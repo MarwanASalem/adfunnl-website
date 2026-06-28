@@ -1,0 +1,141 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+const features = [
+  {
+    icon: "📊",
+    title: "Unified Dashboards",
+    body: "Build custom dashboards that pull data from every ad platform in real time. No more switching between tabs.",
+  },
+  {
+    icon: "🎨",
+    title: "Creative Analysis",
+    body: "See exactly which creatives drive results. Rank ads by performance and stop guessing what works.",
+  },
+  {
+    icon: "⚡",
+    title: "Pulse Monitoring",
+    body: "Get instant alerts when campaign performance drops below your thresholds. React before budgets burn.",
+  },
+  {
+    icon: "📋",
+    title: "Digest Reports",
+    body: "Auto-generated weekly performance digests you can share with clients in one click.",
+  },
+  {
+    icon: "🏢",
+    title: "Agency-Ready",
+    body: "Manage multiple client workspaces from a single account. Built for agencies handling many brands.",
+  },
+  {
+    icon: "📄",
+    title: "Google Sheets Import",
+    body: "Bring your own data. Connect any Google Sheet and blend it with your ad platform data.",
+  },
+];
+
+const integrations = [
+  { name: "Meta Ads",    logo: "/integrations/meta.svg"    },
+  { name: "TikTok Ads", logo: "/integrations/tiktok.svg"  },
+  { name: "Google Ads", logo: "/integrations/google.svg"  },
+  { name: "Snapchat",   logo: "/integrations/snapchat.svg"},
+  { name: "Salla",      logo: "/integrations/salla.svg"   },
+];
+---
+
+<Layout title="All your ad data in one place">
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-white pt-20 pb-28 text-center px-6">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,#ccfbf1,transparent)]" />
+    <div class="mx-auto max-w-3xl">
+      <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold text-brand-700">
+        Now supporting Salla &amp; Google Sheets
+      </div>
+      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 leading-[1.1]">
+        All your ad data.<br />
+        <span class="text-brand-600">One place.</span>
+      </h1>
+      <p class="mt-6 text-lg text-zinc-500 leading-relaxed max-w-xl mx-auto">
+        AdFunnl connects Meta, TikTok, Google Ads, Snapchat and more into a single
+        dashboard — so you can stop context-switching and start making better decisions.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href={`${APP_URL}/signup`}
+           class="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 hover:bg-brand-700 transition">
+          Get started free
+        </a>
+        <a href={`${APP_URL}/login`}
+           class="w-full sm:w-auto rounded-xl border border-zinc-200 bg-white px-8 py-3.5 text-base font-semibold text-zinc-700 hover:bg-zinc-50 transition">
+          Sign in
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrations -->
+  <section id="integrations" class="border-y border-zinc-100 bg-zinc-50 py-14 px-6">
+    <div class="mx-auto max-w-4xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-10">
+        Connects with the platforms you already use
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-10">
+        {integrations.map((i) => (
+          <div class="flex items-center gap-2.5 text-zinc-500 font-medium">
+            <span class="text-2xl">{
+              i.name === "Meta Ads"    ? "📘" :
+              i.name === "TikTok Ads" ? "🎵" :
+              i.name === "Google Ads" ? "🔍" :
+              i.name === "Snapchat"   ? "👻" :
+              "🛒"
+            }</span>
+            {i.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-24 px-6 bg-white">
+    <div class="mx-auto max-w-6xl">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950">
+          Everything you need to run ad operations
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500 max-w-xl mx-auto">
+          Built for performance marketers and agencies who need a single source of truth.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map((f) => (
+          <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-6 hover:border-brand-200 hover:bg-brand-50/40 transition">
+            <div class="text-3xl mb-4">{f.icon}</div>
+            <h3 class="text-base font-semibold text-zinc-900 mb-2">{f.title}</h3>
+            <p class="text-sm text-zinc-500 leading-relaxed">{f.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-brand-600 py-20 px-6 text-center">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+        Ready to unify your ad data?
+      </h2>
+      <p class="mt-4 text-brand-100 text-lg">
+        Connect your first platform in under 2 minutes.
+      </p>
+      <a href={`${APP_URL}/signup`}
+         class="mt-8 inline-block rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-brand-700 hover:bg-brand-50 transition shadow-lg">
+        Get started free
+      </a>
+    </div>
+  </section>
+
+</Layout>

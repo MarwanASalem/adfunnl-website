@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title,
-  description = "AdFunnl — All your ad data in one place. Connect Meta, TikTok, Google Ads, Snapchat and more into one unified dashboard.",
+  description = "AdFunnl — Every ad platform. Every store. One source of truth. Meta, TikTok, Snapchat and Google — plus Shopify and Salla revenue — in one always-fresh workspace.",
   ogImage = "/logo-1024.png",
 } = Astro.props;
 
@@ -34,31 +34,88 @@ const APP_URL = "https://app.adfunnl.com";
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
     <title>{title} · AdFunnl</title>
   </head>
   <body class="bg-white text-zinc-900 antialiased font-sans">
 
     <!-- Nav -->
-    <header class="sticky top-0 z-50 border-b border-zinc-100 bg-white/90 backdrop-blur-sm">
+    <header class="sticky top-0 z-50 border-b border-zinc-100 bg-white/85 backdrop-blur-md">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="/">
+        <a href="/" class="shrink-0">
           <img src="/logo.png" alt="AdFunnl" class="h-6 w-auto" />
         </a>
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
-          <a href="/#features" class="hover:text-zinc-900 transition">Features</a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
+          <!-- Features dropdown -->
+          <div class="relative group">
+            <button
+              type="button"
+              class="flex items-center gap-1 py-2 hover:text-zinc-900 group-focus-within:text-zinc-900 transition"
+              aria-haspopup="true"
+            >
+              Features
+              <svg class="h-4 w-4 text-zinc-400 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
+            </button>
+
+            <!-- Panel (pt-3 keeps a hover bridge) -->
+            <div class="invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200 absolute left-0 top-full pt-3 w-[22rem]">
+              <div class="rounded-2xl border border-zinc-100 bg-white p-2 shadow-xl shadow-zinc-900/[0.08] ring-1 ring-zinc-900/[0.02]">
+                <a href="/features/dashboard" class="group/item flex gap-3.5 rounded-xl p-3.5 hover:bg-brand-50/70 transition">
+                  <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-white">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+                  </span>
+                  <span class="min-w-0">
+                    <span class="flex items-center gap-2">
+                      <span class="text-sm font-semibold text-zinc-900">Dashboards</span>
+                      <span class="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Core</span>
+                    </span>
+                    <span class="mt-1 block text-xs leading-relaxed text-zinc-500">A freeform canvas that matches how you actually think — drag KPIs, charts, funnels and tables anywhere.</span>
+                  </span>
+                </a>
+                <div class="mx-3.5 mt-1 border-t border-zinc-100 pt-3 pb-2">
+                  <p class="text-xs text-zinc-400">More feature pages coming soon — Assistant, Pulse, Creative &amp; Product ROAS.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <a href="/#integrations" class="hover:text-zinc-900 transition">Integrations</a>
         </nav>
+
         <div class="flex items-center gap-3">
           <a href={`${APP_URL}/login`}
              class="hidden sm:inline-block text-sm font-medium text-zinc-600 hover:text-zinc-900 transition">
             Sign in
           </a>
           <a href={`${APP_URL}/signup`}
-             class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition">
-            Get started free
+             class="hidden sm:inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition">
+            Start free
           </a>
+
+          <!-- Mobile toggle -->
+          <input type="checkbox" id="nav-toggle" class="peer hidden" aria-label="Toggle menu" />
+          <label for="nav-toggle" class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-700 cursor-pointer select-none">
+            <svg class="h-5 w-5 peer-checked:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </label>
+
+          <!-- Mobile menu -->
+          <div class="hidden peer-checked:block md:!hidden absolute left-0 right-0 top-full border-b border-zinc-100 bg-white shadow-lg">
+            <nav class="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1 text-sm font-medium text-zinc-700">
+              <a href="/features/dashboard" class="flex items-center justify-between rounded-lg px-3 py-3 hover:bg-zinc-50">
+                Dashboards
+                <span class="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Core</span>
+              </a>
+              <a href="/#features"      class="rounded-lg px-3 py-3 hover:bg-zinc-50">All features</a>
+              <a href="/#integrations"  class="rounded-lg px-3 py-3 hover:bg-zinc-50">Integrations</a>
+              <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-4">
+                <a href={`${APP_URL}/login`}  class="rounded-lg border border-zinc-200 px-4 py-2.5 text-center hover:bg-zinc-50">Sign in</a>
+                <a href={`${APP_URL}/signup`} class="rounded-lg bg-brand-600 px-4 py-2.5 text-center font-semibold text-white hover:bg-brand-700">Start free</a>
+              </div>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
@@ -67,20 +124,30 @@ const APP_URL = "https://app.adfunnl.com";
 
     <!-- Footer -->
     <footer class="border-t border-zinc-100 bg-zinc-50">
-      <div class="mx-auto max-w-6xl px-6 py-12">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="mx-auto max-w-6xl px-6 py-14">
+        <div class="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <img src="/logo.png" alt="AdFunnl" class="h-5 w-auto mb-2" />
-            <p class="text-sm text-zinc-500">All your ad data in one place.</p>
+            <img src="/logo.png" alt="AdFunnl" class="h-5 w-auto mb-3" />
+            <p class="max-w-xs text-sm leading-relaxed text-zinc-500">Every ad platform. Every store. One source of truth — in English and Arabic.</p>
           </div>
-          <nav class="flex flex-wrap gap-6 text-sm text-zinc-500">
-            <a href="/#features"     class="hover:text-zinc-900 transition">Features</a>
-            <a href="/#integrations" class="hover:text-zinc-900 transition">Integrations</a>
-            <a href="/privacy"       class="hover:text-zinc-900 transition">Privacy</a>
-            <a href="/terms"         class="hover:text-zinc-900 transition">Terms</a>
-          </nav>
+          <div>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Product</p>
+            <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
+              <a href="/features/dashboard" class="hover:text-zinc-900 transition">Dashboards</a>
+              <a href="/#features"          class="hover:text-zinc-900 transition">Features</a>
+              <a href="/#integrations"      class="hover:text-zinc-900 transition">Integrations</a>
+            </nav>
+          </div>
+          <div>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Company</p>
+            <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
+              <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">Start free</a>
+              <a href="/privacy" class="hover:text-zinc-900 transition">Privacy</a>
+              <a href="/terms"   class="hover:text-zinc-900 transition">Terms</a>
+            </nav>
+          </div>
         </div>
-        <div class="mt-8 border-t border-zinc-200 pt-6 text-xs text-zinc-400">
+        <div class="mt-10 border-t border-zinc-200 pt-6 text-xs text-zinc-400">
           © {new Date().getFullYear()} AdFunnl. All rights reserved.
         </div>
       </div>

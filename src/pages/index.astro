@@ -3,138 +3,392 @@ import Layout from "../layouts/Layout.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-const features = [
-  {
-    icon: "📊",
-    title: "Unified Dashboards",
-    body: "Build custom dashboards that pull data from every ad platform in real time. No more switching between tabs.",
-  },
-  {
-    icon: "🎨",
-    title: "Creative Analysis",
-    body: "See exactly which creatives drive results. Rank ads by performance and stop guessing what works.",
-  },
-  {
-    icon: "⚡",
-    title: "Pulse Monitoring",
-    body: "Get instant alerts when campaign performance drops below your thresholds. React before budgets burn.",
-  },
-  {
-    icon: "📋",
-    title: "Digest Reports",
-    body: "Auto-generated weekly performance digests you can share with clients in one click.",
-  },
-  {
-    icon: "🏢",
-    title: "Agency-Ready",
-    body: "Manage multiple client workspaces from a single account. Built for agencies handling many brands.",
-  },
-  {
-    icon: "📄",
-    title: "Google Sheets Import",
-    body: "Bring your own data. Connect any Google Sheet and blend it with your ad platform data.",
-  },
+// Data sources — shown as connected chips (no emoji, no fake logos: a
+// colored source dot + the platform name reads as "connected account").
+const adPlatforms = [
+  { name: "Meta",     color: "#1877F2" },
+  { name: "TikTok",   color: "#111111" },
+  { name: "Snapchat", color: "#FFC300" },
+  { name: "Google",   color: "#EA4335" },
+];
+const stores = [
+  { name: "Shopify",      color: "#95BF47" },
+  { name: "Salla",        color: "#00C48C" },
+  { name: "Bosta",        color: "#E30613" },
+  { name: "Easy Orders",  color: "#5738C9" },
+  { name: "Google Sheets", color: "#0F9D58" },
 ];
 
-const integrations = [
-  { name: "Meta Ads",    logo: "/integrations/meta.svg"    },
-  { name: "TikTok Ads", logo: "/integrations/tiktok.svg"  },
-  { name: "Google Ads", logo: "/integrations/google.svg"  },
-  { name: "Snapchat",   logo: "/integrations/snapchat.svg"},
-  { name: "Salla",      logo: "/integrations/salla.svg"   },
+// Signature hero preview: three blended KPI tiles + a mini spend/revenue chart.
+const kpis = [
+  { label: "Ad spend",   value: "$48.2k", delta: "-6%",  down: false },
+  { label: "Revenue",    value: "$213k",  delta: "+18%", down: true  },
+  { label: "Blended ROAS", value: "4.42×", delta: "+0.6", down: true },
 ];
+const bars = [38, 52, 41, 63, 58, 74, 69, 88];
 ---
 
-<Layout title="All your ad data in one place">
+<Layout title="Every ad platform. Every store. One source of truth.">
 
-  <!-- Hero -->
-  <section class="relative overflow-hidden bg-white pt-20 pb-28 text-center px-6">
-    <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,#e6e1fb,transparent)]" />
-    <div class="mx-auto max-w-3xl">
-      <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold text-brand-700">
-        Now supporting Salla &amp; Google Sheets
-      </div>
-      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight text-zinc-950 leading-[1.1]">
-        All your ad data.<br />
-        <span class="text-brand-600">One place.</span>
-      </h1>
-      <p class="mt-6 text-lg text-zinc-500 leading-relaxed max-w-xl mx-auto">
-        AdFunnl connects Meta, TikTok, Google Ads, Snapchat and more into a single
-        dashboard — so you can stop context-switching and start making better decisions.
-      </p>
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href={`${APP_URL}/signup`}
-           class="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 hover:bg-brand-700 transition">
-          Get started free
-        </a>
-        <a href={`${APP_URL}/login`}
-           class="w-full sm:w-auto rounded-xl border border-zinc-200 bg-white px-8 py-3.5 text-base font-semibold text-zinc-700 hover:bg-zinc-50 transition">
-          Sign in
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-white px-6 pt-16 pb-20 sm:pt-20">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
 
-  <!-- Integrations -->
-  <section id="integrations" class="border-y border-zinc-100 bg-zinc-50 py-14 px-6">
-    <div class="mx-auto max-w-4xl text-center">
-      <p class="text-sm font-semibold uppercase tracking-widest text-zinc-400 mb-10">
-        Connects with the platforms you already use
-      </p>
-      <div class="flex flex-wrap items-center justify-center gap-10">
-        {integrations.map((i) => (
-          <div class="flex items-center gap-2.5 text-zinc-500 font-medium">
-            <span class="text-2xl">{
-              i.name === "Meta Ads"    ? "📘" :
-              i.name === "TikTok Ads" ? "🎵" :
-              i.name === "Google Ads" ? "🔍" :
-              i.name === "Snapchat"   ? "👻" :
-              "🛒"
-            }</span>
-            {i.name}
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+    <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
+      <!-- Copy -->
+      <div class="text-center lg:text-left">
+        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold text-brand-700">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-70"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-600"></span>
+          </span>
+          Synced hourly · English &amp; Arabic
+        </div>
 
-  <!-- Features -->
-  <section id="features" class="py-24 px-6 bg-white">
-    <div class="mx-auto max-w-6xl">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950">
-          Everything you need to run ad operations
-        </h2>
-        <p class="mt-4 text-lg text-zinc-500 max-w-xl mx-auto">
-          Built for performance marketers and agencies who need a single source of truth.
+        <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
+          Every ad platform.<br />
+          Every store.<br />
+          <span class="text-brand-600">One source of truth.</span>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 lg:mx-0">
+          AdFunnl pulls Meta, TikTok, Snapchat and Google — plus your Shopify and
+          Salla revenue — into a single, always-fresh workspace. Build the reports
+          you actually think in, and ask your data questions in plain English.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center gap-4 sm:flex-row lg:justify-start justify-center">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
+            Start free
+          </a>
+          <a href={`${APP_URL}/demo`}
+             class="w-full rounded-xl border border-zinc-200 bg-white px-8 py-3.5 text-base font-semibold text-zinc-700 transition hover:bg-zinc-50 sm:w-auto">
+            Book a demo
+          </a>
+        </div>
+
+        <p class="mt-6 text-sm text-zinc-400">
+          Trusted by brands and agencies running paid across four platforms and two languages.
         </p>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {features.map((f) => (
-          <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-6 hover:border-brand-200 hover:bg-brand-50/40 transition">
-            <div class="text-3xl mb-4">{f.icon}</div>
-            <h3 class="text-base font-semibold text-zinc-900 mb-2">{f.title}</h3>
-            <p class="text-sm text-zinc-500 leading-relaxed">{f.body}</p>
+      <!-- Signature: unified dashboard preview -->
+      <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+        <!-- source chips feeding in -->
+        <div class="mb-4 flex flex-wrap justify-center gap-2 lg:justify-start">
+          {[...adPlatforms, stores[0], stores[1]].map((p) => (
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm">
+              <span class="h-2 w-2 rounded-full" style={`background:${p.color}`}></span>
+              {p.name}
+            </span>
+          ))}
+        </div>
+
+        <div class="relative rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xl shadow-brand-900/10 ring-1 ring-zinc-900/[0.03]">
+          <div class="mb-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-brand-600"></span>
+              <span class="text-sm font-semibold text-zinc-800">Q3 · Blended overview</span>
+            </div>
+            <span class="rounded-md bg-brand-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Live</span>
           </div>
-        ))}
+
+          <div class="grid grid-cols-3 gap-2.5">
+            {kpis.map((k) => (
+              <div class="rounded-xl border border-zinc-100 bg-zinc-50/70 p-3">
+                <p class="text-[11px] font-medium text-zinc-400">{k.label}</p>
+                <p class="mt-1 font-display text-lg font-bold text-zinc-900">{k.value}</p>
+                <p class={`mt-0.5 text-[11px] font-semibold ${k.down ? "text-emerald-600" : "text-zinc-400"}`}>{k.delta}</p>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-4 rounded-xl border border-zinc-100 bg-white p-4">
+            <div class="mb-3 flex items-center justify-between">
+              <p class="text-xs font-semibold text-zinc-600">Spend vs. store revenue</p>
+              <div class="flex items-center gap-3 text-[10px] text-zinc-400">
+                <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-brand-300"></span>Spend</span>
+                <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-brand-600"></span>Revenue</span>
+              </div>
+            </div>
+            <div class="flex h-24 items-end gap-2">
+              {bars.map((h) => (
+                <div class="flex flex-1 flex-col items-center justify-end gap-1">
+                  <div class="w-full rounded-t bg-brand-600" style={`height:${h}%`}></div>
+                  <div class="w-full rounded-t bg-brand-200" style={`height:${Math.round(h * 0.45)}%`}></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- floating assistant bubble -->
+          <div class="absolute -bottom-5 -left-4 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl sm:block">
+            <div class="flex items-start gap-2">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
+              <p class="text-[11px] leading-snug text-zinc-600">"Which campaigns wasted budget last week?"</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="bg-brand-600 py-20 px-6 text-center">
-    <div class="mx-auto max-w-2xl">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-        Ready to unify your ad data?
-      </h2>
-      <p class="mt-4 text-brand-100 text-lg">
-        Connect your first platform in under 2 minutes.
-      </p>
-      <a href={`${APP_URL}/signup`}
-         class="mt-8 inline-block rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-brand-700 hover:bg-brand-50 transition shadow-lg">
-        Get started free
-      </a>
+  <!-- ========================= SOCIAL PROOF ========================= -->
+  <section class="border-y border-zinc-100 bg-zinc-50/70">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 text-sm font-medium text-zinc-500">
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Connect in minutes</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Synced hourly</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>English &amp; Arabic (RTL)</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Agency-ready multi-client</span>
+    </div>
+  </section>
+
+  <!-- ============================ UNIFY ============================ -->
+  <section id="integrations" class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid gap-14 lg:grid-cols-2 lg:items-center">
+        <div>
+          <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">Unify</p>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            Stop stitching together spreadsheets
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            Four ad managers, three currencies, and a store dashboard that never
+            agrees with any of them. AdFunnl ends the reconciliation tax. We ingest
+            every platform into one normalized schema, unify currencies automatically,
+            and blend it into true cross-channel numbers — so "how are we actually
+            doing?" has one answer, not five tabs.
+          </p>
+          <ul class="mt-7 space-y-3 text-sm text-zinc-600">
+            {[
+              "Hourly automated syncs, currency-unified, blended metrics",
+              "One normalized schema across every source",
+              "True cross-channel numbers you can stand behind",
+            ].map((item) => (
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- source columns -->
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border border-zinc-100 bg-zinc-50/70 p-5">
+            <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">Ad platforms</p>
+            <ul class="space-y-3">
+              {adPlatforms.map((p) => (
+                <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
+                  <span class="h-2.5 w-2.5 rounded-full" style={`background:${p.color}`}></span>{p.name} Ads
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="rounded-2xl border border-zinc-100 bg-zinc-50/70 p-5">
+            <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">Stores &amp; data</p>
+            <ul class="space-y-3">
+              {stores.map((p) => (
+                <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
+                  <span class="h-2.5 w-2.5 rounded-full" style={`background:${p.color}`}></span>{p.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CAPABILITIES ========================= -->
+  <section id="features" class="bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The workspace</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Everything you need, in one place
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          Build it, ask it, watch it, and tie every dollar back to real store revenue.
+        </p>
+      </div>
+
+      <!-- Build (Dashboards) — flagship, links to feature page -->
+      <div id="build" class="mt-16 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+            Dashboards
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Reports that match how you think</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            A freeform canvas — not a rigid template. Drag KPI tiles, charts, funnels,
+            geo maps, tables and creative galleries wherever they make sense. Add
+            period-over-period comparisons, custom metrics and annotations that mark
+            exactly what you changed and when. Save any layout as a reusable template.
+          </p>
+          <a href="/features/dashboard" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:gap-2.5 transition-all">
+            Explore the builder
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <!-- canvas mock -->
+        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
+          <div class="grid grid-cols-6 gap-2.5">
+            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
+              <p class="text-[10px] text-zinc-400">ROAS</p><p class="font-display text-base font-bold text-zinc-900">4.4×</p>
+            </div>
+            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
+              <p class="text-[10px] text-zinc-400">CAC</p><p class="font-display text-base font-bold text-zinc-900">$21</p>
+            </div>
+            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
+              <p class="text-[10px] text-zinc-400">CTR</p><p class="font-display text-base font-bold text-zinc-900">2.1%</p>
+            </div>
+            <div class="col-span-4 rounded-lg border border-zinc-200 bg-white p-3">
+              <p class="mb-2 text-[10px] text-zinc-400">Revenue by channel</p>
+              <div class="flex h-16 items-end gap-1.5">
+                {[60, 80, 45, 70, 90, 55].map((h) => (
+                  <div class="flex-1 rounded-t bg-brand-500" style={`height:${h}%`}></div>
+                ))}
+              </div>
+            </div>
+            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
+              <p class="mb-2 text-[10px] text-zinc-400">Funnel</p>
+              <div class="space-y-1.5">
+                <div class="h-2 w-full rounded bg-brand-600"></div>
+                <div class="h-2 w-4/5 rounded bg-brand-400"></div>
+                <div class="h-2 w-3/5 rounded bg-brand-300"></div>
+                <div class="h-2 w-2/5 rounded bg-brand-200"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ask + Monitor: two-up -->
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div id="assistant" class="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
+          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Ask</p>
+          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Your data, answered in plain English</h3>
+          <p class="mt-3 text-sm leading-relaxed text-zinc-500">
+            Ask "recap TikTok vs Meta this month" and get a streamed answer that shows
+            exactly which data it used. The assistant lives on every page and remembers
+            your conversation.
+          </p>
+          <div class="mt-5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-xs text-zinc-500">
+            <span class="font-medium text-zinc-700">You:</span> Which campaigns wasted budget last week?
+          </div>
+        </div>
+
+        <div id="pulse" class="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
+          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Monitor</p>
+          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Know something's wrong before it costs you</h3>
+          <p class="mt-3 text-sm leading-relaxed text-zinc-500">
+            Pulse watches every account around the clock, applies your rules, and flags
+            campaigns with clear verdicts on ROAS, spend and CTR. Funding and connection
+            alerts catch a failed card or an expired token before your reports go quiet.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">ROAS healthy</span>
+            <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">Spend spike</span>
+            <span class="rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700">Token expiring</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creative + Product ROAS + Agencies: three-up -->
+      <div class="mt-6 grid gap-6 md:grid-cols-3">
+        <div id="creative" class="rounded-3xl border border-zinc-100 bg-white p-7 shadow-sm">
+          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          <h3 class="font-display text-lg font-bold text-zinc-950">Find your winners. Cut the rest.</h3>
+          <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">
+            AdFunnl scores and ranks every creative. For video, the hook-and-hold view
+            maps exactly where viewers drop off — the most actionable lens in short-form.
+          </p>
+        </div>
+        <div id="product-roas" class="rounded-3xl border border-zinc-100 bg-white p-7 shadow-sm">
+          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+          </div>
+          <h3 class="font-display text-lg font-bold text-zinc-950">The truth lives in your store</h3>
+          <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">
+            Tie spend to real store revenue and attribute it down to individual products
+            and categories — so you finally know which <em>products</em> are profitable to
+            advertise, not just which campaigns spent most.
+          </p>
+        </div>
+        <div id="agencies" class="rounded-3xl border border-zinc-100 bg-white p-7 shadow-sm">
+          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="font-display text-lg font-bold text-zinc-950">One login. Every client. Zero leakage.</h3>
+          <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">
+            Every connection, report and metric is scoped to the right client with
+            server-enforced isolation. Invite your team, publish live share links, and
+            export client-ready PDFs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TRUST + BILINGUAL ===================== -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
+      <div class="rounded-3xl border border-zinc-100 bg-zinc-50/70 p-8 lg:p-10">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-600">Trust</p>
+        <h3 class="mt-2 font-display text-2xl font-bold tracking-tight text-zinc-950">Numbers you can stand behind</h3>
+        <p class="mt-3 leading-relaxed text-zinc-500">
+          A published Methodology page shows exactly how every metric is calculated.
+          Data Logs and the Sync Jobs view show when everything last updated. Snapshots
+          freeze a report — data and currency — so client deliverables never shift under you.
+        </p>
+      </div>
+      <div class="relative overflow-hidden rounded-3xl border border-brand-200 bg-brand-600 p-8 text-white lg:p-10">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-200">Global by design</p>
+        <h3 class="mt-2 font-display text-2xl font-bold tracking-tight">Fully bilingual, truly right-to-left</h3>
+        <p class="mt-3 leading-relaxed text-brand-100">
+          Not just translated labels — a native English and Arabic (RTL) experience end
+          to end. Built for MENA teams and anyone reporting across markets.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <span class="rounded-lg bg-white/15 px-3 py-1.5 text-sm font-medium">English</span>
+          <span class="rounded-lg bg-white/15 px-3 py-1.5 text-sm font-medium" dir="rtl">العربية</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CTA ============================ -->
+  <section class="px-6 pb-24">
+    <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          See all your ad spend clearly — in one place, in your language.
+        </h2>
+        <p class="mt-4 text-lg text-zinc-400">
+          Connect your first account in minutes. No spreadsheet surgery required.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+            Start free
+          </a>
+          <a href={`${APP_URL}/demo`}
+             class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
+            Book a demo
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 

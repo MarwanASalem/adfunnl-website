@@ -46,6 +46,31 @@ const rPts = retention.map((v, i) => {
 });
 const rLine = rPts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
 const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} ${H - PAD} Z`;
+
+// ── Hero signature: the Blended Overview (e-commerce) dashboard ──
+// Faithful to the real template — per-platform metric cards + a blended row.
+// Numbers are anonymized demo data (no real client/account).
+const ovCols = [
+  { label: "Spend",     cur: true },
+  { label: "Purchases", cur: false, hideSm: true },
+  { label: "Cost/Conv.",cur: true,  hideSm: true },
+  { label: "ROAS",      cur: false },
+  { label: "Revenue",   cur: true },
+];
+// cell = [value, deltaPct, up?, good?]
+const ovRows = [
+  { name: "Meta",     color: "#1877F2", cells: [["18,824","17.6",false,true],["223","20.5",true,true],["84.41","31.6",false,true],["5.79×","42.8",true,true],["108,976","17.6",true,true]] },
+  { name: "TikTok",   color: "#111111", cells: [["3,767","19.5",false,true],["43","23.2",false,false],["87.60","4.8",true,false],["5.75×","2.6",false,false],["21,653","21.6",false,false]] },
+  { name: "Google",   color: "#EA4335", cells: [["417","13.9",false,true],["20","60.1",false,false],["21.18","55.6",true,false],["24.5×","51.6",true,true],["10,256","58.3",true,true]] },
+  { name: "Snapchat", color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
+];
+const ovBlended = [
+  { label: "Total spend",  v: "26,323", cur: true },
+  { label: "Conversions",  v: "363",    cur: false, hideSm: true },
+  { label: "Blended CPP",  v: "74",     cur: true,  hideSm: true },
+  { label: "Blended ROAS", v: "6.69×",  cur: false },
+  { label: "Revenue",      v: "180,138",cur: true },
+];
 ---
 
 <Layout title="Every ad platform. Every store. One source of truth.">
@@ -93,106 +118,86 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
         </p>
       </div>
 
-      <!-- Signature: a real, self-animating AdFunnl app window (authentic teal
-           product chrome inside a browser frame — behaves like a live GIF). -->
-      <div class="relative mx-auto w-full max-w-md lg:max-w-none">
-        <!-- source chips feeding in -->
-        <div class="mb-4 flex flex-wrap justify-center gap-2 lg:justify-start">
-          {[...adPlatforms, stores[0], stores[1]].map((p, i) => (
-            <span class="chip-in inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm" style={`--d:${i * 90}ms`}>
-              <span class="h-2 w-2 rounded-full" style={`background:${p.color}`}></span>
-              {p.name}
-            </span>
-          ))}
-        </div>
-
-        <div class="app-window relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xl shadow-brand-900/15 ring-1 ring-zinc-900/[0.04]">
-          <!-- browser chrome -->
-          <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50/80 px-4 py-2.5">
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <div class="ms-2 flex flex-1 items-center gap-1.5 rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-[10px] text-zinc-400">
-              <svg class="h-3 w-3 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              app.adfunnl.com/dashboards
+      <!-- Signature: the real Blended Overview (e-commerce) dashboard, in an
+           app window. Anonymized demo data, reveals + count-up on load. -->
+      <div class="hero-app relative mx-auto w-full max-w-md lg:max-w-none">
+        <div class="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04]">
+          <!-- app top bar -->
+          <div class="flex items-center gap-2 border-b border-zinc-100 bg-white px-3.5 py-2.5">
+            <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
+            <div class="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-700">
+              <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">DS</span>
+              Demo store
+            </div>
+            <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
+            <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">vs. last period</span>
+            <div class="ms-auto flex items-center gap-1.5">
+              <span class="hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">Share</span>
+              <span class="rounded-md bg-brand-600 px-2 py-0.5 text-[10px] font-semibold text-white">+ Widget</span>
             </div>
           </div>
 
-          <div class="flex">
-            <!-- sidebar -->
-            <aside class="hidden w-40 shrink-0 border-e border-zinc-100 bg-zinc-50/60 p-3 sm:block">
-              <div class="mb-4 flex items-center gap-2 px-1">
-                <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-teal-600 text-[11px] font-bold text-white">A</span>
-                <span class="font-display text-sm font-bold text-zinc-800">AdFunnl</span>
-              </div>
-              <nav class="space-y-0.5 text-[11px] font-medium">
-                {[
-                  { l: "Data Hub",  a: false },
-                  { l: "Dashboards", a: true  },
-                  { l: "Pulse",     a: false },
-                  { l: "Creatives", a: false },
-                  { l: "Chat",      a: false },
-                  { l: "Snapshots", a: false },
-                ].map((n) => (
-                  <span class={`flex items-center gap-2 rounded-md px-2 py-1.5 ${n.a ? "bg-teal-50 font-semibold text-teal-700" : "text-zinc-500"}`}>
-                    <span class={`h-1.5 w-1.5 rounded-full ${n.a ? "bg-teal-500" : "bg-zinc-300"}`}></span>{n.l}
-                  </span>
-                ))}
-              </nav>
-              <div class="mt-4 flex overflow-hidden rounded-md border border-zinc-200 text-[10px] font-semibold">
-                <span class="flex-1 bg-teal-600 py-1 text-center text-white">EN</span>
-                <span class="flex-1 border-s border-zinc-200 py-1 text-center text-zinc-400">ع</span>
-              </div>
-            </aside>
+          <!-- dashboard body -->
+          <div class="space-y-2.5 bg-zinc-50/50 p-3.5">
+            <!-- Overview banner -->
+            <div class="flex items-center justify-between rounded-lg bg-brand-600 px-3.5 py-2 shadow-sm shadow-brand-900/20">
+              <span class="font-display text-sm font-bold tracking-tight text-white">Overview</span>
+              <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+                <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-300"></span>Live
+              </span>
+            </div>
 
-            <!-- main -->
-            <div class="min-w-0 flex-1 p-4">
-              <div class="mb-3 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="h-2 w-2 rounded-full bg-teal-500"></span>
-                  <span class="text-sm font-semibold text-zinc-800">Blended Overview</span>
+            <!-- per-platform metric rows -->
+            {ovRows.map((row) => (
+              <div class="flex items-stretch gap-2">
+                <div class="flex w-7 shrink-0 items-center justify-center">
+                  <span class="flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold text-white shadow-sm" style={`background:${row.color}`}>{row.name[0]}</span>
                 </div>
-                <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
-                  <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Live
-                </span>
-              </div>
-
-              <div class="grid grid-cols-3 gap-2.5">
-                {kpis.map((k) => (
-                  <div class="rounded-xl border border-zinc-100 bg-zinc-50/70 p-3">
-                    <p class="text-[11px] font-medium text-zinc-400">{k.label}</p>
-                    <p class="count mt-1 font-display text-lg font-bold text-zinc-900" data-value={k.value}>{k.value}</p>
-                    <p class={`mt-0.5 text-[11px] font-semibold ${k.down ? "text-emerald-600" : "text-zinc-400"}`}>{k.delta}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div class="mt-4 rounded-xl border border-zinc-100 bg-white p-4">
-                <div class="mb-3 flex items-center justify-between">
-                  <p class="text-xs font-semibold text-zinc-600">Spend vs. store revenue</p>
-                  <div class="flex items-center gap-3 text-[10px] text-zinc-400">
-                    <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-teal-300"></span>Spend</span>
-                    <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-teal-600"></span>Revenue</span>
-                  </div>
-                </div>
-                <div class="bars flex h-24 items-end gap-2">
-                  {bars.map((h, i) => (
-                    <div class="flex flex-1 flex-col items-center justify-end gap-1">
-                      <div class="bar w-full rounded-t bg-teal-600" style={`height:${h}%;--d:${i * 70}ms`}></div>
-                      <div class="bar w-full rounded-t bg-teal-200" style={`height:${Math.round(h * 0.45)}%;--d:${i * 70 + 30}ms`}></div>
+                <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
+                  {row.cells.map((c, i) => (
+                    <div class={`rounded-lg border border-zinc-100 bg-white px-2 py-1.5 ${ovCols[i].hideSm ? "hidden sm:block" : ""}`}>
+                      <p class="truncate text-[8px] font-medium uppercase tracking-wide text-zinc-400">{ovCols[i].label}</p>
+                      <p class="mt-0.5 truncate font-display text-[12px] font-bold leading-tight text-zinc-900">
+                        {ovCols[i].cur && <span class="text-[8px] font-semibold text-zinc-400">SAR </span>}{c[0]}
+                      </p>
+                      <p class={`mt-0.5 flex items-center gap-0.5 text-[8px] font-semibold ${c[3] ? "text-emerald-600" : "text-rose-500"}`}>
+                        <span>{c[2] ? "▲" : "▼"}</span>{c[1]}%
+                      </p>
                     </div>
                   ))}
                 </div>
               </div>
+            ))}
+
+            <div class="border-t border-dashed border-zinc-200"></div>
+
+            <!-- blended row (highlighted) -->
+            <div class="flex items-stretch gap-2">
+              <div class="flex w-7 shrink-0 items-center justify-center">
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>
+                </span>
+              </div>
+              <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
+                {ovBlended.map((b, i) => (
+                  <div class={`rounded-lg border border-brand-100 bg-brand-50/60 px-2 py-1.5 ${b.hideSm ? "hidden sm:block" : ""}`}>
+                    <p class="truncate text-[8px] font-medium uppercase tracking-wide text-brand-400">{b.label}</p>
+                    <p class="mt-0.5 truncate font-display text-[13px] font-bold leading-tight text-brand-900">
+                      {b.cur && <span class="text-[8px] font-semibold text-brand-400">SAR </span>}
+                      {i === 3 ? <span class="count" data-value={b.v}>{b.v}</span> : b.v}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        </div>
 
-          <!-- floating assistant bubble -->
-          <div class="absolute -bottom-4 -left-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl sm:block">
-            <div class="flex items-start gap-2">
-              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-600 text-[11px] font-bold text-white">AI</span>
-              <p class="text-[11px] leading-snug text-zinc-600">"Which campaigns wasted budget last week?"</p>
-            </div>
+        <!-- floating assistant bubble -->
+        <div class="absolute -bottom-4 -left-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl lg:block">
+          <div class="flex items-start gap-2">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
+            <p class="text-[11px] leading-snug text-zinc-600">"Which campaigns wasted budget last week?"</p>
           </div>
         </div>
       </div>
@@ -288,9 +293,9 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>Pulse · Meta · Acme Cosmetics
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · Meta · Acme Cosmetics
           </div>
-          <span class="ms-auto rounded-md bg-teal-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-teal-700">Scaling verdicts</span>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Scaling verdicts</span>
         </div>
         <div class="p-5 sm:p-6">
           <div class="mb-3 flex items-center justify-between">
@@ -337,20 +342,20 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>Chat with your data
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Chat with your data
             </div>
           </div>
           <div class="space-y-3 p-5">
             <div class="flex justify-end">
-              <p class="max-w-[85%] rounded-2xl rounded-br-sm bg-teal-600 px-3.5 py-2 text-sm text-white">
+              <p class="max-w-[85%] rounded-2xl rounded-br-sm bg-brand-600 px-3.5 py-2 text-sm text-white">
                 Recap TikTok vs Meta this month — where did we waste budget?
               </p>
             </div>
             <div class="flex gap-2.5">
-              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-600 text-[11px] font-bold text-white">AI</span>
+              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
               <div class="min-w-0 flex-1">
                 <p class="rounded-2xl rounded-bl-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
-                  <span id="chat-stream"></span><span class="stream-caret text-teal-600">▍</span>
+                  <span id="chat-stream"></span><span class="stream-caret text-brand-600">▍</span>
                 </p>
                 <div class="mt-2.5 rounded-lg border border-zinc-200 bg-zinc-50/70 text-xs">
                   <div class="flex items-center gap-1.5 px-2.5 py-1.5 font-medium text-zinc-500">
@@ -374,7 +379,7 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>Creatives · Hook &amp; Hold
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Creatives · Hook &amp; Hold
             </div>
           </div>
           <div class="p-5">
@@ -386,26 +391,26 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
               <div class="flex gap-4 text-right">
                 <div>
                   <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-400">Hook</p>
-                  <p class="font-display text-lg font-bold text-teal-600">31%</p>
+                  <p class="font-display text-lg font-bold text-brand-600">31%</p>
                 </div>
                 <div>
                   <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-400">Hold</p>
-                  <p class="font-display text-lg font-bold text-teal-600">9.4%</p>
+                  <p class="font-display text-lg font-bold text-brand-600">9.4%</p>
                 </div>
               </div>
             </div>
             <svg class="hookhold w-full" viewBox={`0 0 ${W} ${H}`} fill="none" preserveAspectRatio="none" role="img" aria-label="Video retention curve showing viewer drop-off">
               <defs>
                 <linearGradient id="rfill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.22" />
-                  <stop offset="100%" stop-color="#14b8a6" stop-opacity="0" />
+                  <stop offset="0%" stop-color="#5738c9" stop-opacity="0.22" />
+                  <stop offset="100%" stop-color="#5738c9" stop-opacity="0" />
                 </linearGradient>
               </defs>
               {[25, 50, 75].map((y) => (
                 <line x1={PAD} y1={(y / 100) * (H - PAD * 2) + PAD} x2={W - PAD} y2={(y / 100) * (H - PAD * 2) + PAD} stroke="#f1f1f4" stroke-width="1" />
               ))}
               <path class="hh-area" d={rArea} fill="url(#rfill)" />
-              <path class="hh-line" d={rLine} pathLength="1" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path class="hh-line" d={rLine} pathLength="1" stroke="#5738c9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div class="mt-1 flex justify-between text-[10px] font-medium text-zinc-400">
               <span>0s</span><span>3s · hook</span><span>ThruPlay · hold</span>
@@ -608,9 +613,13 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
   </section>
 
   <style is:global>
-    /* Scroll-reveal */
-    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
-    .reveal.in { opacity: 1; transform: none; }
+    /* Scroll-reveal (only hidden when JS is present to reveal it) */
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero entrance — CSS-only so above-the-fold content never depends on JS */
+    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    .hero-app { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; }
 
     /* Hero source chips cascade in */
     @keyframes chipIn { to { opacity: 1; transform: none; } }
@@ -637,8 +646,8 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
     [data-pulse-row="cycle"] [data-roas] { transition: color .35s ease; }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict { animation: none !important; transition: none !important; }
-      .reveal { opacity: 1; transform: none; }
+      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict { animation: none !important; transition: none !important; }
+      .js .reveal { opacity: 1 !important; transform: none !important; }
       .chip-in { opacity: 1; }
       .hh-line { stroke-dashoffset: 0; }
       .hh-area { opacity: 1; }
@@ -646,6 +655,7 @@ const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} $
   </style>
 
   <script>
+    document.documentElement.classList.add("js");
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // ── Scroll reveal ──────────────────────────────────────────────

@@ -90,6 +90,35 @@ const FLOW_LOGOS: Record<string, string> = {
   snapchat: `<svg width="26" height="26" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FFFC00"/><path fill="#FFF" stroke="#000" stroke-width="0.5" transform="translate(3 3) scale(0.75)" d="${SNAP_D}"/></svg>`,
   bosta: `<svg width="26" height="26" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E8173B"/><path fill="#fff" d="M12 5a4 4 0 0 1 4 4c0 2.5-2 4.5-4 6.5C10 13.5 8 11.5 8 9a4 4 0 0 1 4-4zm0 2.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM7 17h10v2H7z"/></svg>`,
 };
+
+// ── Month-over-month showcase: spend (bars, $k) + ROAS (line, ×) ──
+const momRows = [
+  { m: "Feb", spend: 32, roas: 3.1 },
+  { m: "Mar", spend: 41, roas: 3.6 },
+  { m: "Apr", spend: 38, roas: 4.0 },
+  { m: "May", spend: 55, roas: 4.3 },
+  { m: "Jun", spend: 61, roas: 4.8 },
+  { m: "Jul", spend: 72, roas: 5.2 },
+];
+const MOM_W = 480, MOM_H = 220, MOM_PL = 14, MOM_PR = 14, MOM_PT = 16, MOM_PB = 30;
+const momPlotW = MOM_W - MOM_PL - MOM_PR;
+const momPlotH = MOM_H - MOM_PT - MOM_PB;
+const momMaxSpend = Math.max(...momRows.map((r) => r.spend));
+const momMinRoas = Math.min(...momRows.map((r) => r.roas)) - 0.6;
+const momMaxRoas = Math.max(...momRows.map((r) => r.roas)) + 0.4;
+const momStep = momPlotW / momRows.length;
+const momBarW = momStep * 0.46;
+const momBars = momRows.map((r, i) => {
+  const cx = MOM_PL + momStep * i + momStep / 2;
+  const h = (r.spend / momMaxSpend) * momPlotH;
+  return { x: cx - momBarW / 2, y: MOM_PT + momPlotH - h, w: momBarW, h, cx, m: r.m };
+});
+const momLinePts = momBars.map((b, i) => {
+  const y = MOM_PT + momPlotH - ((momRows[i].roas - momMinRoas) / (momMaxRoas - momMinRoas)) * momPlotH;
+  return [Math.round(b.cx * 10) / 10, Math.round(y * 10) / 10];
+});
+const momLine = momLinePts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+const momBaseY = MOM_PT + momPlotH;
 ---
 
 <Layout title="Every ad platform. Every store. One source of truth.">
@@ -106,7 +135,7 @@ const FLOW_LOGOS: Record<string, string> = {
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-70"></span>
             <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-600"></span>
           </span>
-          Synced hourly · English &amp; Arabic
+          Synced hourly · Live shareable dashboards
         </div>
 
         <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
@@ -118,7 +147,7 @@ const FLOW_LOGOS: Record<string, string> = {
         <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 lg:mx-0">
           AdFunnl pulls Meta, TikTok, Snapchat and Google — plus your Shopify and
           Salla revenue — into a single, always-fresh workspace. Build the reports
-          you actually think in, and ask your data questions in plain English.
+          you actually think in, and share live dashboards straight to your clients.
         </p>
 
         <div class="mt-9 flex flex-col items-center gap-4 sm:flex-row lg:justify-start justify-center">
@@ -133,7 +162,7 @@ const FLOW_LOGOS: Record<string, string> = {
         </div>
 
         <p class="mt-6 text-sm text-zinc-400">
-          Trusted by brands and agencies running paid across four platforms and two languages.
+          Trusted by brands and agencies running paid across four platforms and every store.
         </p>
       </div>
 
@@ -145,8 +174,8 @@ const FLOW_LOGOS: Record<string, string> = {
           <div class="flex items-center gap-2 border-b border-zinc-100 bg-white px-3.5 py-2.5">
             <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
             <div class="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-700">
-              <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">DS</span>
-              Demo store
+              <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">BD</span>
+              Brand Data
             </div>
             <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
             <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">vs. last period</span>
@@ -230,7 +259,7 @@ const FLOW_LOGOS: Record<string, string> = {
     <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 text-sm font-medium text-zinc-500">
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Connect in minutes</span>
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Synced hourly</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>English &amp; Arabic (RTL)</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Shareable live dashboards</span>
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Agency-ready multi-client</span>
     </div>
   </section>
@@ -482,14 +511,18 @@ const FLOW_LOGOS: Record<string, string> = {
 
       <!-- Two-up: Assistant (streaming) + Hook & Hold (drawing curve) -->
       <div class="mt-6 grid gap-6 lg:grid-cols-2">
-        <!-- Chat with your data -->
+        <!-- Chat with your data — through the MCP -->
         <div class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
           <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Chat with your data
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Chat with your data · MCP
+            </div>
+            <div class="ms-auto flex items-center gap-1 text-[10px] font-medium text-zinc-400">
+              <span class="rounded border border-zinc-200 bg-white px-1.5 py-0.5">Claude</span>
+              <span class="rounded border border-zinc-200 bg-white px-1.5 py-0.5">ChatGPT</span>
             </div>
           </div>
           <div class="space-y-3 p-5">
@@ -506,12 +539,12 @@ const FLOW_LOGOS: Record<string, string> = {
                 </p>
                 <div class="mt-2.5 rounded-lg border border-zinc-200 bg-zinc-50/70 text-xs">
                   <div class="flex items-center gap-1.5 px-2.5 py-1.5 font-medium text-zinc-500">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-                    Data used
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+                    AdFunnl MCP · tools called
                   </div>
                   <div class="space-y-1 border-t border-zinc-100 px-2.5 py-2 font-mono text-[10px] leading-relaxed text-zinc-500">
-                    <p><span class="text-zinc-400">META_INSIGHTS</span> · 30d · spend, roas by campaign</p>
-                    <p><span class="text-zinc-400">TIKTOK_INSIGHTS</span> · 30d · spend, roas by campaign</p>
+                    <p><span class="text-zinc-400">get_insights</span>(meta) · 30d · spend, roas by campaign</p>
+                    <p><span class="text-zinc-400">get_insights</span>(tiktok) · 30d · spend, roas by campaign</p>
                   </div>
                 </div>
               </div>
@@ -586,7 +619,7 @@ const FLOW_LOGOS: Record<string, string> = {
         <div>
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-            Dashboards
+            Drag &amp; drop builder
           </span>
           <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Reports that match how you think</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
@@ -600,35 +633,184 @@ const FLOW_LOGOS: Record<string, string> = {
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <!-- canvas mock -->
+        <!-- animated drag-and-drop canvas mock -->
         <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
-          <div class="grid grid-cols-6 gap-2.5">
-            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
-              <p class="text-[10px] text-zinc-400">ROAS</p><p class="font-display text-base font-bold text-zinc-900">4.4×</p>
+          <!-- widget palette -->
+          <div class="mb-3 flex items-center gap-1.5">
+            {["KPI", "Chart", "Funnel", "Table"].map((w, i) => (
+              <span class={`rounded-md border px-2 py-1 text-[9px] font-semibold ${i === 0 ? "border-brand-300 bg-brand-100 text-brand-700" : "border-zinc-200 bg-white text-zinc-500"}`}>{w}</span>
+            ))}
+            <span class="ms-auto text-[9px] font-medium text-zinc-400">Canvas</span>
+          </div>
+
+          <!-- fixed-ratio stage so the drag animation lands precisely -->
+          <div class="dnd-stage relative mx-auto aspect-[5/4] w-full">
+            <!-- static tiles -->
+            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:0;top:0;width:47%;height:30%">
+              <p class="text-[9px] text-zinc-400">ROAS</p><p class="font-display text-sm font-bold text-zinc-900">4.4×</p>
             </div>
-            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
-              <p class="text-[10px] text-zinc-400">CAC</p><p class="font-display text-base font-bold text-zinc-900">$21</p>
-            </div>
-            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
-              <p class="text-[10px] text-zinc-400">CTR</p><p class="font-display text-base font-bold text-zinc-900">2.1%</p>
-            </div>
-            <div class="col-span-4 rounded-lg border border-zinc-200 bg-white p-3">
-              <p class="mb-2 text-[10px] text-zinc-400">Revenue by channel</p>
-              <div class="flex h-16 items-end gap-1.5">
+            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:0;top:36%;width:47%;height:60%">
+              <p class="mb-1.5 text-[9px] text-zinc-400">Revenue by channel</p>
+              <div class="flex h-[68%] items-end gap-1">
                 {[60, 80, 45, 70, 90, 55].map((h) => (
                   <div class="flex-1 rounded-t bg-brand-500" style={`height:${h}%`}></div>
                 ))}
               </div>
             </div>
-            <div class="col-span-2 rounded-lg border border-zinc-200 bg-white p-3">
-              <p class="mb-2 text-[10px] text-zinc-400">Funnel</p>
-              <div class="space-y-1.5">
+            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:53%;top:36%;width:47%;height:60%">
+              <p class="mb-1.5 text-[9px] text-zinc-400">Funnel</p>
+              <div class="space-y-1">
                 <div class="h-2 w-full rounded bg-brand-600"></div>
                 <div class="h-2 w-4/5 rounded bg-brand-400"></div>
                 <div class="h-2 w-3/5 rounded bg-brand-300"></div>
                 <div class="h-2 w-2/5 rounded bg-brand-200"></div>
               </div>
             </div>
+
+            <!-- drop zone (top-right slot) -->
+            <div class="dnd-drop absolute rounded-lg border-2 border-dashed" style="left:53%;top:0;width:47%;height:30%"></div>
+
+            <!-- the tile being dragged in -->
+            <div class="dnd-tile absolute rounded-lg border border-brand-300 bg-white p-2.5 shadow-xl shadow-brand-900/20" style="width:47%;height:30%">
+              <p class="text-[9px] text-zinc-400">New customers</p><p class="font-display text-sm font-bold text-zinc-900">1,284</p>
+              <svg class="dnd-cursor absolute h-4 w-4 text-zinc-800" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="1.5" style="right:-6px;bottom:-8px"><path d="M5 3l14 7-6 2-2 6z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month over month: spend + ROAS -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>
+            Trends
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">See the trajectory, month over month</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            Track spend and blended ROAS side by side across every month — so you can see
+            whether scaling budget is actually buying efficiency, or quietly eroding it.
+            Spend climbs as bars; ROAS rides the line above it.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-4 text-sm">
+            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-2.5 rounded-sm bg-brand-500"></span>Spend ($k)</span>
+            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-4 rounded-full bg-emerald-500"></span>ROAS (×)</span>
+          </div>
+        </div>
+        <!-- animated grouped bars + ROAS line -->
+        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
+          <svg class="mom-chart w-full" viewBox={`0 0 ${MOM_W} ${MOM_H}`} role="img" aria-label="Month-over-month spend bars with a rising ROAS line">
+            {[0.25, 0.5, 0.75, 1].map((g) => (
+              <line x1={MOM_PL} y1={MOM_PT + momPlotH - g * momPlotH} x2={MOM_W - MOM_PR} y2={MOM_PT + momPlotH - g * momPlotH} stroke="#eceaf5" stroke-width="1" />
+            ))}
+            {momBars.map((b, i) => (
+              <g>
+                <rect class="mom-bar" x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill="#8b6ff0" style={`transform-box:fill-box;transform-origin:bottom;transition-delay:${i * 80}ms`} />
+                <text x={b.cx} y={momBaseY + 18} text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#a1a1aa">{b.m}</text>
+              </g>
+            ))}
+            <path class="mom-line" d={momLine} pathLength="1" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            {momLinePts.map((p, i) => (
+              <circle class="mom-dot" cx={p[0]} cy={p[1]} r="3.5" fill="#fff" stroke="#10b981" stroke-width="2.5" style={`transition-delay:${700 + i * 90}ms`} />
+            ))}
+          </svg>
+        </div>
+      </div>
+
+      <!-- Currency unification -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div class="cur-viz order-2 lg:order-1 rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+          <div class="grid grid-cols-2 gap-2.5">
+            {[
+              { c: "USD", flag: "$", amt: "142,880" },
+              { c: "AED", flag: "د.إ", amt: "318,400" },
+              { c: "EGP", flag: "£", amt: "2,940,000" },
+              { c: "KWD", flag: "د.ك", amt: "18,220" },
+            ].map((x, i) => (
+              <div class="cur-chip rounded-lg border border-zinc-200 bg-white px-3 py-2.5" style={`transition-delay:${i * 110}ms`}>
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded bg-zinc-100 text-[10px] font-bold text-zinc-500">{x.flag}</span>
+                  <span class="text-[11px] font-semibold text-zinc-500">{x.c}</span>
+                </div>
+                <p class="mt-1 font-display text-sm font-bold text-zinc-800">{x.amt}</p>
+              </div>
+            ))}
+          </div>
+          <div class="my-3 flex items-center justify-center gap-2 text-zinc-300">
+            <span class="h-px w-16 bg-gradient-to-r from-transparent to-zinc-300"></span>
+            <svg class="cur-arrow h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            <span class="h-px w-16 bg-gradient-to-l from-transparent to-zinc-300"></span>
+          </div>
+          <div class="rounded-xl border border-brand-200 bg-brand-50/70 px-4 py-3">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-brand-500">Unified revenue</p>
+            <p class="mt-0.5 font-display text-2xl font-bold text-brand-900">
+              <span class="text-sm font-semibold text-brand-400">SAR </span><span class="cur-total">1,932,540</span>
+            </p>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>
+            Currency
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">One currency. Every account. No more guesswork.</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            Selling in four markets means four currencies — and spreadsheets that never
+            reconcile. AdFunnl converts every platform and store into your reporting
+            currency automatically, using the right rate, so blended ROAS and revenue
+            finally add up to a single number you can trust.
+          </p>
+        </div>
+      </div>
+
+      <!-- Invite your team -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            Collaborate
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Invite your team in seconds</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            Bring in analysts, account managers and clients with a single invite. Assign
+            roles — Admin, Editor or Viewer — and everyone works from the same live
+            numbers. No exports flying around, no version everyone disagrees on.
+          </p>
+        </div>
+        <!-- animated members card -->
+        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <p class="text-sm font-semibold text-zinc-800">Workspace members</p>
+            <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">5 seats</span>
+          </div>
+          <div class="mb-4 flex items-center">
+            {[
+              { i: "HM", c: "bg-brand-600" },
+              { i: "SA", c: "bg-emerald-500" },
+              { i: "KR", c: "bg-amber-500" },
+              { i: "NF", c: "bg-sky-500" },
+            ].map((a, idx) => (
+              <span class={`team-avatar -ms-2 first:ms-0 flex h-9 w-9 items-center justify-center rounded-full ${a.c} text-[11px] font-bold text-white ring-2 ring-zinc-50`} style={`transition-delay:${idx * 120}ms`}>{a.i}</span>
+            ))}
+            <span class="team-avatar -ms-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-dashed border-zinc-300 text-zinc-400 ring-2 ring-zinc-50" style="transition-delay:520ms">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <div class="flex flex-1 items-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-400">teammate@brand.com</div>
+            <button class="rounded-lg bg-brand-600 px-3.5 py-2 text-xs font-semibold text-white">Invite</button>
+          </div>
+          <div class="mt-3 space-y-1.5">
+            {[
+              { n: "Hussein M.", r: "Admin", rc: "bg-brand-50 text-brand-700" },
+              { n: "Sara A.", r: "Editor", rc: "bg-sky-50 text-sky-700" },
+              { n: "Client · Acme", r: "Viewer", rc: "bg-zinc-100 text-zinc-500" },
+            ].map((m) => (
+              <div class="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-xs">
+                <span class="font-medium text-zinc-700">{m.n}</span>
+                <span class={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${m.rc}`}>{m.r}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -639,15 +821,17 @@ const FLOW_LOGOS: Record<string, string> = {
           <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Ask</p>
-          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Your data, answered in plain English</h3>
+          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Ask · MCP</p>
+          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Chat with your data from Claude, ChatGPT, or any assistant</h3>
           <p class="mt-3 text-sm leading-relaxed text-zinc-500">
-            Ask "recap TikTok vs Meta this month" and get a streamed answer that shows
-            exactly which data it used. The assistant lives on every page and remembers
-            your conversation.
+            AdFunnl exposes your unified data as an MCP server — so the AI you already
+            use can query it directly. Connect Claude, ChatGPT or any MCP-capable client
+            and ask "recap TikTok vs Meta this month" in the tool of your choice.
           </p>
-          <div class="mt-5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-xs text-zinc-500">
-            <span class="font-medium text-zinc-700">You:</span> Which campaigns wasted budget last week?
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">Claude</span>
+            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">ChatGPT</span>
+            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">Any MCP client</span>
           </div>
         </div>
 
@@ -708,7 +892,7 @@ const FLOW_LOGOS: Record<string, string> = {
     </div>
   </section>
 
-  <!-- ===================== TRUST + BILINGUAL ===================== -->
+  <!-- ===================== TRUST + SHARE ===================== -->
   <section class="bg-white px-6 py-24">
     <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
       <div class="rounded-3xl border border-zinc-100 bg-zinc-50/70 p-8 lg:p-10">
@@ -721,15 +905,26 @@ const FLOW_LOGOS: Record<string, string> = {
         </p>
       </div>
       <div class="relative overflow-hidden rounded-3xl border border-brand-200 bg-brand-600 p-8 text-white lg:p-10">
-        <p class="text-sm font-semibold uppercase tracking-widest text-brand-200">Global by design</p>
-        <h3 class="mt-2 font-display text-2xl font-bold tracking-tight">Fully bilingual, truly right-to-left</h3>
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand-200">Look professional</p>
+        <h3 class="mt-2 font-display text-2xl font-bold tracking-tight">Shareable live dashboards</h3>
         <p class="mt-3 leading-relaxed text-brand-100">
-          Not just translated labels — a native English and Arabic (RTL) experience end
-          to end. Built for MENA teams and anyone reporting across markets.
+          Send clients and stakeholders a single live link — no logins, no exports,
+          no stale screenshots. It updates on its own, always shows the latest numbers,
+          and puts your name on a report that looks like it took a team to build.
         </p>
-        <div class="mt-6 flex gap-3">
-          <span class="rounded-lg bg-white/15 px-3 py-1.5 text-sm font-medium">English</span>
-          <span class="rounded-lg bg-white/15 px-3 py-1.5 text-sm font-medium" dir="rtl">العربية</span>
+        <div class="mt-6 flex flex-wrap gap-2.5 text-sm font-medium">
+          <span class="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1.5">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
+            Live share link
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1.5">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            Client-ready PDF
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1.5">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
+            View-only, no login
+          </span>
         </div>
       </div>
     </div>
@@ -740,7 +935,7 @@ const FLOW_LOGOS: Record<string, string> = {
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          See all your ad spend clearly — in one place, in your language.
+          See all your ad spend clearly — in one place, shared with your clients.
         </h2>
         <p class="mt-4 text-lg text-zinc-400">
           Connect your first account in minutes. No spreadsheet surgery required.
@@ -802,9 +997,51 @@ const FLOW_LOGOS: Record<string, string> = {
     .flow-check { animation: flowCheck 2.8s ease-in-out infinite; }
     @keyframes flowCheck { 0%,70%,100% { opacity: 1; } 80% { opacity: .3; } }
 
+    /* ── Drag & drop builder ── */
+    .dnd-tile { animation: dndDrag 4.8s cubic-bezier(.4,0,.2,1) infinite; }
+    @keyframes dndDrag {
+      0%   { left: 60%; top: -6%; opacity: 0; }
+      10%  { left: 58%; top: 2%;  opacity: 1; }
+      55%  { left: 53%; top: 0%;  opacity: 1; }
+      70%  { left: 53%; top: 0%;  opacity: 1; }
+      82%  { left: 53%; top: 0%;  opacity: 1; }
+      90%,100% { left: 53%; top: 0%; opacity: 0; }
+    }
+    .dnd-drop { border-color: #ddd6fe; background: rgba(139,111,240,.05); animation: dndDropPulse 4.8s ease-in-out infinite; }
+    @keyframes dndDropPulse {
+      0%,45%   { border-color: #ddd6fe; background: rgba(139,111,240,.05); }
+      55%,82%  { border-color: #8b6ff0; background: rgba(139,111,240,.14); }
+      90%,100% { border-color: #ddd6fe; background: rgba(139,111,240,.05); }
+    }
+    .dnd-cursor { animation: dndClick 4.8s ease-in-out infinite; }
+    @keyframes dndClick { 0%,52%,72%,100% { transform: scale(1); } 60% { transform: scale(.82); } }
+
+    /* ── Month-over-month chart (reveal-triggered) ── */
+    .mom-bar { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); }
+    .reveal.in .mom-bar { transition: transform .9s cubic-bezier(.2,.7,.2,1); transform: scaleY(1); }
+    .mom-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .reveal.in .mom-line { transition: stroke-dashoffset 1.4s ease .5s; stroke-dashoffset: 0; }
+    .mom-dot { opacity: 0; }
+    .reveal.in .mom-dot { transition: opacity .3s ease; opacity: 1; }
+
+    /* ── Currency unification (reveal-triggered) ── */
+    .cur-chip { opacity: 0; transform: translateX(-10px); }
+    .reveal.in .cur-chip { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1); opacity: 1; transform: none; }
+    .reveal.in .cur-arrow { animation: curArrow 1.6s ease-in-out .6s infinite; }
+    @keyframes curArrow { 0%,100% { transform: translateY(-2px); opacity: .6; } 50% { transform: translateY(2px); opacity: 1; } }
+
+    /* ── Team invite avatars (reveal-triggered) ── */
+    .team-avatar { opacity: 0; transform: scale(.6); }
+    .reveal.in .team-avatar { transition: opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1); opacity: 1; transform: none; }
+
     @media (prefers-reduced-motion: reduce) {
       .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict,
-      .flow-stream, .flow-hub-ring, .flow-bar, .flow-check { animation: none !important; transition: none !important; }
+      .flow-stream, .flow-hub-ring, .flow-bar, .flow-check,
+      .dnd-tile, .dnd-drop, .dnd-cursor, .cur-arrow { animation: none !important; transition: none !important; }
+      .dnd-tile { left: 53% !important; top: 0 !important; opacity: 1 !important; }
+      .mom-bar { transform: scaleY(1) !important; }
+      .mom-line { stroke-dashoffset: 0 !important; }
+      .mom-dot, .cur-chip, .team-avatar { opacity: 1 !important; transform: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
       .chip-in { opacity: 1; }
       .hh-line { stroke-dashoffset: 0; }
@@ -829,6 +1066,31 @@ const FLOW_LOGOS: Record<string, string> = {
       }
     }, { threshold: 0.2 });
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // ── Currency total count-up (comma-formatted), fires on scroll ──
+    const curTotal = document.querySelector(".cur-total");
+    if (curTotal) {
+      const target = parseInt(curTotal.textContent.replace(/,/g, ""), 10);
+      const fmt = (n) => Math.round(n).toLocaleString("en-US");
+      if (rm || !Number.isFinite(target)) {
+        /* leave static */
+      } else {
+        const cio = new IntersectionObserver((entries, obs) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            obs.disconnect();
+            const dur = 1400, start = performance.now();
+            const step = (now) => {
+              const p = Math.min(1, (now - start) / dur);
+              curTotal.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+              if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          }
+        }, { threshold: 0.5 });
+        cio.observe(curTotal);
+      }
+    }
 
     // ── Hero KPI count-up ──────────────────────────────────────────
     function countUp(el) {

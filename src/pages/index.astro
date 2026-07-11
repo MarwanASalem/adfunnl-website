@@ -1,22 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PlatformIcon from "../components/PlatformIcon.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-// Data sources — shown as connected chips (no emoji, no fake logos: a
-// colored source dot + the platform name reads as "connected account").
+// Data sources — connected accounts, shown with their real platform logos.
 const adPlatforms = [
-  { name: "Meta",     color: "#1877F2" },
-  { name: "TikTok",   color: "#111111" },
-  { name: "Snapchat", color: "#FFC300" },
-  { name: "Google",   color: "#EA4335" },
+  { name: "Meta",     key: "meta" },
+  { name: "TikTok",   key: "tiktok" },
+  { name: "Snapchat", key: "snapchat" },
+  { name: "Google",   key: "google_ads" },
 ];
 const stores = [
-  { name: "Shopify",      color: "#95BF47" },
-  { name: "Salla",        color: "#00C48C" },
-  { name: "Bosta",        color: "#E30613" },
-  { name: "Easy Orders",  color: "#5738C9" },
-  { name: "Google Sheets", color: "#0F9D58" },
+  { name: "Shopify",       key: "shopify" },
+  { name: "Salla",         key: "salla" },
+  { name: "Bosta",         key: "bosta" },
+  { name: "Easy Orders",   key: "easy_orders" },
+  { name: "Google Sheets", key: "google_sheets" },
 ];
 
 // Signature hero preview: three blended KPI tiles + a mini spend/revenue chart.
@@ -59,10 +59,10 @@ const ovCols = [
 ];
 // cell = [value, deltaPct, up?, good?]
 const ovRows = [
-  { name: "Meta",     color: "#1877F2", cells: [["18,824","17.6",false,true],["223","20.5",true,true],["84.41","31.6",false,true],["5.79×","42.8",true,true],["108,976","17.6",true,true]] },
-  { name: "TikTok",   color: "#111111", cells: [["3,767","19.5",false,true],["43","23.2",false,false],["87.60","4.8",true,false],["5.75×","2.6",false,false],["21,653","21.6",false,false]] },
-  { name: "Google",   color: "#EA4335", cells: [["417","13.9",false,true],["20","60.1",false,false],["21.18","55.6",true,false],["24.5×","51.6",true,true],["10,256","58.3",true,true]] },
-  { name: "Snapchat", color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
+  { name: "Meta",     key: "meta",       color: "#1877F2", cells: [["18,824","17.6",false,true],["223","20.5",true,true],["84.41","31.6",false,true],["5.79×","42.8",true,true],["108,976","17.6",true,true]] },
+  { name: "TikTok",   key: "tiktok",     color: "#111111", cells: [["3,767","19.5",false,true],["43","23.2",false,false],["87.60","4.8",true,false],["5.75×","2.6",false,false],["21,653","21.6",false,false]] },
+  { name: "Google",   key: "google_ads", color: "#EA4335", cells: [["417","13.9",false,true],["20","60.1",false,false],["21.18","55.6",true,false],["24.5×","51.6",true,true],["10,256","58.3",true,true]] },
+  { name: "Snapchat", key: "snapchat",   color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
 ];
 const ovBlended = [
   { label: "Total spend",  v: "26,323", cur: true },
@@ -71,6 +71,25 @@ const ovBlended = [
   { label: "Blended ROAS", v: "6.69×",  cur: false },
   { label: "Revenue",      v: "180,138",cur: true },
 ];
+
+// ── SVG-native platform logos for the animated data-flow diagram ──
+// (inside an <svg> we can't use <img>, so Google Ads is inlined as the
+// 4-colour "G" and the rest reuse the app's official marks.) Each glyph is a
+// nested 26×26 svg placed by a translated parent <g>.
+const TIKTOK_D = "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z";
+const SHOPIFY_D = "M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.114-.192-.211-.192s-1.929-.136-1.929-.136-1.275-1.274-1.439-1.411c-.045-.037-.075-.057-.121-.074l-.914 21.104h.023zM11.71 11.305s-.81-.424-1.774-.424c-1.447 0-1.504.906-1.504 1.141 0 1.232 3.24 1.715 3.24 4.629 0 2.295-1.44 3.76-3.406 3.76-2.354 0-3.54-1.465-3.54-1.465l.646-2.086s1.245 1.066 2.28 1.066c.675 0 .975-.545.975-.932 0-1.619-2.654-1.694-2.654-4.359-.034-2.237 1.571-4.416 4.827-4.416 1.257 0 1.875.361 1.875.361l-.945 2.715-.02.01zM11.17.83c.136 0 .271.038.405.135-.984.465-2.064 1.639-2.508 3.992-.656.213-1.293.405-1.889.578C7.697 3.75 8.951.84 11.17.84V.83zm1.235 2.949v.135c-.754.232-1.583.484-2.394.736.466-1.777 1.333-2.645 2.085-2.971.193.501.309 1.176.309 2.1zm.539-2.234c.694.074 1.141.867 1.429 1.755-.349.114-.735.231-1.158.366v-.252c0-.752-.096-1.371-.271-1.871v.002zm2.992 1.289c-.02 0-.06.021-.078.021s-.289.075-.714.21c-.423-1.233-1.176-2.37-2.508-2.37h-.115C12.135.209 11.669 0 11.265 0 8.159 0 6.675 3.877 6.21 5.846c-1.194.365-2.063.636-2.16.674-.675.213-.694.232-.772.87-.075.462-1.83 14.063-1.83 14.063L15.009 24l.927-21.166z";
+const SNAP_D = "M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z";
+const META_D = "M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z";
+
+// key → raw inner SVG markup (a nested 26×26 svg), embedded via set:html.
+const FLOW_LOGOS: Record<string, string> = {
+  meta: `<svg width="26" height="26" viewBox="0 0 24 24"><path fill="#0082FB" d="${META_D}"/></svg>`,
+  google_ads: `<svg width="26" height="26" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>`,
+  shopify: `<svg width="26" height="26" viewBox="0 0 24 24"><path fill="#95BF47" d="${SHOPIFY_D}"/></svg>`,
+  tiktok: `<svg width="26" height="26" viewBox="0 0 24 24"><path fill="#25F4EE" transform="translate(-0.7 0.5)" d="${TIKTOK_D}"/><path fill="#FE2C55" transform="translate(0.7 -0.5)" d="${TIKTOK_D}"/><path fill="#010101" d="${TIKTOK_D}"/></svg>`,
+  snapchat: `<svg width="26" height="26" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FFFC00"/><path fill="#FFF" stroke="#000" stroke-width="0.5" transform="translate(3 3) scale(0.75)" d="${SNAP_D}"/></svg>`,
+  bosta: `<svg width="26" height="26" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E8173B"/><path fill="#fff" d="M12 5a4 4 0 0 1 4 4c0 2.5-2 4.5-4 6.5C10 13.5 8 11.5 8 9a4 4 0 0 1 4-4zm0 2.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM7 17h10v2H7z"/></svg>`,
+};
 ---
 
 <Layout title="Every ad platform. Every store. One source of truth.">
@@ -151,7 +170,9 @@ const ovBlended = [
             {ovRows.map((row) => (
               <div class="flex items-stretch gap-2">
                 <div class="flex w-7 shrink-0 items-center justify-center">
-                  <span class="flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold text-white shadow-sm" style={`background:${row.color}`}>{row.name[0]}</span>
+                  <span class="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-zinc-200/70 shadow-sm" title={row.name} aria-label={row.name}>
+                    <PlatformIcon platform={row.key} class="h-5 w-5" />
+                  </span>
                 </div>
                 <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
                   {row.cells.map((c, i) => (
@@ -251,7 +272,9 @@ const ovBlended = [
             <ul class="space-y-3">
               {adPlatforms.map((p) => (
                 <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
-                  <span class="h-2.5 w-2.5 rounded-full" style={`background:${p.color}`}></span>{p.name} Ads
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/70">
+                    <PlatformIcon platform={p.key} class="h-4 w-4" />
+                  </span>{p.name} Ads
                 </li>
               ))}
             </ul>
@@ -261,12 +284,136 @@ const ovBlended = [
             <ul class="space-y-3">
               {stores.map((p) => (
                 <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
-                  <span class="h-2.5 w-2.5 rounded-full" style={`background:${p.color}`}></span>{p.name}
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/70">
+                    <PlatformIcon platform={p.key} class="h-4 w-4" />
+                  </span>{p.name}
                 </li>
               ))}
             </ul>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DATA FLOW (animated) ===================== -->
+  <section id="flow" class="relative overflow-hidden bg-zinc-50/60 px-6 py-24">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#efeafc,transparent)]"></div>
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The pipeline</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          From every source to a client-ready report
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          Meta, Google, Shopify, TikTok, Snapchat, Bosta and more stream in continuously.
+          AdFunnl unifies and normalizes everything, turns it into live visuals, and delivers it to your client.
+        </p>
+      </div>
+
+      <!-- One responsive diagram. Scrolls horizontally on very small screens. -->
+      <div class="reveal mt-14 overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8">
+        <svg id="flow-svg" class="mx-auto block min-w-[860px] max-w-[1100px]" viewBox="0 0 1120 500" role="img" aria-label="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it before delivering a report to the client.">
+          <defs>
+            <radialGradient id="flowParticle" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#8b6ff0" />
+              <stop offset="100%" stop-color="#6549dd" />
+            </radialGradient>
+            <filter id="flowGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+
+            <!-- Convergence paths: each source → the AdFunnl hub -->
+            <path id="fp1" d="M184,40  C 300,40  330,240 452,240" fill="none" />
+            <path id="fp2" d="M184,120 C 300,120 330,240 452,240" fill="none" />
+            <path id="fp3" d="M184,200 C 320,200 360,240 452,240" fill="none" />
+            <path id="fp4" d="M184,280 C 320,280 360,240 452,240" fill="none" />
+            <path id="fp5" d="M184,360 C 300,360 330,240 452,240" fill="none" />
+            <path id="fp6" d="M184,440 C 300,440 330,240 452,240" fill="none" />
+            <!-- Hub → Visualize → Client -->
+            <path id="fpv" d="M570,240 L700,240" fill="none" />
+            <path id="fpc" d="M852,240 L940,240" fill="none" />
+          </defs>
+
+          <!-- animated stream lines (marching dashes) -->
+          <use href="#fp1" class="flow-stream" /><use href="#fp2" class="flow-stream" />
+          <use href="#fp3" class="flow-stream" /><use href="#fp4" class="flow-stream" />
+          <use href="#fp5" class="flow-stream" /><use href="#fp6" class="flow-stream" />
+          <use href="#fpv" class="flow-stream" /><use href="#fpc" class="flow-stream" />
+
+          <!-- flowing particles -->
+          {[
+            { p: "fp1", d: "2.6s", b: "0s" },   { p: "fp1", d: "2.6s", b: "1.3s" },
+            { p: "fp2", d: "2.8s", b: "0.5s" }, { p: "fp2", d: "2.8s", b: "1.9s" },
+            { p: "fp3", d: "2.3s", b: "0.2s" }, { p: "fp3", d: "2.3s", b: "1.4s" },
+            { p: "fp4", d: "2.5s", b: "0.9s" }, { p: "fp4", d: "2.5s", b: "2.0s" },
+            { p: "fp5", d: "2.9s", b: "0.4s" }, { p: "fp5", d: "2.9s", b: "1.7s" },
+            { p: "fp6", d: "2.4s", b: "1.1s" }, { p: "fp6", d: "2.4s", b: "2.2s" },
+            { p: "fpv", d: "1.5s", b: "0s" },   { p: "fpv", d: "1.5s", b: "0.7s" },
+            { p: "fpc", d: "1.3s", b: "0.3s" }, { p: "fpc", d: "1.3s", b: "0.9s" },
+          ].map((c) => (
+            <circle r="4.5" fill="url(#flowParticle)" filter="url(#flowGlow)">
+              <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
+                <mpath href={`#${c.p}`} />
+              </animateMotion>
+            </circle>
+          ))}
+
+          <!-- ── Source nodes (real platform logos) ── -->
+          {[
+            { y: 40,  key: "meta",       label: "Meta" },
+            { y: 120, key: "google_ads", label: "Google Ads" },
+            { y: 200, key: "shopify",    label: "Shopify" },
+            { y: 280, key: "tiktok",     label: "TikTok" },
+            { y: 360, key: "snapchat",   label: "Snapchat" },
+            { y: 440, key: "bosta",      label: "Bosta" },
+          ].map((s) => (
+            <g>
+              <rect x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
+              <g transform={`translate(40 ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
+              <text x="78" y={s.y + 5} font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
+            </g>
+          ))}
+          <text x="104" y="486" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
+
+          <!-- ── AdFunnl hub ── -->
+          <circle class="flow-hub-ring" cx="510" cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
+          <circle cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <g transform="translate(510 240)">
+            <path d="M-18,-14 C-18,3 0,0 0,20 M0,-20 V20 M18,-14 C18,3 0,0 0,20" fill="none" stroke="#6549dd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="-18" cy="-16" r="6" fill="#67E8F9" />
+            <circle cx="0" cy="-20" r="6" fill="#C4B5FD" />
+            <circle cx="18" cy="-16" r="6" fill="#FDE68A" />
+            <circle cx="0" cy="20" r="6" fill="#6549dd" />
+          </g>
+          <text x="510" y="322" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
+          <text x="510" y="340" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
+
+          <!-- ── Visualize node ── -->
+          <rect x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <text x="776" y="199" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
+          <g>
+            <rect class="flow-bar" x="722" y="220" width="20" height="66" rx="4" fill="#c4b5fd" style="--h:0.55" />
+            <rect class="flow-bar" x="752" y="220" width="20" height="66" rx="4" fill="#8b6ff0" style="--h:0.8;--d:.2s" />
+            <rect class="flow-bar" x="782" y="220" width="20" height="66" rx="4" fill="#6549dd" style="--h:0.45;--d:.4s" />
+            <rect class="flow-bar" x="812" y="220" width="20" height="66" rx="4" fill="#a78bfa" style="--h:0.95;--d:.6s" />
+          </g>
+          <line x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
+          <text x="776" y="330" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="700" fill="#27272a">Visualized</text>
+
+          <!-- ── Client node ── -->
+          <rect x="940" y="176" width="152" height="128" rx="16" fill="#6549dd" />
+          <rect x="972" y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+          <rect x="982" y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
+          <rect x="982" y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x="982" y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x="982" y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+          <circle class="flow-check" cx="1054" cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+          <path class="flow-check" d="M1048,254 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <text x="1016" y="330" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="700" fill="#27272a">Delivered</text>
+          <text x="1016" y="348" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11.5" font-weight="500" fill="#a1a1aa">to your client</text>
+        </svg>
       </div>
     </div>
   </section>
@@ -645,8 +792,19 @@ const ovBlended = [
     .verdict { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
     [data-pulse-row="cycle"] [data-roas] { transition: color .35s ease; }
 
+    /* ── Animated data-flow diagram ── */
+    .flow-stream { fill: none; stroke: #e0d9f9; stroke-width: 2; stroke-dasharray: 5 9; stroke-linecap: round; animation: flowDash 1.1s linear infinite; }
+    @keyframes flowDash { to { stroke-dashoffset: -14; } }
+    .flow-hub-ring { transform-box: fill-box; transform-origin: center; animation: flowHub 2.6s ease-in-out infinite; }
+    @keyframes flowHub { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
+    .flow-bar { transform-box: fill-box; transform-origin: bottom; animation: flowBar 2.4s cubic-bezier(.4,0,.2,1) infinite; animation-delay: var(--d, 0s); }
+    @keyframes flowBar { 0%,100% { transform: scaleY(calc(var(--h) * .55)); } 50% { transform: scaleY(var(--h)); } }
+    .flow-check { animation: flowCheck 2.8s ease-in-out infinite; }
+    @keyframes flowCheck { 0%,70%,100% { opacity: 1; } 80% { opacity: .3; } }
+
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict { animation: none !important; transition: none !important; }
+      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict,
+      .flow-stream, .flow-hub-ring, .flow-bar, .flow-check { animation: none !important; transition: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
       .chip-in { opacity: 1; }
       .hh-line { stroke-dashoffset: 0; }
@@ -657,6 +815,12 @@ const ovBlended = [
   <script>
     document.documentElement.classList.add("js");
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Reduced motion: freeze the SVG data-flow particles (SMIL isn't paused by CSS).
+    if (rm) {
+      const flowSvg = document.getElementById("flow-svg");
+      if (flowSvg && typeof flowSvg.pauseAnimations === "function") flowSvg.pauseAnimations();
+    }
 
     // ── Scroll reveal ──────────────────────────────────────────────
     const io = new IntersectionObserver((entries) => {

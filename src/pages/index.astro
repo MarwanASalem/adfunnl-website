@@ -4,21 +4,6 @@ import PlatformIcon from "../components/PlatformIcon.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-// Data sources — connected accounts, shown with their real platform logos.
-const adPlatforms = [
-  { name: "Meta",     key: "meta" },
-  { name: "TikTok",   key: "tiktok" },
-  { name: "Snapchat", key: "snapchat" },
-  { name: "Google",   key: "google_ads" },
-];
-const stores = [
-  { name: "Shopify",       key: "shopify" },
-  { name: "Salla",         key: "salla" },
-  { name: "Bosta",         key: "bosta" },
-  { name: "Easy Orders",   key: "easy_orders" },
-  { name: "Google Sheets", key: "google_sheets" },
-];
-
 // Signature hero preview: three blended KPI tiles + a mini spend/revenue chart.
 const kpis = [
   { label: "Ad spend",   value: "$48.2k", delta: "-6%",  down: false },
@@ -264,69 +249,8 @@ const momBaseY = MOM_PT + momPlotH;
     </div>
   </section>
 
-  <!-- ============================ UNIFY ============================ -->
-  <section id="integrations" class="bg-white px-6 py-24">
-    <div class="mx-auto max-w-6xl">
-      <div class="grid gap-14 lg:grid-cols-2 lg:items-center">
-        <div>
-          <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">Unify</p>
-          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-            Stop stitching together spreadsheets
-          </h2>
-          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
-            Four ad managers, three currencies, and a store dashboard that never
-            agrees with any of them. AdFunnl ends the reconciliation tax. We ingest
-            every platform into one normalized schema, unify currencies automatically,
-            and blend it into true cross-channel numbers — so "how are we actually
-            doing?" has one answer, not five tabs.
-          </p>
-          <ul class="mt-7 space-y-3 text-sm text-zinc-600">
-            {[
-              "Hourly automated syncs, currency-unified, blended metrics",
-              "One normalized schema across every source",
-              "True cross-channel numbers you can stand behind",
-            ].map((item) => (
-              <li class="flex items-start gap-3">
-                <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <!-- source columns -->
-        <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-2xl border border-zinc-100 bg-zinc-50/70 p-5">
-            <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">Ad platforms</p>
-            <ul class="space-y-3">
-              {adPlatforms.map((p) => (
-                <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
-                  <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/70">
-                    <PlatformIcon platform={p.key} class="h-4 w-4" />
-                  </span>{p.name} Ads
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div class="rounded-2xl border border-zinc-100 bg-zinc-50/70 p-5">
-            <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-400">Stores &amp; data</p>
-            <ul class="space-y-3">
-              {stores.map((p) => (
-                <li class="flex items-center gap-3 text-sm font-medium text-zinc-700">
-                  <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/70">
-                    <PlatformIcon platform={p.key} class="h-4 w-4" />
-                  </span>{p.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===================== DATA FLOW (animated) ===================== -->
-  <section id="flow" class="relative overflow-hidden bg-zinc-50/60 px-6 py-24">
+  <section id="integrations" class="relative overflow-hidden bg-white px-6 py-24">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#efeafc,transparent)]"></div>
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">

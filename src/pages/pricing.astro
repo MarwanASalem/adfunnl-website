@@ -1,0 +1,507 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// Annual = monthly × 10 (two months free). Compute, never hardcode both.
+const ANNUAL_MONTHS = 10;
+
+type Plan = {
+  key: string;
+  name: string;
+  tagline: string;
+  egp: number; // monthly EGP
+  usd: number; // monthly USD
+  requestable: boolean;
+  popular?: boolean;
+  cta: string;
+  ctaHref: string;
+  highlightsLead?: string;
+  highlights: string[];
+};
+
+const plans: Plan[] = [
+  {
+    key: "free",
+    name: "Free",
+    tagline: "Try it — one client, the basics.",
+    egp: 0,
+    usd: 0,
+    requestable: false,
+    cta: "Start free",
+    ctaHref: `${APP_URL}/signup`,
+    highlights: [
+      "1 client workspace",
+      "3 ad accounts · 2 platforms",
+      "3 dashboards",
+      "12-hour data refresh",
+      "3 months of history",
+      "Creative calculator",
+    ],
+  },
+  {
+    key: "solo",
+    name: "Solo",
+    tagline: "Freelancers and single operators.",
+    egp: 990,
+    usd: 29,
+    requestable: true,
+    cta: "Start free trial",
+    ctaHref: `${APP_URL}/signup?plan=solo`,
+    highlightsLead: "Everything in Free, plus",
+    highlights: [
+      "3 clients · 15 ad accounts",
+      "All platforms · unlimited dashboards",
+      "1 year of history",
+      "Google Sheets export & annotations",
+      "Hook & Hold + Creative Fatigue",
+      "Live sharing, view-only links & PDF",
+      "Add-fund & billing alerts",
+    ],
+  },
+  {
+    key: "growth",
+    name: "Growth",
+    tagline: "Small teams — with the AI assistant.",
+    egp: 2490,
+    usd: 79,
+    requestable: true,
+    popular: true,
+    cta: "Start free trial",
+    ctaHref: `${APP_URL}/signup?plan=growth`,
+    highlightsLead: "Everything in Solo, plus",
+    highlights: [
+      "AI assistant (chat) + MCP access",
+      "1,000 AI credits / month",
+      "3 team seats",
+      "10 clients · 50 ad accounts",
+      "3 years of history",
+    ],
+  },
+  {
+    key: "agency",
+    name: "Agency",
+    tagline: "Agencies — most scale, hourly refresh.",
+    egp: 4990,
+    usd: 149,
+    requestable: true,
+    cta: "Start free trial",
+    ctaHref: `${APP_URL}/signup?plan=agency`,
+    highlightsLead: "Everything in Growth, plus",
+    highlights: [
+      "Hourly data refresh",
+      "3,000 AI credits / month",
+      "10 team seats",
+      "30 clients · 150 ad accounts",
+      "5 years of history",
+    ],
+  },
+];
+
+// AI credit top-up packs (Growth / Agency only).
+const creditPacks = [
+  { credits: "500",   egp: 490,  usd: 15 },
+  { credits: "1,500", egp: 1290, usd: 39,  popular: true },
+  { credits: "5,000", egp: 3490, usd: 105 },
+];
+
+// Comparison matrix. Boolean → check/dash; string → literal.
+type Row = { label: string; free: string | boolean; solo: string | boolean; growth: string | boolean; agency: string | boolean };
+const groups: { title: string; rows: Row[] }[] = [
+  {
+    title: "Limits",
+    rows: [
+      { label: "Team seats",        free: "1",        solo: "1",       growth: "3",       agency: "10" },
+      { label: "Client workspaces", free: "1",        solo: "3",       growth: "10",      agency: "30" },
+      { label: "Ad accounts",       free: "3",        solo: "15",      growth: "50",      agency: "150" },
+      { label: "Ad platforms",      free: "2",        solo: "All",     growth: "All",     agency: "All" },
+      { label: "Dashboards",        free: "3",        solo: "∞",       growth: "∞",       agency: "∞" },
+      { label: "Data refresh",      free: "12h",      solo: "12h",     growth: "12h",     agency: "Hourly" },
+      { label: "History retained",  free: "3 months", solo: "1 year",  growth: "3 years", agency: "5 years" },
+    ],
+  },
+  {
+    title: "Reporting & sharing",
+    rows: [
+      { label: "Google Sheets export",            free: false, solo: true, growth: true, agency: true },
+      { label: "Change annotations",              free: false, solo: true, growth: true, agency: true },
+      { label: "Live sharing (links + PDF)",      free: false, solo: true, growth: true, agency: true },
+      { label: "Add-fund reminder & billing alerts", free: false, solo: true, growth: true, agency: true },
+    ],
+  },
+  {
+    title: "Creative analysis",
+    rows: [
+      { label: "Creative calculator",  free: true,  solo: true, growth: true, agency: true },
+      { label: "Creative Hook & Hold", free: false, solo: true, growth: true, agency: true },
+      { label: "Creative Fatigue",     free: false, solo: true, growth: true, agency: true },
+    ],
+  },
+  {
+    title: "AI",
+    rows: [
+      { label: "AI assistant (chat)", free: false, solo: false, growth: true,    agency: true },
+      { label: "AI MCP access",       free: false, solo: false, growth: true,    agency: true },
+      { label: "AI credits / month",  free: "0",   solo: "0",   growth: "1,000", agency: "3,000" },
+    ],
+  },
+];
+
+const faqs = [
+  {
+    q: "Is there a free trial on paid plans?",
+    a: "Yes. Every paid plan comes with a full-access free trial — all features unlocked. When the trial ends it simply reverts to the Free plan, no charge unless you confirm payment.",
+  },
+  {
+    q: "How does billing work — is it instant checkout?",
+    a: "You request a plan and we enable it once payment is confirmed. It's a request → manual-approval flow rather than instant self-checkout, so you always talk to a real person before anything is charged.",
+  },
+  {
+    q: "How much do I save with annual billing?",
+    a: "Annual is billed at ten months for twelve — two months free. Switch the toggle above to see each plan's yearly price.",
+  },
+  {
+    q: "Which currencies can I pay in?",
+    a: "EGP and USD. EGP is our primary launch-market currency; USD is available for international teams. Use the currency switch above to compare.",
+  },
+  {
+    q: "What are AI credits and when do I need top-ups?",
+    a: "Growth and Agency include a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out — so you never lose what you paid for.",
+  },
+  {
+    q: "Which plan includes the AI assistant?",
+    a: "The AI assistant and MCP access start on Growth. Agency adds hourly data refresh, the largest seat and client caps, five years of history and 3,000 monthly AI credits.",
+  },
+];
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+---
+
+<Layout
+  title="Pricing"
+  description="AdFunnl pricing — Free, Solo, Growth and Agency plans for agencies and media buyers. Multi-platform ad analytics and shareable dashboards. Monthly or annual (two months free), in EGP or USD."
+>
+
+  <!-- Hero + toggles -->
+  <section class="relative overflow-hidden bg-white px-6 pt-14 pb-10 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
+    <!-- dotted-canvas brand backdrop -->
+    <div class="pointer-events-none absolute inset-0 -z-10 opacity-[0.5] [background-image:radial-gradient(#cfc6f6_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000,transparent)]"></div>
+
+    <div class="mx-auto max-w-6xl text-center">
+      <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Simple, honest pricing
+      </span>
+      <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl">
+        Every platform in one workspace — priced for how you grow
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
+        Multi-platform ad analytics and shareable dashboards for agencies and media buyers.
+        Start free, upgrade when your team does. Two months free on annual.
+      </p>
+
+      <!-- Toggles -->
+      <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+        <!-- Billing -->
+        <div id="billing-toggle" class="inline-flex items-center rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-sm font-semibold">
+          <button type="button" data-billing="monthly" class="rounded-lg px-4 py-2 transition">Monthly</button>
+          <button type="button" data-billing="annual"  class="rounded-lg px-4 py-2 transition">
+            Annual
+            <span class="ml-1.5 rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">2 months free</span>
+          </button>
+        </div>
+        <!-- Currency -->
+        <div id="currency-toggle" class="inline-flex items-center rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-sm font-semibold">
+          <button type="button" data-currency="egp" class="rounded-lg px-4 py-2 transition">EGP</button>
+          <button type="button" data-currency="usd" class="rounded-lg px-4 py-2 transition">USD</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plan cards -->
+  <section class="bg-white px-6 pb-6">
+    <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-4">
+      {plans.map((p) => (
+        <div
+          class={`relative flex flex-col rounded-2xl border p-6 ${
+            p.popular
+              ? "border-brand-300 bg-white shadow-2xl shadow-brand-900/10 ring-1 ring-brand-200"
+              : "border-zinc-200 bg-white"
+          }`}
+        >
+          {p.popular && (
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg shadow-brand-300">
+              Most popular
+            </span>
+          )}
+
+          <h3 class="font-display text-lg font-bold text-zinc-950">{p.name}</h3>
+          <p class="mt-1 min-h-[2.5rem] text-sm leading-snug text-zinc-500">{p.tagline}</p>
+
+          <!-- Price -->
+          <div class="mt-4">
+            {p.egp === 0 ? (
+              <p class="font-display text-4xl font-bold text-zinc-950">Free</p>
+            ) : (
+              <p class="flex items-baseline gap-1">
+                <span
+                  class="price-amount font-display text-4xl font-bold text-zinc-950"
+                  data-egp-m={p.egp}
+                  data-egp-y={p.egp * ANNUAL_MONTHS}
+                  data-usd-m={p.usd}
+                  data-usd-y={p.usd * ANNUAL_MONTHS}
+                >EGP {fmt(p.egp)}</span>
+                <span class="price-period text-sm font-medium text-zinc-400">/mo</span>
+              </p>
+            )}
+            <p class={`price-sub mt-1 min-h-[1.25rem] text-xs text-zinc-400 ${p.egp === 0 ? "" : ""}`}>
+              {p.egp === 0 ? "Free forever" : "Billed monthly"}
+            </p>
+          </div>
+
+          <a
+            href={p.ctaHref}
+            class={`mt-5 rounded-xl px-5 py-3 text-center text-sm font-semibold transition ${
+              p.popular
+                ? "bg-brand-600 text-white shadow-lg shadow-brand-200 hover:bg-brand-700"
+                : p.key === "free"
+                  ? "border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+            }`}
+          >
+            {p.cta}
+          </a>
+          {p.requestable && (
+            <p class="mt-2 text-center text-[11px] text-zinc-400">Request a plan — enabled once payment is confirmed</p>
+          )}
+
+          <!-- Highlights -->
+          <div class="mt-6 border-t border-zinc-100 pt-5">
+            {p.highlightsLead && (
+              <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">{p.highlightsLead}</p>
+            )}
+            <ul class="space-y-2.5 text-sm text-zinc-600">
+              {p.highlights.map((h) => (
+                <li class="flex gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="mx-auto mt-6 max-w-6xl text-center text-xs text-zinc-400">
+      All paid plans include a full-access free trial that reverts to Free when it ends.
+    </p>
+  </section>
+
+  <!-- Comparison table -->
+  <section class="bg-white px-6 py-20">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Compare every plan</h2>
+        <p class="mt-4 text-lg text-zinc-500">The exact limits and features each tier unlocks.</p>
+      </div>
+
+      <div class="mt-12 overflow-x-auto">
+        <table class="w-full min-w-[720px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-zinc-200">
+              <th class="w-2/5 py-4 pr-4 text-left font-display text-base font-bold text-zinc-950">Features</th>
+              {plans.map((p) => (
+                <th class={`px-3 py-4 text-center font-display text-base font-bold ${p.popular ? "text-brand-700" : "text-zinc-950"}`}>
+                  {p.name}
+                  {p.popular && <span class="ml-1 align-middle text-[10px] font-bold uppercase tracking-wide text-brand-500">★</span>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {groups.map((g) => (
+              <>
+                <tr>
+                  <td colspan={5} class="bg-zinc-50/70 px-0 py-2.5 pl-1 text-xs font-semibold uppercase tracking-widest text-zinc-400">{g.title}</td>
+                </tr>
+                {g.rows.map((r) => (
+                  <tr class="border-b border-zinc-100">
+                    <td class="py-3 pr-4 text-zinc-600">{r.label}</td>
+                    {[r.free, r.solo, r.growth, r.agency].map((v) => (
+                      <td class="px-3 py-3 text-center">
+                        {typeof v === "boolean" ? (
+                          v ? (
+                            <svg class="mx-auto h-4 w-4 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                          ) : (
+                            <span class="text-zinc-300">—</span>
+                          )
+                        ) : (
+                          <span class="font-medium text-zinc-800">{v}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI credit top-up packs -->
+  <section class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-20">
+    <div class="mx-auto max-w-5xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          Growth &amp; Agency
+        </span>
+        <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">AI credit top-ups</h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          Need more than your monthly allowance? Add credits any time. They carry over and are
+          only spent once your monthly allowance runs out.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-5 sm:grid-cols-3">
+        {creditPacks.map((pack) => (
+          <div class={`relative rounded-2xl border bg-white p-7 text-center ${pack.popular ? "border-brand-300 ring-1 ring-brand-200" : "border-zinc-200"}`}>
+            {pack.popular && (
+              <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                Best value
+              </span>
+            )}
+            <p class="font-display text-3xl font-bold text-zinc-950">{pack.credits}</p>
+            <p class="mt-1 text-sm text-zinc-500">credits</p>
+            <p
+              class="pack-price mt-4 font-display text-xl font-bold text-brand-700"
+              data-egp={pack.egp}
+              data-usd={pack.usd}
+            >EGP {fmt(pack.egp)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Enterprise strip -->
+  <section class="bg-white px-6 py-16">
+    <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-8 py-12 sm:px-12">
+      <div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+        <div class="max-w-xl">
+          <h2 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">Enterprise</h2>
+          <p class="mt-3 text-base leading-relaxed text-zinc-400">
+            Custom limits, guided onboarding and priority support for larger agencies and
+            in-house teams. Tell us what you need and we'll shape a plan around it.
+          </p>
+        </div>
+        <a
+          href={`mailto:${SUPPORT_EMAIL}?subject=AdFunnl%20Enterprise%20enquiry`}
+          class="shrink-0 rounded-xl bg-white px-7 py-3.5 text-center text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
+        >
+          Contact sales
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white px-6 pb-24">
+    <div class="mx-auto max-w-3xl">
+      <div class="text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Questions, answered</h2>
+      </div>
+      <div class="mt-12 divide-y divide-zinc-100 border-y border-zinc-100">
+        {faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left">
+              <span class="font-display text-base font-semibold text-zinc-900">{f.q}</span>
+              <svg class="h-5 w-5 shrink-0 text-zinc-400 transition-transform duration-200 group-open:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <p class="mt-3 pr-9 text-sm leading-relaxed text-zinc-500">{f.a}</p>
+          </details>
+        ))}
+      </div>
+
+      <div class="mt-12 text-center">
+        <p class="text-sm text-zinc-500">Still deciding?</p>
+        <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href={`${APP_URL}/signup`} class="w-full rounded-xl bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">Start free</a>
+          <a href={`${APP_URL}/demo`} class="w-full rounded-xl border border-zinc-200 bg-white px-7 py-3.5 text-center text-base font-semibold text-zinc-700 transition hover:bg-zinc-50 sm:w-auto">Book a demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      const ANNUAL_MONTHS = 10;
+      let billing = "monthly"; // monthly | annual
+      let currency = "egp";    // egp | usd
+
+      const nf = (n) => n.toLocaleString("en-US");
+      const sym = () => (currency === "egp" ? "EGP " : "$");
+
+      function setSeg(container, attr, value) {
+        container.querySelectorAll("button").forEach((btn) => {
+          const active = btn.dataset[attr] === value;
+          btn.classList.toggle("bg-white", active);
+          btn.classList.toggle("text-zinc-900", active);
+          btn.classList.toggle("shadow-sm", active);
+          btn.classList.toggle("text-zinc-500", !active);
+        });
+      }
+
+      function render() {
+        // Plan card prices
+        document.querySelectorAll(".price-amount").forEach((el) => {
+          const monthly = Number(el.dataset[currency === "egp" ? "egpM" : "usdM"]);
+          const yearly = Number(el.dataset[currency === "egp" ? "egpY" : "usdY"]);
+          const card = el.closest("[class*='rounded-2xl']");
+          const sub = card ? card.querySelector(".price-sub") : null;
+          if (billing === "monthly") {
+            el.textContent = sym() + nf(monthly);
+            if (sub) sub.textContent = "Billed monthly";
+          } else {
+            const effMonthly = Math.round(yearly / 12);
+            el.textContent = sym() + nf(effMonthly);
+            if (sub) sub.textContent = sym() + nf(yearly) + " billed yearly · 2 months free";
+          }
+        });
+
+        // Credit pack prices
+        document.querySelectorAll(".pack-price").forEach((el) => {
+          const v = Number(el.dataset[currency]);
+          el.textContent = sym() + nf(v);
+        });
+      }
+
+      const billingToggle = document.getElementById("billing-toggle");
+      const currencyToggle = document.getElementById("currency-toggle");
+
+      billingToggle.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        billing = btn.dataset.billing;
+        setSeg(billingToggle, "billing", billing);
+        render();
+      });
+      currencyToggle.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        currency = btn.dataset.currency;
+        setSeg(currencyToggle, "currency", currency);
+        render();
+      });
+
+      setSeg(billingToggle, "billing", billing);
+      setSeg(currencyToggle, "currency", currency);
+      render();
+    })();
+  </script>
+
+</Layout>

@@ -19,12 +19,18 @@ These are not preferences. A copy change that breaks one of these is wrong.
    Oxford comma. Personas are "Account Managers" and "Team Leads", exactly.
    Never coin an insider term the reader has not been given: no "the book".
    The audience is **media buyers** and **performance marketers**, always
-   written in full. Never shorten to "buyers": the whole product is built for
-   media buyers, and "buyer" reads as a purchaser.
+   written in full. Never drop the "media": on its own the short form reads as
+   somebody making a purchase. The hook enforces this.
 4. **CTAs are fixed and plain.** The allowed set is `Try it now`, `Start free`
    (both to `${APP_URL}/signup`) and `Book a demo` (to `${APP_URL}/demo`). No
    witty or metaphorical button text.
-5. **Never claim a measured result.** No invented case studies, customer names,
+5. **Never claim a capability without checking `docs/what-ships.md`.** That file
+   is the list of what the site may claim, and it has a "Do not claim" section
+   for things that sound true and are not. This repo and the app repo are not
+   connected, so nothing tells you when the app changes. If a capability is not
+   in that file, verify it in the app repo at `../AdFunnl` and add it with the
+   date, or leave it off the site.
+6. **Never claim a measured result.** No invented case studies, customer names,
    testimonials or percentages. Demo numbers must be anonymised. Do not write a
    scenario so specific it needs a disclaimer underneath, and do not add the
    disclaimer instead of fixing the scenario.

@@ -141,7 +141,7 @@ const objections = [
   },
   {
     q: "My clients expect a report that looks like theirs.",
-    a: "Reports carry the client's logo and their reporting currency, and go out as a live view-only link or a clean PDF. Scheduled email digests cover the clients who want it pushed to them.",
+    a: "Reports carry the client's logo and their reporting currency, and go out as a live view-only link or a clean PDF. For a client who runs their own BI, there is a Looker Studio connection to the same data.",
   },
 ];
 
@@ -158,14 +158,15 @@ const creativePoints = [
 ];
 
 // ── The client deliverable ────────────────────────────────────────────
-// Verified: client logo on the dashboard, unified reporting currency, live
-// view-only share links, frozen snapshots, PDF export, scheduled digests.
-// NOT verified and NOT to be claimed: agency white-labelling (backlog only).
+// Every line here is checked against docs/what-ships.md. Two things that
+// sound true and are not: agency white-labelling (backlog), and emailed
+// report digests (the app sends no report emails at all, only account and
+// billing ones). Do not reintroduce either.
 const reportPoints = [
   "The client's own logo and reporting currency on the report they open",
   "A live view-only link, so what they see is current whenever they look",
   "A clean paginated PDF for the clients who still want a document",
-  "Scheduled email digests for the ones who want it pushed to them",
+  "A Looker Studio connection for the clients who want it in their own BI tool",
   "A frozen snapshot of anything you sent, so last month cannot move",
 ];
 

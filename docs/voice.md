@@ -19,10 +19,14 @@ disagree, `CLAUDE.md` wins.
 - Fixed terminology: blended ROAS; "Meta, TikTok, Snapchat and Google" in that
   order with no Oxford comma; personas are "Account Managers" and "Team Leads".
 - The audience is **media buyers** and **performance marketers**, written in
-  full every time. "Buyers" on its own is wrong: the entire app is built for
-  media buyers, and the short form reads as somebody making a purchase.
+  full every time. Dropping the "media" is wrong: the entire app is built for
+  media buyers, and the short form reads as somebody making a purchase. The
+  hook enforces this, which is why this line does not spell out the short form.
 - CTAs are plain: `Try it now`, `Start free`, `Book a demo`. Nothing else.
 - No invented numbers, customers, testimonials or percentages.
+- Capability claims come from `what-ships.md`, including its "Do not claim"
+  list. The app repo is not connected to this one, so nothing warns you when
+  the product changes underneath the copy.
 
 ## 2. Banned words and constructions
 
@@ -222,8 +226,8 @@ answer none.
 
 Worked example, Team Leads:
 
-- "My buyers already have their own reporting." Yes, and no two of them report
-  the same way, which is the problem you are living with.
+- "My media buyers already have their own reporting." Yes, and no two of them
+  report the same way, which is the problem you are living with.
 - "Setting this up will eat a week." One account properly, saved as a template,
   cloned. The thinking happens once.
 - "The numbers will not match the ad platforms." Published methodology, data
@@ -234,20 +238,18 @@ Worked example, Team Leads:
 Keep each persona's pains and objections in that page's frontmatter comments,
 so a later edit does not flatten them back into feature copy.
 
-### Capability truth, per persona
+### Capability truth
 
-Verify before writing. What is true today, from the app repo:
+**Read `what-ships.md` before writing any claim.** That file is the single
+source, and it is not duplicated here on purpose: an earlier version of this
+section already drifted and was claiming emailed report digests, which the app
+does not have.
 
-- Grouping is **Workspace, then Client, then Ad Account**. There is **no media
-  buyer dimension**, and every member sees every client. A team lead's "see
-  each buyer's accounts" is real pain but not a shipped view. Write it as the
-  pain the multiplication causes, never as a feature.
-- Creative analysis is deep and real: ranked creatives by chosen metric with
-  the thumbnails in the page, ad fatigue across platforms, hook and hold
-  retention for video. Ad level is Meta and TikTok.
-- Reports: live view-only share links, frozen snapshots, PDF export, email
-  digests, and the **client's** logo on the dashboard. Agency white-labelling
-  is backlog, not shipped, so do not promise "your agency's branding".
+The one thing worth repeating, because it is the trap on every persona page:
+there is no media-buyer dimension in the product. Grouping is Workspace, then
+Client, then Ad Account, and every member sees every client. A team lead
+wanting each person's own accounts on one screen is real pain and not a shipped
+view. Write it as pain.
 
 ## 4. Page brief: required before drafting
 

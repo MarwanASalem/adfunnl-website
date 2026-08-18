@@ -7,9 +7,16 @@ description: Write or revise user-visible copy for this site. Use for any new pa
 
 ## Step 1: load the rules
 
-Read `docs/voice.md` in full before writing a single line. Read `CLAUDE.md` if
-it is not already in context. Do not skip this on the grounds that the request
-is small. A one-line hero change is exactly where voice drift starts.
+Read `docs/voice.md` in full before writing a single line, and read
+`docs/what-ships.md` before writing any sentence that says what the product can
+do, including its "Do not claim" table. Read `CLAUDE.md` if it is not already in
+context. Do not skip this on the grounds that the request is small. A one-line
+hero change is exactly where voice drift starts, and a single adjective is where
+a false capability claim gets in.
+
+If the copy needs a capability that is not in `what-ships.md`, stop and verify it
+in the app repo at `../AdFunnl`, then add it to `what-ships.md` with today's
+date. Never write the claim first and check later.
 
 ## Step 2: get the brief
 

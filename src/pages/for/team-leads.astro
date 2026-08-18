@@ -60,82 +60,124 @@ const lanes = [
   },
 ];
 
-// ── Pain points ───────────────────────────────────────────────────────
-// The subject of this section is the manual labour of producing a report.
-// `when` is the recognition hook: a moment in that job, not a category.
-// Each `when` is referenced by an `answers` label in `changes` below, so the
-// two lists stay paired. Rename one, rename the other.
-const moments = [
+// ── This page's pains and objections ──────────────────────────────────
+// Kept here on purpose (see R11 to R13 in docs/voice.md): the page is built
+// from this list, so a later edit cannot quietly turn it back into a feature
+// tour. A team lead's pains, in their order of size:
+//   1. Accountable for accounts they cannot see without asking someone.
+//   2. The multiplication: buyers x clients x platforms x currencies.
+//   3. Creative decisions made blind across thousands of running ads.
+//   4. The client deliverable eats a day and is stale on arrival.
+// Their objections, answered in the `objections` array below.
+//
+// CAPABILITY WARNING: the app groups Workspace > Client > Ad Account. There is
+// no media buyer dimension, and every member sees every client. "See each
+// buyer's accounts" is pain to describe, never a feature to claim.
+
+// The multiplication, as the reader's own arithmetic.
+const multiplication = [
+  { n: "5", label: "media buyers", note: "each with their own way of reporting" },
+  { n: "4", label: "clients each", note: "and none of them wait for the first of the month" },
+  { n: "4", label: "platforms per client", note: "different column names, different attribution windows" },
+  { n: "2", label: "currencies", note: "converted in someone's head, unchecked" },
+];
+
+// ── Us versus them (R12) ──────────────────────────────────────────────
+// Rows are jobs a team lead does, not features. The old column has to read
+// as a fair description of the reader's week, because it is theirs.
+const compare = [
   {
-    when: "Four tabs, four date pickers",
-    body: "Every platform names things differently and counts a conversion over its own window. Getting them to agree is somebody's morning, and it happens again next week.",
+    job: "Seeing how the whole roster is doing",
+    old: "Ask each buyer, wait, then reconcile what they send you.",
+    now: "Open one screen. Every client, blended, already current.",
   },
   {
-    when: "The conversion in your head",
-    body: "One account bills in dirhams and buys in riyals. The rate lives in someone's memory or in a corner of a sheet, and nobody has checked it in months.",
+    job: "Comparing platforms against each other",
+    old: "Four tabs, four date pickers, four sets of column names.",
+    now: "Meta, TikTok, Snapchat and Google on one line, with blended totals underneath.",
   },
   {
-    when: "Assembling the deliverable",
-    body: "The numbers exist. Turning them into something a client can read is copy, paste, screenshot, format, repeat. None of it is judgment, and all of it takes a day.",
+    job: "Two currencies in one roster",
+    old: "Somebody converts by hand and nobody checks the cell.",
+    now: "Everything unified into your reporting currency at the right rate.",
   },
   {
-    when: "Old on arrival",
-    body: "A report is true for the hour it was made in. The first question the client asks about it is almost always about now.",
+    job: "Tying spend to actual revenue",
+    old: "The ad platforms say one thing, Shopify says another.",
+    now: "Store revenue sits beside ad spend, down to product level.",
   },
   {
-    when: "The quiet account",
-    body: "Nothing is on fire, so nobody brings it up. It has been drifting gently for three weeks and the first person to notice will be the client.",
+    job: "Finding the winner among thousands of ads",
+    old: "Scroll each platform separately and go on what you remember.",
+    now: "Every creative ranked on the metric you choose, thumbnails in the page.",
   },
   {
-    when: "Account number nine",
-    body: "Reporting gets rebuilt from scratch, slightly differently, by whoever set it up. No two accounts report the same way.",
+    job: "Answering a one-off question",
+    old: "Rebuild a view, or put a buyer on it for an hour.",
+    now: "Ask the assistant in plain English and get the answer with its data shown.",
+  },
+  {
+    job: "Getting the deliverable to the client",
+    old: "Assemble it, format it, send a PDF that ages immediately.",
+    now: "A live link with their logo on it, or a PDF when they insist.",
   },
 ];
 
-// ── What changes ──────────────────────────────────────────────────────
-// Every claim maps to a shipped capability. Do not add one that doesn't.
-const changes = [
+// ── Objections (R13) ──────────────────────────────────────────────────
+// What a team lead says to talk themselves out of starting. Answer honestly
+// or delete the row: a weak answer is worse than no section.
+const objections = [
   {
-    title: "Every platform on one line",
-    body: "Meta, TikTok, Snapchat and Google side by side: spend, purchases, ROAS and revenue, with blended totals underneath. The comparison stops being a spreadsheet job.",
-    answers: "Answers the four tabs",
-    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/>`,
+    q: "My buyers already do their own reporting.",
+    a: "They do, and no two of them do it the same way. That is the part that costs you: nothing is comparable, so every roster-level question turns into a round of asking. One template applied across every account makes the comparison free.",
   },
   {
-    title: "Current before you open it",
-    body: "Everything syncs hourly, so the screen is live rather than a picture of last Friday. You're not asking anyone to refresh anything first.",
-    answers: "Answers old on arrival",
-    icon: `<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>`,
+    q: "Setting this up will eat a week I don't have.",
+    a: "Connect one client, build the view the way you actually want an account read, then save it as a template. Every account after that starts from it. The thinking happens once.",
   },
   {
-    title: "One currency, every account",
-    body: "Spend and revenue are unified into a single currency, so an account that bills in dirhams and one that bills in riyals are actually comparable without anyone doing the rate in their head.",
-    answers: "Answers the conversion in your head",
-    icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
+    q: "The numbers won't match the ad platforms.",
+    a: "Every metric has a published methodology page showing how it is calculated. Data logs and sync times show when each account last updated, and a snapshot freezes exactly what you sent so it cannot shift under you later.",
   },
   {
-    title: "The trajectory, not just today",
-    body: "Add a “vs. prior” comparison to any tile and see month-over-month movement inline. A quiet account that has been sliding for three weeks looks like what it is.",
-    answers: "Answers the quiet account",
-    icon: `<path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/>`,
-  },
-  {
-    title: "One template, every account",
-    body: "Save a layout as an app-wide template so every account reports the same way, and a new client is set up in seconds rather than over a fortnight.",
-    answers: "Answers account number nine",
-    icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
-  },
-  {
-    title: "Ask it, instead of building it",
-    body: "The assistant sits on every page. Ask which accounts slipped this week, or for a recap of TikTok against Meta this month, and the answer streams back showing the data it used. It also runs as an MCP server, so Claude or ChatGPT can query the same numbers.",
-    answers: "Answers assembling the deliverable",
-    icon: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>`,
+    q: "My clients expect a report that looks like theirs.",
+    a: "Reports carry the client's logo and their reporting currency, and go out as a live view-only link or a clean PDF. Scheduled email digests cover the clients who want it pushed to them.",
   },
 ];
+
+// ── Creative analysis ─────────────────────────────────────────────────
+// Verified against the app: BestCreatives (ranked by chosen metric, with
+// synced thumbnails), Ad Fatigue across platforms, Hook & Hold for video.
+// Ad-level data is Meta and TikTok.
+const creativePoints = [
+  "Every running ad ranked on the metric you pick, so the top and the bottom of the list are both one glance away",
+  "The creative itself in the page, not an ad id you have to go and look up",
+  "Meta and TikTok ads side by side, rather than one platform's opinion at a time",
+  "Hook and hold retention for video, showing where viewers actually leave",
+  "Ad fatigue tracked across platforms, so you cut before performance does",
+];
+
+// ── The client deliverable ────────────────────────────────────────────
+// Verified: client logo on the dashboard, unified reporting currency, live
+// view-only share links, frozen snapshots, PDF export, scheduled digests.
+// NOT verified and NOT to be claimed: agency white-labelling (backlog only).
+const reportPoints = [
+  "The client's own logo and reporting currency on the report they open",
+  "A live view-only link, so what they see is current whenever they look",
+  "A clean paginated PDF for the clients who still want a document",
+  "Scheduled email digests for the ones who want it pushed to them",
+  "A frozen snapshot of anything you sent, so last month cannot move",
+];
+
+// The old `changes` feature grid lived here. It was removed deliberately: the
+// comparison table above and the two sections below now carry the same claims
+// against a job the reader recognises, rather than as a tour of capabilities
+// (R11). Anything true that the grid carried alone moved into `alsoOnScreen`.
 
 // ── Breadth: the rest of what's on the same screen ────────────────────
 const alsoOnScreen = [
-  { label: "Creative winners", note: "Ranked creative, plus hook-and-hold retention on video" },
+  { label: "Synced hourly", note: "The screen is current before anyone opens it" },
+  { label: "Versus prior period", note: "Month-over-month movement inline on any tile" },
   { label: "Product-level ROAS", note: "Store revenue attributed down to product and category" },
   { label: "Geo maps & funnels", note: "Performance by region, and step-by-step drop-off" },
   { label: "Change annotations", note: "What changed, and the date it changed on" },
@@ -171,7 +213,7 @@ const control = [
 
 <Layout
   title="For Team Leads"
-  description="Know where every account stands in one look. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto a single live screen: one currency, one template, one version everyone reads."
+  description="Stop asking your team for the overview. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto one live screen, in one currency."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -194,13 +236,13 @@ const control = [
         </span>
 
         <h1 class="mt-5 font-display text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-6xl">
-          Know where the account<br class="hidden sm:block" /> stands in one look.
+          You answer for numbers<br class="hidden sm:block" /> you have to ask for.
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          Spend, purchases and ROAS across every platform, blended into one
-          currency on a single live screen, instead of a report that was already
-          out of date when you sent it.
+          Every client your team runs, every platform under it, blended into one
+          currency on a single live screen. So the overview is something you open,
+          not something you request.
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -272,17 +314,39 @@ const control = [
     </div>
   </section>
 
-  <!-- ===================== DATA FLOW (animated) =====================
-       Placed high on purpose: it explains where the screen above comes
-       from before the page asks the reader to believe anything else. -->
-  <DataFlow
-    sectionClass="relative overflow-hidden border-b border-zinc-100 bg-white px-6 py-24"
-    heading="Every platform in, one live view out"
-    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
-    outLabel="One screen"
-    outSub="for the whole team"
-    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
-  />
+  <!-- ========================= THE MULTIPLICATION =========================
+       First section after the hero on purpose: the size of the problem before
+       anything about the product (R11). -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Nobody has the overview, because it multiplies
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          You are accountable for performance you cannot see without asking
+          somebody to go and assemble it. Here is why it is never just a question.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
+        {multiplication.map((m) => (
+          <div class="reveal bg-white p-7 sm:p-8">
+            <p class="font-display text-4xl font-bold tracking-tight text-brand-600">{m.n}</p>
+            <p class="mt-2 font-semibold text-zinc-900">{m.label}</p>
+            <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">{m.note}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="reveal mx-auto mt-8 max-w-2xl text-center leading-relaxed text-zinc-600">
+        That is eighty places to look before anyone has had an opinion about any
+        of them, and two of those places disagree about what a conversion is. The
+        overview is not slow because your team is slow. It is slow because it
+        multiplies.
+      </p>
+    </div>
+  </section>
 
   <!-- ================== THE SIGNATURE: ONE ROUTINE, TWICE ================== -->
   <section class="border-b border-zinc-200/70 bg-cream px-6 py-24">
@@ -361,60 +425,109 @@ const control = [
     </div>
   </section>
 
-  <!-- ============================ PAIN POINTS ============================ -->
-  <section class="bg-white px-6 py-24">
+  <!-- ======================= US VERSUS THEM (TABLE) ======================= -->
+  <section id="what-changes" class="scroll-mt-20 border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Every report is still assembled by hand
+          The same job, both ways
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Gathering the same numbers off four platforms, reconciling them and
-          formatting the result is manual labour that a tool should be doing.
-          None of it is the judgment you hired anyone for.
+          Every row is something you already do this week. The left column is
+          how it goes now.
         </p>
       </div>
 
-      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2">
-        {moments.map((m) => (
-          <div class="reveal bg-white p-7 transition hover:bg-zinc-50/80 sm:p-8">
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-600">{m.when}</p>
-            <p class="mt-3 leading-relaxed text-zinc-700">{m.body}</p>
+      <div class="reveal mt-14 overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+        <!-- column headers (desktop) -->
+        <div class="hidden border-b border-zinc-200 bg-zinc-50/80 md:grid md:grid-cols-[1.1fr_1fr_1.2fr]">
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">The job</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">Without AdFunnl</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-brand-600">With AdFunnl</p>
+        </div>
+
+        {compare.map((row, i) => (
+          <div class:list={[
+            "grid gap-y-3 px-6 py-6 md:grid-cols-[1.1fr_1fr_1.2fr] md:items-start md:gap-x-6",
+            i > 0 && "border-t border-zinc-100",
+          ]}>
+            <p class="font-semibold leading-snug text-zinc-900">{row.job}</p>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-500">{row.old}</p>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm font-medium leading-relaxed text-zinc-800">{row.now}</p>
+            </div>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- =========================== WHAT CHANGES =========================== -->
-  <section id="what-changes" class="scroll-mt-20 border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+  <!-- ========================= CREATIVE DECISIONS ========================= -->
+  <section class="bg-white px-6 py-24">
     <div class="mx-auto max-w-6xl">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">What changes</p>
-        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          The overview stops being something you assemble
-        </h2>
-        <p class="mt-4 text-lg text-zinc-500">
-          Not a better spreadsheet. A screen that was already correct before
-          anyone went looking for it.
-        </p>
-      </div>
+      <div class="reveal grid items-start gap-12 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            Nobody can hold three thousand ads in their head
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            Across a roster this size there are thousands of creatives running at
+            once. Which ones deserve more budget is the highest-value call your
+            team makes all week, and it is usually made from memory, one platform
+            at a time.
+          </p>
+          <p class="mt-4 leading-relaxed text-zinc-600">
+            Creative analysis lives inside AdFunnl, on the same data as everything
+            else, so the answer is a sort rather than an investigation.
+          </p>
+        </div>
 
-      <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {changes.map((c) => (
-          <div class="reveal flex flex-col rounded-2xl border border-zinc-200/70 bg-white p-7 transition hover:border-brand-200 hover:shadow-sm">
-            <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
-            </div>
-            <h3 class="font-display text-lg font-bold text-zinc-950">{c.title}</h3>
-            <p class="mt-2.5 flex-1 text-sm leading-relaxed text-zinc-500">{c.body}</p>
-            <p class="mt-5 text-[11px] font-semibold uppercase tracking-widest text-brand-600">{c.answers}</p>
-          </div>
-        ))}
+        <ul class="space-y-4">
+          {creativePoints.map((c) => (
+            <li class="reveal flex items-start gap-3 rounded-xl border border-zinc-200/70 bg-white p-4">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-700">{c}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== THE CLIENT DELIVERABLE ======================== -->
+  <section class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal grid items-start gap-12 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            The report is the part the client judges you on
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            They do not see the work, the testing or the restructure. They see
+            the document that arrives. When that document takes a day to build
+            and is out of date by the time it lands, you are being judged on your
+            weakest artefact.
+          </p>
+        </div>
+
+        <ul class="space-y-4">
+          {reportPoints.map((r) => (
+            <li class="reveal flex items-start gap-3 rounded-xl border border-zinc-200/70 bg-white p-4">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-700">{r}</p>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <!-- Breadth: the page shouldn't read as one feature -->
-      <div class="reveal mt-6 rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
+      <div class="reveal mt-12 rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
         <p class="text-sm font-semibold text-zinc-900">And on the same canvas</p>
         <div class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
           {alsoOnScreen.map((a) => (
@@ -430,6 +543,38 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ============================= OBJECTIONS ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-4xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          What you're probably thinking
+        </h2>
+      </div>
+
+      <div class="mt-14 space-y-4">
+        {objections.map((o) => (
+          <div class="reveal rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
+            <p class="font-display text-lg font-bold leading-snug text-zinc-950">{o.q}</p>
+            <p class="mt-3 leading-relaxed text-zinc-600">{o.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DATA FLOW (animated) =====================
+       Placed after the objections on purpose: how it works only matters
+       once the reader has accepted that the problem is worth solving (R11). -->
+  <DataFlow
+    sectionClass="relative overflow-hidden border-y border-zinc-100 bg-white px-6 py-24"
+    heading="Every platform in, one live view out"
+    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
+    outLabel="One screen"
+    outSub="for the whole team"
+    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
+  />
 
   <!-- ========================== ROLLING IT OUT ========================== -->
   <section class="bg-white px-6 py-24">

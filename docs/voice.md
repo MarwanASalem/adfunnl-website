@@ -184,6 +184,68 @@ RULE: Do not open by inviting the reader to think about their worst account.
       brand or client you run.
 ```
 
+### R11. Lead with their pain, not our features
+
+The standing complaint about this site: it is written about what AdFunnl has,
+not about what the reader's week costs them. A feature grid never overcame an
+objection.
+
+```
+WAS:  Six capability cards titled "Every platform on one line",
+      "Current before you open it", "One template, every account"...
+NOW:  The pain first, in the reader's own arithmetic, then the contrast.
+RULE: Open a section with the cost the reader already feels. Mention the
+      capability only as the thing that removes it, and only once.
+```
+
+Practical test for any persona page: could this section exist on a competitor's
+site with the product name swapped? If yes, it is feature copy.
+
+### R12. Us versus them, side by side
+
+Wanted more, everywhere it fits. Two columns, the usual way against AdFunnl,
+one row per job the reader actually does. The comparison does the arguing, so
+the prose does not have to.
+
+Keep the rows about jobs ("finding the winning creative"), not features
+("creative gallery"). Never strawman the old way: it should read as a fair
+description of what the reader does today, because they do it.
+
+### R13. Name the objection, then answer it
+
+Before drafting a persona page, write down what this person would say to talk
+themselves out of signing up, and answer it in the copy. The current pages
+answer none.
+
+Worked example, Team Leads:
+
+- "My buyers already have their own reporting." Yes, and no two of them report
+  the same way, which is the problem you are living with.
+- "Setting this up will eat a week." One account properly, saved as a template,
+  cloned. The thinking happens once.
+- "The numbers will not match the ad platforms." Published methodology, data
+  logs, sync times, and frozen snapshots of anything you sent.
+- "My clients expect their own branded report." Their logo, their currency,
+  live link or PDF.
+
+Keep each persona's pains and objections in that page's frontmatter comments,
+so a later edit does not flatten them back into feature copy.
+
+### Capability truth, per persona
+
+Verify before writing. What is true today, from the app repo:
+
+- Grouping is **Workspace, then Client, then Ad Account**. There is **no media
+  buyer dimension**, and every member sees every client. A team lead's "see
+  each buyer's accounts" is real pain but not a shipped view. Write it as the
+  pain the multiplication causes, never as a feature.
+- Creative analysis is deep and real: ranked creatives by chosen metric with
+  the thumbnails in the page, ad fatigue across platforms, hook and hold
+  retention for video. Ad level is Meta and TikTok.
+- Reports: live view-only share links, frozen snapshots, PDF export, email
+  digests, and the **client's** logo on the dashboard. Agency white-labelling
+  is backlog, not shipped, so do not promise "your agency's branding".
+
 ## 4. Page brief: required before drafting
 
 No page copy gets drafted without these three answers. If they are missing,

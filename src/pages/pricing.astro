@@ -25,7 +25,7 @@ const plans: Plan[] = [
   {
     key: "free",
     name: "Free",
-    tagline: "Try it — one client, the basics.",
+    tagline: "Try it: one client, the basics.",
     egp: 0,
     usd: 0,
     requestable: false,
@@ -63,7 +63,7 @@ const plans: Plan[] = [
   {
     key: "growth",
     name: "Growth",
-    tagline: "Small teams — with the AI assistant.",
+    tagline: "Small teams, with the AI assistant.",
     egp: 2490,
     usd: 79,
     requestable: true,
@@ -82,7 +82,7 @@ const plans: Plan[] = [
   {
     key: "agency",
     name: "Agency",
-    tagline: "Agencies — most scale, hourly refresh.",
+    tagline: "Agencies: most scale, hourly refresh.",
     egp: 4990,
     usd: 149,
     requestable: true,
@@ -151,15 +151,15 @@ const groups: { title: string; rows: Row[] }[] = [
 const faqs = [
   {
     q: "Is there a free trial on paid plans?",
-    a: "Yes. Every paid plan comes with a full-access free trial — all features unlocked. When the trial ends it simply reverts to the Free plan, no charge unless you confirm payment.",
+    a: "Yes. Every paid plan comes with a full-access free trial with all features unlocked. When the trial ends it simply reverts to the Free plan, no charge unless you confirm payment.",
   },
   {
-    q: "How does billing work — is it instant checkout?",
+    q: "How does billing work, and is it instant checkout?",
     a: "You request a plan and we enable it once payment is confirmed. It's a request → manual-approval flow rather than instant self-checkout, so you always talk to a real person before anything is charged.",
   },
   {
     q: "How much do I save with annual billing?",
-    a: "Annual is billed at ten months for twelve — two months free. Switch the toggle above to see each plan's yearly price.",
+    a: "Annual is billed at ten months for twelve, so two months free. Switch the toggle above to see each plan's yearly price.",
   },
   {
     q: "Which currencies can I pay in?",
@@ -167,7 +167,7 @@ const faqs = [
   },
   {
     q: "What are AI credits and when do I need top-ups?",
-    a: "Growth and Agency include a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out — so you never lose what you paid for.",
+    a: "Growth and Agency include a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out, so you never lose what you paid for.",
   },
   {
     q: "Which plan includes the AI assistant?",
@@ -180,7 +180,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 
 <Layout
   title="Pricing"
-  description="AdFunnl pricing — Free, Solo, Growth and Agency plans for agencies and media buyers. Multi-platform ad analytics and shareable dashboards. Monthly or annual (two months free), in EGP or USD."
+  description="AdFunnl pricing: Free, Solo, Growth and Agency plans for agencies and media buyers. Multi-platform ad analytics and shareable dashboards. Monthly or annual (two months free), in EGP or USD."
 >
 
   <!-- Hero + toggles -->
@@ -195,7 +195,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
         Simple, honest pricing
       </span>
       <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl">
-        Every platform in one workspace — priced for how you grow
+        Every platform in one workspace, priced for how you grow
       </h1>
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
         Multi-platform ad analytics and shareable dashboards for agencies and media buyers.
@@ -275,7 +275,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
             {p.cta}
           </a>
           {p.requestable && (
-            <p class="mt-2 text-center text-[11px] text-zinc-400">Request a plan — enabled once payment is confirmed</p>
+            <p class="mt-2 text-center text-[11px] text-zinc-400">Request a plan, enabled once payment is confirmed</p>
           )}
 
           <!-- Highlights -->
@@ -336,7 +336,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
                           v ? (
                             <svg class="mx-auto h-4 w-4 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                           ) : (
-                            <span class="text-zinc-300">—</span>
+                            <span class="text-zinc-300">-</span>
                           )
                         ) : (
                           <span class="font-medium text-zinc-800">{v}</span>

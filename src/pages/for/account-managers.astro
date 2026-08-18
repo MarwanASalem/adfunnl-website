@@ -6,7 +6,7 @@ const APP_URL = "https://app.adfunnl.com";
 
 // ── The stakeholder pressure map ──────────────────────────────────────
 // Four people, four different asks, four different places they arrive from.
-// `channel` carries the vernacular of the job — it does most of the
+// `channel` carries the vernacular of the job, and it does most of the
 // recognition work, so keep it concrete when adding to this list.
 const stakeholders = [
   {
@@ -40,7 +40,7 @@ const stakeholders = [
 ];
 
 // ── Pain points ───────────────────────────────────────────────────────
-// `when` is the recognition hook — a moment, not a category.
+// `when` is the recognition hook: a moment, not a category.
 const moments = [
   {
     when: "First week of the month",
@@ -79,7 +79,7 @@ const changes = [
   },
   {
     title: "Reports that build themselves",
-    body: "Build the template once; it auto-fills from live data each month. Export to PDF when a client insists on a document — but the document is a byproduct, not the work.",
+    body: "Build the template once; it auto-fills from live data each month. Export to PDF when a client insists on a document, but the document is a byproduct, not the work.",
     answers: "Answers the deck",
     icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>`,
   },
@@ -232,7 +232,7 @@ const control = [
         </h2>
         <p class="mt-4 text-lg leading-relaxed text-zinc-400">
           Not one audience with one question. Four people, arriving from four
-          different places, expecting four different things — and all four
+          different places, expecting four different things, and all four
           of them arrive at you.
         </p>
       </div>
@@ -292,8 +292,8 @@ const control = [
             <div class="mx-auto max-w-3xl rounded-2xl border border-brand-400/40 bg-brand-600 p-7 shadow-2xl shadow-brand-900/40 sm:p-9">
               <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">And you</h3>
               <p class="mt-4 text-lg leading-relaxed text-brand-50">
-                You're translating between all four — from four different places,
-                in four different formats — and you're the one holding the version
+                You're translating between all four, from four different places,
+                in four different formats, and you're the one holding the version
                 that has to be correct.
               </p>
             </div>
@@ -342,7 +342,7 @@ const control = [
           One answer that satisfies all four
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Not a faster way to do the same assembly work — a setup where the
+          Not a faster way to do the same assembly work, but a setup where the
           assembly stops being yours to do.
         </p>
       </div>
@@ -364,7 +364,7 @@ const control = [
 
   <!-- ===================== DATA FLOW (animated) =====================
        Same diagram as the homepage; the framing and the terminal node are
-       rewritten for this persona — the payoff is that the client self-serves
+       rewritten for this persona: the payoff is that the client self-serves
        rather than that a report gets delivered. -->
   <DataFlow
     sectionClass="relative overflow-hidden border-y border-zinc-100 bg-zinc-50/60 px-6 py-24"
@@ -411,8 +411,8 @@ const control = [
         <div class="min-w-0">
           <h2 class="font-display text-lg font-bold text-zinc-950">Where control stands today</h2>
           <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-            Changing campaign status and budgets from inside the dashboard — without
-            opening the ad platform — is live for Meta and TikTok. Snapchat and Google
+            Changing campaign status and budgets from inside the dashboard, without
+            opening the ad platform, is live for Meta and TikTok. Snapchat and Google
             are in progress. Reporting works across all four today.
           </p>
           <ul class="mt-5 flex flex-wrap gap-2">
@@ -443,7 +443,7 @@ const control = [
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Pick one client — ideally a demanding one
+          Pick one client, ideally a demanding one
         </h2>
         <p class="mt-5 text-lg leading-relaxed text-zinc-400">
           We'll set their dashboard up together. If in two weeks reporting is
@@ -469,11 +469,11 @@ const control = [
     .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
     .js .reveal.in { opacity: 1; transform: none; }
 
-    /* Hero entrance — CSS-only so above-the-fold content never depends on JS */
+    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
     @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
     .hero-video { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
 
-    /* Stakeholder spine — pressure travelling down toward "you" */
+    /* Stakeholder spine: pressure travelling down toward "you" */
     .spine-pulse {
       position: absolute;
       left: 0;
@@ -535,7 +535,7 @@ const control = [
           iconOn?.classList.toggle("hidden", !on);
           iconOff?.classList.toggle("hidden", on);
           // Native controls carry their own volume button, and ours would sit
-          // on top of them — so it only exists while they're hidden.
+          // on top of them, so it only exists while they're hidden.
           soundBtn.classList.toggle("hidden", video.controls);
         };
 

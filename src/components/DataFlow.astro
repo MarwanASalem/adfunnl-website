@@ -3,7 +3,7 @@
 //
 // Shared by the homepage and the "AdFunnl For" persona pages. The diagram is
 // identical everywhere; only the framing copy changes, so every user-visible
-// string is a prop. Keep the geometry here — if the picture needs to change,
+// string is a prop. Keep the geometry here: if the picture needs to change,
 // it should change in one place.
 interface Props {
   /** Section wrapper */
@@ -13,7 +13,7 @@ interface Props {
   eyebrow?: string;
   heading?: string;
   body?: string;
-  /** Terminal node — the persona-specific payoff */
+  /** Terminal node: the persona-specific payoff */
   outLabel?: string;
   outSub?: string;
   /** Accessible description of the whole picture */
@@ -37,7 +37,7 @@ const {
   uid = Math.random().toString(36).slice(2, 8),
 } = Astro.props;
 
-// Scoped ids for <defs> — see the `uid` prop.
+// Scoped ids for <defs>, see the `uid` prop.
 const ID = {
   particle: `flowParticle-${uid}`,
   glow: `flowGlow-${uid}`,

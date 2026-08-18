@@ -18,6 +18,9 @@ disagree, `CLAUDE.md` wins.
 - No banned filler (section 2).
 - Fixed terminology: blended ROAS; "Meta, TikTok, Snapchat and Google" in that
   order with no Oxford comma; personas are "Account Managers" and "Team Leads".
+- The audience is **media buyers** and **performance marketers**, written in
+  full every time. "Buyers" on its own is wrong: the entire app is built for
+  media buyers, and the short form reads as somebody making a purchase.
 - CTAs are plain: `Try it now`, `Start free`, `Book a demo`. Nothing else.
 - No invented numbers, customers, testimonials or percentages.
 

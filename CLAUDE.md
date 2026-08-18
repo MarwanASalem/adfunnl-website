@@ -18,6 +18,9 @@ These are not preferences. A copy change that breaks one of these is wrong.
    Platforms are written "Meta, TikTok, Snapchat and Google", in that order, no
    Oxford comma. Personas are "Account Managers" and "Team Leads", exactly.
    Never coin an insider term the reader has not been given: no "the book".
+   The audience is **media buyers** and **performance marketers**, always
+   written in full. Never shorten to "buyers": the whole product is built for
+   media buyers, and "buyer" reads as a purchaser.
 4. **CTAs are fixed and plain.** The allowed set is `Try it now`, `Start free`
    (both to `${APP_URL}/signup`) and `Book a demo` (to `${APP_URL}/demo`). No
    witty or metaphorical button text.

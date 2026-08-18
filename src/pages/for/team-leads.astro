@@ -65,14 +65,14 @@ const lanes = [
 // from this list, so a later edit cannot quietly turn it back into a feature
 // tour. A team lead's pains, in their order of size:
 //   1. Accountable for accounts they cannot see without asking someone.
-//   2. The multiplication: buyers x clients x platforms x currencies.
+//   2. The multiplication: media buyers x clients x platforms x currencies.
 //   3. Creative decisions made blind across thousands of running ads.
 //   4. The client deliverable eats a day and is stale on arrival.
 // Their objections, answered in the `objections` array below.
 //
 // CAPABILITY WARNING: the app groups Workspace > Client > Ad Account. There is
 // no media buyer dimension, and every member sees every client. "See each
-// buyer's accounts" is pain to describe, never a feature to claim.
+// media buyer's own accounts" is pain to describe, never a feature to claim.
 
 // The multiplication, as the reader's own arithmetic.
 const multiplication = [
@@ -88,7 +88,7 @@ const multiplication = [
 const compare = [
   {
     job: "Seeing how the whole roster is doing",
-    old: "Ask each buyer, wait, then reconcile what they send you.",
+    old: "Ask each media buyer, wait, then reconcile what they send you.",
     now: "Open one screen. Every client, blended, already current.",
   },
   {
@@ -113,7 +113,7 @@ const compare = [
   },
   {
     job: "Answering a one-off question",
-    old: "Rebuild a view, or put a buyer on it for an hour.",
+    old: "Rebuild a view, or put a media buyer on it for an hour.",
     now: "Ask the assistant in plain English and get the answer with its data shown.",
   },
   {
@@ -128,7 +128,7 @@ const compare = [
 // or delete the row: a weak answer is worse than no section.
 const objections = [
   {
-    q: "My buyers already do their own reporting.",
+    q: "My media buyers already do their own reporting.",
     a: "They do, and no two of them do it the same way. That is the part that costs you: nothing is comparable, so every roster-level question turns into a round of asking. One template applied across every account makes the comparison free.",
   },
   {
@@ -198,7 +198,7 @@ const rollout = [
   },
   {
     step: "Add the team, then the clients",
-    body: "Invite buyers as Editors and clients as Viewers. Live share links mean client questions stop landing on your team as interruptions.",
+    body: "Invite media buyers as Editors and clients as Viewers. Live share links mean client questions stop landing on your team as interruptions.",
   },
 ];
 
@@ -212,8 +212,8 @@ const control = [
 ---
 
 <Layout
-  title="For Team Leads"
-  description="Stop asking your team for the overview. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto one live screen, in one currency."
+  title="Managing a team of media buyers is hard"
+  description="Several media buyers, several accounts each, several platforms under every account, and you answer for all of it. AdFunnl puts the whole picture on one live screen."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -236,13 +236,19 @@ const control = [
         </span>
 
         <h1 class="mt-5 font-display text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-6xl">
-          You answer for numbers<br class="hidden sm:block" /> you have to ask for.
+          Managing a team of<br class="hidden sm:block" /> media buyers is hard.
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          Every client your team runs, every platform under it, blended into one
-          currency on a single live screen. So the overview is something you open,
-          not something you request.
+          Each media buyer holds several accounts. Each account runs on several
+          platforms, in more than one currency, and you are the one who answers
+          for how all of it is performing. Seeing it today means opening it one
+          account at a time, and that is most of a morning gone before you have
+          made a single decision.
+        </p>
+
+        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white">
+          AdFunnl puts the whole picture on one live screen.
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -570,7 +576,7 @@ const control = [
   <DataFlow
     sectionClass="relative overflow-hidden border-y border-zinc-100 bg-white px-6 py-24"
     heading="Every platform in, one live view out"
-    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
+    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the media buyer, you and the client are all reading the same screen."
     outLabel="One screen"
     outSub="for the whole team"
     alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."

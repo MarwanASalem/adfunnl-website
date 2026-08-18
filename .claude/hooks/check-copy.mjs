@@ -90,6 +90,15 @@ lines.forEach((line, i) => {
     problems.push(`${n}: en dash. Use "to" for ranges, or a plain hyphen.\n    ${line.trim()}`);
   }
 
+  // "buyer(s)" is only ever correct as "media buyer(s)". Catching the bare
+  // form is the whole point, so match it and require the qualifier.
+  for (const m of line.matchAll(/\bbuyers?\b/gi)) {
+    const before = line.slice(0, m.index).toLowerCase();
+    if (!/\bmedia\s+$/.test(before)) {
+      problems.push(`${n}: "${m[0]}" without "media". The audience is media buyers.\n    ${line.trim()}`);
+    }
+  }
+
   for (const word of BANNED) {
     // Word-boundary match for single words, plain substring for phrases.
     const pattern = /\s/.test(word)

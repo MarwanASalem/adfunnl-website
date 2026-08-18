@@ -4,56 +4,57 @@ import DataFlow from "../../components/DataFlow.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-// ── Hero ops board ────────────────────────────────────────────────────
+// ── Hero board: the bird's-eye view ───────────────────────────────────
 // Anonymized demo data (no real client or account), same convention as the
-// homepage mocks. Verdicts use Pulse's real vocabulary: Scale / Hold / Cut.
-const clients = [
-  { code: "AC", name: "Acme Cosmetics", flags: 2 },
-  { code: "NM", name: "Nadia Modest",   flags: 0 },
-  { code: "HK", name: "Hikma Home",     flags: 1 },
-  { code: "ZR", name: "Zahra Retail",   flags: 0 },
-  { code: "OS", name: "Oud & Scent",    flags: 0 },
+// homepage mocks. Kept internally consistent: the blended row is the sum of
+// the platform rows, so nobody can check the arithmetic and find it wrong.
+const platforms = [
+  { key: "meta",     name: "Meta",     spend: 18824, purchases: 223, revenue: 108976, color: "#0082FB" },
+  { key: "snapchat", name: "Snapchat", spend: 7081,  purchases: 120, revenue: 60906,  color: "#F5C518" },
+  { key: "tiktok",   name: "TikTok",   spend: 3767,  purchases: 43,  revenue: 21653,  color: "#111111" },
+  { key: "google",   name: "Google",   spend: 417,   purchases: 20,  revenue: 10256,  color: "#EA4335" },
 ];
 
-const pulseRows = [
-  { name: "Retargeting · Broad",     spend: "12,430", roas: "5.2×", verdict: "scale" },
-  { name: "Prospecting · LAL 3%",    spend: "18,900", roas: "2.8×", verdict: "hold"  },
-  { name: "Cold · Interest stack",   spend: "9,240",  roas: "1.4×", verdict: "cut"   },
+const totalSpend     = platforms.reduce((a, p) => a + p.spend, 0);
+const totalPurchases = platforms.reduce((a, p) => a + p.purchases, 0);
+const totalRevenue   = platforms.reduce((a, p) => a + p.revenue, 0);
+const blendedRoas    = totalRevenue / totalSpend;
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+
+const blended = [
+  { label: "Spend",     value: `SAR ${fmt(totalSpend)}` },
+  { label: "Purchases", value: fmt(totalPurchases) },
+  { label: "Revenue",   value: `SAR ${fmt(totalRevenue)}` },
+  { label: "Blended ROAS", value: `${blendedRoas.toFixed(2)}×`, strong: true },
 ];
 
-const VERDICT = {
-  scale: { label: "Scale", cls: "border-emerald-200 bg-emerald-50 text-emerald-700" },
-  hold:  { label: "Hold",  cls: "border-amber-200 bg-amber-50 text-amber-700" },
-  cut:   { label: "Cut",   cls: "border-rose-200 bg-rose-50 text-rose-700" },
-};
-
-// ── The signature: one incident, tracked twice ────────────────────────
-// The gap between the two elapsed times is the whole argument. Timestamps
-// are a scenario, not a measured result — the section says so out loud.
+// ── The signature: one routine, two ways ──────────────────────────────
+// The gap between the elapsed badges is the argument. Timings are a
+// scenario, not a measured result — the section says so out loud.
 const lanes = [
   {
     key: "today",
-    eyebrow: "How it goes today",
-    elapsed: "2 days, 8 hours",
+    eyebrow: "How the number gets made today",
+    elapsed: "About 90 minutes. Every time.",
     tone: "bad",
     stops: [
-      { t: "Tue 09:10", s: "CPA starts climbing on the campaign you approved scaling last week." },
-      { t: "Tue – Wed", s: "Your buyer is heads-down in another account. Nothing surfaces, because nothing is watching." },
-      { t: "Thu 14:20", s: "The client emails you: “is something off this week?”" },
-      { t: "Thu 17:00", s: "You have an answer — and a conversation about why it took two days to get one." },
+      { t: "09:00", s: "Meta Ads Manager. Set the date range, pick the columns, export." },
+      { t: "09:25", s: "TikTok, then Snapchat, then Google. Different column names, different attribution windows, and one of them reports in another currency." },
+      { t: "10:05", s: "Paste four exports into the sheet and repair the formulas that broke when a column moved." },
+      { t: "10:30", s: "A number. It was true at nine o'clock, and someone is about to ask for yesterday as well." },
     ],
   },
   {
-    key: "watched",
-    eyebrow: "How it goes with Pulse watching",
-    elapsed: "1 hour, 20 minutes",
+    key: "adfunnl",
+    eyebrow: "How it goes with AdFunnl",
+    elapsed: "About 2 minutes.",
     tone: "good",
     stops: [
-      { t: "Tue 09:10", s: "The same thing starts. Nothing about the problem has changed." },
-      { t: "Tue 09:40", s: "Pulse applies your rules and flips the campaign's verdict to Cut." },
-      { t: "Tue 10:05", s: "You message the buyer with the number already in front of you." },
-      { t: "Tue 10:30", s: "Handled — before it ever reached the client." },
+      { t: "09:00", s: "Open one screen. Spend, purchases and ROAS across all four platforms are already there, blended and in one currency." },
+      { t: "09:02", s: "You're past the number and onto the decision — which is the part you were actually hired for." },
     ],
+    note: "There is no step three. The screen was current before you opened it.",
   },
 ];
 
@@ -65,16 +66,16 @@ const moments = [
     body: "Half the status meeting is people reading numbers aloud that everyone in the room could have read for themselves.",
   },
   {
+    when: "Four tabs, four date pickers",
+    body: "Every platform names things differently and counts a conversion over a different window. Getting them to agree is a person's morning, and it happens again next week.",
+  },
+  {
+    when: "The exchange rate",
+    body: "One account bills in dirhams and buys in riyals. Somebody is converting by hand in a corner of the sheet, and nobody has checked that cell in months.",
+  },
+  {
     when: "The quiet account",
     body: "Nothing is on fire, so nobody brings it up. It has been drifting gently for three weeks and the first person to notice will be the client.",
-  },
-  {
-    when: "Every time you ask",
-    body: "Getting a straight answer on an account costs somebody an hour of focus. So you ask less often than you should, and find out later than you want.",
-  },
-  {
-    when: "A card expires",
-    body: "A connection drops and the reports go quiet. You find out when a number finally looks wrong, not when it broke.",
   },
   {
     when: "Account number nine",
@@ -90,48 +91,58 @@ const moments = [
 // Every claim maps to a shipped capability. Do not add one that doesn't.
 const changes = [
   {
-    title: "Something is watching at 3am",
-    body: "Pulse watches every account around the clock, applies your rules, and flags campaigns with clear verdicts on ROAS, spend and CTR. You review flags instead of hunting for them.",
+    title: "Every platform on one line",
+    body: "Meta, TikTok, Snapchat and Google side by side — spend, purchases, ROAS and revenue — with blended totals underneath. The comparison stops being a spreadsheet job.",
+    answers: "Answers the four tabs",
+    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/>`,
+  },
+  {
+    title: "Current before you open it",
+    body: "Everything syncs hourly, so the screen is live rather than a picture of last Friday. You're not asking anyone to refresh anything first.",
+    answers: "Answers the stale export",
+    icon: `<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>`,
+  },
+  {
+    title: "One currency across the book",
+    body: "Spend and revenue are unified into a single currency, so an account that bills in dirhams and one that bills in riyals are actually comparable without a conversion cell.",
+    answers: "Answers the exchange rate",
+    icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
+  },
+  {
+    title: "The trajectory, not just today",
+    body: "Add a “vs. prior” comparison to any tile and see month-over-month movement inline. A quiet account that has been sliding for three weeks looks like what it is.",
     answers: "Answers the quiet account",
-    icon: `<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`,
-  },
-  {
-    title: "You hear when a connection breaks",
-    body: "Funding and connection alerts catch a failed card or an expired token before your reports go quiet — instead of a fortnight later when the numbers look wrong.",
-    answers: "Answers the silent failure",
-    icon: `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>`,
-  },
-  {
-    title: "Every account, one login",
-    body: "Every connection, report and metric is scoped to the right client with server-enforced isolation. Switch between accounts in a click instead of keeping fourteen tabs open.",
-    answers: "Answers the asking tax",
-    icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
+    icon: `<path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/>`,
   },
   {
     title: "One template, every account",
     body: "Save a layout as an app-wide template so every account in the book reports the same way — and a new client is set up in seconds rather than over a fortnight.",
     answers: "Answers account number nine",
-    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>`,
+    icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
   },
   {
-    title: "Roles, not exports",
-    body: "Invite analysts, account managers and clients with a single invite and assign Admin, Editor or Viewer. Everyone works from the same live numbers, so there's no version for you to arbitrate.",
-    answers: "Answers the version conflict",
-    icon: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+    title: "Numbers you can defend",
+    body: "A published Methodology page shows how every metric is calculated. Data Logs and Sync Jobs show when it last updated. Snapshots freeze a deliverable so it can't shift under you.",
+    answers: "Answers the awkward question",
+    icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>`,
   },
-  {
-    title: "Context that outlives the tab",
-    body: "Annotations pin what changed to the date it happened — a budget shift, a new creative, a landing-page test — so an account stays readable when the person who ran it is away.",
-    answers: "Answers the handover",
-    icon: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,
-  },
+];
+
+// ── Breadth: the rest of what's on the same screen ────────────────────
+const alsoOnScreen = [
+  { label: "Creative winners", note: "Ranked creative, plus hook-and-hold retention on video" },
+  { label: "Product-level ROAS", note: "Store revenue attributed down to product and category" },
+  { label: "Geo maps & funnels", note: "Performance by region, and step-by-step drop-off" },
+  { label: "Change annotations", note: "What changed, and the date it changed on" },
+  { label: "Live links & PDF", note: "View-only client links, or a document when they insist" },
+  { label: "Arabic, right-to-left", note: "Fully localized, charts included" },
 ];
 
 // ── Rolling it out ────────────────────────────────────────────────────
 const rollout = [
   {
     step: "Set up one account properly",
-    body: "Build the dashboard the way you actually want an account reported, then save it as a template. This is the only part that takes real thought.",
+    body: "Build the view the way you actually want an account read, then save it as a template. This is the only part that takes real thought.",
   },
   {
     step: "Clone it across the book",
@@ -154,7 +165,7 @@ const control = [
 
 <Layout
   title="For Team Leads"
-  description="You shouldn't find out from the client. AdFunnl gives team leads Pulse monitoring across every account, one template for the whole book, and roles so everyone works from the same live numbers."
+  description="Know where every account stands in one look. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto a single live screen — one currency, one template, one version everyone reads."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -177,12 +188,13 @@ const control = [
         </span>
 
         <h1 class="mt-5 font-display text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-6xl">
-          You shouldn't find out<br class="hidden sm:block" /> from the client.
+          Know where the account<br class="hidden sm:block" /> stands in one look.
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          You're accountable for accounts you don't open every day. Right now the
-          only way to know how one is doing is to interrupt the person who does.
+          Spend, purchases and ROAS across every platform — blended, live, on a
+          single screen. Not four exports and a spreadsheet somebody rebuilds
+          every Monday.
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -197,7 +209,7 @@ const control = [
         </div>
       </div>
 
-      <!-- Ops board: client switcher + the Pulse verdicts for the selected account -->
+      <!-- The bird's-eye board: blended totals first, contributions underneath -->
       <div class="hero-board mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50">
         <!-- app top bar -->
         <div class="flex items-center gap-2 border-b border-zinc-100 px-3.5 py-2.5">
@@ -207,75 +219,77 @@ const control = [
             Acme Cosmetics
             <svg class="h-3 w-3 text-zinc-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
           </span>
-          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
-            <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse on
+          <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
+          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Live
           </span>
         </div>
 
-        <div class="grid gap-px bg-zinc-100 sm:grid-cols-[minmax(0,13rem)_1fr]">
-          <!-- client rail -->
-          <div class="bg-white p-3">
-            <p class="px-1.5 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Accounts</p>
-            <ul class="space-y-0.5">
-              {clients.map((c, i) => (
-                <li>
-                  <span class:list={[
-                    "flex items-center gap-2 rounded-lg px-1.5 py-1.5 text-[11px] font-medium",
-                    i === 0 ? "bg-brand-50 text-brand-800" : "text-zinc-600",
-                  ]}>
-                    <span class:list={[
-                      "flex h-5 w-5 shrink-0 items-center justify-center rounded text-[8px] font-bold",
-                      i === 0 ? "bg-brand-600 text-white" : "bg-zinc-100 text-zinc-500",
-                    ]}>{c.code}</span>
-                    <span class="min-w-0 flex-1 truncate">{c.name}</span>
-                    {c.flags > 0 && (
-                      <span class="board-flag inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white" title={`${c.flags} Pulse flags`}>{c.flags}</span>
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <!-- blended totals: the glance -->
+        <div class="grid grid-cols-2 gap-px bg-zinc-100 sm:grid-cols-4">
+          {blended.map((b) => (
+            <div class:list={["p-3.5 sm:p-4", b.strong ? "bg-brand-600" : "bg-white"]}>
+              <p class:list={["text-[9px] font-semibold uppercase tracking-widest", b.strong ? "text-brand-200" : "text-zinc-400"]}>{b.label}</p>
+              <p class:list={["mt-1 font-display text-lg font-bold tracking-tight sm:text-xl", b.strong ? "text-white" : "text-zinc-900"]}>{b.value}</p>
+            </div>
+          ))}
+        </div>
 
-          <!-- Pulse verdicts for the selected account -->
-          <div class="bg-white p-3.5">
-            <div class="mb-2.5 flex items-center justify-between">
-              <p class="text-[11px] font-semibold text-zinc-700">Pulse · active campaigns</p>
-              <p class="hidden text-[10px] text-zinc-400 sm:block">Rule: ROAS ≥ 3.0 to scale</p>
-            </div>
-            <div class="space-y-1.5">
-              {pulseRows.map((r) => (
-                <div class="flex items-center gap-3 rounded-lg border border-zinc-100 px-2.5 py-2">
-                  <span class="min-w-0 flex-1 truncate text-[11px] font-medium text-zinc-700">{r.name}</span>
-                  <span class="hidden shrink-0 text-[11px] tabular-nums text-zinc-400 sm:block">SAR {r.spend}</span>
-                  <span class:list={[
-                    "shrink-0 text-[11px] font-bold tabular-nums",
-                    r.verdict === "cut" ? "text-rose-600" : r.verdict === "hold" ? "text-amber-600" : "text-emerald-600",
-                  ]}>{r.roas}</span>
-                  <span class:list={["shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold", VERDICT[r.verdict].cls]}>
-                    {VERDICT[r.verdict].label}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <p class="mt-2.5 text-[10px] text-zinc-400">Flagged without anyone opening the account.</p>
+        <!-- per-platform contribution -->
+        <div class="border-t border-zinc-100 p-3.5 sm:p-4">
+          <div class="mb-2.5 flex items-center justify-between">
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Where it came from</p>
+            <p class="hidden text-[10px] text-zinc-400 sm:block">Share of spend</p>
           </div>
+          <div class="space-y-1.5">
+            {platforms.map((p) => {
+              const share = (p.spend / totalSpend) * 100;
+              const roas = p.revenue / p.spend;
+              return (
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                  <span class="w-14 shrink-0 text-[11px] font-semibold text-zinc-700 sm:w-16">{p.name}</span>
+                  <span class="h-2 flex-1 overflow-hidden rounded-full bg-zinc-100">
+                    <!-- max() keeps a genuinely tiny share (Google, ~1%) reading as a
+                         small bar rather than a rendering artefact -->
+                    <span class="board-bar block h-full rounded-full" style={`width:max(${share.toFixed(1)}%, 8px);background:${p.color}`}></span>
+                  </span>
+                  <span class="w-16 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:w-20">SAR {fmt(p.spend)}</span>
+                  <span class="hidden w-12 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:block">{p.purchases}</span>
+                  <span class="w-12 shrink-0 text-right text-[11px] font-bold tabular-nums text-zinc-900">{roas.toFixed(1)}×</span>
+                </div>
+              );
+            })}
+          </div>
+          <p class="mt-3 text-[10px] text-zinc-400">Four platforms, one currency, no export.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================== THE SIGNATURE: ONE INCIDENT, TWICE ================== -->
+  <!-- ===================== DATA FLOW (animated) =====================
+       Placed high on purpose: it explains where the screen above comes
+       from before the page asks the reader to believe anything else. -->
+  <DataFlow
+    sectionClass="relative overflow-hidden border-b border-zinc-100 bg-white px-6 py-24"
+    eyebrow="Where that screen comes from"
+    heading="Every platform in. One live view out."
+    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time — so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
+    outLabel="One screen"
+    outSub="for the whole team"
+    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
+  />
+
+  <!-- ================== THE SIGNATURE: ONE ROUTINE, TWICE ================== -->
   <section class="border-b border-zinc-200/70 bg-cream px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The same week, twice</p>
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The same morning, twice</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          The problem is identical. Only the finding-out changes.
+          One number. Four platforms. Two very different mornings.
         </h2>
         <p class="mt-4 text-lg text-zinc-600">
-          Nothing here fixes a campaign for you — your buyer still does that.
-          What changes is how long it takes anyone to know.
+          You want the same thing either way: what we spent, what it bought, and
+          what it returned — across every platform, as of now.
         </p>
       </div>
 
@@ -329,12 +343,18 @@ const control = [
                 </li>
               ))}
             </ol>
+
+            {lane.note && (
+              <p class="mt-6 border-t border-zinc-100 pt-5 text-sm italic leading-relaxed text-zinc-400">
+                {lane.note}
+              </p>
+            )}
           </div>
         ))}
       </div>
 
       <p class="reveal mt-8 text-center text-sm text-zinc-500">
-        An ordinary sequence, not a case study — the timings are illustrative.
+        An ordinary morning, not a case study — the timings are illustrative.
       </p>
     </div>
   </section>
@@ -370,11 +390,11 @@ const control = [
       <div class="reveal mx-auto max-w-2xl text-center">
         <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">What changes</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          The overview stops being something you request
+          The overview stops being something you assemble
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Not a better meeting. A setup where the meeting has less to cover,
-          because the screen already covered it.
+          Not a better spreadsheet. A screen that was already correct before
+          anyone went looking for it.
         </p>
       </div>
 
@@ -390,23 +410,27 @@ const control = [
           </div>
         ))}
       </div>
+
+      <!-- Breadth: the page shouldn't read as one feature -->
+      <div class="reveal mt-6 rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
+        <p class="text-sm font-semibold text-zinc-900">And on the same canvas</p>
+        <div class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+          {alsoOnScreen.map((a) => (
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-snug text-zinc-600">
+                <span class="font-semibold text-zinc-900">{a.label}</span>
+                <span class="mt-0.5 block text-xs text-zinc-500">{a.note}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ===================== DATA FLOW (animated) =====================
-       Same diagram as the homepage, reframed: for a team lead the payoff is
-       that one screen serves the buyer, the lead and the client at once. -->
-  <DataFlow
-    eyebrow="Where the overview comes from"
-    heading="Every account on the same plumbing"
-    body="Each account's platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two people are actually comparable — and the buyer, you and the client are all reading one screen."
-    outLabel="One screen"
-    outSub="for the whole team"
-    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
-  />
-
   <!-- ========================== ROLLING IT OUT ========================== -->
-  <section class="border-t border-zinc-100 bg-white px-6 py-24">
+  <section class="bg-white px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">Rolling it out</p>
@@ -443,7 +467,7 @@ const control = [
           <p class="mt-2 text-sm leading-relaxed text-zinc-500">
             Changing campaign status and budgets from inside the dashboard — without
             opening the ad platform — is live for Meta and TikTok. Snapchat and Google
-            are in progress. Monitoring and reporting work across all four today.
+            are in progress. Reporting works across all four today.
           </p>
           <ul class="mt-5 flex flex-wrap gap-2">
             {control.map((c) => (
@@ -476,9 +500,9 @@ const control = [
           Start with the account you're least sure about
         </h2>
         <p class="mt-5 text-lg leading-relaxed text-zinc-400">
-          We'll set it up with you and turn Pulse on. If in two weeks you're
-          hearing about problems from your screen instead of your client, roll it
-          out to the rest of the book. If not, you've lost an afternoon.
+          We'll put its platforms on one screen with you. If in two weeks your
+          Monday starts with a screen instead of four exports, roll it out to the
+          rest of the book. If not, you've lost an afternoon.
         </p>
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href={`${APP_URL}/demo`}
@@ -503,22 +527,18 @@ const control = [
     @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
     .hero-board { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
 
+    /* Contribution bars fill on load — the glance assembling itself */
+    @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .board-bar { transform-origin: left; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
+
     /* Ambient live indicator */
     @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
     .live-dot { animation: livePulse 1.6s ease-in-out infinite; }
 
-    /* A flag arriving on an account you weren't looking at */
-    @keyframes flagIn {
-      0%, 55%  { opacity: 0; transform: scale(.4); }
-      65%      { opacity: 1; transform: scale(1.25); }
-      72%, 100%{ opacity: 1; transform: scale(1); }
-    }
-    .board-flag { animation: flagIn 5s cubic-bezier(.34,1.56,.64,1) infinite; }
-
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-board, .live-dot, .board-flag { animation: none !important; transition: none !important; }
+      .reveal, .hero-board, .live-dot, .board-bar { animation: none !important; transition: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
-      .board-flag { opacity: 1; transform: none; }
+      .board-bar { transform: none; }
     }
   </style>
 

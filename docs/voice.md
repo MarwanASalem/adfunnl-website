@@ -41,6 +41,12 @@ sentence that collapses without it was never saying anything.
 the three-beat rhythm belongs, which is exactly why body copy must not imitate
 it (see R2).
 
+It lives in the footer, above the descriptive line, in `Layout.astro`. Use it
+sparingly elsewhere and only where it is structurally true rather than
+decorative. Repeating it on every page would spend it. It is deliberately not
+in the data-flow diagram: the picture already is connect, visualize, share, and
+labelling it as such would be saying the same thing twice (R1).
+
 ### R1. One heading per idea
 
 Never stack a kicker and a headline that say the same thing. Pick the one that

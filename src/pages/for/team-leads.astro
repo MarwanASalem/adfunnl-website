@@ -1,0 +1,536 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import DataFlow from "../../components/DataFlow.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// ── Hero ops board ────────────────────────────────────────────────────
+// Anonymized demo data (no real client or account), same convention as the
+// homepage mocks. Verdicts use Pulse's real vocabulary: Scale / Hold / Cut.
+const clients = [
+  { code: "AC", name: "Acme Cosmetics", flags: 2 },
+  { code: "NM", name: "Nadia Modest",   flags: 0 },
+  { code: "HK", name: "Hikma Home",     flags: 1 },
+  { code: "ZR", name: "Zahra Retail",   flags: 0 },
+  { code: "OS", name: "Oud & Scent",    flags: 0 },
+];
+
+const pulseRows = [
+  { name: "Retargeting · Broad",     spend: "12,430", roas: "5.2×", verdict: "scale" },
+  { name: "Prospecting · LAL 3%",    spend: "18,900", roas: "2.8×", verdict: "hold"  },
+  { name: "Cold · Interest stack",   spend: "9,240",  roas: "1.4×", verdict: "cut"   },
+];
+
+const VERDICT = {
+  scale: { label: "Scale", cls: "border-emerald-200 bg-emerald-50 text-emerald-700" },
+  hold:  { label: "Hold",  cls: "border-amber-200 bg-amber-50 text-amber-700" },
+  cut:   { label: "Cut",   cls: "border-rose-200 bg-rose-50 text-rose-700" },
+};
+
+// ── The signature: one incident, tracked twice ────────────────────────
+// The gap between the two elapsed times is the whole argument. Timestamps
+// are a scenario, not a measured result — the section says so out loud.
+const lanes = [
+  {
+    key: "today",
+    eyebrow: "How it goes today",
+    elapsed: "2 days, 8 hours",
+    tone: "bad",
+    stops: [
+      { t: "Tue 09:10", s: "CPA starts climbing on the campaign you approved scaling last week." },
+      { t: "Tue – Wed", s: "Your buyer is heads-down in another account. Nothing surfaces, because nothing is watching." },
+      { t: "Thu 14:20", s: "The client emails you: “is something off this week?”" },
+      { t: "Thu 17:00", s: "You have an answer — and a conversation about why it took two days to get one." },
+    ],
+  },
+  {
+    key: "watched",
+    eyebrow: "How it goes with Pulse watching",
+    elapsed: "1 hour, 20 minutes",
+    tone: "good",
+    stops: [
+      { t: "Tue 09:10", s: "The same thing starts. Nothing about the problem has changed." },
+      { t: "Tue 09:40", s: "Pulse applies your rules and flips the campaign's verdict to Cut." },
+      { t: "Tue 10:05", s: "You message the buyer with the number already in front of you." },
+      { t: "Tue 10:30", s: "Handled — before it ever reached the client." },
+    ],
+  },
+];
+
+// ── Pain points ───────────────────────────────────────────────────────
+// `when` is the recognition hook: a moment, not a category.
+const moments = [
+  {
+    when: "Monday, 10:00",
+    body: "Half the status meeting is people reading numbers aloud that everyone in the room could have read for themselves.",
+  },
+  {
+    when: "The quiet account",
+    body: "Nothing is on fire, so nobody brings it up. It has been drifting gently for three weeks and the first person to notice will be the client.",
+  },
+  {
+    when: "Every time you ask",
+    body: "Getting a straight answer on an account costs somebody an hour of focus. So you ask less often than you should, and find out later than you want.",
+  },
+  {
+    when: "A card expires",
+    body: "A connection drops and the reports go quiet. You find out when a number finally looks wrong, not when it broke.",
+  },
+  {
+    when: "Account number nine",
+    body: "Reporting gets rebuilt from scratch, slightly differently, by whoever set it up. No two accounts in your book report the same way.",
+  },
+  {
+    when: "Someone's on leave",
+    body: "Their accounts go dark for a week, because the context lived in their head and their browser tabs rather than anywhere you can open.",
+  },
+];
+
+// ── What changes ──────────────────────────────────────────────────────
+// Every claim maps to a shipped capability. Do not add one that doesn't.
+const changes = [
+  {
+    title: "Something is watching at 3am",
+    body: "Pulse watches every account around the clock, applies your rules, and flags campaigns with clear verdicts on ROAS, spend and CTR. You review flags instead of hunting for them.",
+    answers: "Answers the quiet account",
+    icon: `<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`,
+  },
+  {
+    title: "You hear when a connection breaks",
+    body: "Funding and connection alerts catch a failed card or an expired token before your reports go quiet — instead of a fortnight later when the numbers look wrong.",
+    answers: "Answers the silent failure",
+    icon: `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>`,
+  },
+  {
+    title: "Every account, one login",
+    body: "Every connection, report and metric is scoped to the right client with server-enforced isolation. Switch between accounts in a click instead of keeping fourteen tabs open.",
+    answers: "Answers the asking tax",
+    icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
+  },
+  {
+    title: "One template, every account",
+    body: "Save a layout as an app-wide template so every account in the book reports the same way — and a new client is set up in seconds rather than over a fortnight.",
+    answers: "Answers account number nine",
+    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>`,
+  },
+  {
+    title: "Roles, not exports",
+    body: "Invite analysts, account managers and clients with a single invite and assign Admin, Editor or Viewer. Everyone works from the same live numbers, so there's no version for you to arbitrate.",
+    answers: "Answers the version conflict",
+    icon: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  },
+  {
+    title: "Context that outlives the tab",
+    body: "Annotations pin what changed to the date it happened — a budget shift, a new creative, a landing-page test — so an account stays readable when the person who ran it is away.",
+    answers: "Answers the handover",
+    icon: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,
+  },
+];
+
+// ── Rolling it out ────────────────────────────────────────────────────
+const rollout = [
+  {
+    step: "Set up one account properly",
+    body: "Build the dashboard the way you actually want an account reported, then save it as a template. This is the only part that takes real thought.",
+  },
+  {
+    step: "Clone it across the book",
+    body: "Every other account starts from that template, so the whole team reports the same way without a style guide or a meeting about it.",
+  },
+  {
+    step: "Add the team, then the clients",
+    body: "Invite buyers as Editors and clients as Viewers. Live share links mean client questions stop landing on your team as interruptions.",
+  },
+];
+
+// ── Roadmap: campaign status & budget control from inside the dashboard ─
+const control = [
+  { platform: "Meta",     status: "Live" },
+  { platform: "TikTok",   status: "Live" },
+  { platform: "Snapchat", status: "In progress" },
+  { platform: "Google",   status: "In progress" },
+];
+---
+
+<Layout
+  title="For Team Leads"
+  description="You shouldn't find out from the client. AdFunnl gives team leads Pulse monitoring across every account, one template for the whole book, and roles so everyone works from the same live numbers."
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-ink px-6 pt-14 pb-20 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-5%,rgba(101,73,221,0.35),transparent)]"></div>
+
+    <div class="relative mx-auto max-w-6xl">
+      <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-500">
+        <a href="/" class="hover:text-zinc-300 transition">Home</a>
+        <span>/</span>
+        <span>AdFunnl For</span>
+        <span>/</span>
+        <span class="font-medium text-zinc-300">Team Leads</span>
+      </nav>
+
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          AdFunnl For · Team Leads
+        </span>
+
+        <h1 class="mt-5 font-display text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-6xl">
+          You shouldn't find out<br class="hidden sm:block" /> from the client.
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
+          You're accountable for accounts you don't open every day. Right now the
+          only way to know how one is doing is to interrupt the person who does.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/demo`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+            Put your book on one screen
+          </a>
+          <a href="#what-changes"
+             class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
+            See what changes
+          </a>
+        </div>
+      </div>
+
+      <!-- Ops board: client switcher + the Pulse verdicts for the selected account -->
+      <div class="hero-board mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50">
+        <!-- app top bar -->
+        <div class="flex items-center gap-2 border-b border-zinc-100 px-3.5 py-2.5">
+          <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
+            <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">AC</span>
+            Acme Cosmetics
+            <svg class="h-3 w-3 text-zinc-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
+          </span>
+          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse on
+          </span>
+        </div>
+
+        <div class="grid gap-px bg-zinc-100 sm:grid-cols-[minmax(0,13rem)_1fr]">
+          <!-- client rail -->
+          <div class="bg-white p-3">
+            <p class="px-1.5 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Accounts</p>
+            <ul class="space-y-0.5">
+              {clients.map((c, i) => (
+                <li>
+                  <span class:list={[
+                    "flex items-center gap-2 rounded-lg px-1.5 py-1.5 text-[11px] font-medium",
+                    i === 0 ? "bg-brand-50 text-brand-800" : "text-zinc-600",
+                  ]}>
+                    <span class:list={[
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded text-[8px] font-bold",
+                      i === 0 ? "bg-brand-600 text-white" : "bg-zinc-100 text-zinc-500",
+                    ]}>{c.code}</span>
+                    <span class="min-w-0 flex-1 truncate">{c.name}</span>
+                    {c.flags > 0 && (
+                      <span class="board-flag inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white" title={`${c.flags} Pulse flags`}>{c.flags}</span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Pulse verdicts for the selected account -->
+          <div class="bg-white p-3.5">
+            <div class="mb-2.5 flex items-center justify-between">
+              <p class="text-[11px] font-semibold text-zinc-700">Pulse · active campaigns</p>
+              <p class="hidden text-[10px] text-zinc-400 sm:block">Rule: ROAS ≥ 3.0 to scale</p>
+            </div>
+            <div class="space-y-1.5">
+              {pulseRows.map((r) => (
+                <div class="flex items-center gap-3 rounded-lg border border-zinc-100 px-2.5 py-2">
+                  <span class="min-w-0 flex-1 truncate text-[11px] font-medium text-zinc-700">{r.name}</span>
+                  <span class="hidden shrink-0 text-[11px] tabular-nums text-zinc-400 sm:block">SAR {r.spend}</span>
+                  <span class:list={[
+                    "shrink-0 text-[11px] font-bold tabular-nums",
+                    r.verdict === "cut" ? "text-rose-600" : r.verdict === "hold" ? "text-amber-600" : "text-emerald-600",
+                  ]}>{r.roas}</span>
+                  <span class:list={["shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold", VERDICT[r.verdict].cls]}>
+                    {VERDICT[r.verdict].label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p class="mt-2.5 text-[10px] text-zinc-400">Flagged without anyone opening the account.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================== THE SIGNATURE: ONE INCIDENT, TWICE ================== -->
+  <section class="border-b border-zinc-200/70 bg-cream px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The same week, twice</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          The problem is identical. Only the finding-out changes.
+        </h2>
+        <p class="mt-4 text-lg text-zinc-600">
+          Nothing here fixes a campaign for you — your buyer still does that.
+          What changes is how long it takes anyone to know.
+        </p>
+      </div>
+
+      <div class="mt-14 space-y-6">
+        {lanes.map((lane) => (
+          <div class:list={[
+            "reveal rounded-2xl border p-6 sm:p-8",
+            lane.tone === "bad" ? "border-zinc-300/60 bg-white/50" : "border-brand-200 bg-white shadow-sm",
+          ]}>
+            <div class="mb-7 flex flex-wrap items-center justify-between gap-3">
+              <p class:list={[
+                "text-sm font-semibold uppercase tracking-widest",
+                lane.tone === "bad" ? "text-zinc-400" : "text-brand-600",
+              ]}>{lane.eyebrow}</p>
+              <span class:list={[
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
+                lane.tone === "bad" ? "bg-zinc-200/70 text-zinc-600" : "bg-brand-600 text-white",
+              ]}>
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+                {lane.elapsed}
+              </span>
+            </div>
+
+            <ol class="grid gap-7 sm:grid-cols-4 sm:gap-5">
+              {lane.stops.map((stop, i) => (
+                <li class="relative sm:pt-7">
+                  <!-- connector rail (desktop only) -->
+                  <span
+                    class:list={[
+                      "absolute left-0 top-1.5 hidden h-px sm:block",
+                      i === lane.stops.length - 1 ? "w-2.5" : "w-[calc(100%+1.25rem)]",
+                      lane.tone === "bad" ? "bg-zinc-300" : "bg-brand-200",
+                    ]}
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class:list={[
+                      "absolute left-0 top-1.5 hidden h-2.5 w-2.5 -translate-y-1/2 rounded-full sm:block",
+                      lane.tone === "bad"
+                        ? (i === lane.stops.length - 1 ? "bg-zinc-500" : "bg-zinc-300")
+                        : (i === lane.stops.length - 1 ? "bg-brand-600" : "bg-brand-300"),
+                    ]}
+                    aria-hidden="true"
+                  ></span>
+
+                  <p class:list={[
+                    "text-xs font-bold uppercase tracking-wider tabular-nums",
+                    lane.tone === "bad" ? "text-zinc-500" : "text-brand-600",
+                  ]}>{stop.t}</p>
+                  <p class="mt-2 text-sm leading-relaxed text-zinc-700">{stop.s}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+
+      <p class="reveal mt-8 text-center text-sm text-zinc-500">
+        An ordinary sequence, not a case study — the timings are illustrative.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ PAIN POINTS ============================ -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">You already know these</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Six ways the book goes quiet on you
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          None of these are management problems in the abstract. They're specific
+          Mondays you've had.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2">
+        {moments.map((m) => (
+          <div class="reveal bg-white p-7 transition hover:bg-zinc-50/80 sm:p-8">
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-600">{m.when}</p>
+            <p class="mt-3 leading-relaxed text-zinc-700">{m.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== WHAT CHANGES =========================== -->
+  <section id="what-changes" class="scroll-mt-20 border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">What changes</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          The overview stops being something you request
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          Not a better meeting. A setup where the meeting has less to cover,
+          because the screen already covered it.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {changes.map((c) => (
+          <div class="reveal flex flex-col rounded-2xl border border-zinc-200/70 bg-white p-7 transition hover:border-brand-200 hover:shadow-sm">
+            <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
+            </div>
+            <h3 class="font-display text-lg font-bold text-zinc-950">{c.title}</h3>
+            <p class="mt-2.5 flex-1 text-sm leading-relaxed text-zinc-500">{c.body}</p>
+            <p class="mt-5 text-[11px] font-semibold uppercase tracking-widest text-brand-600">{c.answers}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DATA FLOW (animated) =====================
+       Same diagram as the homepage, reframed: for a team lead the payoff is
+       that one screen serves the buyer, the lead and the client at once. -->
+  <DataFlow
+    eyebrow="Where the overview comes from"
+    heading="Every account on the same plumbing"
+    body="Each account's platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two people are actually comparable — and the buyer, you and the client are all reading one screen."
+    outLabel="One screen"
+    outSub="for the whole team"
+    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
+  />
+
+  <!-- ========================== ROLLING IT OUT ========================== -->
+  <section class="border-t border-zinc-100 bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">Rolling it out</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Three steps, and only one of them is work
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          You're the one who'll have to run this rollout, so here's the honest
+          shape of it.
+        </p>
+      </div>
+
+      <ol class="mt-14 grid gap-6 md:grid-cols-3">
+        {rollout.map((r, i) => (
+          <li class="reveal relative rounded-2xl border border-zinc-100 bg-zinc-50/60 p-7">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 font-display text-sm font-bold text-white">{i + 1}</span>
+            <h3 class="mt-5 font-display text-lg font-bold text-zinc-950">{r.step}</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">{r.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========================== ROADMAP NOTE ========================== -->
+  <section class="bg-white px-6 pb-24">
+    <div class="reveal mx-auto max-w-3xl rounded-2xl border border-zinc-200 bg-white p-7 sm:p-8">
+      <div class="flex items-start gap-4">
+        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
+          <svg style="width:1.125rem;height:1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+        </span>
+        <div class="min-w-0">
+          <h2 class="font-display text-lg font-bold text-zinc-950">Where control stands today</h2>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+            Changing campaign status and budgets from inside the dashboard — without
+            opening the ad platform — is live for Meta and TikTok. Snapchat and Google
+            are in progress. Monitoring and reporting work across all four today.
+          </p>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {control.map((c) => (
+              <li class:list={[
+                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium",
+                c.status === "Live"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-zinc-200 bg-zinc-50 text-zinc-500",
+              ]}>
+                {c.status === "Live" ? (
+                  <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                ) : (
+                  <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+                )}
+                <span class="font-semibold text-zinc-800">{c.platform}</span>
+                <span>· {c.status}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CLOSING CTA ============================ -->
+  <section class="px-6 pb-24">
+    <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Start with the account you're least sure about
+        </h2>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-400">
+          We'll set it up with you and turn Pulse on. If in two weeks you're
+          hearing about problems from your screen instead of your client, roll it
+          out to the rest of the book. If not, you've lost an afternoon.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/demo`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+            Set up one account with me
+          </a>
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
+            Start free instead
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    /* Scroll-reveal (only hidden when JS is present to reveal it) */
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero entrance — CSS-only so above-the-fold content never depends on JS */
+    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    .hero-board { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
+
+    /* Ambient live indicator */
+    @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .live-dot { animation: livePulse 1.6s ease-in-out infinite; }
+
+    /* A flag arriving on an account you weren't looking at */
+    @keyframes flagIn {
+      0%, 55%  { opacity: 0; transform: scale(.4); }
+      65%      { opacity: 1; transform: scale(1.25); }
+      72%, 100%{ opacity: 1; transform: scale(1); }
+    }
+    .board-flag { animation: flagIn 5s cubic-bezier(.34,1.56,.64,1) infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .hero-board, .live-dot, .board-flag { animation: none !important; transition: none !important; }
+      .js .reveal { opacity: 1 !important; transform: none !important; }
+      .board-flag { opacity: 1; transform: none; }
+    }
+  </style>
+
+  <script>
+    document.documentElement.classList.add("js");
+
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  </script>
+
+</Layout>

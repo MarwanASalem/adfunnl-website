@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import DataFlow from "../../components/DataFlow.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -360,6 +361,20 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ===================== DATA FLOW (animated) =====================
+       Same diagram as the homepage; the framing and the terminal node are
+       rewritten for this persona — the payoff is that the client self-serves
+       rather than that a report gets delivered. -->
+  <DataFlow
+    sectionClass="relative overflow-hidden border-y border-zinc-100 bg-zinc-50/60 px-6 py-24"
+    eyebrow="How the link actually works"
+    heading="Four platforms in. One link out."
+    body="Your ad platforms and your store stream in continuously. AdFunnl unifies and normalizes them, keeps one live dashboard current, and your client opens it whenever they want to. You are no longer a step in that path."
+    outLabel="Your client"
+    outSub="opens it, anytime"
+    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live dashboard that the client opens directly."
+  />
 
   <!-- ======================= THE INTERNAL ARGUMENT ======================= -->
   <section class="bg-white px-6 pb-24">

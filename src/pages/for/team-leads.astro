@@ -31,7 +31,7 @@ const blended = [
 
 // ── The signature: one routine, two ways ──────────────────────────────
 // The gap between the elapsed badges is the argument. Timings are a
-// scenario, not a measured result — the section says so out loud.
+// scenario, not a measured result, and the section says so out loud.
 const lanes = [
   {
     key: "today",
@@ -52,7 +52,7 @@ const lanes = [
     tone: "good",
     stops: [
       { t: "09:00", s: "Open one screen. Spend, purchases and ROAS across all four platforms are already there, blended and in one currency." },
-      { t: "09:02", s: "You're past the number and onto the decision — which is the part you were actually hired for." },
+      { t: "09:02", s: "You're past the number and onto the decision, which is the part you were actually hired for." },
     ],
     note: "There is no step three. The screen was current before you opened it.",
   },
@@ -92,7 +92,7 @@ const moments = [
 const changes = [
   {
     title: "Every platform on one line",
-    body: "Meta, TikTok, Snapchat and Google side by side — spend, purchases, ROAS and revenue — with blended totals underneath. The comparison stops being a spreadsheet job.",
+    body: "Meta, TikTok, Snapchat and Google side by side: spend, purchases, ROAS and revenue, with blended totals underneath. The comparison stops being a spreadsheet job.",
     answers: "Answers the four tabs",
     icon: `<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/>`,
   },
@@ -116,7 +116,7 @@ const changes = [
   },
   {
     title: "One template, every account",
-    body: "Save a layout as an app-wide template so every account in the book reports the same way — and a new client is set up in seconds rather than over a fortnight.",
+    body: "Save a layout as an app-wide template so every account in the book reports the same way, and a new client is set up in seconds rather than over a fortnight.",
     answers: "Answers account number nine",
     icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
   },
@@ -165,7 +165,7 @@ const control = [
 
 <Layout
   title="For Team Leads"
-  description="Know where every account stands in one look. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto a single live screen — one currency, one template, one version everyone reads."
+  description="Know where every account stands in one look. AdFunnl blends spend, purchases and ROAS across Meta, TikTok, Snapchat and Google onto a single live screen: one currency, one template, one version everyone reads."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -192,8 +192,8 @@ const control = [
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          Spend, purchases and ROAS across every platform — blended, live, on a
-          single screen. Not four exports and a spreadsheet somebody rebuilds
+          Spend, purchases and ROAS across every platform, blended and live, on
+          a single screen. Not four exports and a spreadsheet somebody rebuilds
           every Monday.
         </p>
 
@@ -273,7 +273,7 @@ const control = [
     sectionClass="relative overflow-hidden border-b border-zinc-100 bg-white px-6 py-24"
     eyebrow="Where that screen comes from"
     heading="Every platform in. One live view out."
-    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time — so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
+    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
     outLabel="One screen"
     outSub="for the whole team"
     alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
@@ -289,7 +289,7 @@ const control = [
         </h2>
         <p class="mt-4 text-lg text-zinc-600">
           You want the same thing either way: what we spent, what it bought, and
-          what it returned — across every platform, as of now.
+          what it returned, across every platform, as of now.
         </p>
       </div>
 
@@ -354,7 +354,7 @@ const control = [
       </div>
 
       <p class="reveal mt-8 text-center text-sm text-zinc-500">
-        An ordinary morning, not a case study — the timings are illustrative.
+        An ordinary morning, not a case study. The timings are illustrative.
       </p>
     </div>
   </section>
@@ -465,8 +465,8 @@ const control = [
         <div class="min-w-0">
           <h2 class="font-display text-lg font-bold text-zinc-950">Where control stands today</h2>
           <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-            Changing campaign status and budgets from inside the dashboard — without
-            opening the ad platform — is live for Meta and TikTok. Snapchat and Google
+            Changing campaign status and budgets from inside the dashboard, without
+            opening the ad platform, is live for Meta and TikTok. Snapchat and Google
             are in progress. Reporting works across all four today.
           </p>
           <ul class="mt-5 flex flex-wrap gap-2">
@@ -523,11 +523,11 @@ const control = [
     .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
     .js .reveal.in { opacity: 1; transform: none; }
 
-    /* Hero entrance — CSS-only so above-the-fold content never depends on JS */
+    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
     @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
     .hero-board { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
 
-    /* Contribution bars fill on load — the glance assembling itself */
+    /* Contribution bars fill on load: the glance assembling itself */
     @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
     .board-bar { transform-origin: left; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
 

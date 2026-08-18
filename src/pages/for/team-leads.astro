@@ -30,48 +30,57 @@ const blended = [
 ];
 
 // ── The signature: one routine, two ways ──────────────────────────────
-// The gap between the elapsed badges is the argument. Timings are a
-// scenario, not a measured result, and the section says so out loud.
+// The gap between the elapsed badges is the argument. Keep those badges
+// vague on purpose: a precise figure here would be an invented measurement,
+// and precision is what made the old version need a disclaimer under it.
+// The pain is tab-switching and currency math, never CSV exports. See R8.
 const lanes = [
   {
     key: "today",
     eyebrow: "How the number gets made today",
-    elapsed: "About 90 minutes. Every time.",
+    elapsed: "Most of a morning, every time.",
     tone: "bad",
     stops: [
-      { t: "09:00", s: "Meta Ads Manager. Set the date range, pick the columns, export." },
-      { t: "09:25", s: "TikTok, then Snapchat, then Google. Different column names, different attribution windows, and one of them reports in another currency." },
-      { t: "10:05", s: "Paste four exports into the sheet and repair the formulas that broke when a column moved." },
-      { t: "10:30", s: "A number. It was true at nine o'clock, and someone is about to ask for yesterday as well." },
+      { t: "Tab 1", s: "Meta. Read the numbers, hold them in your head, move on." },
+      { t: "Tab 2, 3, 4", s: "TikTok, Snapchat, Google. Each one names the columns differently and counts a conversion over its own window, so none of it lines up." },
+      { t: "The maths", s: "One account buys in riyals and bills in dirhams. You are converting as you go, and you are the only check on it." },
+      { t: "The report", s: "Then all of it has to become something a client can read, which is where the rest of the day goes." },
     ],
   },
   {
     key: "adfunnl",
     eyebrow: "How it goes with AdFunnl",
-    elapsed: "About 2 minutes.",
+    elapsed: "About two minutes.",
     tone: "good",
     stops: [
-      { t: "09:00", s: "Open one screen. Spend, purchases and ROAS across all four platforms are already there, blended and in one currency." },
-      { t: "09:02", s: "You're past the number and onto the decision, which is the part you were actually hired for." },
+      { t: "One screen", s: "Every platform side by side, blended, already converted into one currency. Nothing to hold in your head." },
+      { t: "The decision", s: "You are straight onto which account needs you today, which is the part you were actually hired for." },
     ],
     note: "There is no step three. The screen was current before you opened it.",
   },
 ];
 
 // ── Pain points ───────────────────────────────────────────────────────
-// `when` is the recognition hook: a moment, not a category.
+// The subject of this section is the manual labour of producing a report.
+// `when` is the recognition hook: a moment in that job, not a category.
+// Each `when` is referenced by an `answers` label in `changes` below, so the
+// two lists stay paired. Rename one, rename the other.
 const moments = [
   {
-    when: "Monday, 10:00",
-    body: "Half the status meeting is people reading numbers aloud that everyone in the room could have read for themselves.",
-  },
-  {
     when: "Four tabs, four date pickers",
-    body: "Every platform names things differently and counts a conversion over a different window. Getting them to agree is a person's morning, and it happens again next week.",
+    body: "Every platform names things differently and counts a conversion over its own window. Getting them to agree is somebody's morning, and it happens again next week.",
   },
   {
-    when: "The exchange rate",
-    body: "One account bills in dirhams and buys in riyals. Somebody is converting by hand in a corner of the sheet, and nobody has checked that cell in months.",
+    when: "The conversion in your head",
+    body: "One account bills in dirhams and buys in riyals. The rate lives in someone's memory or in a corner of a sheet, and nobody has checked it in months.",
+  },
+  {
+    when: "Assembling the deliverable",
+    body: "The numbers exist. Turning them into something a client can read is copy, paste, screenshot, format, repeat. None of it is judgment, and all of it takes a day.",
+  },
+  {
+    when: "Old on arrival",
+    body: "A report is true for the hour it was made in. The first question the client asks about it is almost always about now.",
   },
   {
     when: "The quiet account",
@@ -79,11 +88,7 @@ const moments = [
   },
   {
     when: "Account number nine",
-    body: "Reporting gets rebuilt from scratch, slightly differently, by whoever set it up. No two accounts in your book report the same way.",
-  },
-  {
-    when: "Someone's on leave",
-    body: "Their accounts go dark for a week, because the context lived in their head and their browser tabs rather than anywhere you can open.",
+    body: "Reporting gets rebuilt from scratch, slightly differently, by whoever set it up. No two accounts report the same way.",
   },
 ];
 
@@ -99,13 +104,13 @@ const changes = [
   {
     title: "Current before you open it",
     body: "Everything syncs hourly, so the screen is live rather than a picture of last Friday. You're not asking anyone to refresh anything first.",
-    answers: "Answers the stale export",
+    answers: "Answers old on arrival",
     icon: `<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>`,
   },
   {
-    title: "One currency across the book",
-    body: "Spend and revenue are unified into a single currency, so an account that bills in dirhams and one that bills in riyals are actually comparable without a conversion cell.",
-    answers: "Answers the exchange rate",
+    title: "One currency, every account",
+    body: "Spend and revenue are unified into a single currency, so an account that bills in dirhams and one that bills in riyals are actually comparable without anyone doing the rate in their head.",
+    answers: "Answers the conversion in your head",
     icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
   },
   {
@@ -116,15 +121,15 @@ const changes = [
   },
   {
     title: "One template, every account",
-    body: "Save a layout as an app-wide template so every account in the book reports the same way, and a new client is set up in seconds rather than over a fortnight.",
+    body: "Save a layout as an app-wide template so every account reports the same way, and a new client is set up in seconds rather than over a fortnight.",
     answers: "Answers account number nine",
     icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
   },
   {
-    title: "Numbers you can defend",
-    body: "A published Methodology page shows how every metric is calculated. Data Logs and Sync Jobs show when it last updated. Snapshots freeze a deliverable so it can't shift under you.",
-    answers: "Answers the awkward question",
-    icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>`,
+    title: "Ask it, instead of building it",
+    body: "The assistant sits on every page. Ask which accounts slipped this week, or for a recap of TikTok against Meta this month, and the answer streams back showing the data it used. It also runs as an MCP server, so Claude or ChatGPT can query the same numbers.",
+    answers: "Answers assembling the deliverable",
+    icon: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>`,
   },
 ];
 
@@ -135,6 +140,7 @@ const alsoOnScreen = [
   { label: "Geo maps & funnels", note: "Performance by region, and step-by-step drop-off" },
   { label: "Change annotations", note: "What changed, and the date it changed on" },
   { label: "Live links & PDF", note: "View-only client links, or a document when they insist" },
+  { label: "Methodology & snapshots", note: "How every metric is calculated, and a frozen copy of what you sent" },
   { label: "Arabic, right-to-left", note: "Fully localized, charts included" },
 ];
 
@@ -145,7 +151,7 @@ const rollout = [
     body: "Build the view the way you actually want an account read, then save it as a template. This is the only part that takes real thought.",
   },
   {
-    step: "Clone it across the book",
+    step: "Clone it across every account",
     body: "Every other account starts from that template, so the whole team reports the same way without a style guide or a meeting about it.",
   },
   {
@@ -192,15 +198,15 @@ const control = [
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          Spend, purchases and ROAS across every platform, blended and live, on
-          a single screen. Not four exports and a spreadsheet somebody rebuilds
-          every Monday.
+          Spend, purchases and ROAS across every platform, blended into one
+          currency on a single live screen, instead of a report that was already
+          out of date when you sent it.
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href={`${APP_URL}/demo`}
+          <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
-            Put your book on one screen
+            Try it now
           </a>
           <a href="#what-changes"
              class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
@@ -271,8 +277,7 @@ const control = [
        from before the page asks the reader to believe anything else. -->
   <DataFlow
     sectionClass="relative overflow-hidden border-b border-zinc-100 bg-white px-6 py-24"
-    eyebrow="Where that screen comes from"
-    heading="Every platform in. One live view out."
+    heading="Every platform in, one live view out"
     body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the buyer, you and the client are all reading the same screen."
     outLabel="One screen"
     outSub="for the whole team"
@@ -283,13 +288,13 @@ const control = [
   <section class="border-b border-zinc-200/70 bg-cream px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The same morning, twice</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          One number. Four platforms. Two very different mornings.
+          The same morning, twice
         </h2>
         <p class="mt-4 text-lg text-zinc-600">
-          You want the same thing either way: what we spent, what it bought, and
-          what it returned, across every platform, as of now.
+          Reading four platforms in four tabs is like judging a race by watching
+          each runner on a separate screen. You can do it. You just cannot see
+          who is winning.
         </p>
       </div>
 
@@ -353,9 +358,6 @@ const control = [
         ))}
       </div>
 
-      <p class="reveal mt-8 text-center text-sm text-zinc-500">
-        An ordinary morning, not a case study. The timings are illustrative.
-      </p>
     </div>
   </section>
 
@@ -363,13 +365,13 @@ const control = [
   <section class="bg-white px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">You already know these</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Six ways the book goes quiet on you
+          Every report is still assembled by hand
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          None of these are management problems in the abstract. They're specific
-          Mondays you've had.
+          Gathering the same numbers off four platforms, reconciling them and
+          formatting the result is manual labour that a tool should be doing.
+          None of it is the judgment you hired anyone for.
         </p>
       </div>
 
@@ -497,21 +499,22 @@ const control = [
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Start with the account you're least sure about
+          Start with one account
         </h2>
         <p class="mt-5 text-lg leading-relaxed text-zinc-400">
-          We'll put its platforms on one screen with you. If in two weeks your
-          Monday starts with a screen instead of four exports, roll it out to the
-          rest of the book. If not, you've lost an afternoon.
+          Connect one client's platforms and run it for a couple of weeks. Once
+          the screen reads the way you want an account read, save it as a
+          template and clone it across every brand you manage, until one hub
+          holds all of them.
         </p>
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href={`${APP_URL}/demo`}
-             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
-            Set up one account with me
-          </a>
           <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+            Try it now
+          </a>
+          <a href={`${APP_URL}/demo`}
              class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
-            Start free instead
+            Book a demo
           </a>
         </div>
       </div>

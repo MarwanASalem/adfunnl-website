@@ -9,7 +9,11 @@ interface Props {
   /** Section wrapper */
   sectionId?: string;
   sectionClass?: string;
-  /** Framing copy above the diagram */
+  /**
+   * Framing copy above the diagram. `eyebrow` is opt-in and usually wrong:
+   * see R1 in docs/voice.md. Only pass it when it says something the heading
+   * does not.
+   */
   eyebrow?: string;
   heading?: string;
   body?: string;
@@ -28,7 +32,7 @@ interface Props {
 const {
   sectionId,
   sectionClass = "relative overflow-hidden bg-white px-6 py-24",
-  eyebrow = "The pipeline",
+  eyebrow,
   heading = "From every source to a client-ready report",
   body = "Meta, Google, Shopify, TikTok, Snapchat, Bosta and more stream in continuously. AdFunnl unifies and normalizes everything, turns it into live visuals, and delivers it to your client.",
   outLabel = "Delivered",
@@ -87,7 +91,9 @@ const particles = [
   <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#efeafc,transparent)]"></div>
   <div class="mx-auto max-w-6xl">
     <div class="reveal mx-auto max-w-2xl text-center">
-      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">{eyebrow}</p>
+      {eyebrow && (
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">{eyebrow}</p>
+      )}
       <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
         {heading}
       </h2>

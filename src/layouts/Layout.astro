@@ -31,6 +31,13 @@ const personas = [
     href: "/for/team-leads",
     icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
   },
+  {
+    label: "Media Buyers",
+    short: "Media Buyers",
+    blurb: "Take on twice the clients without any of them getting less of you.",
+    href: "/for/media-buyers",
+    icon: `<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>`,
+  },
 ];
 
 const path = (Astro.url.pathname.replace(/\/+$/, "") || "/");
@@ -147,7 +154,7 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
                 <div class="mx-3.5 mt-1 border-t border-zinc-100 pt-3 pb-2">
                   <!-- Keep this list in sync with `personas`: a role listed here
                        and shipped above reads as a mistake. -->
-                  <p class="text-xs text-zinc-400">More roles coming soon: media buyers, agency founders and in-house marketing managers.</p>
+                  <p class="text-xs text-zinc-400">More roles coming soon: agency founders and in-house marketing managers.</p>
                 </div>
               </div>
             </div>

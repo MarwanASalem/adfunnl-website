@@ -56,9 +56,10 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Templates | Save a layout personally or app-wide, then clone it across accounts |
 | Blended totals | Cross-platform blended ROAS, spend, purchases and revenue |
 | Product-level ROAS | Store revenue attributed down to product and category |
-| Creative analysis | Best Creatives ranked by a metric you choose, with the thumbnails in the page. Ad level is Meta and TikTok only |
-| Ad fatigue | Tracked across every ad platform |
-| Hook and hold | Video retention, where viewers drop off |
+| Creative analysis | Best Creatives, with the creative itself in the page. Ranked by a composite score, not one metric: ecommerce mode weights ROAS 40%, cost per purchase 40% and outbound CTR 20%, each standardised across the ads currently in view. Messaging mode is Meta only and weights cost per message 80%, CTR 20%. Ad level is **Meta and Snapchat**, several accounts at once. Checked 19 August 2026 in `web/src/lib/creative-score.ts` and `web/src/pages/BestCreativesPage.tsx` |
+| Creative filters | Minimum spend threshold, defaulting to the average spend across the ads in view, so low-spend noise drops out of the ranking. Plus filters on platform, campaign and objective, a date range, list or grid view, and a one-click PDF of the page. Checked 19 August 2026 |
+| Ad fatigue | Tracked across every ad platform. Confirmed 19 August 2026: Meta, TikTok, Snapchat and Google |
+| Hook and hold | Video retention, where viewers drop off. **Meta only.** Checked 19 August 2026 in `web/src/pages/HookHoldRatesPage.tsx` |
 | Pulse | Watches accounts against your rules and flags them Scale, Hold or Cut |
 | Funding and status alerts | Balance and threshold monitoring, emailed when an account is at risk |
 | Arabic | Full bilingual English and Arabic with RTL, charts included |

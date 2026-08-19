@@ -238,6 +238,22 @@ Worked example, Team Leads:
 Keep each persona's pains and objections in that page's frontmatter comments,
 so a later edit does not flatten them back into feature copy.
 
+### R14. Never put a number on the platforms
+
+There is no count. The ad platforms are Meta, TikTok, Snapchat and Google
+today, and the connector list also carries Shopify, Salla, Bosta, Easy Orders
+and Google Sheets. More get added, and a number in the copy freezes the product
+at the moment it was written.
+
+```
+WAS:  Four platforms, four logins, four sets of column names
+NOW:  A tab per platform, each with its own login and its own column names
+RULE: Write "every ad platform", "all your ad platforms", "every source". The
+      fixed enumeration still applies when you actually list them, in that
+      order and without an Oxford comma. What is banned is the count, and any
+      pain built on the count.
+```
+
 ### Capability truth
 
 **Read `what-ships.md` before writing any claim.** That file is the single

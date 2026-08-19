@@ -1,0 +1,758 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import DataFlow from "../../components/DataFlow.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// ── This page's pains and objections ──────────────────────────────────
+// Kept here on purpose (R11 to R13 in docs/voice.md): the page is built from
+// this list, so a later edit cannot quietly turn it back into a feature tour.
+//
+// The brief:
+//   Who     A media buyer who is in the ad accounts all day. Not the account
+//           manager fielding the client, not the lead running a roster.
+//   Promise You can carry twice the clients without any of them getting less
+//           of you, because the assembling is gone.
+//   Action  Try it now.
+//
+// A media buyer's pains, in their order of size:
+//   1. The morning goes into collecting, before a single decision gets made.
+//   2. Each platform takes credit for the same sale, so true return is a guess.
+//   3. The winning creative is buried somewhere in a thousand running ads.
+//   4. Interruptions: every "how is it going" costs a rebuilt view.
+//
+// CAPABILITY WARNINGS for anyone editing this page:
+//   - Ad-level creative data is Meta and Snapchat. Not every platform. Do not
+//     write "all your creatives" without that qualifier nearby.
+//   - Hook and hold is Meta only.
+//   - Ad fatigue genuinely does cover every ad platform.
+//   - Campaign control is Meta and TikTok. Snapchat and Google are in progress.
+//   - There is no media buyer dimension in the app. Grouping is Workspace,
+//     then Client, then Ad Account, and every member sees every client. Never
+//     imply a per-person view.
+//   - R14: never put a number on the platforms. No "four tabs", no "all four".
+
+// ── Hero: the roster on one screen ────────────────────────────────────
+// Anonymized demo data, same convention as the homepage and Team Leads mocks.
+// ROAS is computed from the two figures beside it, so the arithmetic on screen
+// cannot be caught out.
+const roster = [
+  { client: "Client A", spend: 41280, revenue: 227040, synced: "9 min ago" },
+  { client: "Client B", spend: 28715, revenue: 108117, synced: "9 min ago" },
+  { client: "Client C", spend: 19460, revenue: 132328, synced: "24 min ago" },
+  { client: "Client D", spend: 15230, revenue: 51782, synced: "24 min ago" },
+  { client: "Client E", spend: 11905, revenue: 79363, synced: "41 min ago" },
+  { client: "Client F", spend: 7640, revenue: 22920, synced: "41 min ago" },
+];
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+const roas = (r: number, s: number) => (r / s).toFixed(2);
+
+const rosterSpend = roster.reduce((a, c) => a + c.spend, 0);
+const rosterRevenue = roster.reduce((a, c) => a + c.revenue, 0);
+
+// ── Where the morning goes ────────────────────────────────────────────
+// The recognisable pain (R8): a tab per platform, each with its own everything,
+// then currency math in somebody's head. Never CSV exports.
+const tabs = [
+  { name: "Meta Ads Manager", quirk: "Its own login, its own attribution window" },
+  { name: "TikTok Ads", quirk: "The same metric under a different column name" },
+  { name: "Snapchat Ads", quirk: "Another date picker to set the same range" },
+  { name: "Google Ads", quirk: "Conversions counted its own way again" },
+  { name: "Shopify", quirk: "The revenue that actually landed, in a different tool" },
+  { name: "The sheet", quirk: "Where you convert the currencies and hope" },
+];
+
+// ── Us versus them (R12) ──────────────────────────────────────────────
+// Rows are jobs a media buyer does, not features. The old column has to read
+// as a fair description of their day, because it is theirs.
+const compare = [
+  {
+    job: "Seeing where the money actually went",
+    old: "A tab per platform, then add them up somewhere else.",
+    now: "Every platform on one line, with blended totals underneath.",
+  },
+  {
+    job: "Working out what you really made",
+    old: "Every platform takes credit for the same sale.",
+    now: "Store revenue sits beside ad spend, down to product and category.",
+  },
+  {
+    job: "Running accounts in two currencies",
+    old: "Converted in your head, into a cell nobody checks.",
+    now: "Everything unified into your reporting currency at the right rate.",
+  },
+  {
+    job: "Picking which creative to scale",
+    old: "Scroll each platform separately and go on what you remember.",
+    now: "Every ad scored on return, cost per purchase and click-through together, ranked in one list.",
+  },
+  {
+    job: "Catching an ad on the way down",
+    old: "You notice when the results drop, which is after it happened.",
+    now: "Fatigue tracked across every ad platform, flagged before the results say it.",
+  },
+  {
+    job: "Answering “how is it going”",
+    old: "Stop what you are doing, rebuild a view, screenshot it, send it.",
+    now: "They open a live link. You never find out they looked.",
+  },
+  {
+    job: "Taking on a new account",
+    old: "Build the same views from scratch, one more time.",
+    now: "Clone the template you already made. The thinking happened once.",
+  },
+];
+
+// ── Best Creatives Calculator ─────────────────────────────────────────
+// A recreation of the app's Creatives Analysis report, matching the real
+// toolbar, the rank pills and the score badges. Anonymized ads.
+//
+// The score below is not decorative: `scoreCreatives` is the app's own
+// formula from web/src/lib/creative-score.ts, so the ranking and every badge
+// on this page are produced the way the product produces them. If the app's
+// weights change, change them here too.
+type DemoAd = {
+  name: string;
+  type: "Video" | "Static";
+  spend: number;
+  ctr: number;
+  purchases: number;
+  revenue: number;
+};
+
+// The ads that clear the minimum spend and get ranked. Deliberately shaped so
+// no single ad wins all three metrics: that is the whole point of a composite
+// score, and a demo where the same ad tops every column would not show it.
+const rankedAds: DemoAd[] = [
+  { name: "UGC unboxing, 9:16",    type: "Video",  spend: 7301, ctr: 1.31, purchases: 160, revenue: 51107 },
+  { name: "Carousel, bestsellers", type: "Static", spend: 4789, ctr: 0.67, purchases: 88,  revenue: 19156 },
+  { name: "Testimonial cutdown",   type: "Video",  spend: 3210, ctr: 0.88, purchases: 66,  revenue: 16050 },
+  { name: "Founder to camera",     type: "Video",  spend: 2388, ctr: 0.94, purchases: 61,  revenue: 15522 },
+  { name: "Studio product spin",   type: "Video",  spend: 2145, ctr: 0.61, purchases: 24,  revenue: 6435 },
+  { name: "Ramadan bundle",        type: "Static", spend: 1830, ctr: 0.93, purchases: 33,  revenue: 8235 },
+  { name: "Before and after",      type: "Video",  spend: 1174, ctr: 1.20, purchases: 27,  revenue: 7357 },
+  { name: "Review screenshot",     type: "Static", spend: 1180, ctr: 0.55, purchases: 15,  revenue: 3186 },
+];
+
+// The tail. A real account is mostly low-spend ads, which is why the minimum
+// spend threshold exists and why it defaults to the average: everything here
+// is below it and drops out of the ranking. Only spend and type are used, so
+// only spend and type are given.
+const tailAds = [
+  { type: "Static" as const, spend: 688 }, { type: "Video"  as const, spend: 640 },
+  { type: "Static" as const, spend: 612 }, { type: "Static" as const, spend: 590 },
+  { type: "Video"  as const, spend: 566 }, { type: "Static" as const, spend: 540 },
+  { type: "Video"  as const, spend: 512 }, { type: "Static" as const, spend: 498 },
+  { type: "Video"  as const, spend: 470 }, { type: "Static" as const, spend: 455 },
+  { type: "Static" as const, spend: 430 }, { type: "Video"  as const, spend: 412 },
+  { type: "Static" as const, spend: 395 }, { type: "Static" as const, spend: 370 },
+  { type: "Video"  as const, spend: 348 }, { type: "Static" as const, spend: 330 },
+  { type: "Static" as const, spend: 310 }, { type: "Video"  as const, spend: 288 },
+  { type: "Static" as const, spend: 265 }, { type: "Static" as const, spend: 240 },
+  { type: "Video"  as const, spend: 215 }, { type: "Static" as const, spend: 180 },
+  { type: "Static" as const, spend: 145 },
+];
+
+const demoAds = rankedAds;
+const allAdCount = rankedAds.length + tailAds.length;
+const allAdSpend =
+  rankedAds.reduce((s, a) => s + a.spend, 0) + tailAds.reduce((s, a) => s + a.spend, 0);
+
+// The app standardizes each metric across the ads currently in view, then
+// weights them. `invert` is for metrics where lower is better.
+function standardize(values: number[], invert = false): number[] {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (max === min) return values.map(() => 0);
+  return values.map((v) => {
+    const std = (v - min) / (max - min);
+    return invert ? 1 - std : std;
+  });
+}
+
+// Minimum spend defaults to the average spend across the ads in view, so a
+// lucky ad with almost no spend cannot take the top of the list.
+const avgSpend = allAdSpend / allAdCount;
+const inView = demoAds.filter((a) => a.spend >= avgSpend);
+
+const cprs = inView.map((a) => a.spend / a.purchases);
+const roases = inView.map((a) => a.revenue / a.spend);
+const ctrs = inView.map((a) => a.ctr);
+
+const stdCpr = standardize(cprs, true);
+const stdRoas = standardize(roases);
+const stdCtr = standardize(ctrs);
+
+const scored = inView
+  .map((ad, i) => ({
+    ad,
+    cpr: cprs[i],
+    roas: roases[i],
+    score: 0.4 * stdRoas[i] + 0.4 * stdCpr[i] + 0.2 * stdCtr[i],
+  }))
+  .sort((a, b) => b.score - a.score);
+
+const videoCount =
+  rankedAds.filter((a) => a.type === "Video").length +
+  tailAds.filter((a) => a.type === "Video").length;
+const staticCount = allAdCount - videoCount;
+
+// Spend split, video against the total, for the summary strip's bar.
+const videoSpendShare = Math.round(
+  ((rankedAds.filter((a) => a.type === "Video").reduce((s, a) => s + a.spend, 0) +
+    tailAds.filter((a) => a.type === "Video").reduce((s, a) => s + a.spend, 0)) /
+    allAdSpend) * 100
+);
+
+// How the score is built. Weights verified 19 August 2026 against
+// web/src/lib/creative-score.ts.
+const scoreWeights = [
+  { metric: "Return on ad spend", weight: "40%", note: "What it brought back" },
+  { metric: "Cost per purchase", weight: "40%", note: "What each one cost you" },
+  { metric: "Outbound click-through", weight: "20%", note: "Whether the creative worked" },
+];
+
+// The rest of Creatives Analysis. Platform coverage is checked and is not the
+// same for all three: see the capability warnings at the top of this file.
+const creativeReports = [
+  {
+    title: "Best Creatives Calculator",
+    scope: "Meta and Snapchat",
+    body: "Every ad above your minimum spend, scored and ranked in one list, with the creative itself in the page rather than an ad id you have to go and look up. Filter by platform, campaign or objective, and read it as a table or as a wall of thumbnails.",
+    icon: `<path d="M12 2l2.4 6.9H22l-6.1 4.4 2.3 7-6.2-4.5L5.8 20l2.3-7L2 8.9h7.6z"/>`,
+  },
+  {
+    title: "Hook & Hold Rates",
+    scope: "Meta",
+    body: "Video retention, showing where viewers actually leave. The hook is the first seconds, the hold is everything after, and a brand leaderboard puts your videos in order on both.",
+    icon: `<path d="M3 12h4l3-8 4 16 3-8h4"/>`,
+  },
+  {
+    title: "Ad Fatigue",
+    scope: "Every ad platform",
+    body: "The one report that does span all of them. A winning ad decays before the results admit it, and this is where that shows up first, while cutting it is still a decision rather than a rescue.",
+    icon: `<path d="M12 2v6M12 22v-6"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2"/><circle cx="12" cy="12" r="3"/>`,
+  },
+];
+
+// ── The assistant (R9) ────────────────────────────────────────────────
+// Keep these consistent with the `roster` board in the hero: a reader who
+// checks one against the other has to find them agreeing.
+const assistantAnswer = [
+  "Blended ROAS across your accounts is 5.00x this week, against 4.63x last week.",
+  "Client C moved most: 6.80x, up from 5.24x, on 9% less spend.",
+  "Client F is the drag at 3.00x, and its spend is up 14%.",
+];
+
+const assistantSources = ["Meta", "TikTok", "Snapchat", "Google", "Shopify"];
+
+// ── Where the capacity comes from ─────────────────────────────────────
+// The promise, made concrete. No invented measurement anywhere in here: the
+// argument is about what work each new account adds, not about hours saved.
+const capacity = [
+  {
+    step: "Connect the account",
+    body: "The platforms and the store hook up once. A full backfill of the last 90 days runs, so the account has history the day you take it on.",
+  },
+  {
+    step: "Clone the template",
+    body: "Build one account the way you actually want an account read, save it, and every account after that starts from it. You are not designing a dashboard again.",
+  },
+  {
+    step: "Stop assembling",
+    body: "It syncs hourly, and the last three days get re-fetched every time so late conversions land. The screen is current before you open it.",
+  },
+  {
+    step: "Hand the client their own link",
+    body: "A live view-only link with their logo on it. The questions that used to interrupt you get answered without reaching you.",
+  },
+];
+
+// ── Objections (R13) ──────────────────────────────────────────────────
+// What a media buyer says to talk themselves out of starting. Answer honestly
+// or delete the row: a weak answer is worse than no section.
+const objections = [
+  {
+    q: "I live in Ads Manager and I trust it.",
+    a: "Keep it. Ads Manager is where you build and adjust, and nothing here asks you to stop. What it cannot tell you is what the other platforms and the store did, which is the number your scaling decisions actually rest on.",
+  },
+  {
+    q: "Another dashboard is another thing to maintain.",
+    a: "There is nothing to keep up. Connections sync hourly on their own, and the last three days are re-fetched every sync so conversions that report late still land in the right place.",
+  },
+  {
+    q: "The numbers will not match the platforms.",
+    a: "Every metric has a published methodology page showing how it is calculated. Data logs and sync jobs show when each account last updated and whether it worked, and a snapshot freezes exactly what you sent so last month cannot move.",
+  },
+  {
+    q: "Reporting is not my job.",
+    a: "Agreed, and that is the argument for it. The client opens their own live link and your lead reads the same screen you do, so the questions stop arriving as interruptions on your afternoon.",
+  },
+  {
+    q: "Setting this up will eat a week I do not have.",
+    a: "One account, built properly, saved as a template. Everything after that is a connection and a clone.",
+  },
+];
+
+// ── Roadmap: campaign status & budget control from inside the dashboard ─
+const control = [
+  { platform: "Meta", status: "Live" },
+  { platform: "TikTok", status: "Live" },
+  { platform: "Snapchat", status: "In progress" },
+  { platform: "Google", status: "In progress" },
+];
+---
+
+<Layout
+  title="For Media Buyers"
+  description="Every ad platform and every store on one screen, with your creatives scored and ranked, so a media buyer's day goes into analysis instead of collecting numbers."
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-ink px-6 pt-14 pb-20 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-10%,#422a96,transparent)]"></div>
+    <div class="pointer-events-none absolute inset-0 -z-0 opacity-[0.06] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:44px_44px]"></div>
+
+    <div class="relative mx-auto max-w-6xl">
+      <nav class="mb-8 flex items-center gap-2 text-sm text-white/40">
+        <a href="/" class="transition hover:text-white/80">Home</a>
+        <span>/</span>
+        <span>AdFunnl For</span>
+        <span>/</span>
+        <span class="font-medium text-white/80">Media Buyers</span>
+      </nav>
+
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          AdFunnl For · Media Buyers
+        </span>
+
+        <h1 class="mt-5 font-display text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-6xl">
+          Twice the clients,<br class="hidden sm:block" /> and none of them gets less of you.
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/60">
+          The hours that go into assembling numbers are the reason you cannot
+          take another account. That work is already done by the time you sit
+          down.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+            Try it now
+          </a>
+          <a href="#creatives"
+             class="w-full rounded-xl border border-white/15 bg-white/5 px-8 py-3.5 text-base font-semibold text-white/90 transition hover:bg-white/10 sm:w-auto">
+            See the creative ranking
+          </a>
+        </div>
+      </div>
+
+      <!-- Roster board: every client already current -->
+      <figure class="mt-14">
+        <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/40 backdrop-blur-sm sm:rounded-3xl">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+              <span class="text-sm font-semibold text-white">Your accounts</span>
+              <span class="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/60">Synced hourly</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-white/50">
+              <span>Spend <span class="font-semibold text-white/90">SAR {fmt(rosterSpend)}</span></span>
+              <span>Revenue <span class="font-semibold text-white/90">SAR {fmt(rosterRevenue)}</span></span>
+              <span>Blended ROAS <span class="font-semibold text-brand-200">{roas(rosterRevenue, rosterSpend)}×</span></span>
+            </div>
+          </div>
+
+          <div class="grid gap-px bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
+            {roster.map((c) => (
+              <div class="bg-ink/60 px-5 py-4">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-sm font-semibold text-white">{c.client}</span>
+                  <span class="font-display text-lg font-bold text-brand-200">{roas(c.revenue, c.spend)}×</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] text-white/40">
+                  <span>SAR {fmt(c.spend)} spend</span>
+                  <span>Updated {c.synced}</span>
+                </div>
+                <div class="mt-2.5 h-1 overflow-hidden rounded-full bg-white/10">
+                  <div class="h-full rounded-full bg-brand-400" style={`width:${Math.min(100, (c.revenue / c.spend) * 14)}%`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <figcaption class="mt-4 text-center text-xs text-white/35">
+          A recreation of the product with anonymized data, not a real client account.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ======================= WHERE THE MORNING GOES ======================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Where the morning actually goes
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+          Before you make a single decision, you have collected. A tab per
+          platform, each with its own login, its own column names and its own
+          idea of what counts as a conversion.
+        </p>
+      </div>
+
+      <!-- Tab strip -->
+      <div class="mt-12 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 shadow-sm">
+        <div class="flex gap-1 overflow-x-auto border-b border-zinc-200 bg-zinc-100 px-3 pt-3">
+          {tabs.map((t, i) => (
+            <span class:list={[
+              "shrink-0 rounded-t-lg px-3.5 py-2 text-xs font-medium",
+              i === 0 ? "bg-white text-zinc-800 shadow-[0_-1px_0_0_rgba(0,0,0,0.04)]" : "text-zinc-500",
+            ]}>{t.name}</span>
+          ))}
+        </div>
+        <div class="grid gap-px bg-zinc-200 sm:grid-cols-2 lg:grid-cols-3">
+          {tabs.map((t) => (
+            <div class="bg-white px-5 py-5">
+              <p class="text-sm font-semibold text-zinc-900">{t.name}</p>
+              <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">{t.quirk}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p class="mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-zinc-600">
+        Then the currencies, converted in your head or in a cell nobody checks.
+        None of that is the job. The job starts after it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ COMPARISON ============================ -->
+  <section class="bg-zinc-50 px-6 py-24">
+    <div class="mx-auto max-w-5xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          The same day, without the collecting
+        </h2>
+      </div>
+
+      <div class="mt-12 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div class="hidden grid-cols-[1.1fr_1fr_1fr] border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-widest text-zinc-400 sm:grid">
+          <div class="px-6 py-3.5">The job</div>
+          <div class="px-6 py-3.5">How it goes now</div>
+          <div class="px-6 py-3.5 text-brand-700">With AdFunnl</div>
+        </div>
+        {compare.map((row) => (
+          <div class="grid grid-cols-1 gap-1 border-b border-zinc-100 last:border-b-0 sm:grid-cols-[1.1fr_1fr_1fr] sm:gap-0">
+            <div class="px-6 pt-5 text-sm font-semibold text-zinc-900 sm:py-5">{row.job}</div>
+            <div class="flex items-start gap-2.5 px-6 pt-3 text-sm leading-relaxed text-zinc-500 sm:py-5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span>{row.old}</span>
+            </div>
+            <div class="flex items-start gap-2.5 bg-brand-50/40 px-6 pb-5 pt-3 text-sm leading-relaxed text-zinc-700 sm:py-5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>{row.now}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= DATA FLOW ============================= -->
+  <DataFlow
+    heading="Everything you run, into one place, and back out as a report"
+    body="Every ad platform and every store you are connected to streams in continuously. AdFunnl unifies and normalizes all of it into one reporting currency, turns it into live visuals, and hands the client a link instead of your afternoon."
+    outLabel="Shared"
+    outSub="as a live link"
+  />
+
+  <!-- ============================= CREATIVES ============================= -->
+  <section id="creatives" class="bg-ink px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Finding the winner among a thousand running ads
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-white/60">
+          Sorting by return puts a cheap fluke on top. Sorting by spend puts
+          your biggest mistake on top. The Best Creatives Calculator scores
+          every ad on all of it at once and ranks them.
+        </p>
+      </div>
+
+      <!-- Score weights -->
+      <div class="mt-12 grid gap-4 sm:grid-cols-3">
+        {scoreWeights.map((w) => (
+          <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <div class="flex items-baseline justify-between">
+              <p class="text-sm font-semibold text-white">{w.metric}</p>
+              <p class="font-display text-2xl font-bold text-brand-300">{w.weight}</p>
+            </div>
+            <p class="mt-1.5 text-xs leading-relaxed text-white/45">{w.note}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mx-auto mt-5 max-w-3xl text-center text-sm leading-relaxed text-white/45">
+        Each metric is standardized against the other ads in view before it is
+        weighted, so an ad is measured against what you are actually running
+        rather than against a number somebody picked. For accounts that sell in
+        the inbox there is a messaging mode, weighting cost per message at 80%
+        and click-through at 20%.
+      </p>
+
+      <!-- Recreation of the Creatives Analysis report -->
+      <figure class="mt-12">
+        <div class="overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50 sm:rounded-3xl">
+          <!-- Summary strip -->
+          <div class="flex flex-wrap items-stretch gap-px border-b border-zinc-200 bg-zinc-200">
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">Total ads</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{allAdCount}</p>
+            </div>
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">Static ads</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{staticCount}</p>
+            </div>
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">Video ads</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{videoCount}</p>
+            </div>
+            <div class="flex-[2] bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">Spend split</p>
+              <div class="mt-2 h-2 overflow-hidden rounded-full bg-zinc-200">
+                <div class="h-full rounded-full bg-brand-500" style={`width:${videoSpendShare}%`}></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar chips, as the app shows them -->
+          <div class="flex flex-wrap items-center gap-2 border-b border-zinc-100 px-5 py-3.5">
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">Showing <span class="font-semibold text-zinc-800">{scored.length} of {allAdCount} ads</span></span>
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">Min spend <span class="font-semibold text-zinc-800">SAR {fmt(Math.round(avgSpend))}</span></span>
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">Avg spend <span class="font-semibold text-zinc-800">SAR {fmt(Math.round(avgSpend))}</span></span>
+            <span class="rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-1 text-[11px] font-medium text-brand-700">Filters · platform, campaign, objective</span>
+            <span class="text-[11px] text-zinc-400">Averages cover all {allAdCount} ads, before filters</span>
+          </div>
+
+          <!-- Ranked list -->
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[46rem] text-left">
+              <thead>
+                <tr class="border-b border-zinc-100 text-[11px] uppercase tracking-wide text-zinc-400">
+                  <th class="px-5 py-3 font-medium">Rank</th>
+                  <th class="px-5 py-3 font-medium">Ad</th>
+                  <th class="px-5 py-3 font-medium">Type</th>
+                  <th class="px-5 py-3 font-medium text-right">Spend</th>
+                  <th class="px-5 py-3 font-medium text-right">Link CTR</th>
+                  <th class="px-5 py-3 font-medium text-right">Cost/purchase</th>
+                  <th class="px-5 py-3 font-medium text-right">ROAS</th>
+                  <th class="px-5 py-3 font-medium text-right">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scored.map((row, i) => (
+                  <tr class:list={["border-b border-zinc-50 text-sm", i < 3 && "bg-emerald-50/40"]}>
+                    <td class="px-5 py-3.5">
+                      <span class:list={[
+                        "inline-flex h-6 min-w-6 items-center justify-center rounded-md px-1.5 text-[11px] font-bold",
+                        i < 3 ? "bg-emerald-600 text-white" : "bg-zinc-100 text-zinc-500",
+                      ]}>{i < 3 ? `#${i + 1}` : i + 1}</span>
+                    </td>
+                    <td class="px-5 py-3.5">
+                      <div class="flex items-center gap-3">
+                        <span class:list={[
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-md",
+                          row.ad.type === "Video" ? "bg-zinc-800 text-white" : "bg-zinc-200 text-zinc-500",
+                        ]}>
+                          {row.ad.type === "Video" ? (
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                          ) : (
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                          )}
+                        </span>
+                        <span class="font-medium text-zinc-800">{row.ad.name}</span>
+                      </div>
+                    </td>
+                    <td class="px-5 py-3.5">
+                      <span class="rounded-md bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-700">{row.ad.type}</span>
+                    </td>
+                    <td class="px-5 py-3.5 text-right tabular-nums text-zinc-600">SAR {fmt(row.ad.spend)}</td>
+                    <td class="px-5 py-3.5 text-right tabular-nums text-zinc-600">{row.ad.ctr.toFixed(2)}%</td>
+                    <td class="px-5 py-3.5 text-right tabular-nums text-zinc-600">SAR {row.cpr.toFixed(0)}</td>
+                    <td class="px-5 py-3.5 text-right tabular-nums font-medium text-zinc-800">{row.roas.toFixed(2)}×</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <span class="inline-block rounded-md border border-zinc-200 px-2 py-0.5 text-[11px] font-bold tabular-nums text-zinc-700">{row.score.toFixed(2)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <figcaption class="mt-4 text-center text-xs text-white/35">
+          A recreation with anonymized ads. The scores are produced by the
+          product's own formula, on the figures shown.
+        </figcaption>
+      </figure>
+
+      <!-- The three reports -->
+      <div class="mt-14 grid gap-5 md:grid-cols-3">
+        {creativeReports.map((r) => (
+          <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={r.icon} />
+            </span>
+            <p class="mt-4 font-display text-lg font-bold text-white">{r.title}</p>
+            <p class="mt-1.5 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/60">{r.scope}</p>
+            <p class="mt-3 text-sm leading-relaxed text-white/50">{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ASSISTANT ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid items-center gap-14 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            Ask it instead of building a view
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            Some questions are worth a dashboard. Most are worth thirty seconds.
+            The assistant sits on every page, takes the question in plain
+            English, and shows you which data it used to answer, so you can
+            check it rather than trust it.
+          </p>
+          <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+            It remembers the workspace it is answering about. And if you already
+            work in Claude or ChatGPT, the MCP server lets them query the same
+            unified data directly.
+          </p>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 shadow-lg shadow-zinc-900/[0.06]">
+          <div class="border-b border-zinc-200 bg-white px-5 py-3 text-xs font-semibold text-zinc-400">Assistant</div>
+          <div class="space-y-4 p-5">
+            <div class="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-brand-600 px-4 py-2.5 text-sm text-white">
+              Which client moved the most this week, and why?
+            </div>
+            <div class="w-fit max-w-[92%] rounded-2xl rounded-bl-sm border border-zinc-200 bg-white px-4 py-3">
+              <ul class="space-y-2 text-sm leading-relaxed text-zinc-700">
+                {assistantAnswer.map((line) => <li>{line}</li>)}
+              </ul>
+              <div class="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3">
+                <span class="text-[10px] uppercase tracking-wide text-zinc-400">Data used</span>
+                {assistantSources.map((s) => (
+                  <span class="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500">{s}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CAPACITY ============================== -->
+  <section class="bg-zinc-50 px-6 py-24">
+    <div class="mx-auto max-w-5xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          Where the extra capacity comes from
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+          Every account you took on used to bring its own collecting with it:
+          its own tabs, its own conversions, its own report at the end of the
+          month. That is the part that capped you, and it is the part that
+          stops repeating.
+        </p>
+      </div>
+
+      <ol class="mt-12 grid gap-5 sm:grid-cols-2">
+        {capacity.map((c, i) => (
+          <li class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 font-display text-sm font-bold text-brand-700">{i + 1}</span>
+            <p class="mt-4 font-display text-lg font-bold text-zinc-950">{c.step}</p>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-500">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================= OBJECTIONS ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-center font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+        What you are probably thinking
+      </h2>
+
+      <div class="mt-12 space-y-4">
+        {objections.map((o) => (
+          <div class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <p class="font-display text-lg font-bold text-zinc-950">“{o.q}”</p>
+            <p class="mt-3 leading-relaxed text-zinc-600">{o.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CONTROL ============================== -->
+  <section class="bg-zinc-50 px-6 py-20">
+    <div class="mx-auto max-w-3xl">
+      <div class="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
+        <h2 class="font-display text-xl font-bold text-zinc-950">Changing budgets without leaving the screen</h2>
+        <p class="mt-2 leading-relaxed text-zinc-500">
+          Pausing a campaign and moving a budget happen from inside the
+          dashboard, so the decision and the action are in the same place. Where
+          that stands today:
+        </p>
+        <div class="mt-6 grid gap-px overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 sm:grid-cols-4">
+          {control.map((c) => (
+            <div class="bg-white px-4 py-4 text-center">
+              <p class="text-sm font-semibold text-zinc-900">{c.platform}</p>
+              <p class:list={[
+                "mt-1.5 text-xs font-medium",
+                c.status === "Live" ? "text-emerald-600" : "text-zinc-400",
+              ]}>{c.status}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ CTA ================================ -->
+  <section class="bg-ink px-6 py-24">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Start with one account
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/55">
+        Connect it, build the view the way you actually want an account read,
+        and see what the morning looks like when the numbers are already there.
+      </p>
+      <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href={`${APP_URL}/signup`}
+           class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+          Try it now
+        </a>
+        <a href={`${APP_URL}/demo`}
+           class="w-full rounded-xl border border-white/15 bg-white/5 px-8 py-3.5 text-base font-semibold text-white/90 transition hover:bg-white/10 sm:w-auto">
+          Book a demo
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>

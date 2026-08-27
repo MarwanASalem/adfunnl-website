@@ -9,8 +9,11 @@
     "copy:check": "node .claude/hooks/check-copy.mjs --all"
   },
   "dependencies": {
-    "astro": "^5.0.0",
     "@astrojs/tailwind": "^5.1.0",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "@fontsource/zain": "^5.3.0",
+    "astro": "^5.0.0",
     "tailwindcss": "^3.4.0"
   }
 }

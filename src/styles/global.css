@@ -1,0 +1,49 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Type system. Kept in step with the AdFunnl app (web/), which is the
+   source of truth for the families, the scale and the numeral rules.
+
+   Fonts are self-hosted through Fontsource, same packages and same
+   versions as the app, so there is no third-party font request and the
+   two products cannot drift apart on a CDN URL.
+
+   Order matters in the sans stack: Archivo carries no Arabic glyphs, so
+   the browser falls back per character and reaches Zain for Arabic on
+   its own. Promoting Zain ahead of Archivo would hand it the digits too.
+   Each Fontsource sheet declares unicode-range, so the Arabic files only
+   download when Arabic is painted.
+   ────────────────────────────────────────────────────────────────────── */
+@import "@fontsource-variable/archivo/index.css";
+@import "@fontsource/zain/400.css";
+@import "@fontsource/zain/700.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Tabular lining figures are structural, not decoration: any column of
+     numbers has to line up. Prose and hero copy keep proportional figures. */
+  table :where(td, th),
+  .text-metric-sm,
+  .text-metric,
+  .text-metric-lg {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+@layer utilities {
+  /* Numbers meant to be compared down a column, outside a table. */
+  .num {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Identifiers read character by character: IDs, account numbers, codes.
+     DM Mono keeps 0 and O apart. Not for eyebrows or labels. */
+  .ident {
+    font-family: theme("fontFamily.mono");
+    font-variant-numeric: slashed-zero lining-nums tabular-nums;
+    letter-spacing: -0.01em;
+  }
+}

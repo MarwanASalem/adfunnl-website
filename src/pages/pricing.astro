@@ -194,7 +194,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
         <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         Simple, honest pricing
       </span>
-      <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl">
+      <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
         Every platform in one workspace, priced for how you grow
       </h1>
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
@@ -248,7 +248,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
             ) : (
               <p class="flex items-baseline gap-1">
                 <span
-                  class="price-amount font-display text-4xl font-bold text-zinc-950"
+                  class="price-amount num font-display text-4xl font-bold text-zinc-950"
                   data-egp-m={p.egp}
                   data-egp-y={p.egp * ANNUAL_MONTHS}
                   data-usd-m={p.usd}
@@ -375,10 +375,10 @@ const fmt = (n: number) => n.toLocaleString("en-US");
                 Best value
               </span>
             )}
-            <p class="font-display text-3xl font-bold text-zinc-950">{pack.credits}</p>
+            <p class="num font-display text-3xl font-bold text-zinc-950">{pack.credits}</p>
             <p class="mt-1 text-sm text-zinc-500">credits</p>
             <p
-              class="pack-price mt-4 font-display text-xl font-bold text-brand-700"
+              class="pack-price num mt-4 font-display text-xl font-bold text-brand-700"
               data-egp={pack.egp}
               data-usd={pack.usd}
             >EGP {fmt(pack.egp)}</p>

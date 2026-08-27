@@ -1,4 +1,7 @@
 ---
+// Type system, shared with the app. See src/styles/global.css.
+import "../styles/global.css";
+
 interface Props {
   title: string;
   description?: string;
@@ -63,9 +66,6 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
     <meta name="twitter:image"       content={ogImage} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
     <title>{title} · AdFunnl</title>
   </head>

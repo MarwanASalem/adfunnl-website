@@ -5,33 +5,44 @@ import DataFlow from "../components/DataFlow.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-// Signature hero preview: three blended KPI tiles + a mini spend/revenue chart.
-const kpis = [
-  { label: "Ad spend",   value: "$48.2k", delta: "-6%",  down: false },
-  { label: "Revenue",    value: "$213k",  delta: "+18%", down: true  },
-  { label: "Blended ROAS", value: "4.42×", delta: "+0.6", down: true },
-];
-const bars = [38, 52, 41, 63, 58, 74, 69, 88];
-
 // ── Live snapshots section (faithful recreations of real app screens) ──
 // Pulse: real verdicts are Scale (emerald) / Hold (amber) / Cut (rose).
 const pulseRows = [
-  { name: "Retargeting · Broad", spend: "$3,240", revenue: "$16,900", roas: "5.2×", ctr: "2.4%", verdict: "scale" },
-  { name: "Prospecting · Lookalike 3%", spend: "$5,110", revenue: "$14,300", roas: "2.8×", ctr: "1.9%", verdict: "hold" },
-  { name: "Cold · Interest stack", spend: "$2,780", revenue: "$3,900", roas: "1.4×", ctr: "1.1%", verdict: "cut" },
+  { name: "Retargeting · Broad",        key: "meta",       spend: "$3,240", revenue: "$16,900", roas: "5.2×", ctr: "2.4%", verdict: "scale" },
+  { name: "Prospecting · Lookalike 3%", key: "tiktok",     spend: "$5,110", revenue: "$14,300", roas: "2.8×", ctr: "1.9%", verdict: "hold"  },
+  { name: "Cold · Interest stack",      key: "google_ads", spend: "$2,780", revenue: "$3,900",  roas: "1.4×", ctr: "1.1%", verdict: "cut"   },
+  { name: "Story ads · Gen Z",          key: "snapchat",   spend: "$1,960", revenue: "$7,450",  roas: "3.8×", ctr: "2.1%", verdict: "scale" },
 ];
 
-// Hook & Hold: hook = 3-sec plays ÷ impressions, hold = thruplays ÷ impressions.
-// Retention curve as % of viewers still watching across the video.
-const retention = [100, 92, 78, 63, 54, 48, 44, 41, 39, 37, 35];
-const W = 300, H = 120, PAD = 6;
-const rPts = retention.map((v, i) => {
-  const x = (i / (retention.length - 1)) * (W - PAD * 2) + PAD;
-  const y = (1 - v / 100) * (H - PAD * 2) + PAD;
-  return [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
-});
-const rLine = rPts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
-const rArea = `${rLine} L${rPts[rPts.length - 1][0]} ${H - PAD} L${rPts[0][0]} ${H - PAD} Z`;
+// Ad-level table widget. The Cost / purchase column carries the green wash that
+// stands in for the app's conditional table formatting. Anonymized demo data.
+const adRows = [
+  { ad: "Reel · Pack it Sunday",       key: "meta",     campaign: "Website sales · Tiffin Co.", spend: "EGP 53,133", purchases: "611", cpp: "EGP 86.96",  roas: "4.81×", photo: "/ad-1.jpg", video: true  },
+  { ad: "Reel · Leakproof test",       key: "tiktok",   campaign: "Website sales · Tiffin Co.", spend: "EGP 30,738", purchases: "341", cpp: "EGP 90.14",  roas: "4.35×", photo: "/ad-2.jpg", video: true  },
+  { ad: "Static · School lunch set",   key: "snapchat", campaign: "Back to school · Tiffin Co.", spend: "EGP 14,804", purchases: "208", cpp: "EGP 71.17",  roas: "5.62×", photo: "/ad-3.jpg", video: false },
+  { ad: "Reel · Bento unboxing",       key: "meta",     campaign: "Website sales · Tiffin Co.", spend: "EGP 10,907", purchases: "119", cpp: "EGP 91.66",  roas: "4.02×", photo: "/ad-4.jpg", video: true  },
+  { ad: "UGC · Mum's morning routine", key: "tiktok",   campaign: "Website sales · Tiffin Co.", spend: "EGP 10,730", purchases: "152", cpp: "EGP 70.59",  roas: "5.74×", photo: "/ad-5.jpg", video: true  },
+  { ad: "Reel · Keeps food warm 6h",   key: "snapchat", campaign: "Page views · Tiffin Co.",    spend: "EGP 9,056",  purchases: "74",  cpp: "EGP 122.38", roas: "2.91×", photo: "/ad-2.jpg", video: true  },
+];
+
+// Best Creatives Calculator: composite score, ranked. Ranks 1-3 get the green
+// outline the app uses for its top band.
+const bestCreatives = [
+  { rank: 1, score: "1.00", name: "IG Post · Leakproof test", campaign: "Website sales · Tiffin Co.",  photo: "/ad-1.jpg", spend: "EGP 5,002",  ctr: "5.21%", purchases: "87",  roas: "24.16×", top: true  },
+  { rank: 2, score: "0.42", name: "Reel · Pack it Sunday",    campaign: "Page views · Tiffin Co.",     photo: "/ad-5.jpg", spend: "EGP 9,056",  ctr: "3.14%", purchases: "74",  roas: "6.02×",  top: true  },
+  { rank: 3, score: "0.41", name: "UGC · Mum's morning",      campaign: "Website sales · Tiffin Co.",  photo: "/ad-4.jpg", spend: "EGP 10,730", ctr: "2.25%", purchases: "152", roas: "5.74×",  top: true  },
+  { rank: 4, score: "0.40", name: "Reel · Bento unboxing",    campaign: "Back to school · Tiffin Co.", photo: "/ad-3.jpg", spend: "EGP 7,272",  ctr: "3.46%", purchases: "96",  roas: "5.33×",  top: false },
+  { rank: 5, score: "0.40", name: "Static · School set",      campaign: "Back to school · Tiffin Co.", photo: "/ad-2.jpg", spend: "EGP 4,938",  ctr: "5.22%", purchases: "68",  roas: "5.11×",  top: false },
+];
+
+// Spend vs. store revenue. The maths has to hold:
+// 53,133 + 30,738 + 14,804 + 9,056 = 107,731, and 517,109 / 107,731 = 4.80×.
+const storeSpend = [
+  { name: "Meta",       key: "meta",       amount: "EGP 53,133" },
+  { name: "TikTok",     key: "tiktok",     amount: "EGP 30,738" },
+  { name: "Snapchat",   key: "snapchat",   amount: "EGP 14,804" },
+  { name: "Google Ads", key: "google_ads", amount: "EGP 9,056"  },
+];
 
 // ── Hero signature: the Blended Overview (e-commerce) dashboard ──
 // Faithful to the real template: per-platform metric cards + a blended row.
@@ -86,25 +97,20 @@ const momLinePts = momBars.map((b, i) => {
 });
 const momLine = momLinePts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
 const momBaseY = MOM_PT + momPlotH;
+
+// Shared cell classes for the two dark-section tables.
+const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
 ---
 
 <Layout title="Every ad platform. Every store. One source of truth.">
 
   <!-- ============================== HERO ============================== -->
-  <section class="relative overflow-hidden bg-white px-6 pt-16 pb-20 sm:pt-20">
+  <section class="relative overflow-hidden bg-white px-6 pt-16 pb-10 sm:pt-20">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
 
     <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
       <!-- Copy -->
       <div class="text-center lg:text-left">
-        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-xs font-semibold text-brand-700">
-          <span class="relative flex h-2 w-2">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-70"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-600"></span>
-          </span>
-          Synced hourly · Live shareable dashboards
-        </div>
-
         <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
           Every ad platform.<br />
           Every store.<br />
@@ -127,10 +133,6 @@ const momBaseY = MOM_PT + momPlotH;
             Book a demo
           </a>
         </div>
-
-        <p class="mt-6 text-sm text-zinc-400">
-          Trusted by brands and agencies running paid across four platforms and every store.
-        </p>
       </div>
 
       <!-- Signature: the real Blended Overview (e-commerce) dashboard, in an
@@ -166,7 +168,7 @@ const momBaseY = MOM_PT + momPlotH;
             {ovRows.map((row) => (
               <div class="flex items-stretch gap-2">
                 <div class="flex w-7 shrink-0 items-center justify-center">
-                  <span class="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-zinc-200/70 shadow-sm" title={row.name} aria-label={row.name}>
+                  <span class="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg" title={row.name} aria-label={row.name}>
                     <PlatformIcon platform={row.key} class="h-5 w-5" />
                   </span>
                 </div>
@@ -232,7 +234,7 @@ const momBaseY = MOM_PT + momPlotH;
   </section>
 
   <!-- ===================== DATA FLOW (animated) ===================== -->
-  <DataFlow sectionId="integrations" />
+  <DataFlow sectionId="integrations" heading="Observe and share data in a couple of clicks." />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">
@@ -240,12 +242,11 @@ const momBaseY = MOM_PT + momPlotH;
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          The product, moving
+          Check campaign performance live &amp; side by side.
         </h2>
         <p class="mt-4 text-lg text-zinc-400">
-          Recreations of AdFunnl's real workspace, with verdicts flipping, answers
-          streaming, retention curves drawing themselves. This is what your Monday
-          looks like.
+          Instead of multiple tabs to see your ads, just open AdFunnl.. Imagine the
+          time saved which can be re-invested where it truly matters.
         </p>
       </div>
 
@@ -256,7 +257,7 @@ const momBaseY = MOM_PT + momPlotH;
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · Meta · Acme Cosmetics
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · All platforms · Acme Cosmetics
           </div>
           <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Scaling verdicts</span>
         </div>
@@ -266,7 +267,7 @@ const momBaseY = MOM_PT + momPlotH;
             <p class="text-xs text-zinc-400">Rule: ROAS ≥ 3.0 to scale</p>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full min-w-[540px] text-left text-sm">
+            <table class="w-full min-w-[560px] text-left text-sm">
               <thead>
                 <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
                   <th class="py-2 pe-3 font-semibold">Campaign</th>
@@ -280,11 +281,18 @@ const momBaseY = MOM_PT + momPlotH;
               <tbody>
                 {pulseRows.map((r, i) => (
                   <tr class="border-b border-zinc-50 last:border-0" data-pulse-row={i === 0 ? "cycle" : undefined}>
-                    <td class="py-3 pe-3 font-medium text-zinc-700">{r.name}</td>
-                    <td class="py-3 px-3 text-right tabular-nums text-zinc-600">{r.spend}</td>
-                    <td class="py-3 px-3 text-right tabular-nums text-zinc-600">{r.revenue}</td>
-                    <td class="py-3 px-3 text-right font-semibold tabular-nums text-zinc-900" data-roas>{r.roas}</td>
-                    <td class="py-3 px-3 text-right tabular-nums text-zinc-600">{r.ctr}</td>
+                    <td class="py-3 pe-3 font-medium text-zinc-700">
+                      <span class="flex items-center gap-2">
+                        <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
+                          <PlatformIcon platform={r.key} class="h-[15px] w-[15px]" />
+                        </span>
+                        {r.name}
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.spend}</td>
+                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.revenue}</td>
+                    <td class="py-3 px-3 text-right font-semibold tabular-nums lining-nums text-zinc-900" data-roas>{r.roas}</td>
+                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.ctr}</td>
                     <td class="py-3 ps-3 text-right">
                       <span class="verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium" data-verdict={r.verdict}></span>
                     </td>
@@ -296,93 +304,382 @@ const momBaseY = MOM_PT + momPlotH;
         </div>
       </div>
 
-      <!-- Two-up: Assistant (streaming) + Hook & Hold (drawing curve) -->
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
-        <!-- Chat with your data, through the MCP -->
+      <!-- Ad-level table widget, with the app's conditional formatting -->
+      <div class="reveal mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Table widget · Ad level · Primary Report
+          </div>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Conditional formatting</span>
+        </div>
+        <div class="p-5 sm:p-6">
+          <div class="mb-3 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-zinc-800">Down to the individual ad</p>
+              <p class="mt-0.5 text-xs text-zinc-400">Campaign, ad set and ad level, with the creative in the row</p>
+            </div>
+            <p class="shrink-0 text-xs text-zinc-400">Sorted by spend</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[700px] text-left text-sm">
+              <thead>
+                <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
+                  <th class="py-2 pe-3 font-semibold">Ad</th>
+                  <th class="py-2 px-3 font-semibold">Thumb</th>
+                  <th class="py-2 px-3 font-semibold">Status</th>
+                  <th class="py-2 px-3 font-semibold">Campaign</th>
+                  <th class="py-2 px-3 text-right font-semibold">Spend</th>
+                  <th class="py-2 px-3 text-right font-semibold">Purchases</th>
+                  <th class="bg-emerald-50/80 py-2 px-3 text-right font-semibold text-emerald-700">Cost / purchase</th>
+                  <th class="py-2 ps-3 text-right font-semibold">ROAS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adRows.map((a) => (
+                  <tr class="border-b border-zinc-50 last:border-0">
+                    <td class="py-2.5 pe-3 font-medium text-zinc-700">
+                      <span class="flex items-center gap-2">
+                        <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
+                          <PlatformIcon platform={a.key} class="h-[14px] w-[14px]" />
+                        </span>
+                        {a.ad}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5">
+                      <span class="relative flex h-10 w-8 items-end justify-center overflow-hidden rounded bg-zinc-200 ring-1 ring-zinc-200/90">
+                        <img src={a.photo} alt="" loading="lazy" width="32" height="40" class="absolute inset-0 h-full w-full object-cover" />
+                        {a.video && (
+                          <span class="absolute right-0.5 top-0.5 flex h-[11px] w-[11px] items-center justify-center rounded-full bg-black/50">
+                            <svg class="ms-px h-1.5 w-1.5" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                          </span>
+                        )}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5">
+                      <span class="block h-2 w-2 rounded-full bg-brand-500" title="Active" aria-label="Active"></span>
+                    </td>
+                    <td class="px-3 py-2.5 text-xs text-zinc-600">{a.campaign}</td>
+                    <td class={numCell}>{a.spend}</td>
+                    <td class={numCell}>{a.purchases}</td>
+                    <td class="bg-emerald-50/80 px-3 py-2.5 text-right font-semibold tabular-nums lining-nums text-emerald-700">{a.cpp}</td>
+                    <td class="ps-3 py-2.5 text-right font-semibold tabular-nums lining-nums text-zinc-900">{a.roas}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Creative reports ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          Then go deeper, with ready-made creative reports
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-400">
+          The Best Creatives Calculator scores every ad on the outcomes you care
+          about and ranks them, so your top performers surface in a click.<br />
+          Psst.. We have other ready built templates too 👀
+        </p>
+      </div>
+
+      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Creatives analysis · Best Creatives Calculator
+          </div>
+        </div>
+        <div class="grid md:grid-cols-[190px_1fr]">
+          <!-- app sidebar -->
+          <div class="border-b border-zinc-100 bg-zinc-50/70 px-4 py-5 md:border-b-0 md:border-e">
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Creatives analysis</p>
+            <nav class="flex flex-col gap-1 text-xs">
+              <span class="rounded-lg bg-brand-50 px-3 py-2.5 font-semibold text-brand-700">Best Creatives Calculator</span>
+              <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Hook &amp; Hold Rates</span>
+              <span class="py-1.5 pe-3 ps-6 text-zinc-500">Overview</span>
+              <span class="py-1.5 pe-3 ps-6 text-zinc-500">Brand Leaderboard</span>
+              <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Ad Fatigue</span>
+            </nav>
+          </div>
+
+          <div class="min-w-0 p-5">
+            <!-- filter chips -->
+            <div class="mb-4 flex flex-wrap items-center gap-2 text-xs">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Showing <strong class="font-bold text-zinc-800">11 of 41 ads</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Min spend <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Avg purchases <strong class="font-bold text-zinc-800">4.2</strong></span>
+              <span class="text-zinc-400">Averages cover all 41 ads, before filters</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {bestCreatives.map((c) => (
+                <div class="overflow-hidden rounded-[10px] border border-zinc-200 bg-white">
+                  <div class={`relative aspect-[9/14] w-full overflow-hidden border-b border-zinc-200 bg-zinc-200 ${c.top ? "shadow-[inset_0_0_0_2px_#34d399]" : ""}`}>
+                    <img src={c.photo} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+                    <span class={`absolute left-1.5 top-1.5 rounded px-1.5 py-px text-[9px] font-bold text-white ${c.top ? "bg-emerald-600" : "bg-zinc-800/85"}`}>#{c.rank}</span>
+                    <span class="absolute right-1.5 top-1.5 rounded bg-white/90 px-1.5 py-px text-[9px] font-semibold text-zinc-800">Score {c.score}</span>
+                    <span class="absolute left-1/2 top-1/2 flex h-[30px] w-[30px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/40">
+                      <svg class="ms-0.5 h-3 w-3" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                  </div>
+                  <div class="px-3 pb-3 pt-2.5">
+                    <p class="truncate text-[12px] font-semibold text-zinc-800">{c.name}</p>
+                    <p class="mt-0.5 truncate text-[10px] text-zinc-400">{c.campaign}</p>
+                    <span class="mt-2 inline-block rounded bg-brand-50 px-1.5 py-px text-[10px] font-semibold text-brand-700">Video</span>
+                    <div class="mt-2.5 flex flex-col gap-1.5 text-[11px]">
+                      {[["Spend", c.spend], ["Link CTR", c.ctr], ["Purchases", c.purchases]].map(([k, v]) => (
+                        <span class="flex items-baseline justify-between gap-2">
+                          <span class="text-zinc-400">{k}</span>
+                          <span class="font-semibold tabular-nums lining-nums text-zinc-700">{v}</span>
+                        </span>
+                      ))}
+                      <span class="flex items-baseline justify-between gap-2">
+                        <span class="text-zinc-400">ROAS</span>
+                        <span class="font-bold tabular-nums lining-nums text-brand-600">{c.roas}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Chat with your data, either way ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          Chat with your data, either way
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-400">
+          Connect an MCP and query your unified numbers from the AI assistant you
+          already use, or just ask AdFunnl directly inside the app. Same data, same
+          answer, whichever side you start on.
+        </p>
+      </div>
+
+      <div class="mt-8 grid items-start gap-6 lg:grid-cols-2">
+        <!-- Left: drag-to-compare assistant slider. Two full copies of the same
+             conversation stacked in one grid cell; the Claude layer is clipped. -->
+        <div id="assistant-split"
+             class="assistant-split reveal relative select-none overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40"
+             style="--split:50%">
+          <div class="grid">
+            <!-- ChatGPT layer (bottom) -->
+            <div class="col-start-1 row-start-1 flex flex-col bg-white">
+              <div class="flex items-center gap-2.5 border-b border-[#e5e5e5] bg-[#f7f7f8] px-4 py-2.5">
+                <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
+                </span>
+                <span class="whitespace-nowrap text-xs font-semibold text-[#0d0d0d]">ChatGPT</span>
+                <span class="whitespace-nowrap rounded-md border border-[#e5e5e5] bg-white px-2 py-0.5 text-[10px] font-medium text-[#8f8f8f]">GPT-5</span>
+                <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e5e5e5] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#8f8f8f]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
+                </span>
+              </div>
+              <div class="flex flex-1 flex-col gap-4 p-5">
+                <div class="flex justify-end">
+                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e5e5e5] bg-[#f7f7f8] px-2.5 py-1.5 text-xs font-medium text-[#8f8f8f]">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+                      Used <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
+                    </div>
+                    <p class="text-sm leading-[1.7] text-[#0d0d0d]"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></p>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e5e5e5] bg-white px-3.5 py-2.5">
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#8f8f8f]">Ask anything</span>
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0d0d0d] text-white">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Claude layer (top, clipped to the split) -->
+            <div class="assistant-clip col-start-1 row-start-1 flex flex-col bg-[#faf9f6]">
+              <div class="flex items-center gap-2.5 border-b border-[#e2dbcd] bg-[#f3efe7] px-4 py-2.5">
+                <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
+                </span>
+                <span class="whitespace-nowrap text-xs font-semibold text-[#3d3929]">Claude</span>
+                <span class="whitespace-nowrap rounded-md border border-[#e2dbcd] bg-[#faf9f6] px-2 py-0.5 text-[10px] font-medium text-[#7c7565]">Sonnet 4.5</span>
+                <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e2dbcd] bg-[#faf9f6] px-2.5 py-1 text-[10px] font-semibold text-[#7c7565]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
+                </span>
+              </div>
+              <div class="flex flex-1 flex-col gap-4 p-5">
+                <div class="flex justify-end">
+                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e2dbcd] bg-[#f3efe7] px-2.5 py-1.5 text-xs font-medium text-[#7c7565]">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+                      Used <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
+                    </div>
+                    <p class="text-sm leading-[1.7] text-[#3d3929]"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></p>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e2dbcd] bg-white px-3.5 py-2.5">
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#7c7565]">Reply to Claude…</span>
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] bg-[#D97757] text-white">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- drag overlay -->
+          <div class="assistant-divider pointer-events-none absolute inset-y-0 w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]"></div>
+          <div class="assistant-handle pointer-events-none absolute top-1/2 flex h-[34px] w-[34px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg>
+          </div>
+          <div class="pointer-events-none absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">Drag to switch assistant</div>
+        </div>
+
+        <!-- Right: the in-app assistant -->
         <div class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
           <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Chat with your data · MCP
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>AdFunnl Assistant · Primary Report
             </div>
-            <div class="ms-auto flex items-center gap-1 text-[10px] font-medium text-zinc-400">
-              <span class="rounded border border-zinc-200 bg-white px-1.5 py-0.5">Claude</span>
-              <span class="rounded border border-zinc-200 bg-white px-1.5 py-0.5">ChatGPT</span>
-            </div>
+            <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">In app</span>
           </div>
-          <div class="space-y-3 p-5">
+          <div class="flex flex-col gap-3 p-5">
             <div class="flex justify-end">
-              <p class="max-w-[85%] rounded-2xl rounded-br-sm bg-brand-600 px-3.5 py-2 text-sm text-white">
-                Recap TikTok vs Meta this month. Where did we waste budget?
-              </p>
+              <p class="max-w-[85%] rounded-2xl rounded-br-sm bg-brand-600 px-3.5 py-2 text-sm text-white">Which creative should I put more budget behind this week?</p>
             </div>
             <div class="flex gap-2.5">
-              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
+              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+              </span>
               <div class="min-w-0 flex-1">
                 <p class="rounded-2xl rounded-bl-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
-                  <span id="chat-stream"></span><span class="stream-caret text-brand-600">▍</span>
+                  <span data-inapp-stream></span><span class="stream-caret text-brand-600">▍</span>
                 </p>
-                <div class="mt-2.5 rounded-lg border border-zinc-200 bg-zinc-50/70 text-xs">
-                  <div class="flex items-center gap-1.5 px-2.5 py-1.5 font-medium text-zinc-500">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
-                    AdFunnl MCP · tools called
-                  </div>
-                  <div class="space-y-1 border-t border-zinc-100 px-2.5 py-2 font-mono text-[10px] leading-relaxed text-zinc-500">
-                    <p><span class="text-zinc-400">get_insights</span>(meta) · 30d · spend, roas by campaign</p>
-                    <p><span class="text-zinc-400">get_insights</span>(tiktok) · 30d · spend, roas by campaign</p>
-                  </div>
+                <div class="mt-2.5 flex flex-wrap gap-1.5">
+                  {["Show the ad", "Compare to last month", "Add to report"].map((chip) => (
+                    <span class="rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium text-zinc-600">{chip}</span>
+                  ))}
                 </div>
+              </div>
+            </div>
+            <div class="mt-1 flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
+              <span class="flex-1 text-xs text-zinc-400">Ask anything about this report</span>
+              <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600 text-white">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Store revenue ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          Add your store, and the return gets honest
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-400">
+          Connect Shopify or Salla and AdFunnl sets ad spend against the revenue
+          your store actually recorded. The platforms each claim their own
+          conversions; your store settles it.
+        </p>
+      </div>
+
+      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Spend vs. store revenue · This month
+          </div>
+          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Store connected
+          </span>
+        </div>
+
+        <div class="grid items-center gap-6 px-6 py-7 lg:grid-cols-[1fr_96px_1fr] lg:gap-0">
+          <!-- spend -->
+          <div>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Ad spend, all platforms</p>
+            <div class="flex flex-col gap-2">
+              {storeSpend.map((s) => (
+                <div class="flex items-center gap-2.5 rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
+                  <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center overflow-hidden rounded-[7px] bg-white ring-1 ring-zinc-200/90">
+                    <PlatformIcon platform={s.key} class="h-4 w-4" />
+                  </span>
+                  <span class="flex-1 text-ui font-semibold text-zinc-700">{s.name}</span>
+                  <span class="text-ui font-semibold tabular-nums lining-nums text-zinc-600">{s.amount}</span>
+                </div>
+              ))}
+            </div>
+            <div class="mt-2.5 flex items-center justify-between rounded-[10px] bg-zinc-100 px-3 py-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">Total spend</span>
+              <span class="text-base font-bold tabular-nums lining-nums text-zinc-900">EGP 107,731</span>
+            </div>
+          </div>
+
+          <!-- the vs. hinge -->
+          <div class="flex items-center justify-center gap-2 lg:flex-col">
+            <span class="h-px w-10 bg-gradient-to-r from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-b"></span>
+            <span class="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-bold text-zinc-400">vs</span>
+            <span class="h-px w-10 bg-gradient-to-l from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-t"></span>
+          </div>
+
+          <!-- store revenue -->
+          <div>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Revenue, recorded by your store</p>
+            <div class="rounded-xl border border-[#d7ecc4] bg-[rgba(240,250,232,0.6)] p-4">
+              <div class="flex items-center gap-2.5">
+                <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center overflow-hidden rounded-[7px] bg-white ring-1 ring-zinc-200/90">
+                  <PlatformIcon platform="shopify" class="h-4 w-4" />
+                </span>
+                <span class="flex-1 text-ui font-semibold text-zinc-700">Shopify</span>
+                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#4a7c2f]">Source of truth</span>
+              </div>
+              <p class="mt-3.5 font-display text-metric-lg font-bold tabular-nums lining-nums text-zinc-900">EGP 517,109</p>
+              <p class="mt-1 text-xs text-zinc-500">4,182 orders · 1,193 new customers</p>
+            </div>
+            <div class="mt-2.5 grid grid-cols-2 gap-2.5">
+              <div class="rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Platforms claim</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-zinc-400">6.42×</p>
+              </div>
+              <div class="rounded-[10px] border border-brand-200 bg-brand-50 px-3 py-2.5">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-500">Store-verified ROAS</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-brand-900">4.80×</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Hook & Hold -->
-        <div class="reveal overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
-          <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-            <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Creatives · Hook &amp; Hold
-            </div>
-          </div>
-          <div class="p-5">
-            <div class="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <p class="text-sm font-semibold text-zinc-800">Where viewers drop off</p>
-                <p class="mt-0.5 text-xs text-zinc-400">Spend-weighted · Meta video</p>
-              </div>
-              <div class="flex gap-4 text-right">
-                <div>
-                  <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-400">Hook</p>
-                  <p class="font-display text-lg font-bold text-brand-600">31%</p>
-                </div>
-                <div>
-                  <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-400">Hold</p>
-                  <p class="font-display text-lg font-bold text-brand-600">9.4%</p>
-                </div>
-              </div>
-            </div>
-            <svg class="hookhold w-full" viewBox={`0 0 ${W} ${H}`} fill="none" preserveAspectRatio="none" role="img" aria-label="Video retention curve showing viewer drop-off">
-              <defs>
-                <linearGradient id="rfill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#5738c9" stop-opacity="0.22" />
-                  <stop offset="100%" stop-color="#5738c9" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              {[25, 50, 75].map((y) => (
-                <line x1={PAD} y1={(y / 100) * (H - PAD * 2) + PAD} x2={W - PAD} y2={(y / 100) * (H - PAD * 2) + PAD} stroke="#f1f1f4" stroke-width="1" />
-              ))}
-              <path class="hh-area" d={rArea} fill="url(#rfill)" />
-              <path class="hh-line" d={rLine} pathLength="1" stroke="#5738c9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <div class="mt-1 flex justify-between text-[10px] font-medium text-zinc-400">
-              <span>0s</span><span>3s · hook</span><span>ThruPlay · hold</span>
-            </div>
-          </div>
+        <div class="border-t border-zinc-100 bg-zinc-50/70 px-6 py-3.5">
+          <p class="text-xs text-zinc-500">
+            Add the four platforms' self-reported conversions together and you
+            overcount by a third. AdFunnl reports the number your store can back
+            up, down to product and category.
+          </p>
         </div>
       </div>
     </div>
@@ -392,17 +689,13 @@ const momBaseY = MOM_PT + momPlotH;
   <section id="features" class="bg-zinc-50/60 px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">The workspace</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Everything you need, in one place
+          Then share ALL of this in one drag and drop, customizable dashboard 🤯
         </h2>
-        <p class="mt-4 text-lg text-zinc-500">
-          Build it, ask it, watch it, and tie every dollar back to real store revenue.
-        </p>
       </div>
 
       <!-- Build (Dashboards): flagship, links to feature page -->
-      <div id="build" class="mt-16 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+      <div id="build" class="mt-10 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
         <div>
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
@@ -420,49 +713,23 @@ const momBaseY = MOM_PT + momPlotH;
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <!-- animated drag-and-drop canvas mock -->
-        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
-          <!-- widget palette -->
-          <div class="mb-3 flex items-center gap-1.5">
-            {["KPI", "Chart", "Funnel", "Table"].map((w, i) => (
-              <span class={`rounded-md border px-2 py-1 text-[9px] font-semibold ${i === 0 ? "border-brand-300 bg-brand-100 text-brand-700" : "border-zinc-200 bg-white text-zinc-500"}`}>{w}</span>
-            ))}
-            <span class="ms-auto text-[9px] font-medium text-zinc-400">Canvas</span>
+        <!-- the real thing: a screen recording of the builder, in browser chrome -->
+        <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_20px_40px_rgba(43,29,97,0.14)]">
+          <div class="flex items-center gap-[7px] border-b border-zinc-100 bg-zinc-50 px-3.5 py-2.5">
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="ms-1.5 text-[11px] font-medium text-zinc-400">app.adfunnl.com · Report builder</span>
+            <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
+              <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>Screen recording
+            </span>
           </div>
-
-          <!-- fixed-ratio stage so the drag animation lands precisely -->
-          <div class="dnd-stage relative mx-auto aspect-[5/4] w-full">
-            <!-- static tiles -->
-            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:0;top:0;width:47%;height:30%">
-              <p class="text-[9px] text-zinc-400">ROAS</p><p class="font-display text-sm font-bold text-zinc-900">4.4×</p>
-            </div>
-            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:0;top:36%;width:47%;height:60%">
-              <p class="mb-1.5 text-[9px] text-zinc-400">Revenue by channel</p>
-              <div class="flex h-[68%] items-end gap-1">
-                {[60, 80, 45, 70, 90, 55].map((h) => (
-                  <div class="flex-1 rounded-t bg-brand-500" style={`height:${h}%`}></div>
-                ))}
-              </div>
-            </div>
-            <div class="absolute rounded-lg border border-zinc-200 bg-white p-2.5" style="left:53%;top:36%;width:47%;height:60%">
-              <p class="mb-1.5 text-[9px] text-zinc-400">Funnel</p>
-              <div class="space-y-1">
-                <div class="h-2 w-full rounded bg-brand-600"></div>
-                <div class="h-2 w-4/5 rounded bg-brand-400"></div>
-                <div class="h-2 w-3/5 rounded bg-brand-300"></div>
-                <div class="h-2 w-2/5 rounded bg-brand-200"></div>
-              </div>
-            </div>
-
-            <!-- drop zone (top-right slot) -->
-            <div class="dnd-drop absolute rounded-lg border-2 border-dashed" style="left:53%;top:0;width:47%;height:30%"></div>
-
-            <!-- the tile being dragged in -->
-            <div class="dnd-tile absolute rounded-lg border border-brand-300 bg-white p-2.5 shadow-xl shadow-brand-900/20" style="width:47%;height:30%">
-              <p class="text-[9px] text-zinc-400">New customers</p><p class="font-display text-sm font-bold text-zinc-900">1,284</p>
-              <svg class="dnd-cursor absolute h-4 w-4 text-zinc-800" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="1.5" style="right:-6px;bottom:-8px"><path d="M5 3l14 7-6 2-2 6z"/></svg>
-            </div>
-          </div>
+          <video
+            src="/builder-demo.mp4"
+            autoplay muted loop playsinline preload="metadata"
+            aria-label="Screen recording of the AdFunnl report builder"
+            class="block h-auto w-full bg-zinc-950"
+          ></video>
         </div>
       </div>
 
@@ -505,8 +772,8 @@ const momBaseY = MOM_PT + momPlotH;
       </div>
 
       <!-- Currency unification -->
-      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
-        <div class="cur-viz order-2 lg:order-1 rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-brand-200 bg-white p-8 shadow-[0_12px_32px_rgba(43,29,97,0.1)] lg:grid-cols-2 lg:p-10">
+        <div class="cur-viz order-2 lg:order-1 rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
           <div class="grid grid-cols-2 gap-2.5">
             {[
               { c: "USD", flag: "$", amt: "142,880" },
@@ -540,7 +807,8 @@ const momBaseY = MOM_PT + momPlotH;
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>
             Currency
           </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Every currency, converted into yours</h3>
+          <h3 class="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-zinc-950">No more mental math</h3>
+          <p class="mt-2.5 text-lg font-semibold text-brand-600">Every currency, converted into yours</p>
           <p class="mt-3 leading-relaxed text-zinc-500">
             Selling in four markets means four currencies, and a conversion someone is
             doing in their head. AdFunnl converts every platform and store into your
@@ -602,57 +870,8 @@ const momBaseY = MOM_PT + momPlotH;
         </div>
       </div>
 
-      <!-- Ask + Monitor: two-up -->
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
-        <div id="assistant" class="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
-          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Ask · MCP</p>
-          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Chat with your data from Claude, ChatGPT, or any assistant</h3>
-          <p class="mt-3 text-sm leading-relaxed text-zinc-500">
-            AdFunnl exposes your unified data as an MCP server, so the AI you already
-            use can query it directly. Connect Claude, ChatGPT or any MCP-capable client
-            and ask "recap TikTok vs Meta this month" in the tool of your choice.
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">Claude</span>
-            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">ChatGPT</span>
-            <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700">Any MCP client</span>
-          </div>
-        </div>
-
-        <div id="pulse" class="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
-          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">Monitor</p>
-          <h3 class="mt-2 font-display text-xl font-bold text-zinc-950">Know something's wrong before it costs you</h3>
-          <p class="mt-3 text-sm leading-relaxed text-zinc-500">
-            Pulse watches every account around the clock, applies your rules, and flags
-            campaigns with clear verdicts on ROAS, spend and CTR. Funding and connection
-            alerts catch a failed card or an expired token before your reports go quiet.
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">ROAS healthy</span>
-            <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">Spend spike</span>
-            <span class="rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700">Token expiring</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Creative + Product ROAS + Agencies: three-up -->
-      <div class="mt-6 grid gap-6 md:grid-cols-3">
-        <div id="creative" class="rounded-3xl border border-zinc-100 bg-white p-7 shadow-sm">
-          <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          </div>
-          <h3 class="font-display text-lg font-bold text-zinc-950">Find your winners. Cut the rest.</h3>
-          <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">
-            AdFunnl scores and ranks every creative. For video, the hook-and-hold view
-            maps exactly where viewers drop off, the most actionable lens in short-form.
-          </p>
-        </div>
+      <!-- Product ROAS + Agencies: two-up -->
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
         <div id="product-roas" class="rounded-3xl border border-zinc-100 bg-white p-7 shadow-sm">
           <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
@@ -764,34 +983,17 @@ const momBaseY = MOM_PT + momPlotH;
     @keyframes caretBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
     .stream-caret { animation: caretBlink 1s step-end infinite; }
 
-    /* Hook & Hold curve draws itself once revealed */
-    .hh-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
-    .reveal.in .hh-line { transition: stroke-dashoffset 1.6s ease .2s; stroke-dashoffset: 0; }
-    .hh-area { opacity: 0; }
-    .reveal.in .hh-area { transition: opacity .8s ease 1s; opacity: 1; }
-
     /* Verdict flip on the featured Pulse row */
     .verdict { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
     [data-pulse-row="cycle"] [data-roas] { transition: color .35s ease; }
 
-    /* ── Drag & drop builder ── */
-    .dnd-tile { animation: dndDrag 4.8s cubic-bezier(.4,0,.2,1) infinite; }
-    @keyframes dndDrag {
-      0%   { left: 60%; top: -6%; opacity: 0; }
-      10%  { left: 58%; top: 2%;  opacity: 1; }
-      55%  { left: 53%; top: 0%;  opacity: 1; }
-      70%  { left: 53%; top: 0%;  opacity: 1; }
-      82%  { left: 53%; top: 0%;  opacity: 1; }
-      90%,100% { left: 53%; top: 0%; opacity: 0; }
-    }
-    .dnd-drop { border-color: #ddd6fe; background: rgba(139,111,240,.05); animation: dndDropPulse 4.8s ease-in-out infinite; }
-    @keyframes dndDropPulse {
-      0%,45%   { border-color: #ddd6fe; background: rgba(139,111,240,.05); }
-      55%,82%  { border-color: #8b6ff0; background: rgba(139,111,240,.14); }
-      90%,100% { border-color: #ddd6fe; background: rgba(139,111,240,.05); }
-    }
-    .dnd-cursor { animation: dndClick 4.8s ease-in-out infinite; }
-    @keyframes dndClick { 0%,52%,72%,100% { transform: scale(1); } 60% { transform: scale(.82); } }
+    /* ── Drag-to-compare assistant slider ──
+       Both skins occupy the same grid cell; --split drives the clip and the
+       overlay, so one custom property moves everything at once. */
+    .assistant-split { cursor: ew-resize; touch-action: none; }
+    .assistant-clip { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+    .assistant-divider { left: var(--split); }
+    .assistant-handle { left: var(--split); }
 
     /* ── Month-over-month chart (reveal-triggered) ── */
     .mom-bar { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); }
@@ -812,16 +1014,13 @@ const momBaseY = MOM_PT + momPlotH;
     .reveal.in .team-avatar { transition: opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1); opacity: 1; transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .hh-line, .hh-area, .verdict,
-      .dnd-tile, .dnd-drop, .dnd-cursor, .cur-arrow { animation: none !important; transition: none !important; }
-      .dnd-tile { left: 53% !important; top: 0 !important; opacity: 1 !important; }
+      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .verdict,
+      .cur-arrow { animation: none !important; transition: none !important; }
       .mom-bar { transform: scaleY(1) !important; }
       .mom-line { stroke-dashoffset: 0 !important; }
       .mom-dot, .cur-chip, .team-avatar { opacity: 1 !important; transform: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
       .chip-in { opacity: 1; }
-      .hh-line { stroke-dashoffset: 0; }
-      .hh-area { opacity: 1; }
     }
   </style>
 
@@ -912,21 +1111,63 @@ const momBaseY = MOM_PT + momPlotH;
       }, 2200);
     }
 
-    // ── Chat streaming (loops) ─────────────────────────────────────
-    const streamEl = document.getElementById("chat-stream");
-    const ANSWER = "TikTok took 62% of spend but returned only 38% of revenue. Two Meta retargeting sets carried blended ROAS this month, so shifting ~$4.2k out of TikTok prospecting into them is the clearest win.";
-    if (streamEl) {
-      if (rm) { streamEl.textContent = ANSWER; }
-      else {
-        let i = 0;
-        function type() {
-          streamEl.textContent = ANSWER.slice(0, i);
-          i++;
-          if (i <= ANSWER.length) setTimeout(type, 22);
-          else setTimeout(() => { i = 0; setTimeout(type, 400); }, 3800);
-        }
-        type();
-      }
+    // ── Drag-to-compare assistant slider ──────────────────────────
+    // One shared counter drives both typewriters, so the MCP answer and the
+    // in-app answer stay in step no matter which side of the slider you read.
+    const split = document.getElementById("assistant-split");
+    let dragging = false;
+    if (split) {
+      let pendingX = 0, raf = 0, current = 50;
+      const apply = () => {
+        raf = 0;
+        const r = split.getBoundingClientRect();
+        const pct = Math.max(4, Math.min(96, ((pendingX - r.left) / r.width) * 100));
+        if (Math.abs(pct - current) <= 0.15) return;
+        current = pct;
+        split.style.setProperty("--split", pct.toFixed(2) + "%");
+      };
+      const setFrom = (clientX) => {
+        pendingX = clientX;
+        if (!raf) raf = requestAnimationFrame(apply);
+      };
+      split.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        dragging = true;
+        setFrom(e.clientX);
+        const move = (ev) => setFrom(ev.clientX);
+        const up = () => {
+          dragging = false;
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
+    }
+
+    // ── Assistant typewriters (shared counter, loops) ──────────────
+    const MCP_ANSWER = "TikTok took 62% of spend but returned only 38% of revenue. Two Meta retargeting sets carried blended ROAS this month, so shifting ~$4.2k out of TikTok prospecting into them is the clearest win.";
+    const INAPP_ANSWER = "IG Post · Leakproof test is your clearest case: EGP 5,002 spent, 87 purchases and a 24.16× return, well ahead of the next ad on the list. It is still under your average spend, so there is room to scale it before fatigue shows up.";
+    const mcpEls = document.querySelectorAll("[data-mcp-stream]");
+    const inAppEls = document.querySelectorAll("[data-inapp-stream]");
+    const longest = Math.max(MCP_ANSWER.length, INAPP_ANSWER.length);
+
+    function writeAll(nodes, text, n) {
+      const slice = text.slice(0, Math.min(n, text.length));
+      nodes.forEach((el) => { el.textContent = slice; });
+    }
+
+    if (rm) {
+      writeAll(mcpEls, MCP_ANSWER, MCP_ANSWER.length);
+      writeAll(inAppEls, INAPP_ANSWER, INAPP_ANSWER.length);
+    } else {
+      let n = 0;
+      setInterval(() => {
+        if (dragging) return;
+        n = n > longest + 40 ? 0 : n + 1;
+        writeAll(mcpEls, MCP_ANSWER, n);
+        writeAll(inAppEls, INAPP_ANSWER, n);
+      }, 28);
     }
   </script>
 

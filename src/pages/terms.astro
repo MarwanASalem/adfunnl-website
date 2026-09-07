@@ -1,0 +1,100 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── Terms of Service ─────────────────────────────────────────────────────
+// This is the same policy the app serves at app.adfunnl.com/terms, mirrored
+// here so app stores and platform reviewers have a public URL on the marketing
+// domain to point at. The app is the source: if the policy changes there,
+// change it here too, and move the "Last updated" line on both.
+//
+// Deliberately low-visibility: linked from the footer only, and kept out of
+// the nav and the sitemap-facing pages. See privacy.astro for the sibling page.
+const LAST_UPDATED = "Last updated: June 2025";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "Acceptance of Terms",
+    body: [
+      "By creating an account or using AdFunnl, you agree to these Terms of Service. If you do not agree, do not use the service. These terms apply to all users of the platform.",
+    ],
+  },
+  {
+    title: "Description of Service",
+    body: [
+      "AdFunnl is an advertising analytics platform that aggregates performance data from connected ad platforms (Meta, Google Ads, TikTok, Snapchat) and data sources (Google Sheets, Shopify, and others) into a unified dashboard. We provide data visualization, reporting, and insights tools.",
+    ],
+  },
+  {
+    title: "Your Account",
+    body: [
+      "You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must provide accurate information when registering. You may not share your account with others or use the service for any unlawful purpose.",
+      "You must be at least 18 years old to use AdFunnl.",
+    ],
+  },
+  {
+    title: "Connected Platforms and Data",
+    body: [
+      "When you connect a third-party platform (e.g., Meta, Google Ads), you authorize AdFunnl to access and store data from that platform on your behalf. You are responsible for ensuring you have the right to connect those accounts and that doing so does not violate the terms of those platforms.",
+      "You retain ownership of your data. We do not claim any intellectual property rights over it.",
+    ],
+  },
+  {
+    title: "Acceptable Use",
+    body: [
+      "You agree not to:",
+      "• Use the service to violate any applicable law or regulation.",
+      "• Attempt to gain unauthorized access to our systems or other users' accounts.",
+      "• Reverse engineer, decompile, or otherwise attempt to extract the source code of the platform.",
+      "• Use the service in a way that could damage, disable, or impair our infrastructure.",
+      "• Resell or sublicense access to the service without our written consent.",
+    ],
+  },
+  {
+    title: "Limitation of Liability",
+    body: [
+      "AdFunnl is provided 'as is' without warranties of any kind. We do not guarantee that the service will be uninterrupted, error-free, or that the data displayed will be perfectly accurate at all times, as it depends on data availability from third-party platforms.",
+      "To the maximum extent permitted by law, AdFunnl shall not be liable for any indirect, incidental, or consequential damages arising from your use of the service.",
+    ],
+  },
+  {
+    title: "Changes and Termination",
+    body: [
+      "We may update these terms from time to time. Continued use of the service after changes are posted constitutes acceptance of the updated terms.",
+      "You may terminate your account at any time. We reserve the right to suspend or terminate accounts that violate these terms.",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Terms of Service"
+  description="The terms that govern your use of AdFunnl, including your account, connected platforms, acceptable use, and liability."
+  noindex
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">Terms of Service</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      Questions? Contact us at{" "}
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+    </p>
+  </main>
+</Layout>

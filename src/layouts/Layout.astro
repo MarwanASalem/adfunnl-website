@@ -6,12 +6,16 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  /** Keep a page out of search results. For legal pages that exist to be
+      linked to directly, not found. */
+  noindex?: boolean;
 }
 
 const {
   title,
   description = "AdFunnl: Every ad platform. Every store. One source of truth. Meta, TikTok, Snapchat and Google, plus Shopify and Salla revenue, in one always-fresh workspace.",
   ogImage = "/logo-1024.png",
+  noindex = false,
 } = Astro.props;
 
 const APP_URL = "https://app.adfunnl.com";
@@ -54,6 +58,7 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <meta property="og:title"       content={`${title} · AdFunnl`} />
     <meta property="og:description" content={description} />

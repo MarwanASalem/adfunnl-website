@@ -214,7 +214,7 @@ the reader already has, and let the body bring the fix.
 
 ```
 WAS:  See who your ads actually reach
-NOW:  How long would it take you to see who your ads reach?
+NOW:  How long would it take you to see your breakdowns?
 RULE: An outcome headline asks the reader to want something. A problem
       headline makes them recognise their own week first. The fix belongs in
       the body, after the pain has landed.

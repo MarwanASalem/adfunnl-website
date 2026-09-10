@@ -209,6 +209,17 @@ RULE: Open a section with the cost the reader already feels. Mention the
 Practical test for any persona page: could this section exist on a competitor's
 site with the product name swapped? If yes, it is feature copy.
 
+The same applies to section headlines on the homepage: open with the problem
+the reader already has, and let the body bring the fix.
+
+```
+WAS:  See who your ads actually reach
+NOW:  How long would it take you to see who your ads reach?
+RULE: An outcome headline asks the reader to want something. A problem
+      headline makes them recognise their own week first. The fix belongs in
+      the body, after the pain has landed.
+```
+
 ### R12. Us versus them, side by side
 
 Wanted more, everywhere it fits. Two columns, the usual way against AdFunnl,

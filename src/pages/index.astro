@@ -44,6 +44,21 @@ const storeSpend = [
   { name: "Google Ads", key: "google_ads", amount: "EGP 9,056"  },
 ];
 
+// ── Audience breakdowns: real app screenshots, privacy toggle on ──
+// Breakdowns come from Meta and Snapchat only (docs/what-ships.md, checked
+// 10 September 2026), which is why the body names them. The headline opens
+// with the reader's problem, see R11 in docs/voice.md. An age chart goes into
+// `shots` next to gender and device once the corrected screenshot is in.
+const breakdowns = {
+  heading: "How long would it take you to see who your ads reach?",
+  body: "Age, gender, device and location show you who your ads reach and who actually buys. In the ad platform you get them one campaign at a time, one breakdown at a time, then export and stitch the files together. Connect your accounts and AdFunnl adds them up across all your Meta and Snapchat campaigns, already drawn as charts.",
+  shots: [
+    { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "AdFunnl geo map widget shading ad spend by region across Egypt, darkest around Cairo." },
+    { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "AdFunnl donut chart of Meta purchases by gender: male, female and unknown." },
+    { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "AdFunnl bar chart of Meta purchases and cost per purchase by device, from iPhone and Android phones to desktop and tablets." },
+  ],
+};
+
 // ── Hero signature: the Blended Overview (e-commerce) dashboard ──
 // Faithful to the real template: per-platform metric cards + a blended row.
 // Numbers are anonymized demo data (no real client/account).
@@ -452,17 +467,33 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     </div>
   </section>
 
-  <!-- ===================== ASSISTANT + STORE ===================== -->
+  <!-- ============= BREAKDOWNS + ASSISTANT + STORE ============= -->
   <!-- Light on purpose: the dark section above makes one point in context,
        this one starts the run through the rest of the product. -->
   <section id="assistant" class="bg-white px-6 py-24">
     <div class="mx-auto max-w-6xl">
-      <!-- ── Chat with your data, either way ── -->
-      <div class="reveal mx-auto max-w-2xl text-center">
+      <!-- ── Audience breakdowns ── -->
+      <div id="breakdowns" class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Chat with your data, either way
+          {breakdowns.heading}
         </h2>
-        <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">{breakdowns.body}</p>
+      </div>
+
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        {breakdowns.shots.map((s) => (
+          <figure class={`reveal overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10 ${s.wide ? "md:col-span-2" : ""}`}>
+            <img src={s.src} width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" class="block h-auto w-full" />
+          </figure>
+        ))}
+      </div>
+
+      <!-- ── Chat with your data, either way ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+          Chat with your data, either way
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
           Connect an MCP and query your unified numbers from the AI assistant you
           already use, or just ask AdFunnl directly inside the app. Same data, same
           answer, whichever side you start on.

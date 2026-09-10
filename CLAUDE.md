@@ -21,9 +21,10 @@ These are not preferences. A copy change that breaks one of these is wrong.
    The audience is **media buyers** and **performance marketers**, always
    written in full. Never drop the "media": on its own the short form reads as
    somebody making a purchase. The hook enforces this.
-4. **CTAs are fixed and plain.** The allowed set is `Try it now`, `Start free`
-   (both to `${APP_URL}/signup`) and `Book a demo` (to `${APP_URL}/demo`). No
-   witty or metaphorical button text.
+4. **CTAs are fixed and plain.** The allowed set is `Try it now` and `Start free`,
+   both to `${APP_URL}/signup`. No witty or metaphorical button text. There is
+   no demo button: demos are not offered right now, and the app has no `/demo`
+   page. Do not add one back until that changes.
 5. **Never claim a capability without checking `docs/what-ships.md`.** That file
    is the list of what the site may claim, and it has a "Do not claim" section
    for things that sound true and are not. This repo and the app repo are not

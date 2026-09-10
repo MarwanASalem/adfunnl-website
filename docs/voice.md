@@ -22,7 +22,8 @@ disagree, `CLAUDE.md` wins.
   full every time. Dropping the "media" is wrong: the entire app is built for
   media buyers, and the short form reads as somebody making a purchase. The
   hook enforces this, which is why this line does not spell out the short form.
-- CTAs are plain: `Try it now`, `Start free`, `Book a demo`. Nothing else.
+- CTAs are plain: `Try it now`, `Start free`. Nothing else. No demo button,
+  because demos are not offered right now.
 - No invented numbers, customers, testimonials or percentages.
 - Capability claims come from `what-ships.md`, including its "Do not claim"
   list. The app repo is not connected to this one, so nothing warns you when
@@ -124,7 +125,7 @@ WAS:  Put your book on one screen
       Set up one account with me
 NOW:  Try it now
 RULE: A clever CTA makes the reader decode instead of click. Allowed set:
-      Try it now, Start free, Book a demo.
+      Try it now, Start free.
 ```
 
 ### R6. No coined vocabulary

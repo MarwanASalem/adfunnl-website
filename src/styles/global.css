@@ -13,6 +13,9 @@
    download when Arabic is painted.
    ────────────────────────────────────────────────────────────────────── */
 @import "@fontsource-variable/archivo/index.css";
+/* Real italic for emphasis words (the homepage hero), so the browser never
+   fakes the slant. Only downloads when italic text is painted. */
+@import "@fontsource-variable/archivo/wght-italic.css";
 @import "@fontsource/zain/400.css";
 @import "@fontsource/zain/700.css";
 @import "@fontsource/dm-mono/400.css";

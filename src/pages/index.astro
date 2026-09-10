@@ -60,20 +60,21 @@ const breakdowns = {
   ],
 };
 
-// ── Data analysis stages: Google's six, animated in AnalysisStages ──
-// Heading and body are Hussein's wording. Prepare and Process are automated
-// sync and normalization, NOT AI: the app only uses AI in the assistant, the
-// MCP server and the dashboard builder (checked 10 September 2026). Keep AI
-// out of those two stages. owner: "you" | "auto" | "ai".
+// ── Data analysis stages, animated as a time bar in AnalysisStages ──
+// Heading and body are Hussein's wording. It starts at Preparing data on
+// purpose: an Ask stage read as a lecture on Google's framework, and the
+// point lands without it. Preparing and Processing are automated sync and
+// normalization, NOT AI: the app only uses AI in the assistant, the MCP
+// server and the dashboard builder (checked 10 September 2026). Keep AI out
+// of those two stages. owner: "you" | "auto" | "ai".
 const analysisStages = {
   heading: "How much time are you spending gathering data instead of analyzing it?",
-  body: "Data analysis passes through 6 stages. Preparing and processing is the slow part 🫠 this is where you open many tabs, take many screenshots, do mental math trying to normalize all currencies, export data and import it into sheets to analyze and filter. Instead, your time should focus on actually asking, analyzing, and acting.",
+  body: "Data analysis passes through 5 stages. Preparing and processing is the slow part 🫠 this is where you open many tabs, take many screenshots, do mental math trying to normalize all currencies, export data and import it into sheets to analyze and filter. Instead, your time should focus on actually analyzing and acting.",
   slowLabel: "The slow part 🫠",
   stages: [
-    { key: "ask",     name: "Ask",     owner: "you",  line: "Decide what you need to know, like which campaign deserves more budget." },
-    { key: "prepare", name: "Prepare", owner: "auto", line: "Every ad platform and store connects once, then syncs every hour." },
-    { key: "process", name: "Process", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
-    { key: "analyze", name: "Analyze", owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
+    { key: "prepare", name: "Preparing data",  owner: "auto", line: "Every ad platform and store connects once, then syncs every hour." },
+    { key: "process", name: "Processing data", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
+    { key: "analyze", name: "Analyzing data",  owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
     { key: "share",   name: "Share",   owner: "auto", line: "A live view-only link or a PDF, current whenever someone opens it." },
     { key: "act",     name: "Act",     owner: "you",  line: "Pulse flags accounts Scale, Hold or Cut against your rules. The decision stays yours, and on Meta and TikTok you can change status and budget without leaving AdFunnl." },
   ],

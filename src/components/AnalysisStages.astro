@@ -1,10 +1,10 @@
 ---
-// Google's six stages of data analysis, drawn as one bar of your week.
+// The stages of data analysis, drawn as one bar of your week.
 //
 // Each stage's width is how much of the week it takes. The bar starts "by
-// hand", where Prepare and Process swallow it, then animates to "with
-// AdFunnl": those two shrink to thin automatic strips and Ask, Analyze and Act
-// widen into the time that frees up. The widths are illustrative proportions,
+// hand", where preparing and processing swallow it, then animates to "with
+// AdFunnl": those two shrink to thin automatic strips and analyzing and
+// acting widen into the time that frees up. The widths are illustrative proportions,
 // so the bar carries no numbers (CLAUDE.md rule 6: no measured results).
 //
 // Capability notes (docs/what-ships.md): Prepare, Process and Share are
@@ -38,7 +38,7 @@ const {
 
 // [by hand, with AdFunnl] share of the week, as flex-grow weights.
 const TIME: Record<string, [number, number]> = {
-  ask: [1, 2.2], prepare: [4, 0.8], process: [4, 0.8], analyze: [1.2, 3.2], share: [0.8, 0.8], act: [1, 2.4],
+  prepare: [4, 0.8], process: [4, 0.8], analyze: [1.2, 3.2], share: [0.8, 0.8], act: [1, 2.4],
 };
 const MAX = 4; // largest weight in either state; the phone rows scale to it
 const MANUAL = new Set(["prepare", "process", "share"]); // hatched in the by-hand state
@@ -131,7 +131,9 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
             <div class="flex gap-1.5">
               {it.stages.map((s) => (
                 <span class="flex min-w-0 flex-1 flex-col items-center text-center">
-                  <span class="w-full truncate text-xs font-bold text-zinc-800">{s.name}</span>
+                  <!-- Wraps to two lines under the narrow automatic strips; the
+                       fixed height keeps the card from jumping as they shrink. -->
+                  <span class="flex min-h-[2rem] w-full items-start justify-center text-xs font-bold leading-tight text-zinc-800">{s.name}</span>
                   <span class="grid w-full text-[11px] font-medium text-zinc-500">
                     <span class="tb-when-before col-start-1 row-start-1 truncate">You</span>
                     <span class="tb-when-after col-start-1 row-start-1 truncate">{OWNER_AFTER[s.owner] ?? "You"}</span>
@@ -146,8 +148,8 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
       <!-- Phones and tablets: one row per stage, the bar length is the share of the week. -->
       <ol class="grid gap-2 lg:hidden" aria-hidden="true">
         {stages.map((s) => (
-          <li class="grid grid-cols-[4.5rem_minmax(0,1fr)_4rem] items-center gap-2.5">
-            <span class="whitespace-nowrap text-xs font-bold text-zinc-800">
+          <li class="grid grid-cols-[6.5rem_minmax(0,1fr)_4rem] items-center gap-2.5">
+            <span class="text-xs font-bold leading-tight text-zinc-800">
               {s.name}{SLOW.has(s.key) && <span class="tb-when-before"> 🫠</span>}
             </span>
             <span class="relative h-6 rounded-md bg-zinc-50">

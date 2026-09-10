@@ -265,15 +265,11 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     </div>
   </section>
 
-  <!-- ================= DATA ANALYSIS STAGES (animated) ================= -->
-  <AnalysisStages {...analysisStages} />
-
   <!-- ===================== DATA FLOW (animated) ===================== -->
-  <DataFlow
-    sectionId="integrations"
-    sectionClass="relative overflow-hidden border-t border-zinc-100 bg-white px-6 py-24"
-    heading="Observe and share data in a couple of clicks."
-  />
+  <DataFlow sectionId="integrations" heading="Observe and share data in a couple of clicks." />
+
+  <!-- ============== DATA ANALYSIS STAGES (animated time bar) ============== -->
+  <AnalysisStages {...analysisStages} />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">

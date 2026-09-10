@@ -25,14 +25,14 @@ const plans: Plan[] = [
   {
     key: "free",
     name: "Free",
-    tagline: "Try it: one client, the basics.",
+    tagline: "Try it: one brand, the basics.",
     egp: 0,
     usd: 0,
     requestable: false,
     cta: "Start free",
     ctaHref: `${APP_URL}/signup`,
     highlights: [
-      "1 client workspace",
+      "1 brand",
       "3 ad accounts · 2 platforms",
       "3 dashboards",
       "12-hour data refresh",
@@ -51,7 +51,7 @@ const plans: Plan[] = [
     ctaHref: `${APP_URL}/signup?plan=solo`,
     highlightsLead: "Everything in Free, plus",
     highlights: [
-      "3 clients · 15 ad accounts",
+      "3 brands · 15 ad accounts",
       "All platforms · unlimited dashboards",
       "1 year of history",
       "Google Sheets export & annotations",
@@ -75,7 +75,7 @@ const plans: Plan[] = [
       "AI assistant (chat) + MCP access",
       "1,000 AI credits / month",
       "3 team seats",
-      "10 clients · 50 ad accounts",
+      "10 brands · 50 ad accounts",
       "3 years of history",
     ],
   },
@@ -93,7 +93,7 @@ const plans: Plan[] = [
       "Hourly data refresh",
       "3,000 AI credits / month",
       "10 team seats",
-      "30 clients · 150 ad accounts",
+      "30 brands · 150 ad accounts",
       "5 years of history",
     ],
   },
@@ -113,7 +113,7 @@ const groups: { title: string; rows: Row[] }[] = [
     title: "Limits",
     rows: [
       { label: "Team seats",        free: "1",        solo: "1",       growth: "3",       agency: "10" },
-      { label: "Client workspaces", free: "1",        solo: "3",       growth: "10",      agency: "30" },
+      { label: "Brands",            free: "1",       solo: "3",       growth: "10",      agency: "30" },
       { label: "Ad accounts",       free: "3",        solo: "15",      growth: "50",      agency: "150" },
       { label: "Ad platforms",      free: "2",        solo: "All",     growth: "All",     agency: "All" },
       { label: "Dashboards",        free: "3",        solo: "∞",       growth: "∞",       agency: "∞" },
@@ -171,7 +171,7 @@ const faqs = [
   },
   {
     q: "Which plan includes the AI assistant?",
-    a: "The AI assistant and MCP access start on Growth. Agency adds hourly data refresh, the largest seat and client caps, five years of history and 3,000 monthly AI credits.",
+    a: "The AI assistant and MCP access start on Growth. Agency adds hourly data refresh, the largest seat and brand caps, five years of history and 3,000 monthly AI credits.",
   },
 ];
 

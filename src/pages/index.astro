@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PlatformIcon from "../components/PlatformIcon.astro";
 import DataFlow from "../components/DataFlow.astro";
+import AnalysisStages from "../components/AnalysisStages.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -56,6 +57,25 @@ const breakdowns = {
     { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "AdFunnl geo map widget shading ad spend by region across Egypt, darkest around Cairo." },
     { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "AdFunnl donut chart of Meta purchases by gender: male, female and unknown." },
     { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "AdFunnl bar chart of Meta purchases and cost per purchase by device, from iPhone and Android phones to desktop and tablets." },
+  ],
+};
+
+// ── Data analysis stages: Google's six, animated in AnalysisStages ──
+// Heading and body are Hussein's wording. Prepare and Process are automated
+// sync and normalization, NOT AI: the app only uses AI in the assistant, the
+// MCP server and the dashboard builder (checked 10 September 2026). Keep AI
+// out of those two stages. owner: "you" | "auto" | "ai".
+const analysisStages = {
+  heading: "How much time are you spending gathering data instead of analyzing it?",
+  body: "Data analysis passes through 6 stages. Preparing and processing is the slow part 🫠 this is where you open many tabs, take many screenshots, do mental math trying to normalize all currencies, export data and import it into sheets to analyze and filter. Instead, your time should focus on actually asking, analyzing, and acting.",
+  slowLabel: "The slow part 🫠",
+  stages: [
+    { key: "ask",     name: "Ask",     owner: "you",  line: "Decide what you need to know, like which campaign deserves more budget." },
+    { key: "prepare", name: "Prepare", owner: "auto", line: "Every ad platform and store connects once, then syncs every hour." },
+    { key: "process", name: "Process", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
+    { key: "analyze", name: "Analyze", owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
+    { key: "share",   name: "Share",   owner: "auto", line: "A live view-only link or a PDF, current whenever someone opens it." },
+    { key: "act",     name: "Act",     owner: "you",  line: "Pulse flags accounts Scale, Hold or Cut against your rules. The decision stays yours, and on Meta and TikTok you can change status and budget without leaving AdFunnl." },
   ],
 };
 
@@ -245,8 +265,15 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     </div>
   </section>
 
+  <!-- ================= DATA ANALYSIS STAGES (animated) ================= -->
+  <AnalysisStages {...analysisStages} />
+
   <!-- ===================== DATA FLOW (animated) ===================== -->
-  <DataFlow sectionId="integrations" heading="Observe and share data in a couple of clicks." />
+  <DataFlow
+    sectionId="integrations"
+    sectionClass="relative overflow-hidden border-t border-zinc-100 bg-white px-6 py-24"
+    heading="Observe and share data in a couple of clicks."
+  />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">

@@ -1,0 +1,478 @@
+---
+// Google's six stages of data analysis, as an auto-playing stepper.
+//
+// What it has to get across: Prepare and Process are the slow manual part and
+// AdFunnl takes them over, Analyze gets the AI assistant, and Ask and Act stay
+// with the reader. The page passes the copy in as props; the demo strings
+// inside each scene live here with the scene. Demo numbers are anonymized and
+// match the Pulse rows further down the homepage.
+//
+// Capability notes (docs/what-ships.md): Prepare and Process are automated
+// sync and normalization, not AI, so neither scene mentions AI. Campaign
+// control is Meta and TikTok only, so the Act scene offers its action on the
+// Meta row.
+import PlatformIcon from "./PlatformIcon.astro";
+
+type Owner = "you" | "auto" | "ai";
+interface Stage {
+  key: string;
+  name: string;
+  owner: string;
+  line: string;
+}
+
+interface Props {
+  sectionId?: string;
+  sectionClass?: string;
+  heading: string;
+  body: string;
+  slowLabel: string;
+  stages: Stage[];
+}
+
+const {
+  sectionId = "stages",
+  sectionClass = "relative overflow-hidden bg-white px-6 py-24",
+  heading,
+  body,
+  slowLabel,
+  stages,
+} = Astro.props;
+
+const OWNER: Record<Owner, { label: string; pill: string; dot: string }> = {
+  you:  { label: "You",                pill: "bg-zinc-100 text-zinc-700",                      dot: "bg-zinc-300" },
+  auto: { label: "AdFunnl, automatic", pill: "bg-brand-50 text-brand-700 ring-1 ring-brand-200", dot: "bg-brand-300" },
+  ai:   { label: "AdFunnl + AI",       pill: "bg-brand-600 text-white",                        dot: "bg-brand-600" },
+};
+const owner = (o: string) => OWNER[o as Owner] ?? OWNER.you;
+
+// Milliseconds each stage stays up while autoplaying. Prepare and Process
+// dwell longest on purpose: the manual bar is supposed to feel slow.
+const DWELL: Record<string, number> = { ask: 3600, prepare: 7000, process: 7000, analyze: 6000, share: 4400, act: 5200 };
+const SLOW = new Set(["prepare", "process"]);
+
+// ── Scene content ──
+const prepareByHand = ["Meta Ads Manager tab", "TikTok Ads Manager tab", "Snapchat Ads Manager tab", "Google Ads tab", "Screenshot", "Export .csv", "Import into Sheets"];
+const prepareSources = ["meta", "tiktok", "snapchat", "google_ads", "shopify"];
+const processColumns = ["Amount spent", "Cost", "Spend"];
+const processCurrencies = ["USD 1,240", "AED 3,100", "EGP 58,000"];
+const analyzeBars = [
+  { name: "Retargeting", roas: 5.2 },
+  { name: "Prospecting", roas: 2.8 },
+  { name: "Cold",        roas: 1.4 },
+  { name: "Story ads",   roas: 3.8 },
+];
+const actRows = [
+  { name: "Retargeting · Broad",        key: "meta",       roas: "5.2×", verdict: "Scale", tone: "bg-emerald-50 text-emerald-700 ring-emerald-200" },
+  { name: "Prospecting · Lookalike 3%", key: "tiktok",     roas: "2.8×", verdict: "Hold",  tone: "bg-amber-50 text-amber-700 ring-amber-200" },
+  { name: "Cold · Interest stack",      key: "google_ads", roas: "1.4×", verdict: "Cut",   tone: "bg-rose-50 text-rose-700 ring-rose-200" },
+];
+---
+
+<section id={sectionId} class={sectionClass}>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#f3f0fd,transparent)]"></div>
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{heading}</h2>
+      <p class="mt-4 text-lg leading-relaxed text-zinc-500">{body}</p>
+    </div>
+
+    <div class="stages reveal mt-12" data-stages>
+      <!-- Bracket over Prepare and Process: the slow part. -->
+      <div class="hidden grid-cols-6 gap-2 sm:grid" aria-hidden="true">
+        <div class="col-span-2 col-start-2 flex items-center gap-2 px-1 pb-2 text-xs font-semibold text-rose-600">
+          <span class="h-px flex-1 bg-rose-200"></span>
+          <span class="whitespace-nowrap">{slowLabel}</span>
+          <span class="h-px flex-1 bg-rose-200"></span>
+        </div>
+      </div>
+
+      <!-- The track: one tab per stage. -->
+      <div role="tablist" aria-label="The six stages of data analysis" class="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        {stages.map((s, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`stage-tab-${s.key}`}
+            aria-controls={`stage-panel-${s.key}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+            data-dwell={DWELL[s.key] ?? 5000}
+            class={`stage-tab relative flex flex-col items-start gap-1 overflow-hidden rounded-xl border bg-white px-3 py-2.5 text-left transition-colors ${SLOW.has(s.key) ? "border-rose-200" : "border-zinc-200"} ${i === 0 ? "is-active" : ""}`}
+          >
+            <span class="flex w-full items-center justify-between gap-1">
+              <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">{String(i + 1).padStart(2, "0")}</span>
+              <span class={`h-2 w-2 rounded-full ${owner(s.owner).dot}`}></span>
+            </span>
+            <span class="font-display text-sm font-bold text-zinc-900 sm:text-base">
+              {s.name}{SLOW.has(s.key) && <span class="ms-1 sm:hidden" aria-hidden="true">🫠</span>}
+            </span>
+            <span class="stage-fill absolute inset-x-0 bottom-0 h-[3px] bg-brand-500"></span>
+          </button>
+        ))}
+      </div>
+
+      <!-- One panel per stage, stacked in a single grid cell so the box keeps
+           the height of the tallest one and nothing below it jumps. -->
+      <div class="stage-panels mt-4 rounded-3xl border border-zinc-200 bg-zinc-50/70" data-panels>
+        {stages.map((s, i) => (
+          <div
+            role="tabpanel"
+            id={`stage-panel-${s.key}`}
+            aria-labelledby={`stage-tab-${s.key}`}
+            class={`stage-panel grid grid-cols-1 items-center gap-8 p-6 sm:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12 lg:p-10 ${i === 0 ? "is-active" : ""}`}
+          >
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[0.14em] text-zinc-400">Stage {i + 1} of {stages.length}</p>
+              <h3 class="mt-2 font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">{s.name}</h3>
+              <span class={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${owner(s.owner).pill}`}>{owner(s.owner).label}</span>
+              <p class="mt-4 max-w-md leading-relaxed text-zinc-600">{s.line}</p>
+            </div>
+
+            <div class="flex min-h-[250px] items-center">
+              {s.key === "ask" && (
+                <div class="mx-auto flex w-full max-w-sm flex-col gap-3">
+                  <div class="flex justify-end">
+                    <div class="st-in relative max-w-[92%] rounded-2xl rounded-br-sm bg-brand-600 px-4 py-3 text-sm leading-relaxed text-white shadow-lg shadow-brand-900/15">
+                      <span class="st-dots st-gone absolute left-4 top-4 gap-1 text-white/80" style="--d:1100ms"><i></i><i></i><i></i></span>
+                      <span class="st-fade block" style="--d:1100ms">Which campaign deserves more budget this week?</span>
+                    </div>
+                  </div>
+                  <div class="st-in flex items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm" style="--d:1700ms">
+                    <span class="font-medium text-zinc-500">Target</span>
+                    <span class="font-display font-bold text-zinc-900">Blended ROAS above 4×</span>
+                  </div>
+                </div>
+              )}
+
+              {s.key === "prepare" && (
+                <div class="grid w-full grid-cols-1 gap-3">
+                  <div class="rounded-2xl border border-zinc-200 bg-white p-4">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="uppercase tracking-[0.12em] text-zinc-400">By hand</span>
+                      <span class="text-rose-600">Still going…</span>
+                    </div>
+                    <div class="mt-3 flex flex-wrap gap-1.5">
+                      {prepareByHand.map((c, n) => (
+                        <span class="st-in rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] font-medium text-zinc-600" style={`--d:${300 + n * 650}ms`}>{c}</span>
+                      ))}
+                    </div>
+                    <div class="mt-3 h-2 overflow-hidden rounded-full bg-zinc-100"><div class="st-hand-bar h-full rounded-full bg-rose-400"></div></div>
+                  </div>
+                  <div class="rounded-2xl border border-brand-200 bg-white p-4 shadow-sm shadow-brand-900/5">
+                    <div class="flex items-center justify-between gap-3 text-xs font-semibold">
+                      <span class="uppercase tracking-[0.12em] text-brand-600">With AdFunnl</span>
+                      <span class="st-fade text-emerald-600" style="--d:1300ms">Done, synced every hour</span>
+                    </div>
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                      {prepareSources.map((p, n) => (
+                        <span class="st-in flex h-8 w-8 items-center justify-center rounded-lg bg-white ring-1 ring-zinc-200" style={`--d:${150 + n * 90}ms`}>
+                          <PlatformIcon platform={p} class="h-5 w-5" />
+                        </span>
+                      ))}
+                      <span class="st-fade ms-1 text-xs font-medium text-zinc-500" style="--d:700ms">Connected once</span>
+                    </div>
+                    <div class="mt-3 h-2 overflow-hidden rounded-full bg-brand-50"><div class="st-auto-bar h-full rounded-full bg-brand-500"></div></div>
+                  </div>
+                </div>
+              )}
+
+              {s.key === "process" && (
+                <div class="grid w-full grid-cols-1 gap-3">
+                  <div class="rounded-2xl border border-zinc-200 bg-white p-4">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="uppercase tracking-[0.12em] text-zinc-400">By hand</span>
+                      <span class="text-rose-600">Still going…</span>
+                    </div>
+                    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">Column names</p>
+                        <div class="mt-1.5 flex flex-wrap gap-1.5">
+                          {processColumns.map((c, n) => (
+                            <span class="st-in rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] font-medium text-zinc-600" style={`--d:${300 + n * 600}ms`}>{c}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">Currencies</p>
+                        <div class="mt-1.5 flex flex-wrap gap-1.5">
+                          {processCurrencies.map((c, n) => (
+                            <span class="st-in inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-[11px] font-medium text-zinc-600" style={`--d:${2100 + n * 600}ms`}>
+                              {c}<span class="text-zinc-400">→</span><span class="st-wobble inline-block font-bold text-rose-500">?</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-3 h-2 overflow-hidden rounded-full bg-zinc-100"><div class="st-hand-bar h-full rounded-full bg-rose-400"></div></div>
+                  </div>
+                  <div class="rounded-2xl border border-brand-200 bg-white p-4 shadow-sm shadow-brand-900/5">
+                    <div class="flex items-center justify-between gap-3 text-xs font-semibold">
+                      <span class="uppercase tracking-[0.12em] text-brand-600">With AdFunnl</span>
+                      <span class="st-fade text-emerald-600" style="--d:1300ms">Done</span>
+                    </div>
+                    <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                      <div class="st-in rounded-lg bg-brand-50/70 px-3 py-2" style="--d:400ms">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-500">Column names</p>
+                        <p class="mt-0.5 text-sm font-semibold text-zinc-800">Spend</p>
+                      </div>
+                      <div class="st-in rounded-lg bg-brand-50/70 px-3 py-2" style="--d:650ms">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-500">Currencies</p>
+                        <p class="mt-0.5 text-sm font-semibold text-zinc-800">All in SAR</p>
+                      </div>
+                    </div>
+                    <div class="st-in mt-2 flex items-center justify-between rounded-lg border border-brand-200 bg-white px-3 py-2" style="--d:950ms">
+                      <span class="text-xs font-semibold text-zinc-500">Blended ROAS</span>
+                      <span class="font-display text-lg font-bold text-brand-900">4.80×</span>
+                    </div>
+                    <div class="mt-3 h-2 overflow-hidden rounded-full bg-brand-50"><div class="st-auto-bar h-full rounded-full bg-brand-500"></div></div>
+                  </div>
+                </div>
+              )}
+
+              {s.key === "analyze" && (
+                <div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+                  <div class="rounded-2xl border border-zinc-200 bg-white p-4">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">ROAS by campaign</p>
+                    <div class="mt-3 flex h-36 items-stretch gap-3">
+                      {analyzeBars.map((b, n) => (
+                        <div class="flex flex-1 flex-col items-center gap-1.5">
+                          <span class="st-fade text-[11px] font-bold text-zinc-700" style={`--d:${500 + n * 120}ms`}>{b.roas.toFixed(1)}×</span>
+                          <div class="flex w-full flex-1 items-end">
+                            <span class={`st-grow block w-full rounded-t-md ${n === 0 ? "bg-brand-600" : "bg-brand-200"}`} style={`height:${Math.round((b.roas / 5.2) * 100)}%;--d:${n * 120}ms`}></span>
+                          </div>
+                          <span class="w-full truncate text-center text-[10px] font-medium text-zinc-400">{b.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-2.5 rounded-2xl border border-zinc-200 bg-white p-4">
+                    <div class="flex justify-end">
+                      <p class="st-in max-w-[90%] rounded-2xl rounded-br-sm bg-zinc-100 px-3 py-2 text-xs text-zinc-700" style="--d:300ms">Where should the budget go?</p>
+                    </div>
+                    <div class="flex gap-2">
+                      <span class="st-in flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[10px] font-bold text-white" style="--d:800ms">AI</span>
+                      <div class="st-in relative flex-1 rounded-2xl rounded-tl-sm bg-brand-50 px-3 py-2 text-xs leading-relaxed text-zinc-700" style="--d:800ms">
+                        <span class="st-dots st-gone absolute left-3 top-3 gap-1 text-brand-400" style="--d:1900ms"><i></i><i></i><i></i></span>
+                        <span class="st-fade block" style="--d:1900ms">Retargeting · Broad returns 5.2× on $3,240 of spend. Cold · Interest stack is at 1.4×, so that is the budget to move first.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {s.key === "share" && (
+                <div class="mx-auto grid w-full max-w-md grid-cols-1 gap-3">
+                  <div class="st-in rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="min-w-0">
+                        <p class="truncate text-sm font-semibold text-zinc-900">Monthly performance</p>
+                        <p class="mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-emerald-600">
+                          <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Live
+                        </p>
+                      </div>
+                      <span class="grid shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white">
+                        <span class="st-gone col-start-1 row-start-1" style="--d:1300ms">Copy link</span>
+                        <span class="st-fade col-start-1 row-start-1 text-center" style="--d:1300ms">Copied</span>
+                      </span>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2 rounded-lg bg-zinc-50 px-3 py-2 text-[11px] font-medium text-zinc-500">
+                      <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                      <span class="truncate">View-only link to this dashboard</span>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="st-in inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 ring-1 ring-zinc-200" style="--d:1700ms">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
+                      View-only
+                    </span>
+                    <span class="st-in inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 ring-1 ring-zinc-200" style="--d:1950ms">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                      PDF
+                    </span>
+                  </div>
+                  <div class="st-in flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3" style="--d:2500ms">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-emerald-600 ring-1 ring-emerald-200">
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                    <p class="text-xs leading-snug text-zinc-600"><strong class="font-semibold text-zinc-900">Opened from the link.</strong> The same numbers you see, no login.</p>
+                  </div>
+                </div>
+              )}
+
+              {s.key === "act" && (
+                <div class="mx-auto grid w-full max-w-md grid-cols-1 gap-2">
+                  <p class="st-fade text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">Pulse</p>
+                  {actRows.map((r, n) => (
+                    <div class="st-in flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-3 py-2.5" style={`--d:${n * 220}ms`}>
+                      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ring-1 ring-zinc-200"><PlatformIcon platform={r.key} class="h-4 w-4" /></span>
+                      <span class="min-w-0 flex-1 truncate text-sm font-medium text-zinc-700">{r.name}</span>
+                      <span class="text-xs font-semibold tabular-nums text-zinc-500">{r.roas}</span>
+                      <span class={`st-in rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${r.tone}`} style={`--d:${700 + n * 300}ms`}>{r.verdict}</span>
+                    </div>
+                  ))}
+                  <div class="st-in mt-1 flex items-center justify-between gap-3 rounded-xl border border-brand-200 bg-brand-50/60 px-3 py-2.5" style="--d:1900ms">
+                    <span class="flex min-w-0 items-center gap-2 text-xs font-medium text-zinc-600">
+                      <span class="shrink-0 rounded-full bg-zinc-900 px-2 py-0.5 font-semibold text-white">You</span>
+                      <span class="truncate">Your call on Retargeting · Broad</span>
+                    </span>
+                    <span class="st-press shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white">Raise budget</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* ── Data analysis stages ── */
+  .stages .stage-fill { transform: scaleX(0); transform-origin: left; }
+  .stages .stage-tab.is-active { border-color: #c4b5fd; box-shadow: 0 0 0 3px #ede9fe, 0 8px 20px rgba(43, 29, 97, 0.08); }
+  .stages .stage-tab.is-done .stage-fill { transform: scaleX(1); background: #ddd6fe; }
+  .stages .stage-tab.is-active .stage-fill { animation: stFill var(--dwell, 5s) linear forwards; }
+  .stages.is-paused .stage-tab.is-active .stage-fill { animation-play-state: paused; }
+
+  /* Panels share one grid cell once JS is running; without JS they stack. */
+  /* minmax(0, 1fr): without it a truncated line inside a scene sets the
+     column's minimum width and the panel spills past the screen on phones. */
+  .js .stages .stage-panels { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .js .stages .stage-panel { grid-area: 1 / 1; transition: opacity .35s ease; }
+  .js .stages .stage-panel:not(.is-active) { visibility: hidden; opacity: 0; pointer-events: none; }
+
+  /* Scene choreography. Start states only apply with JS, so a no-JS visitor
+     sees every scene finished. `--d` is each element's delay. */
+  .stages .st-dots { display: none; }
+  .stages .st-dots i { display: block; width: 6px; height: 6px; border-radius: 9999px; background: currentColor; }
+  .stages .st-gone { visibility: hidden; }
+  .stages .st-hand-bar { width: 74%; }
+  .stages .st-auto-bar { width: 100%; }
+
+  .js .stages .st-in,
+  .js .stages .st-fade { opacity: 0; }
+  .js .stages .st-dots { display: flex; }
+  .js .stages .st-gone { visibility: visible; }
+  .js .stages .st-hand-bar,
+  .js .stages .st-auto-bar { width: 0; }
+  .js .stages .st-grow { transform: scaleY(0); transform-origin: bottom; }
+
+  .js .stages .is-active .st-in { animation: stIn .5s cubic-bezier(.2,.7,.2,1) var(--d, 0ms) forwards; }
+  .js .stages .is-active .st-fade { animation: stFade .4s ease var(--d, 0ms) forwards; }
+  .js .stages .is-active .st-gone { animation: stGone .2s ease var(--d, 0ms) forwards; }
+  .js .stages .is-active .st-dots i { animation: stDot 1s ease-in-out infinite; }
+  .js .stages .is-active .st-dots i:nth-child(2) { animation-delay: .15s; }
+  .js .stages .is-active .st-dots i:nth-child(3) { animation-delay: .3s; }
+  .js .stages .is-active .st-hand-bar { animation: stHand 6.5s cubic-bezier(.3,.1,.3,1) forwards; }
+  .js .stages .is-active .st-auto-bar { animation: stAuto .7s cubic-bezier(.2,.7,.2,1) .4s forwards; }
+  .js .stages .is-active .st-grow { animation: stGrow .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms) forwards; }
+  .js .stages .is-active .st-wobble { animation: stWobble .7s ease-in-out infinite; }
+  .js .stages .is-active .st-press { animation: stPress .4s ease 2.8s; }
+
+  @keyframes stFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes stIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes stFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes stGone { to { opacity: 0; visibility: hidden; } }
+  @keyframes stDot { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-3px); opacity: 1; } }
+  @keyframes stHand { from { width: 0; } to { width: 74%; } }
+  @keyframes stAuto { from { width: 0; } to { width: 100%; } }
+  @keyframes stGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes stWobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+  @keyframes stPress { 50% { transform: scale(.92); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .stages .st-in, .js .stages .st-fade { opacity: 1 !important; animation: none !important; }
+    .js .stages .st-gone { visibility: hidden !important; animation: none !important; }
+    .js .stages .st-dots { display: none !important; }
+    .js .stages .st-hand-bar { width: 74% !important; animation: none !important; }
+    .js .stages .st-auto-bar { width: 100% !important; animation: none !important; }
+    .js .stages .st-grow { transform: none !important; animation: none !important; }
+    .stages .st-wobble, .stages .st-press, .stages .stage-fill { animation: none !important; }
+    .js .stages .stage-panel { transition: none !important; }
+  }
+</style>
+
+<script>
+  // Autoplays through the stages while the stepper is on screen. Clicking or
+  // using the arrow keys picks a stage and autoplay carries on from there;
+  // hovering or focusing inside the panel holds the current stage. With
+  // reduced motion there is no autoplay and every scene shows its end state.
+  const root = document.querySelector<HTMLElement>("[data-stages]");
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const panelBox = root.querySelector<HTMLElement>("[data-panels]");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let current = 0;
+    let timer = 0;
+    let inView = false;
+    let held = false;
+
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (reduced || !inView || held) return;
+      timer = window.setTimeout(() => show((current + 1) % tabs.length), Number(tabs[current].dataset.dwell) || 5000);
+    };
+
+    const show = (i: number) => {
+      current = i;
+      tabs.forEach((t, n) => {
+        const on = n === i;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        t.classList.toggle("is-done", n < i);
+        t.classList.remove("is-active");
+        t.style.setProperty("--dwell", `${t.dataset.dwell}ms`);
+      });
+      panels.forEach((p, n) => {
+        const on = n === i;
+        p.inert = !on;
+        p.setAttribute("aria-hidden", String(!on));
+        p.classList.remove("is-active");
+      });
+      // Force a reflow so removing and re-adding the class restarts every
+      // animation in the scene and the tab's progress fill.
+      void root.offsetWidth;
+      tabs[i].classList.add("is-active");
+      panels[i].classList.add("is-active");
+      schedule();
+    };
+
+    tabs.forEach((t, n) => {
+      t.addEventListener("click", () => show(n));
+      t.addEventListener("keydown", (e) => {
+        let to = -1;
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") to = (n + 1) % tabs.length;
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") to = (n - 1 + tabs.length) % tabs.length;
+        if (e.key === "Home") to = 0;
+        if (e.key === "End") to = tabs.length - 1;
+        if (to < 0) return;
+        e.preventDefault();
+        show(to);
+        tabs[to].focus();
+      });
+    });
+
+    const hold = (on: boolean) => {
+      held = on;
+      root.classList.toggle("is-paused", on);
+      if (on) window.clearTimeout(timer);
+      else schedule();
+    };
+    panelBox?.addEventListener("mouseenter", () => hold(true));
+    panelBox?.addEventListener("mouseleave", () => hold(false));
+    panelBox?.addEventListener("focusin", () => hold(true));
+    panelBox?.addEventListener("focusout", () => hold(false));
+
+    new IntersectionObserver(([entry]) => {
+      const was = inView;
+      inView = entry.isIntersecting;
+      if (inView && !was) show(current);
+      else if (!inView) window.clearTimeout(timer);
+    }, { threshold: 0.35 }).observe(root);
+
+    show(0);
+  }
+</script>

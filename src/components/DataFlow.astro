@@ -149,7 +149,6 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
 <section id={sectionId} class={sectionClass}>
   {dark ? (
     <div class="sf-bg" aria-hidden="true">
-      <div class="sf-grid"></div>
       <div class="sf-glow sf-glow-a"></div>
       <div class="sf-glow sf-glow-b"></div>
       <div class="sf-glow sf-glow-c"></div>
@@ -341,9 +340,6 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
   .sf .sf-node { fill: #1b1740; stroke: #342e66; }
   .sf .sf-t1 { fill: #f4f4f5; }
   .sf .sf-t2 { fill: #b3afd1; }
-  .sf .sf-t1, .sf .sf-t2, .sf .sf-accent {
-    paint-order: stroke; stroke: #05040f; stroke-width: 4px; stroke-linejoin: round;
-  }
   .sf .sf-accent { fill: #b0a1ef; }
   .sf .sf-rule { stroke: #342e66; }
   .sf .flow-stream { stroke: #7c66e0; }
@@ -353,15 +349,8 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
   /* TikTok's black glyph becomes white, as on its own dark-mode mark. */
   .sf path[fill="#010101"] { fill: #fff; }
 
-  /* Background: ink, a masked grid, drifting glows and faint data streaks. */
+  /* Background: ink, drifting glows and faint data streaks. */
   .sf-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-  .sf-grid {
-    position: absolute; inset: 0;
-    background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
-    background-size: 56px 56px;
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
-  }
   .sf-glow { position: absolute; border-radius: 9999px; will-change: translate; }
   .sf-glow-a {
     width: 64vmax; height: 64vmax; left: -18vmax; top: -24vmax;

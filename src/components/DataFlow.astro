@@ -131,9 +131,6 @@ const DESK = {
   line: (id: string): Win =>
     id === "fpv" ? [0.46, 0.08] : id === "fpc" ? [0.64, 0.08] : [0.1 + lineIndex(id) * 0.035, 0.16],
   hub: [0.3, 0.14] as Win,
-  viz: [0.5, 0.14] as Win,
-  out: [0.7, 0.12] as Win,
-  check: [0.8, 0.1] as Win,
 };
 // Dashes and particles follow once their line has finished drawing.
 const after = ([a, b]: Win, len = 0.06): Win => [a + b, len];
@@ -141,12 +138,8 @@ const MOB = {
   card: [0, 0.1] as Win,
   src: (i: number): Win => [0.02 + i * 0.05, 0.14],
   line1: [0.3, 0.1] as Win,
-  hub: [0.36, 0.12] as Win,
   line2: [0.5, 0.08] as Win,
-  viz: [0.56, 0.12] as Win,
   line3: [0.7, 0.08] as Win,
-  out: [0.76, 0.12] as Win,
-  check: [0.88, 0.08] as Win,
 };
 
 const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
@@ -190,7 +183,7 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
                to the diagram than heading + body. -->
           <div
             class={scroll
-              ? "sf-card relative hidden rounded-3xl bg-white p-6 ring-1 ring-white/10 lg:block xl:p-8"
+              ? "sf-card relative hidden sf-dark rounded-3xl p-6 ring-1 ring-white/10 lg:block xl:p-8"
               : `reveal ${body ? "mt-14" : "mt-10"} overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8`}
             data-sf-card={scroll ? "" : undefined}
             data-k={scroll ? "" : undefined}
@@ -235,94 +228,94 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
               <!-- ── Source nodes (real platform logos) ── -->
               {sources.map((s, i) => (
                 <g class="sf-pop" data-k style={`${win(DESK.src(i))};--dx:-36px`}>
-                  <rect x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
+                  <rect class="sf-node" x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
                   <g transform={`translate(40 ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
-                  <text x="78" y={s.y + 5} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
+                  <text class="sf-t1" x="78" y={s.y + 5} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
                 </g>
               ))}
-              <text class="sf-fade" data-k style={win(DESK.more)} x="104" y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
+              <text class="sf-fade sf-t2" data-k style={win(DESK.more)} x="104" y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
 
               <!-- ── AdFunnl hub ── -->
-              <g class="sf-pop" data-k style={`${win(DESK.hub)};--s0:.6`}>
+              <g>
                 <circle class="flow-hub-ring" cx="510" cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
-                <circle cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-                <g transform="translate(510 240)" set:html={HUB_MARK} />
-                <text x="510" y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
-                <text x="510" y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
+                <circle class="sf-node" cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+                <g class="sf-hubmark" transform="translate(510 240)" set:html={HUB_MARK} />
+                <text class="sf-t1" x="510" y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
+                <text class="sf-t2" x="510" y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
               </g>
 
               <!-- ── Visualize node ── -->
-              <g class="sf-pop" data-k style={`${win(DESK.viz)};--dy:18px`}>
-                <rect x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-                <text x="776" y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
+              <g>
+                <rect class="sf-node" x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+                <text class="sf-accent" x="776" y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
                 <g>
                   {bars.map((b) => (
                     <rect class="flow-bar" x={b.x} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
                   ))}
                 </g>
-                <line x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
-                <text x="776" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">Visualized</text>
+                <line class="sf-rule" x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
+                <text class="sf-t1" x="776" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">Visualized</text>
               </g>
 
               <!-- ── Recipient node ── -->
-              <g class="sf-pop" data-k style={`${win(DESK.out)};--dx:30px`}>
+              <g>
                 <rect x="940" y="176" width="152" height="128" rx="16" fill="#6549dd" />
                 <rect x="972" y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
                 <rect x="982" y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
                 <rect x="982" y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
                 <rect x="982" y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
                 <rect x="982" y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
-                <g class="sf-pop" data-k style={`${win(DESK.check)};--s0:.2`}>
+                <g>
                   <circle class="flow-check" cx="1054" cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
                   <path class="flow-check" d="M1048,254 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
                 </g>
-                <text x="1016" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
-                <text x="1016" y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
+                <text class="sf-t1" x="1016" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
+                <text class="sf-t2" x="1016" y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
               </g>
             </svg>
           </div>
 
           {scroll && (
             <!-- Phones and tablets: the same pipeline, top to bottom. -->
-            <div class="sf-card relative mx-auto max-w-md rounded-3xl bg-white p-5 ring-1 ring-white/10 sm:max-w-xl sm:p-7 lg:hidden" data-sf-card data-k style={win(MOB.card)} role="img" aria-label={alt}>
+            <div class="sf-card relative mx-auto max-w-md sf-dark rounded-3xl p-5 ring-1 ring-white/10 sm:max-w-xl sm:p-7 lg:hidden" data-sf-card data-k style={win(MOB.card)} role="img" aria-label={alt}>
               <div class="grid grid-cols-2 gap-2 sm:grid-cols-3" aria-hidden="true">
                 {sources.map((s, i) => (
-                  <div class="sf-pop flex min-w-0 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-2.5 py-2.5 sm:gap-2.5 sm:px-3" data-k style={`${win(MOB.src(i))};--dy:14px`}>
+                  <div class="sf-pop flex min-w-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[.04] px-2.5 py-2.5 sm:gap-2.5 sm:px-3" data-k style={`${win(MOB.src(i))};--dy:14px`}>
                     <span class="flex h-[26px] w-[26px] shrink-0" set:html={FLOW_LOGOS[s.key]} />
-                    <span class="truncate text-[13px] font-semibold text-zinc-700 sm:text-sm">{s.label}</span>
+                    <span class="truncate text-[13px] font-semibold text-zinc-100 sm:text-sm">{s.label}</span>
                   </div>
                 ))}
               </div>
-              <p class="sf-fade mt-2.5 text-center text-[11px] font-semibold tracking-wider text-zinc-400" data-k style={win(MOB.src(6))} aria-hidden="true">+ MORE SOURCES</p>
+              <p class="sf-fade mt-2.5 text-center text-[11px] font-semibold tracking-wider text-zinc-500" data-k style={win(MOB.src(6))} aria-hidden="true">+ MORE SOURCES</p>
 
               <div class="sf-vconn" data-k style={win(MOB.line1)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
 
-              <div class="sf-pop flex flex-col items-center" data-k style={`${win(MOB.hub)};--s0:.6`} aria-hidden="true">
-                <div class="relative grid h-[84px] w-[84px] place-items-center rounded-full border border-zinc-200 bg-white">
+              <div class="flex flex-col items-center" aria-hidden="true">
+                <div class="relative grid h-[84px] w-[84px] place-items-center rounded-full border border-white/10 bg-[#1b1740]">
                   <span class="flow-hub-ring absolute -inset-1.5 rounded-full border-2 border-brand-500"></span>
-                  <svg class="h-11 w-11" viewBox="-26 -26 52 52" set:html={HUB_MARK} />
+                  <svg class="sf-hubmark h-11 w-11" viewBox="-26 -26 52 52" set:html={HUB_MARK} />
                 </div>
-                <p class="mt-3 text-sm font-bold text-zinc-800">AdFunnl</p>
+                <p class="mt-3 text-sm font-bold text-white">AdFunnl</p>
                 <p class="text-xs font-medium text-zinc-400">Unify · normalize · blend</p>
               </div>
 
               <div class="sf-vconn" data-k style={win(MOB.line2)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
 
-              <div class="sf-pop mx-auto flex max-w-[220px] flex-col items-center" data-k style={`${win(MOB.viz)};--dy:14px`} aria-hidden="true">
-                <div class="w-full rounded-2xl border border-zinc-200 bg-white p-3">
-                  <p class="text-center text-[10px] font-bold tracking-wide text-brand-600">LIVE DASHBOARD</p>
-                  <div class="mt-2 flex h-14 items-end gap-2 border-b border-zinc-200 px-2">
+              <div class="mx-auto flex max-w-[220px] flex-col items-center" aria-hidden="true">
+                <div class="w-full rounded-2xl border border-white/10 bg-[#1b1740] p-3">
+                  <p class="text-center text-[10px] font-bold tracking-wide text-brand-300">LIVE DASHBOARD</p>
+                  <div class="mt-2 flex h-14 items-end gap-2 border-b border-white/10 px-2">
                     {bars.map((b) => (
                       <span class="flow-bar h-full flex-1 rounded-t" style={`background:${b.c};--h:${b.h};--d:${b.d}`}></span>
                     ))}
                   </div>
                 </div>
-                <p class="mt-2 text-sm font-bold text-zinc-800">Visualized</p>
+                <p class="mt-2 text-sm font-bold text-white">Visualized</p>
               </div>
 
               <div class="sf-vconn" data-k style={win(MOB.line3)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
 
-              <div class="sf-pop mx-auto flex max-w-[220px] flex-col items-center text-center" data-k style={`${win(MOB.out)};--dy:14px`} aria-hidden="true">
+              <div class="mx-auto flex max-w-[220px] flex-col items-center text-center" aria-hidden="true">
                 <div class="relative w-full rounded-2xl bg-[#6549dd] p-4">
                   <div class="mx-auto w-3/4 rounded-md bg-white/95 p-2.5">
                     <span class="block h-1.5 w-3/5 rounded-full bg-[#c4b5fd]"></span>
@@ -330,11 +323,11 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
                     <span class="mt-1.5 block h-1 w-2/3 rounded-full bg-zinc-200"></span>
                     <span class="mt-1.5 block h-1 w-1/2 rounded-full bg-zinc-200"></span>
                   </div>
-                  <span class="sf-pop absolute bottom-3 right-5 grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-[#22c55e]" data-k style={`${win(MOB.check)};--s0:.2`}>
+                  <span class="absolute bottom-3 right-5 grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-[#22c55e]">
                     <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7" /></svg>
                   </span>
                 </div>
-                <p class="mt-2 text-sm font-bold text-zinc-800">{outLabel}</p>
+                <p class="mt-2 text-sm font-bold text-white">{outLabel}</p>
                 <p class="text-xs font-medium text-zinc-400">{outSub}</p>
               </div>
             </div>
@@ -377,7 +370,7 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
       scale(calc(var(--s0, .88) + (1 - var(--s0, .88)) * var(--e)));
   }
   .sf .sf-draw {
-    fill: none; stroke: #ddd5f8; stroke-width: 2;
+    fill: none; stroke: #2e2860; stroke-width: 2;
     stroke-dasharray: 1px 1px;
     stroke-dashoffset: calc((1 - var(--e)) * 1px);
   }
@@ -394,11 +387,26 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
 
   /* Phone connectors: a line that grows down, with a packet travelling it. */
   .sf .sf-vconn { position: relative; margin: .75rem auto; height: 2.25rem; width: 2px; }
-  .sf .sf-vline { position: absolute; inset: 0; border-radius: 2px; background: #cfc6f6; transform-origin: top; transform: scaleY(var(--e)); }
+  .sf .sf-vline { position: absolute; inset: 0; border-radius: 2px; background: #4a3f94; transform-origin: top; transform: scaleY(var(--e)); }
   .sf .sf-vdot { position: absolute; left: -3px; top: 0; height: 8px; width: 8px; border-radius: 9999px; background: #6549dd; box-shadow: 0 0 10px #8b73e6; opacity: var(--e); animation: sfDrop 1.3s linear infinite; }
   @keyframes sfDrop { from { transform: translateY(-4px); } to { transform: translateY(calc(2.25rem - 4px)); } }
 
   .sf .sf-rail { display: none; }
+
+  /* Dark diagram. The SVG keeps its light colours as attributes for the
+     static version on the persona pages; these classes override them. */
+  .sf .sf-dark { background: linear-gradient(180deg, #17133a, #0c0a22); }
+  .sf .sf-node { fill: #1b1740; stroke: #342e66; }
+  .sf .sf-t1 { fill: #f4f4f5; }
+  .sf .sf-t2 { fill: #8f8bb0; }
+  .sf .sf-accent { fill: #b0a1ef; }
+  .sf .sf-rule { stroke: #342e66; }
+  .sf .flow-stream { stroke: #7c66e0; }
+  .sf .flow-hub-ring { stroke: #8b73e6; }
+  .sf .sf-hubmark path { stroke: #a58ff5; }
+  .sf .sf-hubmark circle[fill="#6549dd"] { fill: #a58ff5; }
+  /* TikTok's black glyph becomes white, as on its own dark-mode mark. */
+  .sf path[fill="#010101"] { fill: #fff; }
 
   /* Background: ink, a grid that slides with scroll, drifting glows (the
      middle one brightens as the pipeline completes) and faint data streaks. */

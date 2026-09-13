@@ -6,13 +6,8 @@
 // string is a prop. Keep the geometry here: if the picture needs to change,
 // it should change in one place.
 //
-// `scroll` turns the section into a scroll-driven story on a dark, animated
-// ground (the homepage uses it). The script writes one number, --p from 0 to
-// 1, as you scroll, and every piece reads its own window of it through --a
-// (start) and --b (length). On desktops tall enough, the section pins while
-// the diagram assembles. Phones get a vertical diagram that assembles as it
-// passes through the screen, with no pinning. Without JS, or with reduced
-// motion, --p stays at 1 and the finished diagram shows.
+// `dark` puts the diagram on a dark, animated background (the homepage
+// uses it), with a portrait version of the diagram for phones and tablets.
 interface Props {
   /** Section wrapper */
   sectionId?: string;
@@ -35,14 +30,14 @@ interface Props {
    * clash over <defs> references.
    */
   uid?: string;
-  /** Scroll-driven version on a dark animated background. */
-  scroll?: boolean;
+  /** Dark version on an animated background, with a portrait phone diagram. */
+  dark?: boolean;
 }
 
 const {
   sectionId,
-  scroll = false,
-  sectionClass = scroll ? "sf relative bg-ink" : "relative overflow-hidden bg-white px-6 py-24",
+  dark = false,
+  sectionClass = dark ? "sf relative overflow-hidden bg-ink px-6 py-24" : "relative overflow-hidden bg-white px-6 py-24",
   eyebrow,
   heading = "From every source to a client-ready report",
   body,
@@ -117,225 +112,209 @@ const bars = [
 
 const HUB_MARK = `<path d="M-18,-14 C-18,3 0,0 0,20 M0,-20 V20 M18,-14 C18,3 0,0 0,20" fill="none" stroke="#6549dd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" /><circle cx="-18" cy="-16" r="6" fill="#67E8F9" /><circle cx="0" cy="-20" r="6" fill="#C4B5FD" /><circle cx="18" cy="-16" r="6" fill="#FDE68A" /><circle cx="0" cy="20" r="6" fill="#6549dd" />`;
 
-// ── Scroll timeline ──
-// Each window is [start, length] in scroll progress, 0 to 1. `win` turns one
-// into the --a/--b pair the CSS reads. Desktop draws left to right; the phone
-// diagram is vertical and has its own windows.
-type Win = [number, number];
-const win = ([a, b]: Win) => `--a:${a};--b:${b}`;
-const lineIndex = (id: string) => paths.findIndex((f) => f.id === id);
-const DESK = {
-  card: [0, 0.16] as Win,
-  src: (i: number): Win => [0.04 + i * 0.035, 0.12],
-  more: [0.25, 0.08] as Win,
-  line: (id: string): Win =>
-    id === "fpv" ? [0.46, 0.08] : id === "fpc" ? [0.64, 0.08] : [0.1 + lineIndex(id) * 0.035, 0.16],
-  hub: [0.3, 0.14] as Win,
-};
-// Dashes and particles follow once their line has finished drawing.
-const after = ([a, b]: Win, len = 0.06): Win => [a + b, len];
-const MOB = {
-  card: [0, 0.1] as Win,
-  src: (i: number): Win => [0.02 + i * 0.05, 0.14],
-  line1: [0.3, 0.1] as Win,
-  line2: [0.5, 0.08] as Win,
-  line3: [0.7, 0.08] as Win,
-};
-
 const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
+
+// ── Phone diagram (dark version only) ──
+// Portrait geometry, 360 wide. The sources are scattered on an arc above the
+// hub so each one keeps its own line merging into AdFunnl, then the pipeline
+// runs downwards. Gradient ids are separate from the desktop SVG's, because
+// that one is display:none on phones and its defs would not paint.
+const HUB_M = { x: 180, y: 300 };
+const ARC = [
+  { x: 44, y: 221 }, { x: 83, y: 129 }, { x: 145, y: 77 },
+  { x: 215, y: 77 }, { x: 277, y: 129 }, { x: 316, y: 221 },
+];
+const mSources = sources.map((s, i) => ({ ...s, ...ARC[i] }));
+const mPaths = [
+  ...mSources.map((s, i) => {
+    const mid = (s.y + HUB_M.y) / 2;
+    return { id: `mp${i + 1}`, d: `M${s.x},${s.y} C ${s.x},${mid} ${HUB_M.x},${mid} ${HUB_M.x},${HUB_M.y}` };
+  }),
+  { id: "mpv", d: "M180,402 L180,440" },
+  { id: "mpc", d: "M180,596 L180,634" },
+];
+const mParticles = [
+  ...mSources.flatMap((_, i) => {
+    const d = `${2.2 + (i % 3) * 0.25}s`;
+    return [
+      { p: `mp${i + 1}`, d, b: "0s" },
+      { p: `mp${i + 1}`, d, b: `${1.1 + i * 0.1}s` },
+    ];
+  }),
+  { p: "mpv", d: "1.1s", b: "0s" }, { p: "mpc", d: "1.1s", b: "0.5s" },
+];
+const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
 ---
 
-<section id={sectionId} class={sectionClass} data-sf={scroll ? "" : undefined}>
-  <div class={scroll ? "sf-track" : undefined}>
-    <div class={scroll ? "sf-stick relative overflow-hidden px-6 py-20" : undefined}>
-      {scroll ? (
-        <div class="sf-bg" aria-hidden="true">
-          <div class="sf-grid"></div>
-          <div class="sf-glow sf-glow-a"></div>
-          <div class="sf-glow sf-glow-b"></div>
-          <div class="sf-glow sf-glow-c"></div>
-          <span class="sf-streak" style="top:16%;width:26%;animation-duration:7s;animation-delay:-2s"></span>
-          <span class="sf-streak" style="top:38%;width:34%;animation-duration:9s;animation-delay:-6s"></span>
-          <span class="sf-streak" style="top:61%;width:22%;animation-duration:6.5s;animation-delay:-4s"></span>
-          <span class="sf-streak" style="top:84%;width:30%;animation-duration:10s;animation-delay:-1s"></span>
-        </div>
-      ) : (
-        <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#efeafc,transparent)]"></div>
+<section id={sectionId} class={sectionClass}>
+  {dark ? (
+    <div class="sf-bg" aria-hidden="true">
+      <div class="sf-grid"></div>
+      <div class="sf-glow sf-glow-a"></div>
+      <div class="sf-glow sf-glow-b"></div>
+      <div class="sf-glow sf-glow-c"></div>
+      <span class="sf-streak" style="top:16%;width:26%;animation-duration:7s;animation-delay:-2s"></span>
+      <span class="sf-streak" style="top:38%;width:34%;animation-duration:9s;animation-delay:-6s"></span>
+      <span class="sf-streak" style="top:61%;width:22%;animation-duration:6.5s;animation-delay:-4s"></span>
+      <span class="sf-streak" style="top:84%;width:30%;animation-duration:10s;animation-delay:-1s"></span>
+    </div>
+  ) : (
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,#efeafc,transparent)]"></div>
+  )}
+
+  <div class="relative mx-auto max-w-6xl">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      {eyebrow && (
+        <p class={`mb-3 text-sm font-semibold uppercase tracking-widest ${dark ? "text-brand-300" : "text-brand-600"}`}>{eyebrow}</p>
       )}
+      <h2 class={`font-display text-3xl font-bold tracking-tight sm:text-4xl ${dark ? "text-white" : "text-zinc-950"}`}>
+        {heading}
+      </h2>
+      {body && <p class={`mt-4 text-lg ${dark ? "text-zinc-400" : "text-zinc-500"}`}>{body}</p>}
+    </div>
 
-      <div class="relative mx-auto w-full max-w-6xl">
-        <div class="reveal mx-auto max-w-2xl text-center">
-          {eyebrow && (
-            <p class={`mb-3 text-sm font-semibold uppercase tracking-widest ${scroll ? "text-brand-300" : "text-brand-600"}`}>{eyebrow}</p>
-          )}
-          <h2 class={`font-display text-3xl font-bold tracking-tight sm:text-4xl ${scroll ? "text-white" : "text-zinc-950"}`}>
-            {heading}
-          </h2>
-          {body && <p class={`mt-4 text-lg ${scroll ? "text-zinc-400" : "text-zinc-500"}`}>{body}</p>}
-        </div>
+    <!-- A heading on its own sits closer to the diagram than heading + body. -->
+    <div class={`relative ${body ? "mt-14" : "mt-10"}`}>
+      {dark && <div class="sf-halo" aria-hidden="true"></div>}
 
-        <div class={scroll ? `relative ${body ? "mt-12" : "mt-10"}` : undefined}>
-          {scroll && <div class="sf-halo" data-k style={win(DESK.hub)} aria-hidden="true"></div>}
+      <!-- Horizontal diagram. The light version scrolls sideways on very small
+           screens; the dark version is desktop only and phones get the
+           portrait diagram below. -->
+      <div class={dark
+        ? "sf-card sf-dark reveal relative hidden rounded-3xl p-6 ring-1 ring-white/10 lg:block xl:p-8"
+        : "reveal overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8"}>
+        <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} viewBox="0 0 1120 500" role="img" aria-label={alt}>
+          <defs>
+            <radialGradient id={ID.particle} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#8b6ff0" />
+              <stop offset="100%" stop-color="#6549dd" />
+            </radialGradient>
+            <filter id={ID.glow} x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
 
-          <!-- Horizontal diagram. The static version scrolls sideways on very
-               small screens; the scroll version is desktop only, and phones
-               get the vertical diagram below. A heading on its own sits closer
-               to the diagram than heading + body. -->
-          <div
-            class={scroll
-              ? "sf-card relative hidden sf-dark rounded-3xl p-6 ring-1 ring-white/10 lg:block xl:p-8"
-              : `reveal ${body ? "mt-14" : "mt-10"} overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8`}
-            data-sf-card={scroll ? "" : undefined}
-            data-k={scroll ? "" : undefined}
-            style={scroll ? win(DESK.card) : undefined}
-          >
-            <svg class={scroll ? "flow-svg sf-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} viewBox="0 0 1120 500" role="img" aria-label={alt}>
-              <defs>
-                <radialGradient id={ID.particle} cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#8b6ff0" />
-                  <stop offset="100%" stop-color="#6549dd" />
-                </radialGradient>
-                <filter id={ID.glow} x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="2.5" result="b" />
-                  <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
+            <!-- Convergence paths into the AdFunnl hub, then hub → Visualize → recipient -->
+            {paths.map((f) => <path id={ID.p(f.id)} d={f.d} fill="none" />)}
+          </defs>
 
-                <!-- Convergence paths into the AdFunnl hub, then hub → Visualize → recipient -->
-                {paths.map((f) => <path id={ID.p(f.id)} d={f.d} fill="none" />)}
-              </defs>
+          <!-- animated stream lines (marching dashes) -->
+          {paths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
 
-              <!-- Scroll version: each line draws itself before its dashes start moving -->
-              {scroll && paths.map((f) => (
-                <path d={f.d} pathLength="1" class="sf-draw" data-k style={win(DESK.line(f.id))} />
-              ))}
+          <!-- flowing particles -->
+          {particles.map((c) => (
+            <circle r="4.5" fill={`url(#${ID.particle})`} filter={`url(#${ID.glow})`}>
+              <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
+                <mpath href={`#${ID.p(c.p)}`} />
+              </animateMotion>
+            </circle>
+          ))}
 
-              <!-- animated stream lines (marching dashes) -->
-              {paths.map((f) => (
-                <use href={`#${ID.p(f.id)}`} class="flow-stream" data-k style={win(after(DESK.line(f.id)))} />
-              ))}
+          <!-- ── Source nodes (real platform logos) ── -->
+          {sources.map((s) => (
+            <g>
+              <rect class="sf-node" x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
+              <g transform={`translate(40 ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
+              <text class="sf-t1" x="78" y={s.y + 5} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
+            </g>
+          ))}
+          <text class="sf-t2" x="104" y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
 
-              <!-- flowing particles -->
-              {particles.map((c) => (
-                <g class="sf-fade" data-k style={win(after(DESK.line(c.p), 0.05))}>
-                  <circle r="4.5" fill={`url(#${ID.particle})`} filter={`url(#${ID.glow})`}>
-                    <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
-                      <mpath href={`#${ID.p(c.p)}`} />
-                    </animateMotion>
-                  </circle>
-                </g>
-              ))}
+          <!-- ── AdFunnl hub ── -->
+          <circle class="flow-hub-ring" cx="510" cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
+          <circle class="sf-node" cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <g class="sf-hubmark" transform="translate(510 240)" set:html={HUB_MARK} />
+          <text class="sf-t1" x="510" y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
+          <text class="sf-t2" x="510" y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
 
-              <!-- ── Source nodes (real platform logos) ── -->
-              {sources.map((s, i) => (
-                <g class="sf-pop" data-k style={`${win(DESK.src(i))};--dx:-36px`}>
-                  <rect class="sf-node" x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
-                  <g transform={`translate(40 ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
-                  <text class="sf-t1" x="78" y={s.y + 5} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
-                </g>
-              ))}
-              <text class="sf-fade sf-t2" data-k style={win(DESK.more)} x="104" y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
+          <!-- ── Visualize node ── -->
+          <rect class="sf-node" x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-accent" x="776" y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
+          {bars.map((b) => (
+            <rect class="flow-bar" x={b.x} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
+          ))}
+          <line class="sf-rule" x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-t1" x="776" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">Visualized</text>
 
-              <!-- ── AdFunnl hub ── -->
-              <g>
-                <circle class="flow-hub-ring" cx="510" cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
-                <circle class="sf-node" cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-                <g class="sf-hubmark" transform="translate(510 240)" set:html={HUB_MARK} />
-                <text class="sf-t1" x="510" y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
-                <text class="sf-t2" x="510" y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
-              </g>
-
-              <!-- ── Visualize node ── -->
-              <g>
-                <rect class="sf-node" x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-                <text class="sf-accent" x="776" y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
-                <g>
-                  {bars.map((b) => (
-                    <rect class="flow-bar" x={b.x} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
-                  ))}
-                </g>
-                <line class="sf-rule" x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
-                <text class="sf-t1" x="776" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">Visualized</text>
-              </g>
-
-              <!-- ── Recipient node ── -->
-              <g>
-                <rect x="940" y="176" width="152" height="128" rx="16" fill="#6549dd" />
-                <rect x="972" y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
-                <rect x="982" y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
-                <rect x="982" y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
-                <rect x="982" y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
-                <rect x="982" y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
-                <g>
-                  <circle class="flow-check" cx="1054" cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
-                  <path class="flow-check" d="M1048,254 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                </g>
-                <text class="sf-t1" x="1016" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
-                <text class="sf-t2" x="1016" y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
-              </g>
-            </svg>
-          </div>
-
-          {scroll && (
-            <!-- Phones and tablets: the same pipeline, top to bottom. -->
-            <div class="sf-card relative mx-auto max-w-md sf-dark rounded-3xl p-5 ring-1 ring-white/10 sm:max-w-xl sm:p-7 lg:hidden" data-sf-card data-k style={win(MOB.card)} role="img" aria-label={alt}>
-              <div class="grid grid-cols-2 gap-2 sm:grid-cols-3" aria-hidden="true">
-                {sources.map((s, i) => (
-                  <div class="sf-pop flex min-w-0 items-center gap-2 rounded-xl border border-white/10 bg-white/[.04] px-2.5 py-2.5 sm:gap-2.5 sm:px-3" data-k style={`${win(MOB.src(i))};--dy:14px`}>
-                    <span class="flex h-[26px] w-[26px] shrink-0" set:html={FLOW_LOGOS[s.key]} />
-                    <span class="truncate text-[13px] font-semibold text-zinc-100 sm:text-sm">{s.label}</span>
-                  </div>
-                ))}
-              </div>
-              <p class="sf-fade mt-2.5 text-center text-[11px] font-semibold tracking-wider text-zinc-500" data-k style={win(MOB.src(6))} aria-hidden="true">+ MORE SOURCES</p>
-
-              <div class="sf-vconn" data-k style={win(MOB.line1)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
-
-              <div class="flex flex-col items-center" aria-hidden="true">
-                <div class="relative grid h-[84px] w-[84px] place-items-center rounded-full border border-white/10 bg-[#1b1740]">
-                  <span class="flow-hub-ring absolute -inset-1.5 rounded-full border-2 border-brand-500"></span>
-                  <svg class="sf-hubmark h-11 w-11" viewBox="-26 -26 52 52" set:html={HUB_MARK} />
-                </div>
-                <p class="mt-3 text-sm font-bold text-white">AdFunnl</p>
-                <p class="text-xs font-medium text-zinc-400">Unify · normalize · blend</p>
-              </div>
-
-              <div class="sf-vconn" data-k style={win(MOB.line2)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
-
-              <div class="mx-auto flex max-w-[220px] flex-col items-center" aria-hidden="true">
-                <div class="w-full rounded-2xl border border-white/10 bg-[#1b1740] p-3">
-                  <p class="text-center text-[10px] font-bold tracking-wide text-brand-300">LIVE DASHBOARD</p>
-                  <div class="mt-2 flex h-14 items-end gap-2 border-b border-white/10 px-2">
-                    {bars.map((b) => (
-                      <span class="flow-bar h-full flex-1 rounded-t" style={`background:${b.c};--h:${b.h};--d:${b.d}`}></span>
-                    ))}
-                  </div>
-                </div>
-                <p class="mt-2 text-sm font-bold text-white">Visualized</p>
-              </div>
-
-              <div class="sf-vconn" data-k style={win(MOB.line3)} aria-hidden="true"><span class="sf-vline"></span><span class="sf-vdot"></span></div>
-
-              <div class="mx-auto flex max-w-[220px] flex-col items-center text-center" aria-hidden="true">
-                <div class="relative w-full rounded-2xl bg-[#6549dd] p-4">
-                  <div class="mx-auto w-3/4 rounded-md bg-white/95 p-2.5">
-                    <span class="block h-1.5 w-3/5 rounded-full bg-[#c4b5fd]"></span>
-                    <span class="mt-1.5 block h-1 w-4/5 rounded-full bg-zinc-200"></span>
-                    <span class="mt-1.5 block h-1 w-2/3 rounded-full bg-zinc-200"></span>
-                    <span class="mt-1.5 block h-1 w-1/2 rounded-full bg-zinc-200"></span>
-                  </div>
-                  <span class="absolute bottom-3 right-5 grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-[#22c55e]">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7" /></svg>
-                  </span>
-                </div>
-                <p class="mt-2 text-sm font-bold text-white">{outLabel}</p>
-                <p class="text-xs font-medium text-zinc-400">{outSub}</p>
-              </div>
-            </div>
-          )}
-
-          {scroll && <div class="sf-rail" aria-hidden="true"><span></span></div>}
-        </div>
+          <!-- ── Recipient node ── -->
+          <rect x="940" y="176" width="152" height="128" rx="16" fill="#6549dd" />
+          <rect x="972" y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+          <rect x="982" y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
+          <rect x="982" y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x="982" y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x="982" y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+          <circle class="flow-check" cx="1054" cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+          <path class="flow-check" d="M1048,254 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <text class="sf-t1" x="1016" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
+          <text class="sf-t2" x="1016" y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
+        </svg>
       </div>
+
+      {dark && (
+        <!-- Phones and tablets: portrait diagram, same pipeline. -->
+        <div class="sf-card sf-dark reveal relative mx-auto max-w-md rounded-3xl px-3 py-5 ring-1 ring-white/10 sm:p-6 lg:hidden">
+          <svg class="flow-svg mx-auto block h-auto w-full" viewBox="0 0 360 808" role="img" aria-label={alt}>
+            <defs>
+              <radialGradient id={ID.p("mParticle")} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#8b6ff0" />
+                <stop offset="100%" stop-color="#6549dd" />
+              </radialGradient>
+              <filter id={ID.p("mGlow")} x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.5" result="b" />
+                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+              {mPaths.map((f) => <path id={ID.p(f.id)} d={f.d} fill="none" />)}
+            </defs>
+
+            {mPaths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
+
+            {mParticles.map((c) => (
+              <circle r="4.5" fill={`url(#${ID.p("mParticle")})`} filter={`url(#${ID.p("mGlow")})`}>
+                <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
+                  <mpath href={`#${ID.p(c.p)}`} />
+                </animateMotion>
+              </circle>
+            ))}
+
+            <!-- Sources, scattered on the arc, label above each -->
+            {mSources.map((s) => (
+              <g>
+                <circle class="sf-node" cx={s.x} cy={s.y} r="25" stroke-width="1.5" />
+                <g transform={`translate(${s.x - 13} ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
+                <text class="sf-t1" x={s.x} y={s.y - 34} text-anchor="middle" font-family={FONT} font-size="13" font-weight="600">{s.label}</text>
+              </g>
+            ))}
+
+            <!-- Hub -->
+            <circle class="flow-hub-ring" cx={HUB_M.x} cy={HUB_M.y} r="52" fill="none" stroke-width="2" />
+            <circle class="sf-node" cx={HUB_M.x} cy={HUB_M.y} r="46" stroke-width="1.5" />
+            <g class="sf-hubmark" transform={`translate(${HUB_M.x} ${HUB_M.y})`} set:html={HUB_MARK} />
+            <text class="sf-t1" x="180" y="374" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">AdFunnl</text>
+            <text class="sf-t2" x="180" y="392" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">Unify · normalize · blend</text>
+
+            <!-- Visualized -->
+            <rect class="sf-node" x="110" y="440" width="140" height="120" rx="16" stroke-width="1.5" />
+            <text class="sf-accent" x="180" y="463" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5">LIVE DASHBOARD</text>
+            {mBars.map((b) => (
+              <rect class="flow-bar" x={b.x} y="480" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
+            ))}
+            <line class="sf-rule" x1="120" y1="546" x2="240" y2="546" stroke-width="1.5" />
+            <text class="sf-t1" x="180" y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">Visualized</text>
+
+            <!-- Delivered -->
+            <rect x="110" y="634" width="140" height="120" rx="16" fill="#6549dd" />
+            <rect x="136" y="656" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+            <rect x="146" y="667" width="52" height="6" rx="3" fill="#c4b5fd" />
+            <rect x="146" y="679" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+            <rect x="146" y="689" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+            <rect x="146" y="699" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+            <circle class="flow-check" cx="218" cy="710" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+            <path class="flow-check" d="M212,710 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <text class="sf-t1" x="180" y="778" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{outLabel}</text>
+            <text class="sf-t2" x="180" y="796" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{outSub}</text>
+          </svg>
+        </div>
+      )}
     </div>
   </div>
 </section>
@@ -351,51 +330,15 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
   .flow-check { animation: flowCheck 2.8s ease-in-out infinite; }
   @keyframes flowCheck { 0%,70%,100% { opacity: 1; } 80% { opacity: .3; } }
 
-  /* ── Scroll version ──
-     --p is scroll progress. Every [data-k] piece turns it into its own local
-     progress --k over its window, and --e is that eased. Children without
-     their own window inherit the parent's --e. */
-  .sf { --p: 1; }
-  .sf [data-k] {
-    --k: clamp(0, (var(--p) - var(--a)) / var(--b), 1);
-    --e: calc(var(--k) * var(--k) * (3 - 2 * var(--k)));
-  }
-  .sf .sf-fade, .sf .flow-stream { opacity: var(--e); }
-  .sf .sf-pop {
-    opacity: var(--e);
-    transform-box: fill-box;
-    transform-origin: center;
-    transform:
-      translate(calc((1 - var(--e)) * var(--dx, 0px)), calc((1 - var(--e)) * var(--dy, 0px)))
-      scale(calc(var(--s0, .88) + (1 - var(--s0, .88)) * var(--e)));
-  }
-  .sf .sf-draw {
-    fill: none; stroke: #2e2860; stroke-width: 2;
-    stroke-dasharray: 1px 1px;
-    stroke-dashoffset: calc((1 - var(--e)) * 1px);
-  }
-  .sf .sf-card {
-    transform-origin: 50% 0;
-    transform: perspective(1600px) rotateX(calc((1 - var(--e)) * 14deg)) scale(calc(.94 + .06 * var(--e)));
-    box-shadow: 0 40px 120px -30px rgba(101, 73, 221, calc(.25 + .45 * var(--p)));
-  }
+  /* ── Dark version ──
+     The SVGs keep their light colours as attributes for the light version on
+     the persona pages; these classes override them inside .sf. */
+  .sf .sf-dark { background: linear-gradient(180deg, #17133a, #0c0a22); }
+  .sf .sf-card { box-shadow: 0 40px 120px -30px rgba(101, 73, 221, .6); }
   .sf .sf-halo {
     position: absolute; inset: -12% -6%; pointer-events: none;
-    background: radial-gradient(closest-side, rgba(139, 115, 230, .55), transparent);
-    opacity: var(--e);
+    background: radial-gradient(closest-side, rgba(139, 115, 230, .4), transparent);
   }
-
-  /* Phone connectors: a line that grows down, with a packet travelling it. */
-  .sf .sf-vconn { position: relative; margin: .75rem auto; height: 2.25rem; width: 2px; }
-  .sf .sf-vline { position: absolute; inset: 0; border-radius: 2px; background: #4a3f94; transform-origin: top; transform: scaleY(var(--e)); }
-  .sf .sf-vdot { position: absolute; left: -3px; top: 0; height: 8px; width: 8px; border-radius: 9999px; background: #6549dd; box-shadow: 0 0 10px #8b73e6; opacity: var(--e); animation: sfDrop 1.3s linear infinite; }
-  @keyframes sfDrop { from { transform: translateY(-4px); } to { transform: translateY(calc(2.25rem - 4px)); } }
-
-  .sf .sf-rail { display: none; }
-
-  /* Dark diagram. The SVG keeps its light colours as attributes for the
-     static version on the persona pages; these classes override them. */
-  .sf .sf-dark { background: linear-gradient(180deg, #17133a, #0c0a22); }
   .sf .sf-node { fill: #1b1740; stroke: #342e66; }
   .sf .sf-t1 { fill: #f4f4f5; }
   .sf .sf-t2 { fill: #8f8bb0; }
@@ -408,34 +351,29 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
   /* TikTok's black glyph becomes white, as on its own dark-mode mark. */
   .sf path[fill="#010101"] { fill: #fff; }
 
-  /* Background: ink, a grid that slides with scroll, drifting glows (the
-     middle one brightens as the pipeline completes) and faint data streaks. */
+  /* Background: ink, a masked grid, drifting glows and faint data streaks. */
   .sf-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .sf-grid {
-    position: absolute; inset: -80px 0;
+    position: absolute; inset: 0;
     background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
     background-size: 56px 56px;
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
     mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
-    transform: translate3d(0, calc(var(--p) * -56px), 0);
   }
-  .sf-glow { position: absolute; border-radius: 9999px; will-change: transform; }
+  .sf-glow { position: absolute; border-radius: 9999px; will-change: translate; }
   .sf-glow-a {
     width: 64vmax; height: 64vmax; left: -18vmax; top: -24vmax;
     background: radial-gradient(closest-side, rgba(101, 73, 221, .5), transparent);
-    transform: translate3d(0, calc(var(--p) * 60px), 0);
     animation: sfDriftA 22s ease-in-out infinite alternate;
   }
   .sf-glow-b {
     width: 54vmax; height: 54vmax; right: -16vmax; bottom: -26vmax;
     background: radial-gradient(closest-side, rgba(103, 232, 249, .16), transparent);
-    transform: translate3d(0, calc(var(--p) * -80px), 0);
     animation: sfDriftB 26s ease-in-out infinite alternate;
   }
   .sf-glow-c {
     width: 48vmax; height: 36vmax; left: 50%; top: 55%; margin: -18vmax 0 0 -24vmax;
-    background: radial-gradient(closest-side, rgba(139, 115, 230, .32), transparent);
-    opacity: calc(.2 + .8 * var(--p));
+    background: radial-gradient(closest-side, rgba(139, 115, 230, .28), transparent);
   }
   @keyframes sfDriftA { to { translate: 14vmax 10vmax; } }
   @keyframes sfDriftB { to { translate: -12vmax -8vmax; } }
@@ -446,87 +384,19 @@ const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
   }
   @keyframes sfStreak { to { transform: translateX(calc(100vw + 100%)); } }
 
-  /* Pinned on desktops tall enough to hold the whole diagram. */
-  @media (min-width: 1024px) and (min-height: 700px) {
-    .sf-live .sf-track { height: 260vh; }
-    .sf-live .sf-stick {
-      position: sticky; top: 0; height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding-top: 5rem; padding-bottom: 2rem;
-    }
-    .sf-live .sf-svg { max-height: calc(100vh - 17rem); }
-    .sf-live .sf-rail {
-      display: block; margin: 1.5rem auto 0; height: 3px; width: 12rem; overflow: hidden;
-      border-radius: 9999px; background: rgba(255, 255, 255, .1);
-    }
-    .sf-live .sf-rail span {
-      display: block; height: 100%; transform-origin: left; transform: scaleX(var(--p));
-      background: linear-gradient(90deg, #8b73e6, #67e8f9);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .flow-stream, .flow-hub-ring, .flow-bar, .flow-check, .sf-glow, .sf-vdot { animation: none !important; }
+    .flow-stream, .flow-hub-ring, .flow-bar, .flow-check, .sf-glow { animation: none !important; }
     .sf-streak { display: none; }
   }
 </style>
 
 <script>
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   // Reduced motion: freeze the SVG particles (SMIL isn't paused by CSS).
-  if (reduced) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.querySelectorAll("svg.flow-svg").forEach((svg) => {
       if (typeof (svg as SVGSVGElement).pauseAnimations === "function") {
         (svg as SVGSVGElement).pauseAnimations();
       }
     });
   }
-
-  // Scroll version: writes --p. Pinned, progress runs from the section
-  // reaching mid-screen to the end of the pin. Unpinned (phones, short
-  // screens), it runs from the diagram entering the screen to its bottom
-  // edge passing two thirds of the way up. The value eases toward the target
-  // each frame so the motion stays smooth on jumpy wheels and flicks.
-  const PIN = window.matchMedia("(min-width: 1024px) and (min-height: 700px)");
-  document.querySelectorAll<HTMLElement>("[data-sf]").forEach((root) => {
-    if (reduced) return;
-    root.classList.add("sf-live");
-    const track = root.querySelector<HTMLElement>(".sf-track")!;
-    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-sf-card]"));
-    let target = 0;
-    let current = 0;
-    let frame = 0;
-
-    const measure = () => {
-      const vh = window.innerHeight;
-      let p: number;
-      if (PIN.matches) {
-        const r = track.getBoundingClientRect();
-        p = (vh * 0.5 - r.top) / (r.height - vh * 0.5);
-      } else {
-        const card = cards.find((c) => c.offsetParent !== null) ?? cards[0];
-        const r = card.getBoundingClientRect();
-        p = (vh * 0.92 - r.top) / (r.height + vh * 0.26);
-      }
-      target = Math.min(1, Math.max(0, p));
-    };
-    const write = (v: number) => root.style.setProperty("--p", v.toFixed(4));
-    const tick = () => {
-      current += (target - current) * 0.16;
-      if (Math.abs(target - current) < 0.001) current = target;
-      write(current);
-      frame = current === target ? 0 : requestAnimationFrame(tick);
-    };
-    const onScroll = () => {
-      measure();
-      if (!frame) frame = requestAnimationFrame(tick);
-    };
-
-    measure();
-    current = target;
-    write(current);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-  });
 </script>

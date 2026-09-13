@@ -47,7 +47,6 @@ const SLOW = new Set(["prepare", "process"]);            // under the slow-part 
 const LABEL = {
   before: "By hand",
   after: "With AdFunnl",
-  replay: "Replay",
   automatic: "Automatic",
   legendAuto: "AdFunnl, automatic",
   legendYours: "Your time",
@@ -85,10 +84,6 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
             <span class="tb-when-before col-start-1 row-start-1">{LABEL.before}</span>
             <span class="tb-when-after col-start-1 row-start-1">{LABEL.after}</span>
           </span>
-          <button type="button" data-tb-replay class="inline-flex items-center gap-1 rounded-full border border-zinc-200 px-2.5 py-1 text-xs font-semibold text-zinc-600 transition hover:border-brand-300 hover:text-brand-700">
-            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-            {LABEL.replay}
-          </button>
         </div>
         <ul class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-zinc-500 sm:gap-x-4 sm:text-xs" aria-hidden="true">
           <li class="flex items-center gap-1.5"><span class="tb-swatch-hand h-3 w-3 rounded-sm"></span>{LABEL.before}</li>
@@ -207,24 +202,33 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
 </style>
 
 <script>
-  // Shows the by-hand bar first, then swaps to the AdFunnl bar once it has
-  // been on screen long enough to read. Replay runs it again. With reduced
-  // motion the swap is instant instead of animated.
+  // Loops between the by-hand bar and the AdFunnl bar while the card is on
+  // screen. By hand holds long enough to read, the swap animates, the AdFunnl
+  // bar holds longer, then it animates back and the loop starts again. It
+  // pauses while the card is off screen. With reduced motion it shows the
+  // AdFunnl bar and stays there.
+  const SWAP = 1400;        // matches the 1.4s width transition in the CSS
+  const READ_BEFORE = 2600; // by-hand bar at rest
+  const READ_AFTER = 6000;  // AdFunnl bar at rest
+
   const bar = document.querySelector<HTMLElement>("[data-timebar]");
-  if (bar) {
+  if (bar && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     let timer = 0;
-    const play = () => {
-      window.clearTimeout(timer);
-      bar.classList.remove("is-after");
-      void bar.offsetWidth;
-      timer = window.setTimeout(() => bar.classList.add("is-after"), 1300);
+    const toAfter = () => {
+      bar.classList.add("is-after");
+      timer = window.setTimeout(toBefore, SWAP + READ_AFTER);
     };
+    const toBefore = () => {
+      bar.classList.remove("is-after");
+      timer = window.setTimeout(toAfter, SWAP + READ_BEFORE);
+    };
+
     bar.classList.remove("is-after");
-    new IntersectionObserver(([entry], obs) => {
-      if (!entry.isIntersecting) return;
-      obs.disconnect();
-      play();
-    }, { threshold: 0.5 }).observe(bar);
-    bar.querySelector("[data-tb-replay]")?.addEventListener("click", play);
+    new IntersectionObserver(([entry]) => {
+      window.clearTimeout(timer);
+      if (entry.intersectionRatio < 0.4) return;
+      if (bar.classList.contains("is-after")) toBefore();
+      else timer = window.setTimeout(toAfter, READ_BEFORE);
+    }, { threshold: [0, 0.4] }).observe(bar);
   }
 </script>

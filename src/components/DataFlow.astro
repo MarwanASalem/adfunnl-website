@@ -181,7 +181,7 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
            screens; the dark version is desktop only and phones get the
            portrait diagram below. -->
       <div class={dark
-        ? "sf-card sf-dark reveal relative hidden rounded-3xl p-6 ring-1 ring-white/10 lg:block xl:p-8"
+        ? "reveal relative hidden p-2 lg:block xl:p-4"
         : "reveal overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8"}>
         <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} viewBox="0 0 1120 500" role="img" aria-label={alt}>
           <defs>
@@ -252,7 +252,7 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
 
       {dark && (
         <!-- Phones and tablets: portrait diagram, same pipeline. -->
-        <div class="sf-card sf-dark reveal relative mx-auto max-w-md rounded-3xl px-3 py-5 ring-1 ring-white/10 sm:p-6 lg:hidden">
+        <div class="reveal relative mx-auto max-w-md lg:hidden">
           <svg class="flow-svg mx-auto block h-auto w-full" viewBox="0 0 360 808" role="img" aria-label={alt}>
             <defs>
               <radialGradient id={ID.p("mParticle")} cx="50%" cy="50%" r="50%">
@@ -332,16 +332,18 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
 
   /* ── Dark version ──
      The SVGs keep their light colours as attributes for the light version on
-     the persona pages; these classes override them inside .sf. */
-  .sf .sf-dark { background: linear-gradient(180deg, #17133a, #0c0a22); }
-  .sf .sf-card { box-shadow: 0 40px 120px -30px rgba(101, 73, 221, .6); }
+     the persona pages; these classes override them inside .sf. The diagram
+     has no panel of its own: it sits straight on the section background. */
   .sf .sf-halo {
     position: absolute; inset: -12% -6%; pointer-events: none;
-    background: radial-gradient(closest-side, rgba(139, 115, 230, .4), transparent);
+    background: radial-gradient(closest-side, rgba(139, 115, 230, .22), transparent);
   }
   .sf .sf-node { fill: #1b1740; stroke: #342e66; }
   .sf .sf-t1 { fill: #f4f4f5; }
-  .sf .sf-t2 { fill: #8f8bb0; }
+  .sf .sf-t2 { fill: #b3afd1; }
+  .sf .sf-t1, .sf .sf-t2, .sf .sf-accent {
+    paint-order: stroke; stroke: #05040f; stroke-width: 4px; stroke-linejoin: round;
+  }
   .sf .sf-accent { fill: #b0a1ef; }
   .sf .sf-rule { stroke: #342e66; }
   .sf .flow-stream { stroke: #7c66e0; }

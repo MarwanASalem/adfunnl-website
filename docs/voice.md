@@ -22,7 +22,7 @@ disagree, `CLAUDE.md` wins.
   full every time. Dropping the "media" is wrong: the entire app is built for
   media buyers, and the short form reads as somebody making a purchase. The
   hook enforces this, which is why this line does not spell out the short form.
-- CTAs are plain: `Try it now`, `Start free`. Nothing else. No demo button,
+- The CTA is `Start free`, on every page. Nothing else. No demo button,
   because demos are not offered right now.
 - No invented numbers, customers, testimonials or percentages.
 - Capability claims come from `what-ships.md`, including its "Do not claim"
@@ -123,9 +123,9 @@ metaphorical.
 ```
 WAS:  Put your book on one screen
       Set up one account with me
-NOW:  Try it now
-RULE: A clever CTA makes the reader decode instead of click. Allowed set:
-      Try it now, Start free.
+NOW:  Start free
+RULE: A clever CTA makes the reader decode instead of click. The call to
+      action is Start free, on every page.
 ```
 
 ### R6. No coined vocabulary
@@ -354,7 +354,7 @@ Notes that come up every time:
 - The app's own `ar.ts` translates ROAS. The site deliberately does not.
 - Platforms in a list: "Meta وTikTok وSnapchat وGoogle", same order, the و
   joined to the next name. Still no count (R14).
-- CTAs: `جرّبه الآن` (Try it now) and `ابدأ مجانًا` (Start free). Nothing else.
+- CTA: `ابدأ مجانًا` (Start free). Nothing else.
 - Slogan: `اربط. اعرض. شارك.`
 - The Arabic article before an English term is fine where Arabic grammar wants
   it (الـ Creatives), but do not put it on every occurrence.

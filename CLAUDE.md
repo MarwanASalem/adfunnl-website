@@ -21,7 +21,7 @@ These are not preferences. A copy change that breaks one of these is wrong.
    The audience is **media buyers** and **performance marketers**, always
    written in full. Never drop the "media": on its own the short form reads as
    somebody making a purchase. The hook enforces this.
-4. **CTAs are fixed and plain.** The allowed set is `Try it now` and `Start free`,
+4. **CTAs are fixed and plain.** The one call to action is `Start free` (in Arabic `ابدأ مجانًا`),
    both to `${APP_URL}/signup`. No witty or metaphorical button text. There is
    no demo button: demos are not offered right now, and the app has no `/demo`
    page. Do not add one back until that changes.

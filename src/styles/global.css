@@ -72,4 +72,16 @@
   [dir="rtl"] :is(em, i, .italic) {
     font-style: normal;
   }
+
+  /* Arabic headings need more room between lines than the Latin ladder
+     gives them: the display sizes close to 1.05, which lets Zain's tall
+     letters and dots collide across lines. The selector outranks the
+     leading and text-size utilities, so no page has to override them. */
+  [dir="rtl"] h1 {
+    line-height: 1.35;
+  }
+
+  [dir="rtl"] :is(h2, h3) {
+    line-height: 1.45;
+  }
 }

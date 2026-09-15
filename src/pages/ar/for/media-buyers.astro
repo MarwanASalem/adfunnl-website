@@ -1,0 +1,736 @@
+---
+// Arabic twin of src/pages/for/media-buyers.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../../layouts/Layout.astro";
+import DataFlow from "../../../components/DataFlow.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// ── This page's pains and objections ──────────────────────────────────
+// Kept here on purpose (R11 to R13 in docs/voice.md): the page is built from
+// this list, so a later edit cannot quietly turn it back into a feature tour.
+//
+// The brief:
+//   Who     A media buyer who is in the ad accounts all day. Not the account
+//           manager fielding the client, not the lead running a roster.
+//   Promise You can carry twice the clients without any of them getting less
+//           of you, because the assembling is gone.
+//   Action  جرّبه الآن.
+//
+// A media buyer's pains, in their order of size:
+//   1. The morning goes into collecting, before a single decision gets made.
+//   2. Each platform takes credit for the same sale, so true return is a guess.
+//   3. The winning creative is buried somewhere in a thousand running ads.
+//   4. Interruptions: every "how is it going" costs a rebuilt view.
+//
+// CAPABILITY WARNINGS for anyone editing this page:
+//   - Ad-level creative data is Meta and Snapchat. Not every platform. Do not
+//     write "all your creatives" without that qualifier nearby.
+//   - Hook and hold is Meta only.
+//   - Ad fatigue genuinely does cover every ad platform.
+//   - Campaign control is Meta and TikTok. Snapchat and Google are in progress.
+//   - There is no media buyer dimension in the app. Grouping is Workspace,
+//     then Client, then Ad Account, and every member sees every client. Never
+//     imply a per-person view.
+//   - R14: never put a number on the platforms. No "four tabs", no "all four".
+
+// ── Hero: the roster on one screen ────────────────────────────────────
+// Anonymized demo data, same convention as the homepage and Team Leads mocks.
+// ROAS is computed from the two figures beside it, so the arithmetic on screen
+// cannot be caught out.
+const roster = [
+  { client: "عميل A", spend: 41280, revenue: 227040, synced: "قبل 9 دقائق" },
+  { client: "عميل B", spend: 28715, revenue: 108117, synced: "قبل 9 دقائق" },
+  { client: "عميل C", spend: 19460, revenue: 132328, synced: "قبل 24 دقيقة" },
+  { client: "عميل D", spend: 15230, revenue: 51782, synced: "قبل 24 دقيقة" },
+  { client: "عميل E", spend: 11905, revenue: 79363, synced: "قبل 41 دقيقة" },
+  { client: "عميل F", spend: 7640, revenue: 22920, synced: "قبل 41 دقيقة" },
+];
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+const roas = (r: number, s: number) => (r / s).toFixed(2);
+
+const rosterSpend = roster.reduce((a, c) => a + c.spend, 0);
+const rosterRevenue = roster.reduce((a, c) => a + c.revenue, 0);
+
+// ── Where the morning goes ────────────────────────────────────────────
+// The recognisable pain (R8): a tab per platform, each with its own everything,
+// then currency math in somebody's head. Never CSV exports.
+const tabs = [
+  { name: "Meta Ads Manager", quirk: "تسجيل دخول خاص وattribution window خاصة" },
+  { name: "TikTok Ads", quirk: "المقياس نفسه تحت اسم عمود مختلف" },
+  { name: "Snapchat Ads", quirk: "منتقي تاريخ آخر لضبط المدة نفسها" },
+  { name: "Google Ads", quirk: "التحويلات محسوبة بطريقتها الخاصة مرة أخرى" },
+  { name: "Shopify", quirk: "الإيرادات التي تحققت فعلًا، في أداة أخرى" },
+  { name: "الجدول", quirk: "حيث تحوّل العملات وتتمنى أن تكون صحيحة" },
+];
+
+// ── Us versus them (R12) ──────────────────────────────────────────────
+// Rows are jobs a media buyer does, not features. The old column has to read
+// as a fair description of their day, because it is theirs.
+const compare = [
+  {
+    job: "معرفة أين ذهبت الأموال فعلًا",
+    old: "تبويب لكل منصة، ثم تجمع الأرقام في مكان آخر.",
+    now: "كل المنصات في صف واحد، والإجماليات المدمجة تحتها.",
+  },
+  {
+    job: "حساب ما حققته فعلًا",
+    old: "كل منصة تنسب البيعة نفسها لنفسها.",
+    now: "إيرادات المتجر بجانب الإنفاق الإعلاني، حتى مستوى المنتج والفئة.",
+  },
+  {
+    job: "إدارة حسابات بأكثر من عملة",
+    old: "تحويل في رأسك، إلى خلية لا يراجعها أحد.",
+    now: "كل شيء موحّد بعملة تقاريرك وبالسعر الصحيح.",
+  },
+  {
+    job: "اختيار الـ Creative الذي تعمل له Scale",
+    old: "تتصفح كل منصة على حدة وتعتمد على ذاكرتك.",
+    now: "كل إعلان يُقيَّم على ROAS وتكلفة الشراء وCTR معًا، ومرتّب في قائمة واحدة.",
+  },
+  {
+    job: "التقاط إعلان وهو يتراجع",
+    old: "تلاحظ حين تهبط النتائج، أي بعد أن يحدث الأمر.",
+    now: "متابعة الـ fatigue على كل المنصات الإعلانية، مع تنبيه قبل أن تقوله النتائج.",
+  },
+  {
+    job: "الرد على «كيف تسير الأمور؟»",
+    old: "تترك ما في يدك، وتعيد بناء عرض، وتلتقط صورة له، وترسلها.",
+    now: "يفتحون رابطًا مباشرًا، ولن تعرف حتى أنهم نظروا.",
+  },
+  {
+    job: "استلام حساب جديد",
+    old: "تبني العروض نفسها من الصفر، مرة أخرى.",
+    now: "تنسخ القالب الذي صنعته بالفعل. التفكير حدث مرة واحدة.",
+  },
+];
+
+// ── Best Creatives Calculator ─────────────────────────────────────────
+// A recreation of the app's Creatives Analysis report, matching the real
+// toolbar, the rank pills and the score badges. Anonymized ads.
+//
+// The score below is not decorative: `scoreCreatives` is the app's own
+// formula from web/src/lib/creative-score.ts, so the ranking and every badge
+// on this page are produced the way the product produces them. If the app's
+// weights change, change them here too.
+type DemoAd = {
+  name: string;
+  type: "Video" | "Static";
+  spend: number;
+  ctr: number;
+  purchases: number;
+  revenue: number;
+};
+
+// The ads that clear the minimum spend and get ranked. Deliberately shaped so
+// no single ad wins all three metrics: that is the whole point of a composite
+// score, and a demo where the same ad tops every column would not show it.
+const rankedAds: DemoAd[] = [
+  { name: "UGC unboxing, 9:16",    type: "Video",  spend: 7301, ctr: 1.31, purchases: 160, revenue: 51107 },
+  { name: "Carousel, bestsellers", type: "Static", spend: 4789, ctr: 0.67, purchases: 88,  revenue: 19156 },
+  { name: "Testimonial cutdown",   type: "Video",  spend: 3210, ctr: 0.88, purchases: 66,  revenue: 16050 },
+  { name: "Founder to camera",     type: "Video",  spend: 2388, ctr: 0.94, purchases: 61,  revenue: 15522 },
+  { name: "Studio product spin",   type: "Video",  spend: 2145, ctr: 0.61, purchases: 24,  revenue: 6435 },
+  { name: "Ramadan bundle",        type: "Static", spend: 1830, ctr: 0.93, purchases: 33,  revenue: 8235 },
+  { name: "Before and after",      type: "Video",  spend: 1174, ctr: 1.20, purchases: 27,  revenue: 7357 },
+  { name: "Review screenshot",     type: "Static", spend: 1180, ctr: 0.55, purchases: 15,  revenue: 3186 },
+];
+
+// The tail. A real account is mostly low-spend ads, which is why the minimum
+// spend threshold exists and why it defaults to the average: everything here
+// is below it and drops out of the ranking. Only spend and type are used, so
+// only spend and type are given.
+const tailAds = [
+  { type: "Static" as const, spend: 688 }, { type: "Video"  as const, spend: 640 },
+  { type: "Static" as const, spend: 612 }, { type: "Static" as const, spend: 590 },
+  { type: "Video"  as const, spend: 566 }, { type: "Static" as const, spend: 540 },
+  { type: "Video"  as const, spend: 512 }, { type: "Static" as const, spend: 498 },
+  { type: "Video"  as const, spend: 470 }, { type: "Static" as const, spend: 455 },
+  { type: "Static" as const, spend: 430 }, { type: "Video"  as const, spend: 412 },
+  { type: "Static" as const, spend: 395 }, { type: "Static" as const, spend: 370 },
+  { type: "Video"  as const, spend: 348 }, { type: "Static" as const, spend: 330 },
+  { type: "Static" as const, spend: 310 }, { type: "Video"  as const, spend: 288 },
+  { type: "Static" as const, spend: 265 }, { type: "Static" as const, spend: 240 },
+  { type: "Video"  as const, spend: 215 }, { type: "Static" as const, spend: 180 },
+  { type: "Static" as const, spend: 145 },
+];
+
+const demoAds = rankedAds;
+const allAdCount = rankedAds.length + tailAds.length;
+const allAdSpend =
+  rankedAds.reduce((s, a) => s + a.spend, 0) + tailAds.reduce((s, a) => s + a.spend, 0);
+
+// The app standardizes each metric across the ads currently in view, then
+// weights them. `invert` is for metrics where lower is better.
+function standardize(values: number[], invert = false): number[] {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (max === min) return values.map(() => 0);
+  return values.map((v) => {
+    const std = (v - min) / (max - min);
+    return invert ? 1 - std : std;
+  });
+}
+
+// Minimum spend defaults to the average spend across the ads in view, so a
+// lucky ad with almost no spend cannot take the top of the list.
+const avgSpend = allAdSpend / allAdCount;
+const inView = demoAds.filter((a) => a.spend >= avgSpend);
+
+const cprs = inView.map((a) => a.spend / a.purchases);
+const roases = inView.map((a) => a.revenue / a.spend);
+const ctrs = inView.map((a) => a.ctr);
+
+const stdCpr = standardize(cprs, true);
+const stdRoas = standardize(roases);
+const stdCtr = standardize(ctrs);
+
+const scored = inView
+  .map((ad, i) => ({
+    ad,
+    cpr: cprs[i],
+    roas: roases[i],
+    score: 0.4 * stdRoas[i] + 0.4 * stdCpr[i] + 0.2 * stdCtr[i],
+  }))
+  .sort((a, b) => b.score - a.score);
+
+const videoCount =
+  rankedAds.filter((a) => a.type === "Video").length +
+  tailAds.filter((a) => a.type === "Video").length;
+const staticCount = allAdCount - videoCount;
+
+// Spend split, video against the total, for the summary strip's bar.
+const videoSpendShare = Math.round(
+  ((rankedAds.filter((a) => a.type === "Video").reduce((s, a) => s + a.spend, 0) +
+    tailAds.filter((a) => a.type === "Video").reduce((s, a) => s + a.spend, 0)) /
+    allAdSpend) * 100
+);
+
+// How the score is built. Weights verified 19 August 2026 against
+// web/src/lib/creative-score.ts.
+const scoreWeights = [
+  { metric: "ROAS", weight: "40%", note: "ما جلبه الإعلان" },
+  { metric: "تكلفة الشراء", weight: "40%", note: "كم كلّفك كل شراء" },
+  { metric: "Outbound CTR", weight: "20%", note: "هل نجح الـ Creative" },
+];
+
+// The rest of Creatives Analysis. Platform coverage is checked and is not the
+// same for all three: see the capability warnings at the top of this file.
+const creativeReports = [
+  {
+    title: "Best Creatives Calculator",
+    scope: "Meta وSnapchat",
+    body: "كل إعلان فوق الحد الأدنى للإنفاق، مُقيَّم ومرتّب في قائمة واحدة، مع الـ Creative نفسه في الصفحة بدل رقم إعلان تبحث عنه. فلتر حسب المنصة أو الحملة أو الهدف، واقرأه كجدول أو كشبكة من الصور المصغّرة.",
+    icon: `<path d="M12 2l2.4 6.9H22l-6.1 4.4 2.3 7-6.2-4.5L5.8 20l2.3-7L2 8.9h7.6z"/>`,
+  },
+  {
+    title: "Hook & Hold Rates",
+    scope: "Meta",
+    body: "نسب احتفاظ الفيديو، لترى أين يغادر المشاهدون فعلًا. الـ Hook هو الثواني الأولى، والـ Hold هو كل ما بعدها، وتُرتّب لوحة المتصدرين فيديوهاتك على الاثنين.",
+    icon: `<path d="M3 12h4l3-8 4 16 3-8h4"/>`,
+  },
+  {
+    title: "Ad Fatigue",
+    scope: "كل المنصات الإعلانية",
+    body: "التقرير الوحيد الذي يغطيها كلها. الإعلان الرابح يتراجع قبل أن تعترف النتائج بذلك، وهنا يظهر ذلك أولًا، بينما إيقافه ما زال قرارًا لا عملية إنقاذ.",
+    icon: `<path d="M12 2v6M12 22v-6"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2"/><circle cx="12" cy="12" r="3"/>`,
+  },
+];
+
+// ── The assistant (R9) ────────────────────────────────────────────────
+// Keep these consistent with the `roster` board in the hero: a reader who
+// checks one against the other has to find them agreeing.
+const assistantAnswer = [
+  "blended ROAS على حساباتك 5.00x هذا الأسبوع، مقابل 4.63x الأسبوع الماضي.",
+  "عميل C هو الأكثر تغيّرًا: 6.80x بعد 5.24x، مع إنفاق أقل بنسبة 9%.",
+  "عميل F هو الأضعف عند 3.00x، وإنفاقه ارتفع 14%.",
+];
+
+const assistantSources = ["Meta", "TikTok", "Snapchat", "Google", "Shopify"];
+
+// ── Where the capacity comes from ─────────────────────────────────────
+// The promise, made concrete. No invented measurement anywhere in here: the
+// argument is about what work each new account adds, not about hours saved.
+const capacity = [
+  {
+    step: "اربط الحساب",
+    body: "تُربط المنصات والمتجر مرة واحدة، وتُسحب بيانات آخر 90 يومًا كاملة، فيكون للحساب سجل من يوم استلامه.",
+  },
+  {
+    step: "انسخ القالب",
+    body: "ابنِ حسابًا واحدًا بالطريقة التي تريد أن يُقرأ بها أي حساب، واحفظه، وكل حساب بعده يبدأ منه. لن تصمم لوحة من جديد.",
+  },
+  {
+    step: "توقف عن التجميع",
+    body: "المزامنة كل ساعة، وتُجلب بيانات آخر ثلاثة أيام من جديد في كل مرة لتصل التحويلات المتأخرة. الشاشة محدَّثة قبل أن تفتحها.",
+  },
+  {
+    step: "أعطِ العميل رابطه الخاص",
+    body: "رابط مباشر للعرض فقط عليه شعاره. الأسئلة التي كانت تقاطعك تجد إجاباتها دون أن تصل إليك.",
+  },
+];
+
+// ── Objections (R13) ──────────────────────────────────────────────────
+// What a media buyer says to talk themselves out of starting. Answer honestly
+// or delete the row: a weak answer is worse than no section.
+const objections = [
+  {
+    q: "أقضي يومي داخل Ads Manager وأثق به.",
+    a: "احتفظ به. Ads Manager هو المكان الذي تبني فيه وتعدّل، ولا شيء هنا يطلب منك التوقف. ما لا يستطيع إخبارك به هو ما فعلته المنصات الأخرى والمتجر، وهو الرقم الذي تقوم عليه قرارات الـ Scale فعلًا.",
+  },
+  {
+    q: "لوحة أخرى تعني شيئًا آخر أحتاج إلى صيانته.",
+    a: "لا يوجد ما تصونه. الاتصالات تتزامن كل ساعة وحدها، وتُجلب بيانات آخر ثلاثة أيام من جديد في كل مزامنة، فتصل التحويلات المتأخرة إلى مكانها الصحيح.",
+  },
+  {
+    q: "الأرقام لن تطابق المنصات.",
+    a: "لكل مقياس صفحة منهجية منشورة توضّح طريقة حسابه. سجلات البيانات وعمليات المزامنة تُظهر آخر تحديث لكل حساب وهل نجح، واللقطة الثابتة تحفظ ما أرسلته كما هو فلا تتغير أرقام الشهر الماضي.",
+  },
+  {
+    q: "التقارير ليست من عملي.",
+    a: "صحيح، وهذا بالضبط سبب استخدامه. العميل يفتح رابطه المباشر، والـ Team Lead يقرأ الشاشة نفسها التي تقرؤها، فتتوقف الأسئلة عن مقاطعة يومك.",
+  },
+  {
+    q: "إعداد هذا سيأخذ أسبوعًا لا أملكه.",
+    a: "حساب واحد، مبني كما يجب، ومحفوظ كقالب. كل ما بعده ربط ونسخ.",
+  },
+];
+
+// ── Roadmap: campaign status & budget control from inside the dashboard ─
+const control = [
+  { platform: "Meta", status: "Live" },
+  { platform: "TikTok", status: "Live" },
+  { platform: "Snapchat", status: "In progress" },
+  { platform: "Google", status: "In progress" },
+];
+---
+
+<Layout
+  locale="ar"
+  title="لـ Media Buyers"
+  description="كل منصة إعلانية وكل متجر على شاشة واحدة، مع تقييم الـ Creatives وترتيبها، ليذهب يوم الـ Media Buyer إلى التحليل بدل جمع الأرقام."
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-ink px-6 pt-14 pb-20 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-10%,#422a96,transparent)]"></div>
+    <div class="pointer-events-none absolute inset-0 -z-0 opacity-[0.06] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:44px_44px]"></div>
+
+    <div class="relative mx-auto max-w-6xl">
+      <nav class="mb-8 flex items-center gap-2 text-sm text-white/40">
+        <a href="/ar" class="transition hover:text-white/80">الرئيسية</a>
+        <span>/</span>
+        <span>حسب دورك</span>
+        <span>/</span>
+        <span class="font-medium text-white/80">Media Buyers</span>
+      </nav>
+
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          AdFunnl لـ Media Buyers
+        </span>
+
+        <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          ضعف عدد العملاء،<br class="hidden sm:block" /> دون أن يقل نصيب أيٍّ منهم منك.
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/60">
+          الساعات التي تذهب في تجميع الأرقام هي سبب عجزك عن استلام حساب إضافي. هذا العمل يكون منجزًا قبل أن تجلس إلى مكتبك.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+            جرّبه الآن
+          </a>
+          <a href="#creatives"
+             class="w-full rounded-xl border border-white/15 bg-white/5 px-8 py-3.5 text-base font-semibold text-white/90 transition hover:bg-white/10 sm:w-auto">
+            شاهد ترتيب الـ Creatives
+          </a>
+        </div>
+      </div>
+
+      <!-- Roster board: every client already current -->
+      <figure class="mt-14">
+        <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/40 backdrop-blur-sm sm:rounded-3xl">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+              <span class="text-sm font-semibold text-white">حساباتك</span>
+              <span class="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/60">مزامنة كل ساعة</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-white/50">
+              <span>الإنفاق <span class="font-semibold text-white/90">SAR {fmt(rosterSpend)}</span></span>
+              <span>الإيرادات <span class="font-semibold text-white/90">SAR {fmt(rosterRevenue)}</span></span>
+              <span>Blended ROAS <span class="font-semibold text-brand-200"><bdi dir="ltr">{roas(rosterRevenue, rosterSpend)}×</bdi></span></span>
+            </div>
+          </div>
+
+          <div class="grid gap-px bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
+            {roster.map((c) => (
+              <div class="bg-ink/60 px-5 py-4">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-sm font-semibold text-white">{c.client}</span>
+                  <span class="font-display text-lg font-bold text-brand-200"><bdi dir="ltr">{roas(c.revenue, c.spend)}×</bdi></span>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] text-white/40">
+                  <span>إنفاق SAR {fmt(c.spend)}</span>
+                  <span>آخر تحديث {c.synced}</span>
+                </div>
+                <div class="mt-2.5 h-1 overflow-hidden rounded-full bg-white/10">
+                  <div class="h-full rounded-full bg-brand-400" style={`width:${Math.min(100, (c.revenue / c.spend) * 14)}%`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <figcaption class="mt-4 text-center text-xs text-white/35">
+          محاكاة للمنتج ببيانات مجهّلة، وليست حساب عميل حقيقي.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ======================= WHERE THE MORNING GOES ======================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          أين يذهب الصباح فعلًا
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+          قبل أن تتخذ قرارًا واحدًا، تكون قد قضيت وقتك في الجمع: تبويب لكل منصة، ولكل منصة تسجيل دخول وأسماء أعمدة وتعريف خاص للتحويل.
+        </p>
+      </div>
+
+      <!-- Tab strip -->
+      <div class="mt-12 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 shadow-sm">
+        <div class="flex gap-1 overflow-x-auto border-b border-zinc-200 bg-zinc-100 px-3 pt-3">
+          {tabs.map((t, i) => (
+            <span class:list={[
+              "shrink-0 rounded-t-lg px-3.5 py-2 text-xs font-medium",
+              i === 0 ? "bg-white text-zinc-800 shadow-[0_-1px_0_0_rgba(0,0,0,0.04)]" : "text-zinc-500",
+            ]}>{t.name}</span>
+          ))}
+        </div>
+        <div class="grid gap-px bg-zinc-200 sm:grid-cols-2 lg:grid-cols-3">
+          {tabs.map((t) => (
+            <div class="bg-white px-5 py-5">
+              <p class="text-sm font-semibold text-zinc-900">{t.name}</p>
+              <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">{t.quirk}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p class="mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-zinc-600">
+        ثم العملات، تُحوَّل في رأسك أو في خلية لا يراجعها أحد. لا شيء من ذلك هو العمل الحقيقي، فالعمل يبدأ بعده.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ COMPARISON ============================ -->
+  <section class="bg-zinc-50 px-6 py-24">
+    <div class="mx-auto max-w-5xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          اليوم نفسه، دون الجمع
+        </h2>
+      </div>
+
+      <div class="mt-12 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div class="hidden grid-cols-[1.1fr_1fr_1fr] border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-widest text-zinc-400 sm:grid">
+          <div class="px-6 py-3.5">المهمة</div>
+          <div class="px-6 py-3.5">كيف تسير الآن</div>
+          <div class="px-6 py-3.5 text-brand-700">مع AdFunnl</div>
+        </div>
+        {compare.map((row) => (
+          <div class="grid grid-cols-1 gap-1 border-b border-zinc-100 last:border-b-0 sm:grid-cols-[1.1fr_1fr_1fr] sm:gap-0">
+            <div class="px-6 pt-5 text-sm font-semibold text-zinc-900 sm:py-5">{row.job}</div>
+            <div class="flex items-start gap-2.5 px-6 pt-3 text-sm leading-relaxed text-zinc-500 sm:py-5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span>{row.old}</span>
+            </div>
+            <div class="flex items-start gap-2.5 bg-brand-50/40 px-6 pb-5 pt-3 text-sm leading-relaxed text-zinc-700 sm:py-5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>{row.now}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= DATA FLOW ============================= -->
+  <DataFlow locale="ar"
+    heading="كل ما تديره في مكان واحد، ثم يخرج كتقرير"
+    body="تتدفق بيانات كل منصة إعلانية وكل متجر مربوط باستمرار. AdFunnl يوحّدها ويعايرها بعملة تقارير واحدة، ويحوّلها إلى رسوم مباشرة، ويعطي العميل رابطًا بدل أن يأخذ يومك."
+    outLabel="تمت المشاركة"
+    outSub="كرابط مباشر"
+  />
+
+  <!-- ============================= CREATIVES ============================= -->
+  <section id="creatives" class="bg-ink px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          إيجاد الرابح بين ألف إعلان نشط
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-white/60">
+          الترتيب حسب العائد يضع صدفة رخيصة في الأعلى، والترتيب حسب الإنفاق يضع أكبر أخطائك في الأعلى. Best Creatives Calculator تقيّم كل إعلان على كل ذلك معًا وترتّبها.
+        </p>
+      </div>
+
+      <!-- Score weights -->
+      <div class="mt-12 grid gap-4 sm:grid-cols-3">
+        {scoreWeights.map((w) => (
+          <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <div class="flex items-baseline justify-between">
+              <p class="text-sm font-semibold text-white">{w.metric}</p>
+              <p class="font-display text-2xl font-bold text-brand-300">{w.weight}</p>
+            </div>
+            <p class="mt-1.5 text-xs leading-relaxed text-white/45">{w.note}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mx-auto mt-5 max-w-3xl text-center text-sm leading-relaxed text-white/45">
+        كل مقياس يُعاير مقارنةً بالإعلانات الأخرى المعروضة قبل ترجيحه، فيُقاس الإعلان على ما تشغّله فعلًا لا على رقم اختاره أحدهم. وللحسابات التي تبيع عبر الرسائل يوجد وضع للرسائل، يعطي تكلفة الرسالة وزن 80% والـ CTR وزن 20%.
+      </p>
+
+      <!-- Recreation of the Creatives Analysis report -->
+      <figure class="mt-12">
+        <div class="overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50 sm:rounded-3xl">
+          <!-- Summary strip -->
+          <div class="flex flex-wrap items-stretch gap-px border-b border-zinc-200 bg-zinc-200">
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">إجمالي الإعلانات</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{allAdCount}</p>
+            </div>
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">الإعلانات الثابتة</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{staticCount}</p>
+            </div>
+            <div class="flex-1 bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">إعلانات الفيديو</p>
+              <p class="font-display text-xl font-bold text-zinc-900">{videoCount}</p>
+            </div>
+            <div class="flex-[2] bg-white px-5 py-3.5">
+              <p class="text-[11px] uppercase tracking-wide text-zinc-400">توزيع الإنفاق</p>
+              <div class="mt-2 h-2 overflow-hidden rounded-full bg-zinc-200">
+                <div class="h-full rounded-full bg-brand-500" style={`width:${videoSpendShare}%`}></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar chips, as the app shows them -->
+          <div class="flex flex-wrap items-center gap-2 border-b border-zinc-100 px-5 py-3.5">
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">المعروض <span class="font-semibold text-zinc-800">{scored.length} من {allAdCount} إعلانًا</span></span>
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">الحد الأدنى للإنفاق <span class="font-semibold text-zinc-800">SAR {fmt(Math.round(avgSpend))}</span></span>
+            <span class="rounded-lg border border-zinc-200 px-2.5 py-1 text-[11px] text-zinc-500">متوسط الإنفاق <span class="font-semibold text-zinc-800">SAR {fmt(Math.round(avgSpend))}</span></span>
+            <span class="rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-1 text-[11px] font-medium text-brand-700">الفلاتر · المنصة، الحملة، الهدف</span>
+            <span class="text-[11px] text-zinc-400">المتوسطات تشمل كل الإعلانات الـ {allAdCount} قبل الفلاتر</span>
+          </div>
+
+          <!-- Ranked list -->
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[46rem] text-start">
+              <thead>
+                <tr class="border-b border-zinc-100 text-[11px] uppercase tracking-wide text-zinc-400">
+                  <th class="px-5 py-3 font-medium">الترتيب</th>
+                  <th class="px-5 py-3 font-medium">الإعلان</th>
+                  <th class="px-5 py-3 font-medium">النوع</th>
+                  <th class="px-5 py-3 font-medium text-end">الإنفاق</th>
+                  <th class="px-5 py-3 font-medium text-end">Link CTR</th>
+                  <th class="px-5 py-3 font-medium text-end">تكلفة الشراء</th>
+                  <th class="px-5 py-3 font-medium text-end">ROAS</th>
+                  <th class="px-5 py-3 font-medium text-end">النقاط</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scored.map((row, i) => (
+                  <tr class:list={["border-b border-zinc-50 text-sm", i < 3 && "bg-emerald-50/40"]}>
+                    <td class="px-5 py-3.5">
+                      <span class:list={[
+                        "inline-flex h-6 min-w-6 items-center justify-center rounded-md px-1.5 text-[11px] font-bold",
+                        i < 3 ? "bg-emerald-600 text-white" : "bg-zinc-100 text-zinc-500",
+                      ]}>{i < 3 ? `#${i + 1}` : i + 1}</span>
+                    </td>
+                    <td class="px-5 py-3.5">
+                      <div class="flex items-center gap-3">
+                        <span class:list={[
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-md",
+                          row.ad.type === "Video" ? "bg-zinc-800 text-white" : "bg-zinc-200 text-zinc-500",
+                        ]}>
+                          {row.ad.type === "Video" ? (
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                          ) : (
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                          )}
+                        </span>
+                        <span class="font-medium text-zinc-800">{row.ad.name}</span>
+                      </div>
+                    </td>
+                    <td class="px-5 py-3.5">
+                      <span class="rounded-md bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-700">{row.ad.type === "Video" ? "فيديو" : "ثابت"}</span>
+                    </td>
+                    <td class="px-5 py-3.5 text-end tabular-nums text-zinc-600">SAR {fmt(row.ad.spend)}</td>
+                    <td class="px-5 py-3.5 text-end tabular-nums text-zinc-600">{row.ad.ctr.toFixed(2)}%</td>
+                    <td class="px-5 py-3.5 text-end tabular-nums text-zinc-600">SAR {row.cpr.toFixed(0)}</td>
+                    <td class="px-5 py-3.5 text-end tabular-nums font-medium text-zinc-800"><bdi dir="ltr">{row.roas.toFixed(2)}×</bdi></td>
+                    <td class="px-5 py-3.5 text-end">
+                      <span class="inline-block rounded-md border border-zinc-200 px-2 py-0.5 text-[11px] font-bold tabular-nums text-zinc-700">{row.score.toFixed(2)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <figcaption class="mt-4 text-center text-xs text-white/35">
+          محاكاة بإعلانات مجهّلة. النقاط محسوبة بمعادلة المنتج نفسها على الأرقام المعروضة.
+        </figcaption>
+      </figure>
+
+      <!-- The three reports -->
+      <div class="mt-14 grid gap-5 md:grid-cols-3">
+        {creativeReports.map((r) => (
+          <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={r.icon} />
+            </span>
+            <p class="mt-4 font-display text-lg font-bold text-white">{r.title}</p>
+            <p class="mt-1.5 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/60">{r.scope}</p>
+            <p class="mt-3 text-sm leading-relaxed text-white/50">{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ASSISTANT ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid items-center gap-14 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            اسأله بدل أن تبني عرضًا
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            بعض الأسئلة تستحق لوحة كاملة، ومعظمها يستحق ثلاثين ثانية. المساعد موجود في كل صفحة، يستقبل سؤالك بلغة عادية، ويُظهر لك البيانات التي استخدمها في الإجابة، لتتحقق منها بدل أن تثق بها فقط.
+          </p>
+          <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+            ويتذكر مساحة العمل التي يجيب عنها. وإن كنت تعمل على Claude أو ChatGPT، فخادم MCP يتيح لهما الاستعلام عن البيانات الموحّدة نفسها مباشرة.
+          </p>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 shadow-lg shadow-zinc-900/[0.06]">
+          <div class="border-b border-zinc-200 bg-white px-5 py-3 text-xs font-semibold text-zinc-400">المساعد</div>
+          <div class="space-y-4 p-5">
+            <div class="ms-auto w-fit max-w-[85%] rounded-2xl rounded-ee-sm bg-brand-600 px-4 py-2.5 text-sm text-white">
+              أي عميل تغيّر أداؤه أكثر هذا الأسبوع، ولماذا؟
+            </div>
+            <div class="w-fit max-w-[92%] rounded-2xl rounded-es-sm border border-zinc-200 bg-white px-4 py-3">
+              <ul class="space-y-2 text-sm leading-relaxed text-zinc-700">
+                {assistantAnswer.map((line) => <li>{line}</li>)}
+              </ul>
+              <div class="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3">
+                <span class="text-[10px] uppercase tracking-wide text-zinc-400">البيانات المستخدمة</span>
+                {assistantSources.map((s) => (
+                  <span class="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500">{s}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CAPACITY ============================== -->
+  <section class="bg-zinc-50 px-6 py-24">
+    <div class="mx-auto max-w-5xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          من أين تأتي السعة الإضافية
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">
+          كل حساب استلمته كان يأتي معه عمل جمع خاص به: تبويباته وتحويلاته وتقريره آخر الشهر. هذا الجزء هو ما كان يحدّ من قدرتك، وهو الجزء الذي يتوقف عن التكرار.
+        </p>
+      </div>
+
+      <ol class="mt-12 grid gap-5 sm:grid-cols-2">
+        {capacity.map((c, i) => (
+          <li class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 font-display text-sm font-bold text-brand-700">{i + 1}</span>
+            <p class="mt-4 font-display text-lg font-bold text-zinc-950">{c.step}</p>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-500">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================= OBJECTIONS ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-center font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+        ما الذي تفكر فيه على الأرجح
+      </h2>
+
+      <div class="mt-12 space-y-4">
+        {objections.map((o) => (
+          <div class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <p class="font-display text-lg font-bold text-zinc-950">«{o.q}»</p>
+            <p class="mt-3 leading-relaxed text-zinc-600">{o.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CONTROL ============================== -->
+  <section class="bg-zinc-50 px-6 py-20">
+    <div class="mx-auto max-w-3xl">
+      <div class="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
+        <h2 class="font-display text-xl font-bold text-zinc-950">تغيير الميزانيات دون مغادرة الشاشة</h2>
+        <p class="mt-2 leading-relaxed text-zinc-500">
+          إيقاف حملة وتعديل ميزانية يتمّان من داخل اللوحة، فيكون القرار والتنفيذ في المكان نفسه. أين وصل ذلك اليوم:
+        </p>
+        <div class="mt-6 grid gap-px overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 sm:grid-cols-4">
+          {control.map((c) => (
+            <div class="bg-white px-4 py-4 text-center">
+              <p class="text-sm font-semibold text-zinc-900">{c.platform}</p>
+              <p class:list={[
+                "mt-1.5 text-xs font-medium",
+                c.status === "Live" ? "text-emerald-600" : "text-zinc-400",
+              ]}>{c.status === "Live" ? "متاح" : "قيد التطوير"}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ CTA ================================ -->
+  <section class="bg-ink px-6 py-24">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        ابدأ بحساب واحد
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/55">
+        اربطه، وابنِ العرض بالطريقة التي تريد أن يُقرأ بها أي حساب، وشاهد كيف يبدو الصباح والأرقام جاهزة.
+      </p>
+      <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href={`${APP_URL}/signup`}
+           class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+          جرّبه الآن
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>

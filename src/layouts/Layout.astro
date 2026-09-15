@@ -9,65 +9,155 @@ interface Props {
   /** Keep a page out of search results. For legal pages that exist to be
       linked to directly, not found. */
   noindex?: boolean;
+  /** "ar" renders the page right-to-left and localizes the nav and footer.
+      Arabic pages live under src/pages/ar/, one twin per English page. */
+  locale?: "en" | "ar";
 }
 
 const {
   title,
-  description = "AdFunnl: Every ad platform. Every store. One source of truth. Meta, TikTok, Snapchat and Google, plus Shopify and Salla revenue, in one always-fresh workspace.",
+  description,
   ogImage = "/logo-1024.png",
   noindex = false,
+  locale = "en",
 } = Astro.props;
 
 const APP_URL = "https://app.adfunnl.com";
+const SITE = "https://www.adfunnl.com";
+const ar = locale === "ar";
+
+// ── Paths ──────────────────────────────────────────────────────────────
+// Every Arabic page is its English twin's path with /ar in front. `basePath`
+// is the English path for both, so the active states and the language
+// switch work the same way on either side.
+const path = (Astro.url.pathname.replace(/\/+$/, "") || "/");
+const basePath = path.replace(/^\/ar(?=\/|$)/, "") || "/";
+const toAr = (href: string) =>
+  href === "/" ? "/ar" : href.startsWith("/#") ? `/ar${href.slice(1)}` : `/ar${href}`;
+/** Internal link in the current locale. */
+const L = (href: string) => (ar ? toAr(href) : href);
+const enHref = basePath;
+const arHref = toAr(basePath);
+
+// ── Nav and footer copy ────────────────────────────────────────────────
+// Arabic keeps media-buying terms and the persona names in English, see the
+// Arabic section in docs/voice.md.
+const COPY = {
+  en: {
+    description: "AdFunnl: Every ad platform. Every store. One source of truth. Meta, TikTok, Snapchat and Google, plus Shopify and Salla revenue, in one always-fresh workspace.",
+    forMenu: "AdFunnl For",
+    menuEyebrow: "Built around the job you actually do",
+    youreHere: "You're here",
+    moreRoles: "More roles coming soon: agency founders and in-house marketing managers.",
+    integrations: "Integrations",
+    pricing: "Pricing",
+    signIn: "Sign in",
+    startFree: "Start free",
+    toggleMenu: "Toggle menu",
+    slogan: "Connect. Visualize. Share.",
+    footerLine: "Every ad platform. Every store. One source of truth, shared live with your clients.",
+    product: "Product",
+    dashboards: "Dashboards",
+    features: "Features",
+    company: "Company",
+    about: "About",
+    privacy: "Privacy",
+    terms: "Terms",
+    forPersona: (s: string) => `For ${s}`,
+    rights: "AdFunnl. All rights reserved.",
+    powered: "Powered by Funnl Suite",
+    blurbs: {
+      am: "Answer client questions with a link, not an evening's work.",
+      tl: "Know an account is slipping before the client tells you.",
+      mb: "Take on twice the clients without any of them getting less of you.",
+    },
+  },
+  ar: {
+    description: "AdFunnl يجمع Meta وTikTok وSnapchat وGoogle مع إيرادات Shopify وسلة في مساحة عمل واحدة محدَّثة دائمًا.",
+    forMenu: "حسب دورك",
+    menuEyebrow: "مبني حول العمل الذي تقوم به فعلًا",
+    youreHere: "أنت هنا",
+    moreRoles: "أدوار أخرى قريبًا: مؤسسو الوكالات ومديرو التسويق داخل الشركات.",
+    integrations: "التكاملات",
+    pricing: "الأسعار",
+    signIn: "تسجيل الدخول",
+    startFree: "ابدأ مجانًا",
+    toggleMenu: "فتح القائمة",
+    slogan: "اربط. اعرض. شارك.",
+    footerLine: "كل منصاتك الإعلانية ومتاجرك في مصدر أرقام واحد، تشاركه مع عملائك مباشرةً.",
+    product: "المنتج",
+    dashboards: "لوحات المعلومات",
+    features: "المزايا",
+    company: "الشركة",
+    about: "من نحن",
+    privacy: "الخصوصية",
+    terms: "الشروط",
+    forPersona: (s: string) => `لـ ${s}`,
+    rights: "AdFunnl. جميع الحقوق محفوظة.",
+    powered: "من تطوير Funnl Suite",
+    blurbs: {
+      am: "أجب عن أسئلة العميل برابط واحد، بدل أمسية كاملة من العمل.",
+      tl: "اعرف أن حسابًا يتراجع قبل أن يخبرك العميل.",
+      mb: "استلم ضعف عدد العملاء دون أن يقلّ نصيب أيٍّ منهم من وقتك.",
+    },
+  },
+};
+const T = COPY[locale];
+const pageDescription = description ?? T.description;
 
 // ── "AdFunnl For" persona menu ────────────────────────────────────────
 // Adding a persona page is a one-line change here: the desktop mega-menu,
-// the mobile menu and the active states all read from this array.
+// the mobile menu and the active states all read from this array. The
+// persona names are fixed terms and stay in English in both locales.
 const personas = [
   {
     label: "Account Managers",
     short: "Account Managers",
-    blurb: "Answer client questions with a link, not an evening's work.",
+    blurb: T.blurbs.am,
     href: "/for/account-managers",
     icon: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
   },
   {
     label: "Team Leads",
     short: "Team Leads",
-    blurb: "Know an account is slipping before the client tells you.",
+    blurb: T.blurbs.tl,
     href: "/for/team-leads",
     icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
   },
   {
     label: "Media Buyers",
     short: "Media Buyers",
-    blurb: "Take on twice the clients without any of them getting less of you.",
+    blurb: T.blurbs.mb,
     href: "/for/media-buyers",
     icon: `<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>`,
   },
 ];
 
-const path = (Astro.url.pathname.replace(/\/+$/, "") || "/");
-const isCurrent = (href: string) => path === href.replace(/\/+$/, "");
-const forSectionActive = path === "/for" || path.startsWith("/for/");
+const isCurrent = (href: string) => basePath === href.replace(/\/+$/, "");
+const forSectionActive = basePath === "/for" || basePath.startsWith("/for/");
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={locale} dir={ar ? "rtl" : "ltr"}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     {noindex && <meta name="robots" content="noindex, follow" />}
 
+    <link rel="alternate" hreflang="en" href={`${SITE}${enHref === "/" ? "/" : enHref}`} />
+    <link rel="alternate" hreflang="ar" href={`${SITE}${arHref}`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE}${enHref === "/" ? "/" : enHref}`} />
+
     <meta property="og:title"       content={`${title} · AdFunnl`} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:image"       content={ogImage} />
     <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content={ar ? "ar_AR" : "en_US"} />
 
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content={`${title} · AdFunnl`} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image"       content={ogImage} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -79,7 +169,7 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
     <!-- Nav -->
     <header class="sticky top-0 z-50 border-b border-zinc-100 bg-white/85 backdrop-blur-md">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="/" class="shrink-0">
+        <a href={L("/")} class="shrink-0">
           <img src="/logo.png" alt="AdFunnl" class="h-6 w-auto" />
         </a>
 
@@ -92,19 +182,20 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
               class:list={["flex items-center gap-1 py-2 transition hover:text-zinc-900 group-focus-within:text-zinc-900", forSectionActive && "text-zinc-900"]}
               aria-haspopup="true"
             >
-              AdFunnl For
+              {T.forMenu}
               <svg class="h-4 w-4 text-zinc-400 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
             </button>
 
-            <!-- Panel (pt-3 keeps a hover bridge) -->
+            <!-- Panel (pt-3 keeps a hover bridge). left-1/2 plus the negative
+                 translate centres it physically, so it stays put in RTL. -->
             <div class="invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[27rem]">
               <div class="rounded-2xl border border-zinc-100 bg-white p-2 shadow-xl shadow-zinc-900/[0.08] ring-1 ring-zinc-900/[0.02]">
                 <p class="px-3.5 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
-                  Built around the job you actually do
+                  {T.menuEyebrow}
                 </p>
                 {personas.map((p) => (
                   <a
-                    href={p.href}
+                    href={L(p.href)}
                     aria-current={isCurrent(p.href) ? "page" : undefined}
                     class:list={["group/item flex gap-3.5 rounded-xl p-3.5 transition hover:bg-brand-50/70", isCurrent(p.href) && "bg-brand-50/70"]}
                   >
@@ -115,7 +206,7 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
                       <span class="flex items-start gap-2">
                         <span class="min-w-0 flex-1 text-sm font-semibold text-zinc-900">{p.label}</span>
                         {isCurrent(p.href) && (
-                          <span class="mt-0.5 shrink-0 whitespace-nowrap rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">You're here</span>
+                          <span class="mt-0.5 shrink-0 whitespace-nowrap rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">{T.youreHere}</span>
                         )}
                       </span>
                       <span class="mt-1 block text-xs leading-relaxed text-zinc-500">{p.blurb}</span>
@@ -125,39 +216,48 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
                 <div class="mx-3.5 mt-1 border-t border-zinc-100 pt-3 pb-2">
                   <!-- Keep this list in sync with `personas`: a role listed here
                        and shipped above reads as a mistake. -->
-                  <p class="text-xs text-zinc-400">More roles coming soon: agency founders and in-house marketing managers.</p>
+                  <p class="text-xs text-zinc-400">{T.moreRoles}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <a href="/#integrations" class="hover:text-zinc-900 transition">Integrations</a>
-          <a href="/pricing" class="hover:text-zinc-900 transition">Pricing</a>
+          <a href={L("/#integrations")} class="hover:text-zinc-900 transition">{T.integrations}</a>
+          <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
         </nav>
 
         <div class="flex items-center gap-3">
+          <!-- Language switch, same EN / ع pair as the app's toggle. It links to
+               this page's twin in the other language. -->
+          <div dir="ltr" class="flex overflow-hidden rounded-lg border border-zinc-200 text-xs font-medium">
+            <a href={enHref} hreflang="en" lang="en" aria-current={ar ? undefined : "true"}
+               class:list={["px-2.5 py-1 transition", ar ? "text-zinc-500 hover:bg-zinc-50" : "bg-brand-600 text-white"]}>EN</a>
+            <a href={arHref} hreflang="ar" lang="ar" aria-label="العربية" aria-current={ar ? "true" : undefined}
+               class:list={["border-s border-zinc-200 px-2.5 py-1 transition", ar ? "bg-brand-600 text-white" : "text-zinc-500 hover:bg-zinc-50"]}>ع</a>
+          </div>
+
           <a href={`${APP_URL}/login`}
              class="hidden sm:inline-block text-sm font-medium text-zinc-600 hover:text-zinc-900 transition">
-            Sign in
+            {T.signIn}
           </a>
           <a href={`${APP_URL}/signup`}
              class="hidden sm:inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition">
-            Start free
+            {T.startFree}
           </a>
 
           <!-- Mobile toggle -->
-          <input type="checkbox" id="nav-toggle" class="peer hidden" aria-label="Toggle menu" />
+          <input type="checkbox" id="nav-toggle" class="peer hidden" aria-label={T.toggleMenu} />
           <label for="nav-toggle" class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-700 cursor-pointer select-none">
             <svg class="h-5 w-5 peer-checked:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
           </label>
 
           <!-- Mobile menu -->
-          <div class="hidden peer-checked:block md:!hidden absolute left-0 right-0 top-full border-b border-zinc-100 bg-white shadow-lg">
+          <div class="hidden peer-checked:block md:!hidden absolute inset-x-0 top-full border-b border-zinc-100 bg-white shadow-lg">
             <nav class="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1 text-sm font-medium text-zinc-700">
-              <p class="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">AdFunnl For</p>
+              <p class="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{T.forMenu}</p>
               {personas.map((p) => (
                 <a
-                  href={p.href}
+                  href={L(p.href)}
                   aria-current={isCurrent(p.href) ? "page" : undefined}
                   class:list={["flex items-start gap-3 rounded-lg px-3 py-3 hover:bg-zinc-50", isCurrent(p.href) && "bg-brand-50/70"]}
                 >
@@ -168,7 +268,7 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
                     <span class="flex flex-wrap items-center gap-2">
                       <span class={isCurrent(p.href) ? "text-brand-700" : ""}>{p.label}</span>
                       {isCurrent(p.href) && (
-                        <span class="shrink-0 whitespace-nowrap rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">You're here</span>
+                        <span class="shrink-0 whitespace-nowrap rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">{T.youreHere}</span>
                       )}
                     </span>
                     <span class="mt-0.5 block text-xs font-normal leading-relaxed text-zinc-500">{p.blurb}</span>
@@ -176,11 +276,11 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
                 </a>
               ))}
               <div class="my-1 border-t border-zinc-100"></div>
-              <a href="/#integrations"  class="rounded-lg px-3 py-3 hover:bg-zinc-50">Integrations</a>
-              <a href="/pricing"        class="rounded-lg px-3 py-3 hover:bg-zinc-50">Pricing</a>
+              <a href={L("/#integrations")} class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.integrations}</a>
+              <a href={L("/pricing")}       class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.pricing}</a>
               <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-4">
-                <a href={`${APP_URL}/login`}  class="rounded-lg border border-zinc-200 px-4 py-2.5 text-center hover:bg-zinc-50">Sign in</a>
-                <a href={`${APP_URL}/signup`} class="rounded-lg bg-brand-600 px-4 py-2.5 text-center font-semibold text-white hover:bg-brand-700">Start free</a>
+                <a href={`${APP_URL}/login`}  class="rounded-lg border border-zinc-200 px-4 py-2.5 text-center hover:bg-zinc-50">{T.signIn}</a>
+                <a href={`${APP_URL}/signup`} class="rounded-lg bg-brand-600 px-4 py-2.5 text-center font-semibold text-white hover:bg-brand-700">{T.startFree}</a>
               </div>
             </nav>
           </div>
@@ -199,34 +299,34 @@ const forSectionActive = path === "/for" || path.startsWith("/for/");
             <!-- The slogan. This is its home: brand line first, then the plain
                  description of what the product is. Do not repeat it elsewhere
                  on the page. -->
-            <p class="font-display text-base font-bold tracking-tight text-brand-700">Connect. Visualize. Share.</p>
-            <p class="mt-2 max-w-xs text-sm leading-relaxed text-zinc-500">Every ad platform. Every store. One source of truth, shared live with your clients.</p>
+            <p class="font-display text-base font-bold tracking-tight text-brand-700">{T.slogan}</p>
+            <p class="mt-2 max-w-xs text-sm leading-relaxed text-zinc-500">{T.footerLine}</p>
           </div>
           <div>
-            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Product</p>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">{T.product}</p>
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
-              <a href="/features/dashboard" class="hover:text-zinc-900 transition">Dashboards</a>
-              <a href="/#features"          class="hover:text-zinc-900 transition">Features</a>
-              <a href="/#integrations"      class="hover:text-zinc-900 transition">Integrations</a>
-              <a href="/pricing"            class="hover:text-zinc-900 transition">Pricing</a>
+              <a href={L("/features/dashboard")} class="hover:text-zinc-900 transition">{T.dashboards}</a>
+              <a href={L("/#features")}          class="hover:text-zinc-900 transition">{T.features}</a>
+              <a href={L("/#integrations")}      class="hover:text-zinc-900 transition">{T.integrations}</a>
+              <a href={L("/pricing")}            class="hover:text-zinc-900 transition">{T.pricing}</a>
               {personas.map((p) => (
-                <a href={p.href} class="hover:text-zinc-900 transition">For {p.short}</a>
+                <a href={L(p.href)} class="hover:text-zinc-900 transition">{T.forPersona(p.short)}</a>
               ))}
             </nav>
           </div>
           <div>
-            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Company</p>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">{T.company}</p>
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
-              <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">Start free</a>
-              <a href="/about"   class="hover:text-zinc-900 transition">About</a>
-              <a href="/privacy" class="hover:text-zinc-900 transition">Privacy</a>
-              <a href="/terms"   class="hover:text-zinc-900 transition">Terms</a>
+              <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">{T.startFree}</a>
+              <a href={L("/about")}   class="hover:text-zinc-900 transition">{T.about}</a>
+              <a href={L("/privacy")} class="hover:text-zinc-900 transition">{T.privacy}</a>
+              <a href={L("/terms")}   class="hover:text-zinc-900 transition">{T.terms}</a>
             </nav>
           </div>
         </div>
         <div class="mt-10 flex flex-col gap-1.5 border-t border-zinc-200 pt-6 text-xs text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} AdFunnl. All rights reserved.</span>
-          <span>Powered by Funnl Suite</span>
+          <span>© {new Date().getFullYear()} {T.rights}</span>
+          <span>{T.powered}</span>
         </div>
       </div>
     </footer>

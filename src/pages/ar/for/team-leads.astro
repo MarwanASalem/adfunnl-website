@@ -1,0 +1,689 @@
+---
+// Arabic twin of src/pages/for/team-leads.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../../layouts/Layout.astro";
+import DataFlow from "../../../components/DataFlow.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// ── Hero board: the bird's-eye view ───────────────────────────────────
+// Anonymized demo data (no real client or account), same convention as the
+// homepage mocks. Kept internally consistent: the blended row is the sum of
+// the platform rows, so nobody can check the arithmetic and find it wrong.
+const platforms = [
+  { key: "meta",     name: "Meta",     spend: 18824, purchases: 223, revenue: 108976, color: "#0082FB" },
+  { key: "snapchat", name: "Snapchat", spend: 7081,  purchases: 120, revenue: 60906,  color: "#F5C518" },
+  { key: "tiktok",   name: "TikTok",   spend: 3767,  purchases: 43,  revenue: 21653,  color: "#111111" },
+  { key: "google",   name: "Google",   spend: 417,   purchases: 20,  revenue: 10256,  color: "#EA4335" },
+];
+
+const totalSpend     = platforms.reduce((a, p) => a + p.spend, 0);
+const totalPurchases = platforms.reduce((a, p) => a + p.purchases, 0);
+const totalRevenue   = platforms.reduce((a, p) => a + p.revenue, 0);
+const blendedRoas    = totalRevenue / totalSpend;
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+
+const blended = [
+  { label: "الإنفاق", value: `SAR ${fmt(totalSpend)}` },
+  { label: "المشتريات", value: fmt(totalPurchases) },
+  { label: "الإيرادات", value: `SAR ${fmt(totalRevenue)}` },
+  { label: "Blended ROAS", value: `${blendedRoas.toFixed(2)}×`, strong: true },
+];
+
+// ── The signature: one routine, two ways ──────────────────────────────
+// The gap between the elapsed badges is the argument. Keep those badges
+// vague on purpose: a precise figure here would be an invented measurement,
+// and precision is what made the old version need a disclaimer under it.
+// The pain is tab-switching and currency math, never CSV exports. See R8.
+const lanes = [
+  {
+    key: "today",
+    eyebrow: "كيف يُصنع الرقم اليوم",
+    elapsed: "معظم الصباح، في كل مرة.",
+    tone: "bad",
+    stops: [
+      { t: "التبويب 1", s: "Meta. اقرأ الأرقام، واحفظها في رأسك، وانتقل." },
+      { t: "التبويبات التالية", s: "TikTok وSnapchat وGoogle. كل منصة تسمّي الأعمدة بطريقتها وتحسب التحويل ضمن attribution window خاصة بها، فلا شيء يتطابق." },
+      { t: "الحساب", s: "حساب يشتري بالريال ويُفوتر بالدرهم. أنت تحوّل العملات أثناء العمل، ولا أحد يراجع غيرك." },
+      { t: "التقرير", s: "ثم يجب أن يتحول كل ذلك إلى شيء يقرؤه العميل، وهنا يذهب باقي اليوم." },
+    ],
+  },
+  {
+    key: "adfunnl",
+    eyebrow: "كيف يسير الأمر مع AdFunnl",
+    elapsed: "دقيقتان تقريبًا.",
+    tone: "good",
+    stops: [
+      { t: "شاشة واحدة", s: "كل المنصات جنبًا إلى جنب، مدمجة ومحوّلة إلى عملة واحدة. لا شيء تحفظه في رأسك." },
+      { t: "القرار", s: "تنتقل مباشرة إلى الحساب الذي يحتاجك اليوم، وهذا هو الجزء الذي وُظّفت من أجله." },
+    ],
+    note: "لا توجد خطوة ثالثة. الشاشة كانت محدّثة قبل أن تفتحها.",
+  },
+];
+
+// ── This page's pains and objections ──────────────────────────────────
+// Kept here on purpose (see R11 to R13 in docs/voice.md): the page is built
+// from this list, so a later edit cannot quietly turn it back into a feature
+// tour. A team lead's pains, in their order of size:
+//   1. Accountable for accounts they cannot see without asking someone.
+//   2. The multiplication: media buyers x clients x platforms x currencies.
+//   3. Creative decisions made blind across thousands of running ads.
+//   4. The client deliverable eats a day and is stale on arrival.
+// Their objections, answered in the `objections` array below.
+//
+// CAPABILITY WARNING: the app groups Workspace > Client > Ad Account. There is
+// no media buyer dimension, and every member sees every client. "See each
+// media buyer's own accounts" is pain to describe, never a feature to claim.
+
+// The multiplication, as the reader's own arithmetic.
+const multiplication = [
+  { n: "5", label: "Media Buyers", note: "لكلٍّ منهم طريقته في التقارير" },
+  { n: "4", label: "عملاء لكل منهم", note: "ولا أحد منهم ينتظر أول الشهر" },
+  { n: "4", label: "منصات لكل عميل", note: "أسماء أعمدة مختلفة وattribution windows مختلفة" },
+  { n: "2", label: "عملات", note: "تُحوَّل في رأس أحدهم دون مراجعة" },
+];
+
+// ── Us versus them (R12) ──────────────────────────────────────────────
+// Rows are jobs a team lead does, not features. The old column has to read
+// as a fair description of the reader's week, because it is theirs.
+const compare = [
+  {
+    job: "معرفة أداء كل الحسابات",
+    old: "تسأل كل Media Buyer، وتنتظر، ثم توفّق بين ما يرسلونه.",
+    now: "تفتح شاشة واحدة، فيها كل العملاء مدمجين ومحدَّثين.",
+  },
+  {
+    job: "مقارنة المنصات ببعضها",
+    old: "تبويب لكل منصة، ولكل تبويب منتقي تاريخ وأسماء أعمدة خاصة به.",
+    now: "Meta وTikTok وSnapchat وGoogle في صف واحد، والإجماليات المدمجة تحتها.",
+  },
+  {
+    job: "أكثر من عملة في الحسابات نفسها",
+    old: "أحدهم يحوّل يدويًا ولا أحد يراجع الخلية.",
+    now: "كل شيء موحّد بعملة تقاريرك وبالسعر الصحيح.",
+  },
+  {
+    job: "ربط الإنفاق بالإيرادات الفعلية",
+    old: "المنصات الإعلانية تقول شيئًا، وShopify يقول شيئًا آخر.",
+    now: "إيرادات المتجر بجانب الإنفاق الإعلاني، حتى مستوى المنتج.",
+  },
+  {
+    job: "إيجاد الإعلان الرابح بين آلاف الإعلانات",
+    old: "تتصفح كل منصة على حدة وتعتمد على ذاكرتك.",
+    now: "كل Creative مرتّب حسب المقياس الذي تختاره، مع الصور المصغّرة في الصفحة.",
+  },
+  {
+    job: "الإجابة عن سؤال طارئ",
+    old: "تعيد بناء عرض، أو تشغل Media Buyer به لساعة.",
+    now: "تسأل المساعد بلغة عادية وتحصل على الإجابة مع البيانات التي استخدمها.",
+  },
+  {
+    job: "تسليم التقرير للعميل",
+    old: "تجمعه، وتنسّقه، وترسل PDF يتقادم فورًا.",
+    now: "رابط مباشر عليه شعاره، أو PDF حين يصر.",
+  },
+];
+
+// ── Objections (R13) ──────────────────────────────────────────────────
+// What a team lead says to talk themselves out of starting. Answer honestly
+// or delete the row: a weak answer is worse than no section.
+const objections = [
+  {
+    q: "الـ Media Buyers عندي يعدّون تقاريرهم بأنفسهم.",
+    a: "صحيح، ولا يعدّها اثنان منهم بالطريقة نفسها. وهذا ما يكلّفك: لا شيء قابل للمقارنة، فيتحول كل سؤال عن الحسابات كلها إلى جولة من الاستفسارات. قالب واحد على كل الحسابات يجعل المقارنة بلا تكلفة.",
+  },
+  {
+    q: "إعداد هذا سيأخذ أسبوعًا لا أملكه.",
+    a: "اربط عميلًا واحدًا، وابنِ العرض بالطريقة التي تريد أن يُقرأ بها أي حساب، ثم احفظه كقالب. كل حساب بعده يبدأ منه، والتفكير يحدث مرة واحدة.",
+  },
+  {
+    q: "الأرقام لن تطابق المنصات الإعلانية.",
+    a: "لكل مقياس صفحة منهجية منشورة توضّح طريقة حسابه. سجلات البيانات وأوقات المزامنة تُظهر آخر تحديث لكل حساب، واللقطة الثابتة تحفظ ما أرسلته كما هو فلا يتغير لاحقًا.",
+  },
+  {
+    q: "عملائي يتوقعون تقريرًا يحمل هويتهم.",
+    a: "التقارير تحمل شعار العميل وعملة تقاريره، وتُرسل كرابط مباشر للعرض فقط أو كملف PDF مرتب. وللعميل الذي يستخدم أداة BI خاصة به، يوجد ربط مع Looker Studio على البيانات نفسها.",
+  },
+];
+
+// ── Creative analysis ─────────────────────────────────────────────────
+// Verified against the app 19 August 2026: BestCreatives (ranked by a composite
+// score, with synced thumbnails), Ad Fatigue across every ad platform, Hook &
+// Hold for video. Ad-level creative data is Meta and Snapchat, and Hook & Hold
+// is Meta only. It said Meta and TikTok until this check.
+const creativePoints = [
+  "كل إعلان نشط مرتّب حسب المقياس الذي تختاره، فتصل إلى أعلى القائمة وأسفلها بنظرة واحدة",
+  "الـ Creative نفسه في الصفحة، لا رقم إعلان تبحث عنه",
+  "إعلانات Meta وSnapchat جنبًا إلى جنب، بدل رأي منصة واحدة في كل مرة",
+  "نسب Hook & Hold للفيديو، لترى أين يغادر المشاهدون فعلًا",
+  "متابعة الـ Ad fatigue على كل المنصات، لتوقف الإعلان قبل أن يتراجع الأداء",
+];
+
+// ── The client deliverable ────────────────────────────────────────────
+// Every line here is checked against docs/what-ships.md. Two things that
+// sound true and are not: agency white-labelling (backlog), and emailed
+// report digests (the app sends no report emails at all, only account and
+// billing ones). Do not reintroduce either.
+const reportPoints = [
+  "شعار العميل وعملة تقاريره على التقرير الذي يفتحه",
+  "رابط مباشر للعرض فقط، فما يراه محدَّث كلما نظر",
+  "ملف PDF مرتب بصفحات للعملاء الذين ما زالوا يريدون مستندًا",
+  "ربط مع Looker Studio للعملاء الذين يريدون البيانات في أداة BI خاصة بهم",
+  "لقطة ثابتة لكل ما أرسلته، فلا تتغير أرقام الشهر الماضي",
+];
+
+// The old `changes` feature grid lived here. It was removed deliberately: the
+// comparison table above and the two sections below now carry the same claims
+// against a job the reader recognises, rather than as a tour of capabilities
+// (R11). Anything true that the grid carried alone moved into `alsoOnScreen`.
+
+// ── Breadth: the rest of what's on the same screen ────────────────────
+const alsoOnScreen = [
+  { label: "مزامنة كل ساعة", note: "الشاشة محدَّثة قبل أن يفتحها أحد" },
+  { label: "مقارنة بالفترة السابقة", note: "التغيّر الشهري داخل أي مربع" },
+  { label: "ROAS على مستوى المنتج", note: "إيرادات المتجر منسوبة حتى المنتج والفئة" },
+  { label: "الخرائط ومسارات التحويل", note: "الأداء حسب المنطقة، والتسرّب خطوة بخطوة" },
+  { label: "ملاحظات التغييرات", note: "ما الذي تغيّر، وتاريخ تغيّره" },
+  { label: "روابط مباشرة وPDF", note: "روابط للعرض فقط للعملاء، أو مستند حين يصرّون" },
+  { label: "المنهجية واللقطات الثابتة", note: "كيف يُحسب كل مقياس، ونسخة ثابتة مما أرسلته" },
+  { label: "عربي من اليمين إلى اليسار", note: "تعريب كامل، والرسوم البيانية معه" },
+];
+
+// ── Rolling it out ────────────────────────────────────────────────────
+const rollout = [
+  {
+    step: "جهّز حسابًا واحدًا كما يجب",
+    body: "ابنِ العرض بالطريقة التي تريد أن يُقرأ بها أي حساب، ثم احفظه كقالب. هذا هو الجزء الوحيد الذي يحتاج تفكيرًا حقيقيًا.",
+  },
+  {
+    step: "انسخه على كل الحسابات",
+    body: "كل حساب آخر يبدأ من ذلك القالب، فيعدّ الفريق كله التقارير بالطريقة نفسها دون دليل أو اجتماع.",
+  },
+  {
+    step: "أضف الفريق، ثم العملاء",
+    body: "ادعُ الـ Media Buyers إلى مساحة العمل، وأرسل للعملاء روابط مشاركة مباشرة، فتتوقف أسئلتهم عن الوصول إلى فريقك كمقاطعات.",
+  },
+];
+
+// ── Roadmap: campaign status & budget control from inside the dashboard ─
+const control = [
+  { platform: "Meta",     status: "Live" },
+  { platform: "TikTok",   status: "Live" },
+  { platform: "Snapchat", status: "In progress" },
+  { platform: "Google",   status: "In progress" },
+];
+---
+
+<Layout
+  locale="ar"
+  title="إدارة فريق من الـ Media Buyers أمر صعب"
+  description="عدة Media Buyers، ولكلٍّ منهم عدة حسابات، وتحت كل حساب عدة منصات، وأنت المسؤول عن كل ذلك. AdFunnl يضع الصورة كاملة على شاشة مباشرة واحدة."
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-ink px-6 pt-14 pb-20 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-5%,rgba(101,73,221,0.35),transparent)]"></div>
+
+    <div class="relative mx-auto max-w-6xl">
+      <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-500">
+        <a href="/ar" class="hover:text-zinc-300 transition">الرئيسية</a>
+        <span>/</span>
+        <span>حسب دورك</span>
+        <span>/</span>
+        <span class="font-medium text-zinc-300">Team Leads</span>
+      </nav>
+
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          AdFunnl لـ Team Leads
+        </span>
+
+        <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          إدارة فريق من<br class="hidden sm:block" /> الـ Media Buyers أمر صعب.
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
+          كل Media Buyer يدير عدة حسابات. وكل حساب يعمل على عدة منصات وبأكثر من عملة، وأنت من يُسأل عن أداء كل ذلك. رؤيته اليوم تعني فتحه حسابًا بعد حساب، فيضيع معظم الصباح قبل أن تتخذ قرارًا واحدًا.
+        </p>
+
+        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white">
+          AdFunnl يضع الصورة كاملة على شاشة مباشرة واحدة.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
+            جرّبه الآن
+          </a>
+          <a href="#what-changes"
+             class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
+            شاهد ما الذي يتغير
+          </a>
+        </div>
+      </div>
+
+      <!-- The bird's-eye board: blended totals first, contributions underneath -->
+      <div class="hero-board mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50">
+        <!-- app top bar -->
+        <div class="flex items-center gap-2 border-b border-zinc-100 px-3.5 py-2.5">
+          <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
+            <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">AC</span>
+            Acme Cosmetics
+            <svg class="h-3 w-3 text-zinc-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
+          </span>
+          <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">هذا الشهر</span>
+          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>مباشر
+          </span>
+        </div>
+
+        <!-- blended totals: the glance -->
+        <div class="grid grid-cols-2 gap-px bg-zinc-100 sm:grid-cols-4">
+          {blended.map((b) => (
+            <div class:list={["p-3.5 sm:p-4", b.strong ? "bg-brand-600" : "bg-white"]}>
+              <p class:list={["text-[9px] font-semibold uppercase tracking-widest", b.strong ? "text-brand-200" : "text-zinc-400"]}>{b.label}</p>
+              <p class:list={["mt-1 font-display text-lg font-bold tracking-tight sm:text-xl", b.strong ? "text-white" : "text-zinc-900"]}><bdi dir="ltr">{b.value}</bdi></p>
+            </div>
+          ))}
+        </div>
+
+        <!-- per-platform contribution -->
+        <div class="border-t border-zinc-100 p-3.5 sm:p-4">
+          <div class="mb-2.5 flex items-center justify-between">
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">مصدر الأرقام</p>
+            <p class="hidden text-[10px] text-zinc-400 sm:block">حصة الإنفاق</p>
+          </div>
+          <div class="space-y-1.5">
+            {platforms.map((p) => {
+              const share = (p.spend / totalSpend) * 100;
+              const roas = p.revenue / p.spend;
+              return (
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                  <span class="w-14 shrink-0 text-[11px] font-semibold text-zinc-700 sm:w-16">{p.name}</span>
+                  <span class="h-2 flex-1 overflow-hidden rounded-full bg-zinc-100">
+                    <!-- max() keeps a genuinely tiny share (Google, ~1%) reading as a
+                         small bar rather than a rendering artefact -->
+                    <span class="board-bar block h-full rounded-full" style={`width:max(${share.toFixed(1)}%, 8px);background:${p.color}`}></span>
+                  </span>
+                  <span class="w-16 shrink-0 text-end text-[11px] tabular-nums text-zinc-500 sm:w-20">SAR {fmt(p.spend)}</span>
+                  <span class="hidden w-12 shrink-0 text-end text-[11px] tabular-nums text-zinc-500 sm:block"><bdi dir="ltr">{p.purchases}</bdi></span>
+                  <span class="w-12 shrink-0 text-end text-[11px] font-bold tabular-nums text-zinc-900"><bdi dir="ltr">{roas.toFixed(1)}×</bdi></span>
+                </div>
+              );
+            })}
+          </div>
+          <p class="mt-3 text-[10px] text-zinc-400">كل المنصات بعملة واحدة ودون أي تصدير.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= THE MULTIPLICATION =========================
+       First section after the hero on purpose: the size of the problem before
+       anything about the product (R11). -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          لا أحد يملك الصورة الكاملة، لأنها تتضاعف
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          أنت مسؤول عن أداء لا تستطيع رؤيته دون أن تطلب من أحد تجميعه. وهذا سبب أنه لا يكون مجرد سؤال أبدًا.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
+        {multiplication.map((m) => (
+          <div class="reveal bg-white p-7 sm:p-8">
+            <p class="font-display text-4xl font-bold tracking-tight text-brand-600">{m.n}</p>
+            <p class="mt-2 font-semibold text-zinc-900">{m.label}</p>
+            <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">{m.note}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="reveal mx-auto mt-8 max-w-2xl text-center leading-relaxed text-zinc-600">
+        هذه ثمانون خانة يجب النظر فيها قبل أن يكوّن أحد رأيًا في أيٍّ منها، ومكانان منها يختلفان على تعريف التحويل. الصورة الكاملة لا تتأخر لأن فريقك بطيء، بل لأنها تتضاعف.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================== THE SIGNATURE: ONE ROUTINE, TWICE ================== -->
+  <section class="border-b border-zinc-200/70 bg-cream px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          الصباح نفسه، مرتين
+        </h2>
+        <p class="mt-4 text-lg text-zinc-600">
+          قراءة كل منصة في تبويب منفصل تشبه تحكيم سباق وأنت تشاهد كل عدّاء على شاشة مستقلة. يمكنك فعل ذلك، لكنك لن ترى من يفوز.
+        </p>
+      </div>
+
+      <div class="mt-14 space-y-6">
+        {lanes.map((lane) => (
+          <div class:list={[
+            "reveal rounded-2xl border p-6 sm:p-8",
+            lane.tone === "bad" ? "border-zinc-300/60 bg-white/50" : "border-brand-200 bg-white shadow-sm",
+          ]}>
+            <div class="mb-7 flex flex-wrap items-center justify-between gap-3">
+              <p class:list={[
+                "text-sm font-semibold uppercase tracking-widest",
+                lane.tone === "bad" ? "text-zinc-400" : "text-brand-600",
+              ]}>{lane.eyebrow}</p>
+              <span class:list={[
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
+                lane.tone === "bad" ? "bg-zinc-200/70 text-zinc-600" : "bg-brand-600 text-white",
+              ]}>
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+                {lane.elapsed}
+              </span>
+            </div>
+
+            <ol class="grid gap-7 sm:grid-cols-4 sm:gap-5">
+              {lane.stops.map((stop, i) => (
+                <li class="relative sm:pt-7">
+                  <!-- connector rail (desktop only) -->
+                  <span
+                    class:list={[
+                      "absolute start-0 top-1.5 hidden h-px sm:block",
+                      i === lane.stops.length - 1 ? "w-2.5" : "w-[calc(100%+1.25rem)]",
+                      lane.tone === "bad" ? "bg-zinc-300" : "bg-brand-200",
+                    ]}
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class:list={[
+                      "absolute start-0 top-1.5 hidden h-2.5 w-2.5 -translate-y-1/2 rounded-full sm:block",
+                      lane.tone === "bad"
+                        ? (i === lane.stops.length - 1 ? "bg-zinc-500" : "bg-zinc-300")
+                        : (i === lane.stops.length - 1 ? "bg-brand-600" : "bg-brand-300"),
+                    ]}
+                    aria-hidden="true"
+                  ></span>
+
+                  <p class:list={[
+                    "text-xs font-bold uppercase tracking-wider tabular-nums",
+                    lane.tone === "bad" ? "text-zinc-500" : "text-brand-600",
+                  ]}>{stop.t}</p>
+                  <p class="mt-2 text-sm leading-relaxed text-zinc-700">{stop.s}</p>
+                </li>
+              ))}
+            </ol>
+
+            {lane.note && (
+              <p class="mt-6 border-t border-zinc-100 pt-5 text-sm leading-relaxed text-zinc-400">
+                {lane.note}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================= US VERSUS THEM (TABLE) ======================= -->
+  <section id="what-changes" class="scroll-mt-20 border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          المهمة نفسها بطريقتين
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          كل صف مهمة تقوم بها هذا الأسبوع، وعمود «بدون AdFunnl» يصف كيف تسير الآن.
+        </p>
+      </div>
+
+      <div class="reveal mt-14 overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+        <!-- column headers (desktop) -->
+        <div class="hidden border-b border-zinc-200 bg-zinc-50/80 md:grid md:grid-cols-[1.1fr_1fr_1.2fr]">
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">المهمة</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">بدون AdFunnl</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-brand-600">مع AdFunnl</p>
+        </div>
+
+        {compare.map((row, i) => (
+          <div class:list={[
+            "grid gap-y-3 px-6 py-6 md:grid-cols-[1.1fr_1fr_1.2fr] md:items-start md:gap-x-6",
+            i > 0 && "border-t border-zinc-100",
+          ]}>
+            <p class="font-semibold leading-snug text-zinc-900">{row.job}</p>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-500">{row.old}</p>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm font-medium leading-relaxed text-zinc-800">{row.now}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CREATIVE DECISIONS ========================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal grid items-start gap-12 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            لا أحد يستطيع حفظ ثلاثة آلاف إعلان في رأسه
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            في حسابات بهذا الحجم تعمل آلاف الإعلانات في وقت واحد. تحديد أيها يستحق ميزانية أكبر هو أهم قرار يتخذه فريقك طوال الأسبوع، وغالبًا ما يُتخذ من الذاكرة، منصةً بعد منصة.
+          </p>
+          <p class="mt-4 leading-relaxed text-zinc-600">
+            تحليل الـ Creatives موجود داخل AdFunnl، على البيانات نفسها، فتصبح الإجابة ترتيبًا بسيطًا لا تحقيقًا.
+          </p>
+        </div>
+
+        <ul class="space-y-4">
+          {creativePoints.map((c) => (
+            <li class="reveal flex items-start gap-3 rounded-xl border border-zinc-200/70 bg-white p-4">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-700">{c}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== THE CLIENT DELIVERABLE ======================== -->
+  <section class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal grid items-start gap-12 lg:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+            التقرير هو ما يحكم عليك العميل من خلاله
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-zinc-500">
+            العميل لا يرى العمل ولا الاختبارات ولا إعادة الهيكلة، بل يرى المستند الذي يصله. وحين يستغرق بناؤه يومًا ويصل وقد تقادم، فأنت تُقيَّم على أضعف ما تقدّمه.
+          </p>
+        </div>
+
+        <ul class="space-y-4">
+          {reportPoints.map((r) => (
+            <li class="reveal flex items-start gap-3 rounded-xl border border-zinc-200/70 bg-white p-4">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-relaxed text-zinc-700">{r}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Breadth: the page shouldn't read as one feature -->
+      <div class="reveal mt-12 rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
+        <p class="text-sm font-semibold text-zinc-900">وعلى المساحة نفسها</p>
+        <div class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+          {alsoOnScreen.map((a) => (
+            <div class="flex items-start gap-2.5">
+              <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="text-sm leading-snug text-zinc-600">
+                <span class="font-semibold text-zinc-900">{a.label}</span>
+                <span class="mt-0.5 block text-xs text-zinc-500">{a.note}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= OBJECTIONS ============================= -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-4xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          ما الذي تفكر فيه على الأرجح
+        </h2>
+      </div>
+
+      <div class="mt-14 space-y-4">
+        {objections.map((o) => (
+          <div class="reveal rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
+            <p class="font-display text-lg font-bold leading-snug text-zinc-950">{o.q}</p>
+            <p class="mt-3 leading-relaxed text-zinc-600">{o.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DATA FLOW (animated) =====================
+       Placed after the objections on purpose: how it works only matters
+       once the reader has accepted that the problem is worth solving (R11). -->
+  <DataFlow locale="ar"
+    sectionClass="relative overflow-hidden border-y border-zinc-100 bg-white px-6 py-24"
+    heading="كل المنصات تدخل، وعرض مباشر واحد يخرج"
+    body="تتدفق بيانات المنصات الإعلانية والمتجر لكل حساب باستمرار. AdFunnl يوحّدها ويعايرها بالطريقة نفسها في كل مرة، فيصبح حسابان يديرهما شخصان مختلفان قابلين للمقارنة فعلًا، ويقرأ الـ Media Buyer وأنت والعميل الشاشة نفسها."
+    outLabel="شاشة واحدة"
+    outSub="للفريق كله"
+    alt="تتدفق البيانات من Meta وGoogle Ads وShopify وTikTok وSnapchat وبوسطة إلى AdFunnl، الذي يوحّدها ويعرضها على شاشة مباشرة واحدة يشاركها الفريق والعميل."
+  />
+
+  <!-- ========================== ROLLING IT OUT ========================== -->
+  <section class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">خطوات التطبيق</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          ثلاث خطوات، وواحدة منها فقط تحتاج جهدًا
+        </h2>
+        <p class="mt-4 text-lg text-zinc-500">
+          أنت من سيقود التطبيق، فهذه صورته كما هي.
+        </p>
+      </div>
+
+      <ol class="mt-14 grid gap-6 md:grid-cols-3">
+        {rollout.map((r, i) => (
+          <li class="reveal relative rounded-2xl border border-zinc-100 bg-zinc-50/60 p-7">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 font-display text-sm font-bold text-white">{i + 1}</span>
+            <h3 class="mt-5 font-display text-lg font-bold text-zinc-950">{r.step}</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-zinc-500">{r.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========================== ROADMAP NOTE ========================== -->
+  <section class="bg-white px-6 pb-24">
+    <div class="reveal mx-auto max-w-3xl rounded-2xl border border-zinc-200 bg-white p-7 sm:p-8">
+      <div class="flex items-start gap-4">
+        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
+          <svg style="width:1.125rem;height:1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+        </span>
+        <div class="min-w-0">
+          <h2 class="font-display text-lg font-bold text-zinc-950">أين وصل التحكم اليوم</h2>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+            تغيير حالة الحملات والميزانيات من داخل اللوحة، دون فتح المنصة الإعلانية، متاح الآن على Meta وTikTok، والعمل جارٍ على Snapchat وGoogle. أما التقارير فتعمل على كل المنصات اليوم.
+          </p>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {control.map((c) => (
+              <li class:list={[
+                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium",
+                c.status === "Live"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-zinc-200 bg-zinc-50 text-zinc-500",
+              ]}>
+                {c.status === "Live" ? (
+                  <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                ) : (
+                  <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+                )}
+                <span class="font-semibold text-zinc-800">{c.platform}</span>
+                <span>· {c.status === "Live" ? "متاح" : "قيد التطوير"}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CLOSING CTA ============================ -->
+  <section class="px-6 pb-24">
+    <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          ابدأ بحساب واحد
+        </h2>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-400">
+          اربط منصات عميل واحد وجرّبه لأسبوعين. وحين تُقرأ الشاشة بالطريقة التي تريدها، احفظها كقالب وانسخها على كل علامة تجارية تديرها، حتى يجمعها كلها مركز واحد.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+            جرّبه الآن
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    /* Scroll-reveal (only hidden when JS is present to reveal it) */
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
+    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    .hero-board { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
+
+    /* Contribution bars fill on load: the glance assembling itself */
+    @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .board-bar { transform-origin: right; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
+
+    /* Ambient live indicator */
+    @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .live-dot { animation: livePulse 1.6s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .hero-board, .live-dot, .board-bar { animation: none !important; transition: none !important; }
+      .js .reveal { opacity: 1 !important; transform: none !important; }
+      .board-bar { transform: none; }
+    }
+  </style>
+
+  <script>
+    document.documentElement.classList.add("js");
+
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  </script>
+
+</Layout>

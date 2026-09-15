@@ -50,3 +50,26 @@
     letter-spacing: -0.01em;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   Arabic: the /ar pages, rendered with dir="rtl" on <html>.
+
+   The fonts do not change. The sans stack above already hands Arabic
+   script to Zain and keeps Latin and every digit on Archivo, exactly as
+   the app does. Do not add a locale-driven font swap here.
+
+   What changes is spacing. Arabic is a joined script: tracking pulls the
+   letters of a word apart, and the negative tracking the display sizes
+   carry breaks the joins outright. Zain also has no italic, and a slant
+   the browser invents on Arabic reads as a rendering fault.
+   ────────────────────────────────────────────────────────────────────── */
+@layer base {
+  [dir="rtl"],
+  [dir="rtl"] * {
+    letter-spacing: 0 !important;
+  }
+
+  [dir="rtl"] :is(em, i, .italic) {
+    font-style: normal;
+  }
+}

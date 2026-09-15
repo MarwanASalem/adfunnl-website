@@ -1,0 +1,120 @@
+---
+// Arabic twin of src/pages/privacy.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── Privacy policy ────────────────────────────────────────────────────────
+// This is the same policy the app serves at app.adfunnl.com/privacy, mirrored
+// here so app stores and platform reviewers have a public URL on the marketing
+// domain to point at. The app is the source: if the policy changes there,
+// change it here too, and move the "Last updated" line on both.
+//
+// Deliberately low-visibility: linked from the footer only, and kept out of
+// the nav and the sitemap-facing pages.
+const LAST_UPDATED = "آخر تحديث: أغسطس 2026";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "نظرة عامة",
+    body: [
+      `تقدّم AdFunnl («نحن» أو «لنا») منصة لتحليلات الإعلانات تتصل بحساباتك الإعلانية ومصادر بياناتك لتمنحك رؤية موحّدة لأدائك التسويقي. توضّح سياسة الخصوصية هذه البيانات التي نجمعها، وكيف نستخدمها، وحقوقك.`,
+    ],
+  },
+  {
+    title: "البيانات التي نجمعها",
+    body: [
+      "نجمع فئات البيانات التالية:",
+      "• معلومات الحساب: بريدك الإلكتروني واسم مساحة العمل عند التسجيل.",
+      "• بيانات المنصات الإعلانية: مقاييس الحملات والإنفاق ومرات الظهور والنقرات والتحويلات التي نجلبها من المنصات المتصلة (Meta وTikTok وSnapchat وGoogle).",
+      "• بيانات مستخدم Google: عند ربط Google Ads أو Google Sheets، نصل إلى البريد الإلكتروني لحساب Google، ومقاييس الحساب الإعلاني، وبيانات جداول البيانات التي تأذن بها صراحةً.",
+      "• بيانات الاستخدام: سجلات الإجراءات داخل التطبيق، لأغراض تصحيح الأخطاء والموثوقية.",
+    ],
+  },
+  {
+    title: "كيف نستخدم بياناتك",
+    body: [
+      "نستخدم البيانات التي نجمعها فقط لتقديم خدمة AdFunnl وتحسينها:",
+      "• عرض مقاييس أدائك الإعلاني في لوحتك.",
+      "• مزامنة بيانات الحملات التاريخية وتخزينها لتتمكن من تحليل الاتجاهات بمرور الوقت.",
+      "• إرسال رسائل البريد الإلكتروني الخاصة بالحساب (تأكيد الحساب، وإعادة تعيين كلمة المرور، ودعوات مساحة العمل).",
+      "لا نستخدم بياناتك للإعلان أو لبناء ملفات تعريفية أو لأي غرض لا يتعلق بتقديم الخدمة.",
+    ],
+  },
+  {
+    title: "خدمات Google API",
+    body: [
+      "يلتزم استخدام AdFunnl للمعلومات الواردة من Google APIs بسياسة بيانات المستخدمين لخدمات Google API (Google API Services User Data Policy)، بما في ذلك متطلبات الاستخدام المحدود (Limited Use). وتحديدًا:",
+      "• لا نطلب إلا الحد الأدنى من صلاحيات Google اللازمة لجلب مقاييسك الإعلانية وبيانات جداولك.",
+      "• تُستخدم بيانات مستخدم Google حصريًا لعرض بيانات أدائك داخل لوحة AdFunnl الخاصة بك.",
+      "• لا ننقل بيانات مستخدم Google أو نبيعها أو نشاركها مع أطراف ثالثة إلا بالقدر اللازم لتشغيل الخدمة، مثل تخزين بيانات الاعتماد مشفّرة في قاعدة بياناتنا.",
+      "• لا نستخدم بيانات مستخدم Google لعرض الإعلانات.",
+    ],
+  },
+  {
+    title: "بيانات Shopify",
+    body: [
+      "عند ربط متجر Shopify، نصل إلى بيانات الطلبات والمنتجات، بما فيها الإيرادات والمرتجعات والكميات وتفاصيل المنتجات، لحساب إجمالي الإيرادات وblended ROAS وأداء كل منتج في لوحاتك. لا نخزّن المعلومات الشخصية للعملاء الأفراد مثل الأسماء أو عناوين البريد الإلكتروني أو عناوين الشحن. يمكنك فصل متجرك في أي وقت من صفحة الاتصالات، ما يُلغي وصولنا إلى تلك البيانات. كما نستجيب تلقائيًا لطلبات Shopify بمحو بيانات العملاء والمتاجر.",
+    ],
+  },
+  {
+    title: "تخزين البيانات وأمنها",
+    body: [
+      "تُخزَّن بياناتك في قاعدة بيانات PostgreSQL مؤمَّنة ومستضافة على Railway. تُشفَّر بيانات اعتماد OAuth (رموز الوصول ورموز التحديث) بتشفير AES-256 قبل تخزينها. نستخدم HTTPS لكل البيانات أثناء نقلها، ويقتصر الوصول إلى أنظمة الإنتاج على الموظفين المصرّح لهم.",
+    ],
+  },
+  {
+    title: "الاحتفاظ بالبيانات",
+    body: [
+      "نحتفظ ببيانات حسابك طالما كان حسابك نشطًا، ونحتفظ ببيانات الأداء الإعلاني المُزامَنة من المنصات المتصلة لدعم التحليل التاريخي. يمكنك طلب حذف حسابك والبيانات المرتبطة به في أي وقت بالتواصل معنا.",
+    ],
+  },
+  {
+    title: "المشاركة مع أطراف ثالثة",
+    body: [
+      "لا نبيع بياناتك الشخصية أو بيانات مستخدم Google أو نؤجّرها أو نشاركها مع أطراف ثالثة لأغراضها الخاصة. قد نشارك البيانات مع مزوّدي خدمات يساعدوننا في تشغيل المنصة، مثل Railway للاستضافة وResend لإرسال البريد الإلكتروني، بموجب التزامات بالسرية. وقد نفصح عن البيانات إذا اقتضى القانون ذلك.",
+    ],
+  },
+  {
+    title: "حقوقك",
+    body: [
+      "لك الحق في الوصول إلى بياناتك الشخصية التي نحتفظ بها أو تصحيحها أو حذفها. يمكنك فصل أي منصة مربوطة في أي وقت من صفحة الاتصالات، ما يُلغي وصولنا إلى بيانات تلك المنصة. لممارسة أي من هذه الحقوق، تواصل معنا على العنوان أدناه.",
+    ],
+  },
+];
+---
+
+<Layout
+  locale="ar"
+  title="سياسة الخصوصية"
+  description="كيف تجمع AdFunnl البيانات في مساحة عملك وتستخدمها وتخزّنها، بما فيها بيانات المنصات الإعلانية والمتاجر المتصلة."
+  noindex
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">سياسة الخصوصية</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      لديك أسئلة أو طلبات؟ تواصل معنا على{" "}
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+    </p>
+  </main>
+</Layout>

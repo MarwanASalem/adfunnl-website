@@ -25,6 +25,7 @@ interface Props {
   body: string;
   slowLabel: string;
   stages: Stage[];
+  locale?: "en" | "ar";
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   body,
   slowLabel,
   stages,
+  locale = "en",
 } = Astro.props;
 
 // [by hand, with AdFunnl] share of the week, as flex-grow weights.
@@ -44,14 +46,30 @@ const MAX = 4; // largest weight in either state; the phone rows scale to it
 const MANUAL = new Set(["prepare", "process", "share"]); // hatched in the by-hand state
 const SLOW = new Set(["prepare", "process"]);            // under the slow-part bracket
 
-const LABEL = {
-  before: "By hand",
-  after: "With AdFunnl",
-  automatic: "Automatic",
-  legendAuto: "AdFunnl, automatic",
-  legendYours: "Your time",
+// The bar's own labels. The page passes the rest of the copy in. Layout uses
+// logical classes (start, end) so the same markup reads right to left.
+const COPY = {
+  en: {
+    before: "By hand",
+    after: "With AdFunnl",
+    automatic: "Automatic",
+    legendAuto: "AdFunnl, automatic",
+    legendYours: "Your time",
+    you: "You",
+    owner: { you: "You", ai: "You + AI", auto: "AdFunnl" },
+  },
+  ar: {
+    before: "يدويًا",
+    after: "مع AdFunnl",
+    automatic: "تلقائي",
+    legendAuto: "AdFunnl، تلقائيًا",
+    legendYours: "وقتك",
+    you: "أنت",
+    owner: { you: "أنت", ai: "أنت + AI", auto: "AdFunnl" },
+  },
 };
-const OWNER_AFTER: Record<string, string> = { you: "You", ai: "You + AI", auto: "AdFunnl" };
+const LABEL = COPY[locale];
+const OWNER_AFTER: Record<string, string> = LABEL.owner;
 
 const time = (key: string) => TIME[key] ?? [1, 1];
 const beforeKind = (key: string) => (MANUAL.has(key) ? "hand" : "thin");
@@ -130,8 +148,8 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
                        fixed height keeps the card from jumping as they shrink. -->
                   <span class="flex min-h-[2rem] w-full items-start justify-center text-xs font-bold leading-tight text-zinc-800">{s.name}</span>
                   <span class="grid w-full text-[11px] font-medium text-zinc-500">
-                    <span class="tb-when-before col-start-1 row-start-1 truncate">You</span>
-                    <span class="tb-when-after col-start-1 row-start-1 truncate">{OWNER_AFTER[s.owner] ?? "You"}</span>
+                    <span class="tb-when-before col-start-1 row-start-1 truncate">{LABEL.you}</span>
+                    <span class="tb-when-after col-start-1 row-start-1 truncate">{OWNER_AFTER[s.owner] ?? LABEL.you}</span>
                   </span>
                 </span>
               ))}
@@ -148,11 +166,11 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
               {s.name}{SLOW.has(s.key) && <span class="tb-when-before"> 🫠</span>}
             </span>
             <span class="relative h-6 rounded-md bg-zinc-50">
-              <span class="tb-fill tb-row-fill absolute inset-y-0 left-0 overflow-hidden rounded-md" data-before={beforeKind(s.key)} data-after={afterKind(s.owner)} style={`--w0:${pct(time(s.key)[0])};--w1:${pct(time(s.key)[1])}`}></span>
+              <span class="tb-fill tb-row-fill absolute inset-y-0 start-0 overflow-hidden rounded-md" data-before={beforeKind(s.key)} data-after={afterKind(s.owner)} style={`--w0:${pct(time(s.key)[0])};--w1:${pct(time(s.key)[1])}`}></span>
             </span>
-            <span class="grid text-right text-[11px] font-medium text-zinc-500">
-              <span class="tb-when-before col-start-1 row-start-1">You</span>
-              <span class="tb-when-after col-start-1 row-start-1">{OWNER_AFTER[s.owner] ?? "You"}</span>
+            <span class="grid text-end text-[11px] font-medium text-zinc-500">
+              <span class="tb-when-before col-start-1 row-start-1">{LABEL.you}</span>
+              <span class="tb-when-after col-start-1 row-start-1">{OWNER_AFTER[s.owner] ?? LABEL.you}</span>
             </span>
           </li>
         ))}
@@ -160,7 +178,7 @@ const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[
 
       <ol class="sr-only">
         {stages.map((s) => (
-          <li>{s.name}, {OWNER_AFTER[s.owner] ?? "You"}: {s.line}</li>
+          <li>{s.name}, {OWNER_AFTER[s.owner] ?? LABEL.you}: {s.line}</li>
         ))}
       </ol>
     </div>

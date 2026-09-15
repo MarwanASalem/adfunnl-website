@@ -54,3 +54,18 @@ for a new page until the copy block has been reviewed.
 Page data and prose live in `const` blocks in the Astro frontmatter, so a whole
 page's copy can be read and revised in one screen without touching markup. Keep
 new pages to that pattern: strings at the top, markup consumes them.
+
+## Arabic site
+
+Every page has an Arabic twin under `src/pages/ar/` at the same path (`/pricing`
+and `/ar/pricing`). **A change to one page's copy, claims or markup belongs in
+its twin in the same change.** A new English page is not finished until its
+Arabic twin exists and the sitemap lists both.
+
+- `<Layout locale="ar">` sets `dir="rtl"`, localizes the nav and footer, and
+  wires the EN / ع switch and hreflang. `DataFlow` and `AnalysisStages` take
+  `locale="ar"` too.
+- Fonts stay the app's: Archivo, with Zain reached for Arabic script. Never
+  Cairo, never a locale-driven font swap.
+- Media-buying and technical terms stay in English, lightly. The glossary is
+  section 7 of `docs/voice.md`. Read it before writing any Arabic.

@@ -32,20 +32,64 @@ interface Props {
   uid?: string;
   /** Dark version on an animated background, with a portrait phone diagram. */
   dark?: boolean;
+  /**
+   * "ar" localizes the diagram's own labels and mirrors the landscape
+   * diagram, so the data flows right to left like the page reads.
+   */
+  locale?: "en" | "ar";
 }
+
+const locale = Astro.props.locale ?? "en";
+const rtl = locale === "ar";
+
+// The diagram's fixed labels. Page-specific framing still comes in as props.
+const COPY = {
+  en: {
+    heading: "From every source to a client-ready report",
+    outLabel: "Delivered",
+    outSub: "to your client",
+    alt: "Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it before delivering a report to the client.",
+    more: "+ MORE SOURCES",
+    hubSub: "Unify · normalize · blend",
+    live: "LIVE DASHBOARD",
+    visualized: "Visualized",
+    bosta: "Bosta",
+  },
+  ar: {
+    heading: "من كل مصدر إلى تقرير جاهز للعميل",
+    outLabel: "تم التسليم",
+    outSub: "إلى عميلك",
+    alt: "تتدفق البيانات من Meta وGoogle Ads وShopify وTikTok وSnapchat وبوسطة إلى AdFunnl، الذي يوحّدها ويعرضها بصريًا ثم يسلّم التقرير إلى العميل.",
+    more: "+ مصادر أخرى",
+    hubSub: "توحيد · معايرة · دمج",
+    live: "لوحة مباشرة",
+    visualized: "عرض مرئي",
+    bosta: "بوسطة",
+  },
+};
+const T = COPY[locale];
 
 const {
   sectionId,
   dark = false,
   sectionClass = dark ? "sf relative overflow-hidden bg-ink px-6 py-24" : "relative overflow-hidden bg-white px-6 py-24",
   eyebrow,
-  heading = "From every source to a client-ready report",
+  heading = T.heading,
   body,
-  outLabel = "Delivered",
-  outSub = "to your client",
-  alt = "Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it before delivering a report to the client.",
+  outLabel = T.outLabel,
+  outSub = T.outSub,
+  alt = T.alt,
   uid = Math.random().toString(36).slice(2, 8),
 } = Astro.props;
+
+// ── Mirroring (Arabic) ──
+// The landscape diagram is 1120 wide. In RTL every x is reflected, so the
+// sources sit on the right and the delivered report on the left. Logos, text
+// and the check mark are re-placed rather than flipped, so none of them read
+// backwards. `mx` reflects a point, `mr` reflects a box of width `w`.
+const W = 1120;
+const mx = (x: number) => (rtl ? W - x : x);
+const mr = (x: number, w: number) => (rtl ? W - x - w : x);
 
 // Scoped ids for <defs>, see the `uid` prop.
 const ID = {
@@ -78,7 +122,7 @@ const sources = [
   { y: 200, key: "shopify",    label: "Shopify" },
   { y: 280, key: "tiktok",     label: "TikTok" },
   { y: 360, key: "snapchat",   label: "Snapchat" },
-  { y: 440, key: "bosta",      label: "Bosta" },
+  { y: 440, key: "bosta",      label: T.bosta },
 ];
 
 const particles = [
@@ -124,7 +168,9 @@ const ARC = [
   { x: 44, y: 221 }, { x: 83, y: 129 }, { x: 145, y: 77 },
   { x: 215, y: 77 }, { x: 277, y: 129 }, { x: 316, y: 221 },
 ];
-const mSources = sources.map((s, i) => ({ ...s, ...ARC[i] }));
+// In Arabic the arc runs the other way, so Meta starts on the right.
+const arc = rtl ? [...ARC].reverse() : ARC;
+const mSources = sources.map((s, i) => ({ ...s, ...arc[i] }));
 const mPaths = [
   ...mSources.map((s, i) => {
     const mid = (s.y + HUB_M.y) / 2;
@@ -182,7 +228,9 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
       <div class={dark
         ? "reveal relative hidden p-2 lg:block xl:p-4"
         : "reveal overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8"}>
-        <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} viewBox="0 0 1120 500" role="img" aria-label={alt}>
+        <!-- direction:ltr keeps text-anchor meaning left and right inside the
+             SVG in both locales. Arabic labels still shape and order correctly. -->
+        <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} style="direction:ltr" viewBox="0 0 1120 500" role="img" aria-label={alt}>
           <defs>
             <radialGradient id={ID.particle} cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#8b6ff0" />
@@ -197,62 +245,66 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
             {paths.map((f) => <path id={ID.p(f.id)} d={f.d} fill="none" />)}
           </defs>
 
-          <!-- animated stream lines (marching dashes) -->
-          {paths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
+          <!-- Streams and particles follow the paths in <defs>. In RTL the
+               group reflects them; circles and dashes look the same either way. -->
+          <g transform={rtl ? `matrix(-1 0 0 1 ${W} 0)` : undefined}>
+            <!-- animated stream lines (marching dashes) -->
+            {paths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
 
-          <!-- flowing particles -->
-          {particles.map((c) => (
-            <circle r="4.5" fill={`url(#${ID.particle})`} filter={`url(#${ID.glow})`}>
-              <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
-                <mpath href={`#${ID.p(c.p)}`} />
-              </animateMotion>
-            </circle>
-          ))}
+            <!-- flowing particles -->
+            {particles.map((c) => (
+              <circle r="4.5" fill={`url(#${ID.particle})`} filter={`url(#${ID.glow})`}>
+                <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
+                  <mpath href={`#${ID.p(c.p)}`} />
+                </animateMotion>
+              </circle>
+            ))}
+          </g>
 
           <!-- ── Source nodes (real platform logos) ── -->
           {sources.map((s) => (
             <g>
-              <rect class="sf-node" x="24" y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
-              <g transform={`translate(40 ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
-              <text class="sf-t1" x="78" y={s.y + 5} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
+              <rect class="sf-node" x={mr(24, 160)} y={s.y - 23} width="160" height="46" rx="12" fill="#fff" stroke="#e4e4e7" />
+              <g transform={`translate(${mr(40, 26)} ${s.y - 13})`} set:html={FLOW_LOGOS[s.key]} />
+              <text class="sf-t1" x={mx(78)} y={s.y + 5} text-anchor={rtl ? "end" : "start"} font-family={FONT} font-size="15" font-weight="600" fill="#3f3f46">{s.label}</text>
             </g>
           ))}
-          <text class="sf-t2" x="104" y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing="1" fill="#a1a1aa">+ MORE SOURCES</text>
+          <text class="sf-t2" x={mx(104)} y="486" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" letter-spacing={rtl ? "0" : "1"} fill="#a1a1aa">{T.more}</text>
 
           <!-- ── AdFunnl hub ── -->
-          <circle class="flow-hub-ring" cx="510" cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
-          <circle class="sf-node" cx="510" cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-          <g class="sf-hubmark" transform="translate(510 240)" set:html={HUB_MARK} />
-          <text class="sf-t1" x="510" y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
-          <text class="sf-t2" x="510" y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">Unify · normalize · blend</text>
+          <circle class="flow-hub-ring" cx={mx(510)} cy="240" r="58" fill="none" stroke="#6549dd" stroke-width="2" />
+          <circle class="sf-node" cx={mx(510)} cy="240" r="52" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <g class="sf-hubmark" transform={`translate(${mx(510)} 240)`} set:html={HUB_MARK} />
+          <text class="sf-t1" x={mx(510)} y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
+          <text class="sf-t2" x={mx(510)} y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{T.hubSub}</text>
 
           <!-- ── Visualize node ── -->
-          <rect class="sf-node" x="700" y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-          <text class="sf-accent" x="776" y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5" fill="#6549dd">LIVE DASHBOARD</text>
+          <rect class="sf-node" x={mr(700, 152)} y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-accent" x={mx(776)} y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"} fill="#6549dd">{T.live}</text>
           {bars.map((b) => (
-            <rect class="flow-bar" x={b.x} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
+            <rect class="flow-bar" x={mr(b.x, 20)} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
           ))}
-          <line class="sf-rule" x1="716" y1="286" x2="836" y2="286" stroke="#e4e4e7" stroke-width="1.5" />
-          <text class="sf-t1" x="776" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">Visualized</text>
+          <line class="sf-rule" x1={mx(716)} y1="286" x2={mx(836)} y2="286" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-t1" x={mx(776)} y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{T.visualized}</text>
 
           <!-- ── Recipient node ── -->
-          <rect x="940" y="176" width="152" height="128" rx="16" fill="#6549dd" />
-          <rect x="972" y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
-          <rect x="982" y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
-          <rect x="982" y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
-          <rect x="982" y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
-          <rect x="982" y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
-          <circle class="flow-check" cx="1054" cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
-          <path class="flow-check" d="M1048,254 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-          <text class="sf-t1" x="1016" y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
-          <text class="sf-t2" x="1016" y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
+          <rect x={mr(940, 152)} y="176" width="152" height="128" rx="16" fill="#6549dd" />
+          <rect x={mr(972, 88)} y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+          <rect x={mr(982, 52)} y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
+          <rect x={mr(982, 68)} y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x={mr(982, 60)} y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x={mr(982, 44)} y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+          <circle class="flow-check" cx={mx(1054)} cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+          <path class="flow-check" d={`M${mx(1054) - 6},254 l4,4 l7,-8`} fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <text class="sf-t1" x={mx(1016)} y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
+          <text class="sf-t2" x={mx(1016)} y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
         </svg>
       </div>
 
       {dark && (
         <!-- Phones and tablets: portrait diagram, same pipeline. -->
         <div class="reveal relative mx-auto max-w-md lg:hidden">
-          <svg class="flow-svg mx-auto block h-auto w-full" viewBox="0 0 360 808" role="img" aria-label={alt}>
+          <svg class="flow-svg mx-auto block h-auto w-full" style="direction:ltr" viewBox="0 0 360 808" role="img" aria-label={alt}>
             <defs>
               <radialGradient id={ID.p("mParticle")} cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#8b6ff0" />
@@ -289,16 +341,16 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
             <circle class="sf-node" cx={HUB_M.x} cy={HUB_M.y} r="46" stroke-width="1.5" />
             <g class="sf-hubmark" transform={`translate(${HUB_M.x} ${HUB_M.y})`} set:html={HUB_MARK} />
             <text class="sf-t1" x="180" y="374" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">AdFunnl</text>
-            <text class="sf-t2" x="180" y="392" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">Unify · normalize · blend</text>
+            <text class="sf-t2" x="180" y="392" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{T.hubSub}</text>
 
             <!-- Visualized -->
             <rect class="sf-node" x="110" y="440" width="140" height="120" rx="16" stroke-width="1.5" />
-            <text class="sf-accent" x="180" y="463" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing="0.5">LIVE DASHBOARD</text>
+            <text class="sf-accent" x="180" y="463" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"}>{T.live}</text>
             {mBars.map((b) => (
               <rect class="flow-bar" x={b.x} y="480" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
             ))}
             <line class="sf-rule" x1="120" y1="546" x2="240" y2="546" stroke-width="1.5" />
-            <text class="sf-t1" x="180" y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">Visualized</text>
+            <text class="sf-t1" x="180" y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{T.visualized}</text>
 
             <!-- Delivered -->
             <rect x="110" y="634" width="140" height="120" rx="16" fill="#6549dd" />

@@ -1,0 +1,1151 @@
+---
+// Arabic twin of src/pages/index.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
+import PlatformIcon from "../../components/PlatformIcon.astro";
+import DataFlow from "../../components/DataFlow.astro";
+import AnalysisStages from "../../components/AnalysisStages.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// ── Live snapshots section (faithful recreations of real app screens) ──
+// Pulse: real verdicts are Scale (emerald) / Hold (amber) / Cut (rose).
+const pulseRows = [
+  { name: "Retargeting · Broad",        key: "meta",       spend: "$3,240", revenue: "$16,900", roas: "5.2×", ctr: "2.4%", verdict: "scale" },
+  { name: "Prospecting · Lookalike 3%", key: "tiktok",     spend: "$5,110", revenue: "$14,300", roas: "2.8×", ctr: "1.9%", verdict: "hold"  },
+  { name: "Cold · Interest stack",      key: "google_ads", spend: "$2,780", revenue: "$3,900",  roas: "1.4×", ctr: "1.1%", verdict: "cut"   },
+  { name: "Story ads · Gen Z",          key: "snapchat",   spend: "$1,960", revenue: "$7,450",  roas: "3.8×", ctr: "2.1%", verdict: "scale" },
+];
+
+// Ad-level table widget. The Cost / purchase column carries the green wash that
+// stands in for the app's conditional table formatting. Anonymized demo data.
+const adRows = [
+  { ad: "Reel · Pack it Sunday",       key: "meta",     campaign: "Website sales · Tiffin Co.", spend: "EGP 53,133", purchases: "611", cpp: "EGP 86.96",  roas: "4.81×", photo: "/ad-1.jpg", video: true  },
+  { ad: "Reel · Leakproof test",       key: "tiktok",   campaign: "Website sales · Tiffin Co.", spend: "EGP 30,738", purchases: "341", cpp: "EGP 90.14",  roas: "4.35×", photo: "/ad-2.jpg", video: true  },
+  { ad: "Static · School lunch set",   key: "snapchat", campaign: "Back to school · Tiffin Co.", spend: "EGP 14,804", purchases: "208", cpp: "EGP 71.17",  roas: "5.62×", photo: "/ad-3.jpg", video: false },
+  { ad: "Reel · Bento unboxing",       key: "meta",     campaign: "Website sales · Tiffin Co.", spend: "EGP 10,907", purchases: "119", cpp: "EGP 91.66",  roas: "4.02×", photo: "/ad-4.jpg", video: true  },
+  { ad: "UGC · Mum's morning routine", key: "tiktok",   campaign: "Website sales · Tiffin Co.", spend: "EGP 10,730", purchases: "152", cpp: "EGP 70.59",  roas: "5.74×", photo: "/ad-5.jpg", video: true  },
+  { ad: "Reel · Keeps food warm 6h",   key: "snapchat", campaign: "Page views · Tiffin Co.",    spend: "EGP 9,056",  purchases: "74",  cpp: "EGP 122.38", roas: "2.91×", photo: "/ad-2.jpg", video: true  },
+];
+
+// Best Creatives Calculator: composite score, ranked. Ranks 1-3 get the green
+// outline the app uses for its top band.
+const bestCreatives = [
+  { rank: 1, score: "1.00", name: "IG Post · Leakproof test", campaign: "Website sales · Tiffin Co.",  photo: "/ad-1.jpg", spend: "EGP 5,002",  ctr: "5.21%", purchases: "87",  roas: "24.16×", top: true  },
+  { rank: 2, score: "0.42", name: "Reel · Pack it Sunday",    campaign: "Page views · Tiffin Co.",     photo: "/ad-5.jpg", spend: "EGP 9,056",  ctr: "3.14%", purchases: "74",  roas: "6.02×",  top: true  },
+  { rank: 3, score: "0.41", name: "UGC · Mum's morning",      campaign: "Website sales · Tiffin Co.",  photo: "/ad-4.jpg", spend: "EGP 10,730", ctr: "2.25%", purchases: "152", roas: "5.74×",  top: true  },
+  { rank: 4, score: "0.40", name: "Reel · Bento unboxing",    campaign: "Back to school · Tiffin Co.", photo: "/ad-3.jpg", spend: "EGP 7,272",  ctr: "3.46%", purchases: "96",  roas: "5.33×",  top: false },
+  { rank: 5, score: "0.40", name: "Static · School set",      campaign: "Back to school · Tiffin Co.", photo: "/ad-2.jpg", spend: "EGP 4,938",  ctr: "5.22%", purchases: "68",  roas: "5.11×",  top: false },
+];
+
+// Spend vs. store revenue. The maths has to hold:
+// 53,133 + 30,738 + 14,804 + 9,056 = 107,731, and 517,109 / 107,731 = 4.80×.
+const storeSpend = [
+  { name: "Meta",       key: "meta",       amount: "EGP 53,133" },
+  { name: "TikTok",     key: "tiktok",     amount: "EGP 30,738" },
+  { name: "Snapchat",   key: "snapchat",   amount: "EGP 14,804" },
+  { name: "Google Ads", key: "google_ads", amount: "EGP 9,056"  },
+];
+
+// ── Audience breakdowns: real app screenshots, privacy toggle on ──
+// Breakdowns come from Meta and Snapchat only (docs/what-ships.md, checked
+// 10 September 2026), which is why the body names them. The headline opens
+// with the reader's problem, see R11 in docs/voice.md. An age chart goes into
+// `shots` next to gender and device once the corrected screenshot is in.
+const breakdowns = {
+  heading: "كم يأخذ منك الوصول إلى الـ Breakdowns؟",
+  body: "العمر والجنس والجهاز والموقع تُظهر لك من تصل إليه إعلاناتك ومن يشتري فعلًا. في المنصة الإعلانية تحصل عليها حملةً بعد حملة وbreakdown بعد آخر، ثم تصدّر الملفات وتجمعها بنفسك. اربط حساباتك وسيجمعها AdFunnl عبر كل حملاتك على Meta وSnapchat، مرسومة جاهزة كرسوم بيانية.",
+  shots: [
+    { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "خريطة جغرافية في AdFunnl تلوّن الإنفاق الإعلاني حسب المنطقة في مصر، وأغمقها حول القاهرة." },
+    { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "رسم دائري في AdFunnl لمشتريات Meta حسب الجنس: ذكر وأنثى وغير معروف." },
+    { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "رسم أعمدة في AdFunnl لمشتريات Meta وتكلفة الشراء حسب الجهاز، من هواتف iPhone وAndroid إلى أجهزة الكمبيوتر والتابلت." },
+  ],
+};
+
+// ── Data analysis stages, animated as a time bar in AnalysisStages ──
+// Heading and body are Hussein's wording. It starts at Preparing data on
+// purpose: an Ask stage read as a lecture on Google's framework, and the
+// point lands without it. Preparing and Processing are automated sync and
+// normalization, NOT AI: the app only uses AI in the assistant, the MCP
+// server and the dashboard builder (checked 10 September 2026). Keep AI out
+// of those two stages. owner: "you" | "auto" | "ai".
+const analysisStages = {
+  heading: "كم من وقتك يذهب في جمع البيانات بدل تحليلها؟",
+  body: "يمر تحليل البيانات بخمس مراحل. التجهيز والمعالجة هما الجزء البطيء 🫠 هنا تفتح تبويبات كثيرة، وتلتقط صورًا كثيرة للشاشة، وتحسب في رأسك لتوحيد العملات، وتصدّر البيانات ثم تستوردها إلى Sheets لتحللها وتفلترها. وقتك يجب أن يذهب إلى التحليل واتخاذ القرار.",
+  slowLabel: "الجزء البطيء 🫠",
+  stages: [
+    { key: "prepare", name: "تجهيز البيانات",  owner: "auto", line: "تُربط كل منصة إعلانية وكل متجر مرة واحدة، ثم تتم المزامنة كل ساعة." },
+    { key: "process", name: "معالجة البيانات", owner: "auto", line: "تُوحَّد أرقام كل منصة وتُحوَّل إلى عملة تقاريرك، فيأتي blended ROAS صحيحًا." },
+    { key: "analyze", name: "تحليل البيانات",  owner: "ai",   line: "تُبنى اللوحات من بيانات مباشرة، ويجيب مساعد AI عن أسئلتك عنها بلغة بسيطة." },
+    { key: "share",   name: "المشاركة",   owner: "auto", line: "رابط مباشر للعرض فقط أو ملف PDF، محدَّث كلما فتحه أحد." },
+    { key: "act",     name: "التنفيذ",     owner: "you",  line: "يصنّف Pulse الحسابات إلى Scale أو Hold أو Cut حسب قواعدك. القرار يبقى لك، وعلى Meta وTikTok يمكنك تغيير الحالة والميزانية دون مغادرة AdFunnl." },
+  ],
+};
+
+// ── Hero signature: the Blended Overview (e-commerce) dashboard ──
+// Faithful to the real template: per-platform metric cards + a blended row.
+// Numbers are anonymized demo data (no real client/account).
+const ovCols = [
+  { label: "الإنفاق",     cur: true },
+  { label: "المشتريات", cur: false, hideSm: true },
+  { label: "تكلفة التحويل",cur: true,  hideSm: true },
+  { label: "ROAS",      cur: false },
+  { label: "الإيرادات",   cur: true },
+];
+// cell = [value, deltaPct, up?, good?]
+const ovRows = [
+  { name: "Meta",     key: "meta",       color: "#1877F2", cells: [["18,824","17.6",false,true],["223","20.5",true,true],["84.41","31.6",false,true],["5.79×","42.8",true,true],["108,976","17.6",true,true]] },
+  { name: "TikTok",   key: "tiktok",     color: "#111111", cells: [["3,767","19.5",false,true],["43","23.2",false,false],["87.60","4.8",true,false],["5.75×","2.6",false,false],["21,653","21.6",false,false]] },
+  { name: "Google",   key: "google_ads", color: "#EA4335", cells: [["417","13.9",false,true],["20","60.1",false,false],["21.18","55.6",true,false],["24.5×","51.6",true,true],["10,256","58.3",true,true]] },
+  { name: "Snapchat", key: "snapchat",   color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
+];
+const ovBlended = [
+  { label: "إجمالي الإنفاق",  v: "26,323", cur: true },
+  { label: "التحويلات",  v: "363",    cur: false, hideSm: true },
+  { label: "Blended CPP",  v: "74",     cur: true,  hideSm: true },
+  { label: "Blended ROAS", v: "6.69×",  cur: false },
+  { label: "الإيرادات",      v: "180,138",cur: true },
+];
+
+// ── Month-over-month showcase: spend (bars, $k) + ROAS (line, ×) ──
+const momRows = [
+  { m: "فبراير", spend: 32, roas: 3.1 },
+  { m: "مارس", spend: 41, roas: 3.6 },
+  { m: "أبريل", spend: 38, roas: 4.0 },
+  { m: "مايو", spend: 55, roas: 4.3 },
+  { m: "يونيو", spend: 61, roas: 4.8 },
+  { m: "يوليو", spend: 72, roas: 5.2 },
+];
+const MOM_W = 480, MOM_H = 220, MOM_PL = 14, MOM_PR = 14, MOM_PT = 16, MOM_PB = 30;
+const momPlotW = MOM_W - MOM_PL - MOM_PR;
+const momPlotH = MOM_H - MOM_PT - MOM_PB;
+const momMaxSpend = Math.max(...momRows.map((r) => r.spend));
+const momMinRoas = Math.min(...momRows.map((r) => r.roas)) - 0.6;
+const momMaxRoas = Math.max(...momRows.map((r) => r.roas)) + 0.4;
+const momStep = momPlotW / momRows.length;
+const momBarW = momStep * 0.46;
+const momBars = momRows.map((r, i) => {
+  // Mirrored: the earliest month sits on the right, as in the app's Arabic charts.
+  const cx = MOM_W - (MOM_PL + momStep * i + momStep / 2);
+  const h = (r.spend / momMaxSpend) * momPlotH;
+  return { x: cx - momBarW / 2, y: MOM_PT + momPlotH - h, w: momBarW, h, cx, m: r.m };
+});
+const momLinePts = momBars.map((b, i) => {
+  const y = MOM_PT + momPlotH - ((momRows[i].roas - momMinRoas) / (momMaxRoas - momMinRoas)) * momPlotH;
+  return [Math.round(b.cx * 10) / 10, Math.round(y * 10) / 10];
+});
+const momLine = momLinePts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+const momBaseY = MOM_PT + momPlotH;
+
+// Shared cell classes for the two dark-section tables.
+const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
+---
+
+<Layout
+  locale="ar"
+  title="وقت أقل في جمع الأرقام، ووقت أكثر في استخدامها"
+  description="AdFunnl يجمع كل منصاتك الإعلانية وإيرادات متجرك في لوحة مباشرة واحدة، فيبدأ أسبوعك بالقرارات بدل تقرير ينتظر التجميع."
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-white px-6 pt-16 pb-10 sm:pt-20">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
+
+    <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
+      <!-- Copy -->
+      <div class="text-center lg:text-start">
+        <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
+          وقت أقل في جمع الأرقام، ووقت أكثر في <em class="text-brand-600">استخدامها</em>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 lg:mx-0">
+          AdFunnl يجمع كل منصاتك الإعلانية وإيرادات متجرك في لوحة مباشرة واحدة، فيبدأ أسبوعك بالقرارات بدل تقرير ينتظر التجميع.
+        </p>
+
+        <div class="mt-9 flex flex-col items-center gap-4 sm:flex-row lg:justify-start justify-center">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
+            ابدأ مجانًا
+          </a>
+        </div>
+      </div>
+
+      <!-- Signature: the real Blended Overview (e-commerce) dashboard, in an
+           app window. Anonymized demo data, reveals + count-up on load. -->
+      <div class="hero-app relative mx-auto w-full max-w-md lg:max-w-none">
+        <div class="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04]">
+          <!-- app top bar -->
+          <div class="flex items-center gap-2 border-b border-zinc-100 bg-white px-3.5 py-2.5">
+            <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
+            <div class="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-700">
+              <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">BD</span>
+              بيانات العلامة
+            </div>
+            <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">هذا الشهر</span>
+            <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">مقارنة بالفترة السابقة</span>
+            <div class="ms-auto flex items-center gap-1.5">
+              <span class="hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">مشاركة</span>
+              <span class="rounded-md bg-brand-600 px-2 py-0.5 text-[10px] font-semibold text-white">+ عنصر</span>
+            </div>
+          </div>
+
+          <!-- dashboard body -->
+          <div class="space-y-2.5 bg-zinc-50/50 p-3.5">
+            <!-- Overview banner -->
+            <div class="flex items-center justify-between rounded-lg bg-brand-600 px-3.5 py-2 shadow-sm shadow-brand-900/20">
+              <span class="font-display text-sm font-bold tracking-tight text-white">نظرة عامة</span>
+              <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+                <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-300"></span>مباشر
+              </span>
+            </div>
+
+            <!-- per-platform metric rows -->
+            {ovRows.map((row) => (
+              <div class="flex items-stretch gap-2">
+                <div class="flex w-7 shrink-0 items-center justify-center">
+                  <span class="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg" title={row.name} aria-label={row.name}>
+                    <PlatformIcon platform={row.key} class="h-5 w-5" />
+                  </span>
+                </div>
+                <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
+                  {row.cells.map((c, i) => (
+                    <div class={`rounded-lg border border-zinc-100 bg-white px-2 py-1.5 ${ovCols[i].hideSm ? "hidden sm:block" : ""}`}>
+                      <p class="truncate text-[8px] font-medium uppercase tracking-wide text-zinc-400">{ovCols[i].label}</p>
+                      <p class="mt-0.5 truncate font-display text-[12px] font-bold leading-tight text-zinc-900">
+                        <bdi dir="ltr">{ovCols[i].cur && <span class="text-[8px] font-semibold text-zinc-400">SAR </span>}{c[0]}</bdi>
+                      </p>
+                      <p class={`mt-0.5 flex items-center gap-0.5 text-[8px] font-semibold ${c[3] ? "text-emerald-600" : "text-rose-500"}`}>
+                        <span>{c[2] ? "▲" : "▼"}</span>{c[1]}%
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div class="border-t border-dashed border-zinc-200"></div>
+
+            <!-- blended row (highlighted) -->
+            <div class="flex items-stretch gap-2">
+              <div class="flex w-7 shrink-0 items-center justify-center">
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>
+                </span>
+              </div>
+              <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
+                {ovBlended.map((b, i) => (
+                  <div class={`rounded-lg border border-brand-100 bg-brand-50/60 px-2 py-1.5 ${b.hideSm ? "hidden sm:block" : ""}`}>
+                    <p class="truncate text-[8px] font-medium uppercase tracking-wide text-brand-400">{b.label}</p>
+                    <p class="mt-0.5 truncate font-display text-[13px] font-bold leading-tight text-brand-900">
+                      <bdi dir="ltr">{b.cur && <span class="text-[8px] font-semibold text-brand-400">SAR </span>}{i === 3 ? <span class="count" data-value={b.v}>{b.v}</span> : b.v}</bdi>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- floating assistant bubble -->
+        <div class="absolute -bottom-4 -start-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl lg:block">
+          <div class="flex items-start gap-2">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
+            <p class="text-[11px] leading-snug text-zinc-600">"ما الحملات التي أهدرت الميزانية الأسبوع الماضي؟"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SOCIAL PROOF ========================= -->
+  <section class="border-y border-zinc-100 bg-zinc-50/70">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 text-sm font-medium text-zinc-500">
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>الربط في دقائق</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>مزامنة كل ساعة</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>لوحات مباشرة قابلة للمشاركة</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>جاهز للوكالات وتعدد العملاء</span>
+    </div>
+  </section>
+
+  <!-- ===================== DATA FLOW (animated) ===================== -->
+  <DataFlow locale="ar" dark sectionId="integrations" heading="راقب بياناتك وشاركها بنقرتين." />
+
+  <!-- ============== DATA ANALYSIS STAGES (animated time bar) ============== -->
+  <AnalysisStages locale="ar" {...analysisStages} />
+
+  <!-- ========================= SEE IT LIVE ========================= -->
+  <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(87,56,201,0.35),transparent)]"></div>
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          تابع أداء الحملات مباشرةً وجنبًا إلى جنب.
+        </h2>
+        <p class="mt-4 text-lg text-zinc-400">
+          بدل تبويبات كثيرة لرؤية إعلاناتك، افتح AdFunnl فقط.. تخيّل الوقت الذي توفّره لتستثمره فيما يهم فعلًا.
+        </p>
+      </div>
+
+      <!-- Pulse: featured, wide -->
+      <div class="reveal mt-14 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · كل المنصات · Acme Cosmetics
+          </div>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">قرارات Scale</span>
+        </div>
+        <div class="p-5 sm:p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <p class="text-sm font-semibold text-zinc-800">الحملات النشطة</p>
+            <p class="text-xs text-zinc-400">القاعدة: <bdi dir="ltr">ROAS ≥ 3.0</bdi> للـ Scale</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[560px] text-start text-sm">
+              <thead>
+                <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
+                  <th class="py-2 pe-3 font-semibold">الحملة</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإنفاق</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإيرادات</th>
+                  <th class="py-2 px-3 text-end font-semibold">ROAS</th>
+                  <th class="py-2 px-3 text-end font-semibold">CTR</th>
+                  <th class="py-2 ps-3 text-end font-semibold">الحكم</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pulseRows.map((r, i) => (
+                  <tr class="border-b border-zinc-50 last:border-0" data-pulse-row={i === 0 ? "cycle" : undefined}>
+                    <td class="py-3 pe-3 font-medium text-zinc-700">
+                      <span class="flex items-center gap-2">
+                        <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
+                          <PlatformIcon platform={r.key} class="h-[15px] w-[15px]" />
+                        </span>
+                        {r.name}
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.spend}</bdi></td>
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.revenue}</bdi></td>
+                    <td class="py-3 px-3 text-end font-semibold tabular-nums lining-nums text-zinc-900" ><bdi dir="ltr" data-roas>{r.roas}</bdi></td>
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.ctr}</bdi></td>
+                    <td class="py-3 ps-3 text-end">
+                      <span class="verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium" data-verdict={r.verdict}></span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ad-level table widget, with the app's conditional formatting -->
+      <div class="reveal mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>عنصر جدول · مستوى الإعلان · التقرير الرئيسي
+          </div>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">تنسيق شرطي</span>
+        </div>
+        <div class="p-5 sm:p-6">
+          <div class="mb-3 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-zinc-800">حتى مستوى الإعلان الواحد</p>
+              <p class="mt-0.5 text-xs text-zinc-400">مستوى الحملة والمجموعة الإعلانية والإعلان، مع الـ Creative داخل الصف</p>
+            </div>
+            <p class="shrink-0 text-xs text-zinc-400">مرتّب حسب الإنفاق</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[700px] text-start text-sm">
+              <thead>
+                <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
+                  <th class="py-2 pe-3 font-semibold">الإعلان</th>
+                  <th class="py-2 px-3 font-semibold">الصورة</th>
+                  <th class="py-2 px-3 font-semibold">الحالة</th>
+                  <th class="py-2 px-3 font-semibold">الحملة</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإنفاق</th>
+                  <th class="py-2 px-3 text-end font-semibold">المشتريات</th>
+                  <th class="bg-emerald-50/80 py-2 px-3 text-end font-semibold text-emerald-700">تكلفة الشراء</th>
+                  <th class="py-2 ps-3 text-end font-semibold">ROAS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adRows.map((a) => (
+                  <tr class="border-b border-zinc-50 last:border-0">
+                    <td class="py-2.5 pe-3 font-medium text-zinc-700">
+                      <span class="flex items-center gap-2">
+                        <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
+                          <PlatformIcon platform={a.key} class="h-[14px] w-[14px]" />
+                        </span>
+                        {a.ad}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5">
+                      <span class="relative flex h-10 w-8 items-end justify-center overflow-hidden rounded bg-zinc-200 ring-1 ring-zinc-200/90">
+                        <img src={a.photo} alt="" loading="lazy" width="32" height="40" class="absolute inset-0 h-full w-full object-cover" />
+                        {a.video && (
+                          <span class="absolute end-0.5 top-0.5 flex h-[11px] w-[11px] items-center justify-center rounded-full bg-black/50">
+                            <svg class="ms-px h-1.5 w-1.5" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                          </span>
+                        )}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5">
+                      <span class="block h-2 w-2 rounded-full bg-brand-500" title="نشط" aria-label="نشط"></span>
+                    </td>
+                    <td class="px-3 py-2.5 text-xs text-zinc-600"><bdi dir="ltr">{a.campaign}</bdi></td>
+                    <td class={numCell}><bdi dir="ltr">{a.spend}</bdi></td>
+                    <td class={numCell}><bdi dir="ltr">{a.purchases}</bdi></td>
+                    <td class="bg-emerald-50/80 px-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-emerald-700"><bdi dir="ltr">{a.cpp}</bdi></td>
+                    <td class="ps-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-zinc-900"><bdi dir="ltr">{a.roas}</bdi></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Creative reports ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          ثم تعمّق أكثر مع تقارير Creatives جاهزة
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-400">
+          تقيّم Best Creatives Calculator كل إعلان حسب النتائج التي تهمك وترتّبها، فتظهر أفضل إعلاناتك بنقرة.<br />
+          وبالمناسبة.. لدينا قوالب جاهزة أخرى أيضًا 👀
+        </p>
+      </div>
+
+      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>تحليل الـ Creatives · Best Creatives Calculator
+          </div>
+        </div>
+        <div class="grid md:grid-cols-[190px_1fr]">
+          <!-- app sidebar -->
+          <div class="border-b border-zinc-100 bg-zinc-50/70 px-4 py-5 md:border-b-0 md:border-e">
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">تحليل الـ Creatives</p>
+            <nav class="flex flex-col gap-1 text-xs">
+              <span class="rounded-lg bg-brand-50 px-3 py-2.5 font-semibold text-brand-700">Best Creatives Calculator</span>
+              <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Hook &amp; Hold Rates</span>
+              <span class="py-1.5 pe-3 ps-6 text-zinc-500">نظرة عامة</span>
+              <span class="py-1.5 pe-3 ps-6 text-zinc-500">Brand Leaderboard</span>
+              <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Ad Fatigue</span>
+            </nav>
+          </div>
+
+          <div class="min-w-0 p-5">
+            <!-- filter chips -->
+            <div class="mb-4 flex flex-wrap items-center gap-2 text-xs">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">المعروض <strong class="font-bold text-zinc-800">11 من 41 إعلانًا</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">الحد الأدنى للإنفاق <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">متوسط المشتريات <strong class="font-bold text-zinc-800">4.2</strong></span>
+              <span class="text-zinc-400">المتوسطات تشمل كل الإعلانات الـ 41 قبل الفلاتر</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {bestCreatives.map((c) => (
+                <div class="overflow-hidden rounded-[10px] border border-zinc-200 bg-white">
+                  <div class={`relative aspect-[9/14] w-full overflow-hidden border-b border-zinc-200 bg-zinc-200 ${c.top ? "shadow-[inset_0_0_0_2px_#34d399]" : ""}`}>
+                    <img src={c.photo} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+                    <span class={`absolute start-1.5 top-1.5 rounded px-1.5 py-px text-[9px] font-bold text-white ${c.top ? "bg-emerald-600" : "bg-zinc-800/85"}`}>#{c.rank}</span>
+                    <span class="absolute end-1.5 top-1.5 rounded bg-white/90 px-1.5 py-px text-[9px] font-semibold text-zinc-800">النقاط {c.score}</span>
+                    <span class="absolute start-1/2 top-1/2 flex h-[30px] w-[30px] -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/40">
+                      <svg class="ms-0.5 h-3 w-3" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                  </div>
+                  <div class="px-3 pb-3 pt-2.5">
+                    <p class="truncate text-[12px] font-semibold text-zinc-800">{c.name}</p>
+                    <p class="mt-0.5 truncate text-[10px] text-zinc-400">{c.campaign}</p>
+                    <span class="mt-2 inline-block rounded bg-brand-50 px-1.5 py-px text-[10px] font-semibold text-brand-700">فيديو</span>
+                    <div class="mt-2.5 flex flex-col gap-1.5 text-[11px]">
+                      {[["الإنفاق", c.spend], ["Link CTR", c.ctr], ["المشتريات", c.purchases]].map(([k, v]) => (
+                        <span class="flex items-baseline justify-between gap-2">
+                          <span class="text-zinc-400">{k}</span>
+                          <span class="font-semibold tabular-nums lining-nums text-zinc-700"><bdi dir="ltr">{v}</bdi></span>
+                        </span>
+                      ))}
+                      <span class="flex items-baseline justify-between gap-2">
+                        <span class="text-zinc-400">ROAS</span>
+                        <span class="font-bold tabular-nums lining-nums text-brand-600"><bdi dir="ltr">{c.roas}</bdi></span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============= BREAKDOWNS + ASSISTANT + STORE ============= -->
+  <!-- Light on purpose: the dark section above makes one point in context,
+       this one starts the run through the rest of the product. -->
+  <section id="assistant" class="bg-white px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <!-- ── Audience breakdowns ── -->
+      <div id="breakdowns" class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          {breakdowns.heading}
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">{breakdowns.body}</p>
+      </div>
+
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        {breakdowns.shots.map((s) => (
+          <figure class={`reveal overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10 ${s.wide ? "md:col-span-2" : ""}`}>
+            <img src={s.src} width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" class="block h-auto w-full" />
+          </figure>
+        ))}
+      </div>
+
+      <!-- ── Chat with your data, either way ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+          تحدّث مع بياناتك بالطريقة التي تفضّلها
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
+          اربط MCP واسأل عن أرقامك الموحّدة من مساعد AI الذي تستخدمه بالفعل، أو اسأل AdFunnl مباشرة داخل التطبيق. البيانات نفسها والإجابة نفسها، من أي جهة بدأت.
+        </p>
+      </div>
+
+      <div class="mt-8 grid items-start gap-6 lg:grid-cols-2">
+        <!-- Left: drag-to-compare assistant slider. Two full copies of the same
+             conversation stacked in one grid cell; the Claude layer is clipped. -->
+        <div id="assistant-split"
+             class="assistant-split reveal relative select-none overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10"
+             style="--split:50%">
+          <div class="grid">
+            <!-- ChatGPT layer (bottom) -->
+            <div class="col-start-1 row-start-1 flex flex-col bg-white">
+              <div class="flex items-center gap-2.5 border-b border-[#e5e5e5] bg-[#f7f7f8] px-4 py-2.5">
+                <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
+                </span>
+                <span class="whitespace-nowrap text-xs font-semibold text-[#0d0d0d]">ChatGPT</span>
+                <span class="whitespace-nowrap rounded-md border border-[#e5e5e5] bg-white px-2 py-0.5 text-[10px] font-medium text-[#8f8f8f]">GPT-5</span>
+                <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e5e5e5] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#8f8f8f]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl متصل
+                </span>
+              </div>
+              <div class="flex flex-1 flex-col gap-4 p-5">
+                <div class="flex justify-end">
+                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">لخّص لي TikTok مقابل Meta هذا الشهر. أين أهدرنا الميزانية؟</p>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e5e5e5] bg-[#f7f7f8] px-2.5 py-1.5 text-xs font-medium text-[#8f8f8f]">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+                      استخدم <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
+                    </div>
+                    <p class="text-sm leading-[1.7] text-[#0d0d0d]"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></p>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e5e5e5] bg-white px-3.5 py-2.5">
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#8f8f8f]">اسأل عن أي شيء</span>
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0d0d0d] text-white">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Claude layer (top, clipped to the split) -->
+            <div class="assistant-clip col-start-1 row-start-1 flex flex-col bg-[#faf9f6]">
+              <div class="flex items-center gap-2.5 border-b border-[#e2dbcd] bg-[#f3efe7] px-4 py-2.5">
+                <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
+                </span>
+                <span class="whitespace-nowrap text-xs font-semibold text-[#3d3929]">Claude</span>
+                <span class="whitespace-nowrap rounded-md border border-[#e2dbcd] bg-[#faf9f6] px-2 py-0.5 text-[10px] font-medium text-[#7c7565]">Sonnet 4.5</span>
+                <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e2dbcd] bg-[#faf9f6] px-2.5 py-1 text-[10px] font-semibold text-[#7c7565]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl متصل
+                </span>
+              </div>
+              <div class="flex flex-1 flex-col gap-4 p-5">
+                <div class="flex justify-end">
+                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">لخّص لي TikTok مقابل Meta هذا الشهر. أين أهدرنا الميزانية؟</p>
+                </div>
+                <div class="flex gap-3">
+                  <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e2dbcd] bg-[#f3efe7] px-2.5 py-1.5 text-xs font-medium text-[#7c7565]">
+                      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+                      استخدم <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
+                    </div>
+                    <p class="text-sm leading-[1.7] text-[#3d3929]"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></p>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e2dbcd] bg-white px-3.5 py-2.5">
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#7c7565]">رد على Claude…</span>
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] bg-[#D97757] text-white">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- drag overlay -->
+          <div class="assistant-divider pointer-events-none absolute inset-y-0 w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]"></div>
+          <div class="assistant-handle pointer-events-none absolute top-1/2 flex h-[34px] w-[34px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg>
+          </div>
+          <div class="pointer-events-none absolute bottom-2.5 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">اسحب للتبديل بين المساعدَين</div>
+        </div>
+
+        <!-- Right: the in-app assistant -->
+        <div class="reveal overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
+          <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+            <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>مساعد AdFunnl · التقرير الرئيسي
+            </div>
+            <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">داخل التطبيق</span>
+          </div>
+          <div class="flex flex-col gap-3 p-5">
+            <div class="flex justify-end">
+              <p class="max-w-[85%] rounded-2xl rounded-ee-sm bg-brand-600 px-3.5 py-2 text-sm text-white">أي Creative يستحق ميزانية أكبر هذا الأسبوع؟</p>
+            </div>
+            <div class="flex gap-2.5">
+              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+              </span>
+              <div class="min-w-0 flex-1">
+                <p class="rounded-2xl rounded-es-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
+                  <span data-inapp-stream></span><span class="stream-caret text-brand-600">▍</span>
+                </p>
+                <div class="mt-2.5 flex flex-wrap gap-1.5">
+                  {["اعرض الإعلان", "قارن بالشهر الماضي", "أضف إلى التقرير"].map((chip) => (
+                    <span class="rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium text-zinc-600">{chip}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div class="mt-1 flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
+              <span class="flex-1 text-xs text-zinc-400">اسأل عن أي شيء في هذا التقرير</span>
+              <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600 text-white">
+                <svg class="rtl:-scale-x-100 h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Store revenue ── -->
+      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
+        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+          اربط متجرك ليصبح العائد حقيقيًا
+        </h3>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
+          اربط Shopify أو سلة، وسيضع AdFunnl الإنفاق الإعلاني أمام الإيرادات التي سجّلها متجرك فعلًا. كل منصة تنسب التحويلات لنفسها، ومتجرك هو الحَكَم.
+        </p>
+      </div>
+
+      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
+          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>الإنفاق مقابل إيرادات المتجر · هذا الشهر
+          </div>
+          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>المتجر متصل
+          </span>
+        </div>
+
+        <div class="grid items-center gap-6 px-6 py-7 lg:grid-cols-[1fr_96px_1fr] lg:gap-0">
+          <!-- spend -->
+          <div>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">الإنفاق الإعلاني، كل المنصات</p>
+            <div class="flex flex-col gap-2">
+              {storeSpend.map((s) => (
+                <div class="flex items-center gap-2.5 rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
+                  <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center overflow-hidden rounded-[7px] bg-white ring-1 ring-zinc-200/90">
+                    <PlatformIcon platform={s.key} class="h-4 w-4" />
+                  </span>
+                  <span class="flex-1 text-ui font-semibold text-zinc-700">{s.name}</span>
+                  <span class="text-ui font-semibold tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{s.amount}</bdi></span>
+                </div>
+              ))}
+            </div>
+            <div class="mt-2.5 flex items-center justify-between rounded-[10px] bg-zinc-100 px-3 py-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">إجمالي الإنفاق</span>
+              <span class="text-base font-bold tabular-nums lining-nums text-zinc-900"><bdi dir="ltr">EGP 107,731</bdi></span>
+            </div>
+          </div>
+
+          <!-- the vs. hinge -->
+          <div class="flex items-center justify-center gap-2 lg:flex-col">
+            <span class="h-px w-10 bg-gradient-to-l from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-b"></span>
+            <span class="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-bold text-zinc-400">مقابل</span>
+            <span class="h-px w-10 bg-gradient-to-r from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-t"></span>
+          </div>
+
+          <!-- store revenue -->
+          <div>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">الإيرادات كما سجّلها متجرك</p>
+            <div class="rounded-xl border border-[#d7ecc4] bg-[rgba(240,250,232,0.6)] p-4">
+              <div class="flex items-center gap-2.5">
+                <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center overflow-hidden rounded-[7px] bg-white ring-1 ring-zinc-200/90">
+                  <PlatformIcon platform="shopify" class="h-4 w-4" />
+                </span>
+                <span class="flex-1 text-ui font-semibold text-zinc-700">Shopify</span>
+                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#4a7c2f]">المرجع</span>
+              </div>
+              <p class="mt-3.5 font-display text-metric-lg font-bold tabular-nums lining-nums text-zinc-900">EGP 517,109</p>
+              <p class="mt-1 text-xs text-zinc-500">4,182 طلبًا · 1,193 عميلًا جديدًا</p>
+            </div>
+            <div class="mt-2.5 grid grid-cols-2 gap-2.5">
+              <div class="rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">ما تنسبه المنصات لنفسها</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-zinc-400"><bdi dir="ltr">6.42×</bdi></p>
+              </div>
+              <div class="rounded-[10px] border border-brand-200 bg-brand-50 px-3 py-2.5">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-500">ROAS موثّق من المتجر</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-brand-900"><bdi dir="ltr">4.80×</bdi></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-zinc-100 bg-zinc-50/70 px-6 py-3.5">
+          <p class="text-xs text-zinc-500">
+            في هذا المثال، جمع التحويلات التي تعلنها كل منصة عن نفسها يرفع الرقم بنحو الثلث. AdFunnl يعرض الرقم الذي يستطيع متجرك إثباته، حتى مستوى المنتج والفئة.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CAPABILITIES ========================= -->
+  <section id="features" class="border-t border-zinc-100 bg-zinc-50/60 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          ثم شارك كل هذا في لوحة واحدة قابلة للتخصيص بالسحب والإفلات 🤯
+        </h2>
+      </div>
+
+      <!-- Build (Dashboards): flagship, links to feature page -->
+      <div id="build" class="mt-10 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+            منشئ بالسحب والإفلات
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">تقارير تشبه طريقة تفكيرك</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            مساحة حرة بدل قالب جامد. اسحب مربعات KPI والرسوم البيانية ومسارات التحويل والخرائط والجداول ومعارض الـ Creatives إلى حيث تريد. أضف المقارنة بالفترة السابقة، ومقاييس مخصّصة، وملاحظات توثّق ما غيّرته ومتى. واحفظ أي تصميم كقالب تعيد استخدامه.
+          </p>
+          <a href="/ar/features/dashboard" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:gap-2.5 transition-all">
+            استكشف المنشئ
+            <svg class="rtl:-scale-x-100 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <!-- the real thing: a screen recording of the builder, in browser chrome -->
+        <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_20px_40px_rgba(43,29,97,0.14)]">
+          <div class="flex items-center gap-[7px] border-b border-zinc-100 bg-zinc-50 px-3.5 py-2.5">
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
+            <span class="ms-1.5 text-[11px] font-medium text-zinc-400">app.adfunnl.com · منشئ التقارير</span>
+            <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
+              <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>تسجيل شاشة
+            </span>
+          </div>
+          <video
+            src="/builder-demo.mp4"
+            autoplay muted loop playsinline preload="metadata"
+            aria-label="تسجيل شاشة لمنشئ التقارير في AdFunnl"
+            class="block h-auto w-full bg-zinc-950"
+          ></video>
+        </div>
+      </div>
+
+      <!-- Month over month: spend + ROAS -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>
+            الاتجاهات
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">تابع الاتجاه شهرًا بعد شهر</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            تابع الإنفاق وblended ROAS جنبًا إلى جنب لكل شهر، لترى هل زيادة الميزانية تشتري كفاءة فعلًا أم تستنزفها بصمت. الإنفاق يظهر كأعمدة، والـ ROAS كخط فوقها.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-4 text-sm">
+            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-2.5 rounded-sm bg-brand-500"></span>الإنفاق (ألف $)</span>
+            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-4 rounded-full bg-emerald-500"></span>ROAS (×)</span>
+          </div>
+        </div>
+        <!-- animated grouped bars + ROAS line -->
+        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
+          <svg class="mom-chart w-full" viewBox={`0 0 ${MOM_W} ${MOM_H}`} role="img" aria-label="أعمدة الإنفاق الشهري مع خط ROAS صاعد">
+            {[0.25, 0.5, 0.75, 1].map((g) => (
+              <line x1={MOM_PL} y1={MOM_PT + momPlotH - g * momPlotH} x2={MOM_W - MOM_PR} y2={MOM_PT + momPlotH - g * momPlotH} stroke="#eceaf5" stroke-width="1" />
+            ))}
+            {momBars.map((b, i) => (
+              <g>
+                <rect class="mom-bar" x={b.x} y={b.y} width={b.w} height={b.h} rx="4" fill="#8b6ff0" style={`transform-box:fill-box;transform-origin:bottom;transition-delay:${i * 80}ms`} />
+                <text x={b.cx} y={momBaseY + 18} text-anchor="middle" font-family="Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#a1a1aa">{b.m}</text>
+              </g>
+            ))}
+            <path class="mom-line" d={momLine} pathLength="1" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            {momLinePts.map((p, i) => (
+              <circle class="mom-dot" cx={p[0]} cy={p[1]} r="3.5" fill="#fff" stroke="#10b981" stroke-width="2.5" style={`transition-delay:${700 + i * 90}ms`} />
+            ))}
+          </svg>
+        </div>
+      </div>
+
+      <!-- Currency unification -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-brand-200 bg-white p-8 shadow-[0_12px_32px_rgba(43,29,97,0.1)] lg:grid-cols-2 lg:p-10">
+        <div class="cur-viz order-2 lg:order-1 rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
+          <div class="grid grid-cols-2 gap-2.5">
+            {[
+              { c: "USD", flag: "$", amt: "142,880" },
+              { c: "AED", flag: "د.إ", amt: "318,400" },
+              { c: "EGP", flag: "£", amt: "2,940,000" },
+              { c: "KWD", flag: "د.ك", amt: "18,220" },
+            ].map((x, i) => (
+              <div class="cur-chip rounded-lg border border-zinc-200 bg-white px-3 py-2.5" style={`transition-delay:${i * 110}ms`}>
+                <div class="flex items-center gap-1.5">
+                  <span class="flex h-5 w-5 items-center justify-center rounded bg-zinc-100 text-[10px] font-bold text-zinc-500">{x.flag}</span>
+                  <span class="text-[11px] font-semibold text-zinc-500">{x.c}</span>
+                </div>
+                <p class="mt-1 font-display text-sm font-bold text-zinc-800">{x.amt}</p>
+              </div>
+            ))}
+          </div>
+          <div class="my-3 flex items-center justify-center gap-2 text-zinc-300">
+            <span class="h-px w-16 bg-gradient-to-l from-transparent to-zinc-300"></span>
+            <svg class="cur-arrow h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            <span class="h-px w-16 bg-gradient-to-r from-transparent to-zinc-300"></span>
+          </div>
+          <div class="rounded-xl border border-brand-200 bg-brand-50/70 px-4 py-3">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-brand-500">الإيرادات الموحّدة</p>
+            <p class="mt-0.5 font-display text-2xl font-bold text-brand-900">
+              <bdi dir="ltr"><span class="text-sm font-semibold text-brand-400">SAR </span><span class="cur-total">1,932,540</span></bdi>
+            </p>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>
+            العملة
+          </span>
+          <h3 class="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-zinc-950">لا مزيد من الحساب الذهني</h3>
+          <p class="mt-2.5 text-lg font-semibold text-brand-600">كل العملات، محوّلة إلى عملتك</p>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            البيع في أكثر من سوق يعني أكثر من عملة، وتحويلًا يجريه أحدهم في رأسه. AdFunnl يحوّل أرقام كل منصة ومتجر إلى عملة تقاريرك تلقائيًا وبالسعر الصحيح، فيجتمع blended ROAS والإيرادات في رقم واحد تستطيع الدفاع عنه.
+          </p>
+        </div>
+      </div>
+
+      <!-- Invite your team -->
+      <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            التعاون
+          </span>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">ادعُ فريقك في ثوانٍ</h3>
+          <p class="mt-3 leading-relaxed text-zinc-500">
+            أضف المحللين والـ Account Managers بدعوة واحدة، وحدّد دور كل شخص، مسؤولًا أو عضوًا. يعمل الجميع على الأرقام المباشرة نفسها، ويتابع العميل عبر رابط مشاركة، دون ملفات متناقلة أو نسخ يختلف عليها الجميع.
+          </p>
+        </div>
+        <!-- animated members card -->
+        <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <p class="text-sm font-semibold text-zinc-800">أعضاء مساحة العمل</p>
+            <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">5 مقاعد</span>
+          </div>
+          <div class="mb-4 flex items-center">
+            {[
+              { i: "HM", c: "bg-brand-600" },
+              { i: "SA", c: "bg-emerald-500" },
+              { i: "KR", c: "bg-amber-500" },
+              { i: "NF", c: "bg-sky-500" },
+            ].map((a, idx) => (
+              <span class={`team-avatar -ms-2 first:ms-0 flex h-9 w-9 items-center justify-center rounded-full ${a.c} text-[11px] font-bold text-white ring-2 ring-zinc-50`} style={`transition-delay:${idx * 120}ms`}>{a.i}</span>
+            ))}
+            <span class="team-avatar -ms-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-dashed border-zinc-300 text-zinc-400 ring-2 ring-zinc-50" style="transition-delay:520ms">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <div class="flex flex-1 items-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-400">teammate@brand.com</div>
+            <button class="rounded-lg bg-brand-600 px-3.5 py-2 text-xs font-semibold text-white">دعوة</button>
+          </div>
+          <div class="mt-3 space-y-1.5">
+            {[
+              { n: "Hussein M.", r: "المالك", rc: "bg-brand-50 text-brand-700" },
+              { n: "Sara A.", r: "مسؤول", rc: "bg-sky-50 text-sky-700" },
+              { n: "Karim R.", r: "عضو", rc: "bg-zinc-100 text-zinc-500" },
+            ].map((m) => (
+              <div class="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-xs">
+                <span class="font-medium text-zinc-700">{m.n}</span>
+                <span class={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${m.rc}`}>{m.r}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CTA ============================ -->
+  <section class="px-6 py-24">
+    <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          شاهد إنفاقك الإعلاني كله بوضوح في مكان واحد، مشتركًا مع عملائك.
+        </h2>
+        <p class="mt-4 text-lg text-zinc-400">
+          اربط حسابك الأول في دقائق، دون ترقيع في الجداول.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={`${APP_URL}/signup`}
+             class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+            ابدأ مجانًا
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    /* Scroll-reveal (only hidden when JS is present to reveal it) */
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
+    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    .hero-app { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; }
+
+    /* Hero source chips cascade in */
+    @keyframes chipIn { to { opacity: 1; transform: none; } }
+    .chip-in { opacity: 0; transform: translateY(8px); animation: chipIn .5s ease forwards; animation-delay: var(--d, 0ms); }
+
+    /* Hero chart bars grow from the baseline */
+    @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    .bar { transform-origin: bottom; animation: barGrow .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0ms); }
+
+    /* Ambient live indicators */
+    @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .live-dot { animation: livePulse 1.6s ease-in-out infinite; }
+    @keyframes caretBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    .stream-caret { animation: caretBlink 1s step-end infinite; }
+
+    /* Verdict flip on the featured Pulse row */
+    .verdict { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
+    [data-pulse-row="cycle"] [data-roas] { transition: color .35s ease; }
+
+    /* ── Drag-to-compare assistant slider ──
+       Both skins occupy the same grid cell; --split drives the clip and the
+       overlay, so one custom property moves everything at once. */
+    .assistant-split { cursor: ew-resize; touch-action: none; }
+    .assistant-clip { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+    .assistant-divider { left: var(--split); }
+    .assistant-handle { left: var(--split); }
+
+    /* ── Month-over-month chart (reveal-triggered) ── */
+    .mom-bar { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); }
+    .reveal.in .mom-bar { transition: transform .9s cubic-bezier(.2,.7,.2,1); transform: scaleY(1); }
+    .mom-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .reveal.in .mom-line { transition: stroke-dashoffset 1.4s ease .5s; stroke-dashoffset: 0; }
+    .mom-dot { opacity: 0; }
+    .reveal.in .mom-dot { transition: opacity .3s ease; opacity: 1; }
+
+    /* ── Currency unification (reveal-triggered) ── */
+    .cur-chip { opacity: 0; transform: translateX(-10px); }
+    .reveal.in .cur-chip { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1); opacity: 1; transform: none; }
+    .reveal.in .cur-arrow { animation: curArrow 1.6s ease-in-out .6s infinite; }
+    @keyframes curArrow { 0%,100% { transform: translateY(-2px); opacity: .6; } 50% { transform: translateY(2px); opacity: 1; } }
+
+    /* ── Team invite avatars (reveal-triggered) ── */
+    .team-avatar { opacity: 0; transform: scale(.6); }
+    .reveal.in .team-avatar { transition: opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1); opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .verdict,
+      .cur-arrow { animation: none !important; transition: none !important; }
+      .mom-bar { transform: scaleY(1) !important; }
+      .mom-line { stroke-dashoffset: 0 !important; }
+      .mom-dot, .cur-chip, .team-avatar { opacity: 1 !important; transform: none !important; }
+      .js .reveal { opacity: 1 !important; transform: none !important; }
+      .chip-in { opacity: 1; }
+    }
+  </style>
+
+  <script>
+    document.documentElement.classList.add("js");
+    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // ── Scroll reveal ──────────────────────────────────────────────
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.2 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // ── Currency total count-up (comma-formatted), fires on scroll ──
+    const curTotal = document.querySelector(".cur-total");
+    if (curTotal) {
+      const target = parseInt(curTotal.textContent.replace(/,/g, ""), 10);
+      const fmt = (n) => Math.round(n).toLocaleString("en-US");
+      if (rm || !Number.isFinite(target)) {
+        /* leave static */
+      } else {
+        const cio = new IntersectionObserver((entries, obs) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            obs.disconnect();
+            const dur = 1400, start = performance.now();
+            const step = (now) => {
+              const p = Math.min(1, (now - start) / dur);
+              curTotal.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+              if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          }
+        }, { threshold: 0.5 });
+        cio.observe(curTotal);
+      }
+    }
+
+    // ── Hero KPI count-up ──────────────────────────────────────────
+    function countUp(el) {
+      const raw = el.dataset.value || el.textContent || "";
+      const m = raw.match(/^([^0-9.-]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
+      if (!m) return;
+      const [, prefix, numStr, suffix] = m;
+      const target = parseFloat(numStr);
+      const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
+      if (rm) { el.textContent = raw; return; }
+      const dur = 1200; const start = performance.now();
+      function tick(now) {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = raw;
+      }
+      requestAnimationFrame(tick);
+    }
+    document.querySelectorAll(".count").forEach((el) => countUp(el));
+
+    // ── Pulse verdict badges + featured-row flip ───────────────────
+    const VERDICT = {
+      scale: { label: "Scale", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      hold:  { label: "Hold",  cls: "bg-amber-50 text-amber-700 border-amber-200" },
+      cut:   { label: "Cut",   cls: "bg-rose-50 text-rose-700 border-rose-200" },
+    };
+    const BASE = "verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium";
+    function paint(el, v) { const s = VERDICT[v]; el.className = BASE + " " + s.cls; el.textContent = s.label; }
+    document.querySelectorAll(".verdict").forEach((el) => paint(el, el.dataset.verdict));
+
+    const cycleRow = document.querySelector('[data-pulse-row="cycle"]');
+    if (cycleRow && !rm) {
+      const seq = [
+        { roas: "5.2×", v: "scale" },
+        { roas: "3.6×", v: "scale" },
+        { roas: "2.7×", v: "hold" },
+        { roas: "4.1×", v: "scale" },
+      ];
+      const badge = cycleRow.querySelector(".verdict");
+      const roasCell = cycleRow.querySelector("[data-roas]");
+      let i = 0;
+      setInterval(() => {
+        i = (i + 1) % seq.length;
+        roasCell.textContent = seq[i].roas;
+        roasCell.style.color = seq[i].v === "hold" ? "#b45309" : "#0f766e";
+        paint(badge, seq[i].v);
+      }, 2200);
+    }
+
+    // ── Drag-to-compare assistant slider ──────────────────────────
+    // One shared counter drives both typewriters, so the MCP answer and the
+    // in-app answer stay in step no matter which side of the slider you read.
+    const split = document.getElementById("assistant-split");
+    let dragging = false;
+    if (split) {
+      let pendingX = 0, raf = 0, current = 50;
+      const apply = () => {
+        raf = 0;
+        const r = split.getBoundingClientRect();
+        const pct = Math.max(4, Math.min(96, ((pendingX - r.left) / r.width) * 100));
+        if (Math.abs(pct - current) <= 0.15) return;
+        current = pct;
+        split.style.setProperty("--split", pct.toFixed(2) + "%");
+      };
+      const setFrom = (clientX) => {
+        pendingX = clientX;
+        if (!raf) raf = requestAnimationFrame(apply);
+      };
+      split.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        dragging = true;
+        setFrom(e.clientX);
+        const move = (ev) => setFrom(ev.clientX);
+        const up = () => {
+          dragging = false;
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
+    }
+
+    // ── Assistant typewriters (shared counter, loops) ──────────────
+    const MCP_ANSWER = "استحوذ TikTok على 62% من الإنفاق لكنه جلب 38% فقط من الإيرادات. مجموعتا retargeting على Meta حملتا blended ROAS هذا الشهر، لذلك نقل حوالي $4.2k من prospecting على TikTok إليهما هو المكسب الأوضح.";
+    const INAPP_ANSWER = "الإعلان IG Post · Leakproof test هو الأوضح: إنفاق EGP 5,002 و87 عملية شراء وROAS يبلغ 24.16x، متقدمًا بفارق كبير على الإعلان التالي. وما زال تحت متوسط إنفاقك، فهناك مجال لعمل Scale له قبل أن يظهر عليه الـ fatigue.";
+    const mcpEls = document.querySelectorAll("[data-mcp-stream]");
+    const inAppEls = document.querySelectorAll("[data-inapp-stream]");
+    const longest = Math.max(MCP_ANSWER.length, INAPP_ANSWER.length);
+
+    function writeAll(nodes, text, n) {
+      const slice = text.slice(0, Math.min(n, text.length));
+      nodes.forEach((el) => { el.textContent = slice; });
+    }
+
+    if (rm) {
+      writeAll(mcpEls, MCP_ANSWER, MCP_ANSWER.length);
+      writeAll(inAppEls, INAPP_ANSWER, INAPP_ANSWER.length);
+    } else {
+      let n = 0;
+      setInterval(() => {
+        if (dragging) return;
+        n = n > longest + 40 ? 0 : n + 1;
+        writeAll(mcpEls, MCP_ANSWER, n);
+        writeAll(inAppEls, INAPP_ANSWER, n);
+      }, 28);
+    }
+  </script>
+
+</Layout>

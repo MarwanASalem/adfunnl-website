@@ -23,9 +23,19 @@ declare global {
 const APP_HOST = "app.adfunnl.com";
 const locale = document.documentElement.lang === "ar" ? "ar" : "en";
 
+// GTM keeps every key it has seen, so a value pushed with one event would
+// ride along on the next. Each push clears the event-level keys first.
+// page_type is left out on purpose: it describes the page, not the event.
+const EVENT_KEYS = [
+  "cta_text", "cta_location", "link_url", "link_domain", "plan",
+  "toggle", "value", "from_locale", "to_locale",
+  "percent_scrolled", "engaged_seconds", "max_scroll_percent",
+];
+const CLEARED = Object.fromEntries(EVENT_KEYS.map((k) => [k, undefined]));
+
 function push(event: string, params: DataLayerEvent = {}) {
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ site_section: "web", locale, event, ...params });
+  window.dataLayer.push({ ...CLEARED, site_section: "web", locale, event, ...params });
 }
 
 // ── Where on the page a click happened ─────────────────────────────────

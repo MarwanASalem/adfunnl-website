@@ -66,3 +66,90 @@ site reports the click that led to it (`web_signup_click`).
 
 Session duration and engaged time are also calculated by GA4 on its own from
 these hits. `web_engaged_time` and `web_page_exit` give the same data per page.
+
+## Meta Pixel
+
+The pixel lives only in GTM. Neither repo has pixel code, and neither should:
+the site and the app both push to the dataLayer and GTM turns that into Meta
+events. Checked 2026-09-16: the published container (version 2) held only the
+GA4 tag `G-5J8K852WBD`, with no Meta tag, so nothing below is live until it is
+added and published.
+
+### Naming
+
+Meta has no `site_section`, so the event name is what separates the two.
+
+- **Site**: custom events, all starting with `Web`, sent with `trackCustom`.
+- **App**: Meta standard events (`CompleteRegistration`, `InitiateCheckout`,
+  `Purchase`), which is what ad sets optimise for. The site never sends a
+  standard event except `PageView`.
+- `PageView` fires on both, with `site_section` as a parameter so a custom
+  conversion can split them.
+
+| dataLayer event (site) | Meta event | Parameters |
+| --- | --- | --- |
+| page load, `site_section` = web | `PageView` (standard) | `site_section`, `locale` |
+| `web_signup_click` | `WebSignupClick` | `cta_location`, `plan`, `locale` |
+| `web_signin_click` | `WebSigninClick` | `cta_location`, `locale` |
+| `web_pricing_toggle` | `WebPricingToggle` | `toggle`, `value` |
+| `web_engaged_time` with `engaged_seconds` = 60 | `WebEngaged60s` | `page_type`, `locale` |
+| `web_scroll_depth` with `percent_scrolled` = 75 | `WebScroll75` | `page_type`, `locale` |
+
+Only those milestones go to Meta, so the ad side gets one clean "engaged
+visitor" signal each instead of five near-duplicates. For the app side, the
+matching map is `sign_up` to `CompleteRegistration`, `begin_checkout` to
+`InitiateCheckout` (with `value`, `currency`) and `purchase` to `Purchase`.
+
+### Tags
+
+Replace `PIXEL_ID` with the dataset ID from Events Manager.
+
+1. **Meta base code**: Custom HTML, trigger "Initialization, All Pages", tag
+   firing option "Once per page":
+
+   ```html
+   <script>
+   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+   document,'script','https://connect.facebook.net/en_US/fbevents.js');
+   fbq('init', 'PIXEL_ID');
+   fbq('track', 'PageView', {site_section: {{site_section}}, locale: {{locale}}});
+   </script>
+   ```
+
+   The app is a single-page app, so it also needs a second tag that sends
+   `fbq('track', 'PageView', {site_section: 'app'})` on `virtual_page_view`.
+   Do not add that trigger to the site.
+
+2. **Meta web events**: Custom HTML, trigger "Meta web events" (below), tag
+   sequencing "fire Meta base code before this tag":
+
+   ```html
+   <script>
+   (function () {
+     var e = {{Event}}, p = {locale: {{locale}}}, name = null;
+     if (e === 'web_signup_click') { name = 'WebSignupClick'; p.cta_location = {{cta_location}}; p.plan = {{plan}}; }
+     else if (e === 'web_signin_click') { name = 'WebSigninClick'; p.cta_location = {{cta_location}}; }
+     else if (e === 'web_pricing_toggle') { name = 'WebPricingToggle'; p.toggle = {{toggle}}; p.value = {{value}}; }
+     else if (e === 'web_engaged_time' && {{engaged_seconds}} === 60) { name = 'WebEngaged60s'; p.page_type = {{page_type}}; }
+     else if (e === 'web_scroll_depth' && {{percent_scrolled}} === 75) { name = 'WebScroll75'; p.page_type = {{page_type}}; }
+     if (name && window.fbq) fbq('trackCustom', name, p);
+   })();
+   </script>
+   ```
+
+   `page_type` is only pushed with `web_page_view`, and GTM keeps the value
+   for later events on the same page, so the variable still reads correctly.
+
+3. **Trigger "Meta web events"**: Custom Event, event name matches regex
+   `^web_(signup_click|signin_click|pricing_toggle|engaged_time|scroll_depth)$`,
+   condition `site_section` equals `web`.
+
+### In Events Manager
+
+- Create custom conversions from `WebSignupClick` (the site's lead signal)
+  and, once the app sends it, `CompleteRegistration` (the real signup).
+- Add `adfunnl.com` and `app.adfunnl.com` to the dataset's allowed domains.
+- Test with the Test Events tab and GTM Preview before publishing.

@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import DataFlow from "../../components/DataFlow.astro";
+import AiDashboard from "../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -124,6 +125,17 @@ const argument = [
     gets: "Checks every account live, without pulling anyone off work to assemble it.",
   },
 ];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. Two-phase: the
+// assistant returns a plan, you approve it, then it builds. The objection
+// this answers is the one every new client raises, the first report.
+const aiDashboard = {
+  heading: "A new client still means building the first report from scratch",
+  body: "Or you ask for it. Say which client the dashboard is for and the assistant plans one out of what that client has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. The plan arrives before anything is built, with the panels that would come back empty named, and it waits for your approval. After that the layout is yours: move what you want, then save it as a template for the client after this one.",
+  prompt: "Build a dashboard for the new client, Tiffin Co.",
+  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+};
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
 const control = [
@@ -361,6 +373,15 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    sectionClass="border-t border-zinc-100 bg-white px-6 pb-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ===================== DATA FLOW (animated) =====================
        Same diagram as the homepage; the framing and the terminal node are

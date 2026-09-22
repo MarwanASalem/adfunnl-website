@@ -4,8 +4,17 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../../layouts/Layout.astro";
+import AiDashboard from "../../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
+
+// The AI dashboard builder (docs/what-ships.md, checked 22 September 2026).
+// Two-phase: خطة تقرأها وتوافق عليها، ثم البناء. Keep the approval in the copy.
+const aiDashboard = {
+  heading: "اللوحة الأولى هي التي تؤجلها دائمًا",
+  body: "فاطلبها. قل لأي علامة تجارية هي، فيضع المساعد خطة لوحة مما ربطته هذه العلامة فعلًا: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تصلك الخطة أولًا وفيها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل موافقتك. وما تحصل عليه لوحة عادية على اللوحة نفسها، كل عنصر فيها قابل للتحريك أو إعادة التسمية أو الحذف.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
+};
 
 const tileTypes = [
   { name: "مربعات KPI",        note: "الإنفاق وROAS وCAC وCTR وأي مقياس، بنظرة واحدة" },
@@ -171,8 +180,17 @@ const capabilities = [
     </div>
   </section>
 
+  <!-- Ask for the dashboard instead of building it -->
+  <AiDashboard
+    locale="ar"
+    sectionClass="border-t border-zinc-100 bg-zinc-50/60 px-6 py-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    meta={aiDashboard.meta}
+  />
+
   <!-- CTA -->
-  <section class="px-6 pb-24">
+  <section class="px-6 py-24">
     <div class="mx-auto max-w-5xl rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">

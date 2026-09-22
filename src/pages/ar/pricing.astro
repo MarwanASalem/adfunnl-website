@@ -126,9 +126,16 @@ const groups: { title: string; rows: Row[] }[] = [
     ],
   },
   {
+    // Google Sheets استيراد في اتجاه واحد، للداخل فقط (docs/what-ships.md)،
+    // فمكانه هنا وليس ضمن المشاركة: لا شيء يُرسَل إليه.
+    title: "مصادر البيانات",
+    rows: [
+      { label: "استيراد من Google Sheets", free: false, solo: true, growth: true, agency: true },
+    ],
+  },
+  {
     title: "التقارير والمشاركة",
     rows: [
-      { label: "ربط Google Sheets",            free: false, solo: true, growth: true, agency: true },
       { label: "ملاحظات التغييرات",              free: false, solo: true, growth: true, agency: true },
       { label: "المشاركة المباشرة (روابط + PDF)",      free: false, solo: true, growth: true, agency: true },
       { label: "تذكير شحن الرصيد وتنبيهات الفوترة", free: false, solo: true, growth: true, agency: true },
@@ -146,6 +153,7 @@ const groups: { title: string; rows: Row[] }[] = [
     title: "AI",
     rows: [
       { label: "مساعد AI (محادثة)", free: false, solo: false, growth: true,    agency: true },
+      { label: "AI يبني لوحتك", free: false, solo: false, growth: true, agency: true },
       { label: "وصول MCP",       free: false, solo: false, growth: true,    agency: true },
       { label: "رصيد AI شهريًا",  free: "0",   solo: "0",   growth: "1,000", agency: "3,000" },
     ],

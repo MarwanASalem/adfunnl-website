@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import DataFlow from "../../components/DataFlow.astro";
+import AiDashboard from "../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -246,6 +247,18 @@ const assistantAnswer = [
 ];
 
 const assistantSources = ["Meta", "TikTok", "Snapchat", "Google", "Shopify"];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. It sits right
+// after the assistant section, so the heading has to carry the new idea
+// (building the dashboard) and not restate "ask instead of build" (R1).
+// Two-phase and never silent: plan first, approval, then the build.
+const aiDashboard = {
+  heading: "When you do want the dashboard, ask for that too",
+  body: "Name the brand and the assistant plans the whole thing out of what it has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. You read the plan first, panels that would come back empty included, and nothing is built until you approve it. What lands is an ordinary dashboard on the usual canvas, still yours to rearrange.",
+  prompt: "Build me a dashboard for Tiffin Co.",
+  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+};
 
 // ── Where the capacity comes from ─────────────────────────────────────
 // The promise, made concrete. No invented measurement anywhere in here: the
@@ -661,6 +674,15 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    sectionClass="border-t border-zinc-100 bg-zinc-50 px-6 py-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ============================== CAPACITY ============================== -->
   <section class="bg-zinc-50 px-6 py-24">

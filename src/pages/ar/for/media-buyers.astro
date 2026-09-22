@@ -5,6 +5,7 @@
 //
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
+import AiDashboard from "../../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -250,6 +251,17 @@ const assistantAnswer = [
 ];
 
 const assistantSources = ["Meta", "TikTok", "Snapchat", "Google", "Shopify"];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. Twin of the
+// English section. It follows the assistant section, so the heading carries
+// the new idea (بناء اللوحة) ولا يعيد فكرة "اسأل بدل أن تبني" (R1).
+const aiDashboard = {
+  heading: "وحين تريد اللوحة نفسها، اطلبها أيضًا",
+  body: "سمِّ العلامة التجارية فيضع المساعد خطة اللوحة كاملة مما ربطته: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تقرأ الخطة أولًا، ومعها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل موافقتك. وما يصلك لوحة عادية على اللوحة المعتادة، تعيد ترتيبها كما تشاء.",
+  prompt: "ابنِ لي لوحة لـ Tiffin Co.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
+};
 
 // ── Where the capacity comes from ─────────────────────────────────────
 // The promise, made concrete. No invented measurement anywhere in here: the
@@ -649,6 +661,16 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    locale="ar"
+    sectionClass="border-t border-zinc-100 bg-zinc-50 px-6 py-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ============================== CAPACITY ============================== -->
   <section class="bg-zinc-50 px-6 py-24">

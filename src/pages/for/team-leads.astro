@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import DataFlow from "../../components/DataFlow.astro";
+import AiDashboard from "../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -203,6 +204,19 @@ const rollout = [
     body: "Invite media buyers into the workspace and send clients a live share link, so client questions stop landing on your team as interruptions.",
   },
 ];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. Two-phase:
+// a plan somebody approves, then the build. For this persona the point is
+// that the team starts from one shape instead of six. Do not turn that into
+// a claim about per-member views, which do not exist (voice.md, capability
+// truth).
+const aiDashboard = {
+  heading: "Nobody on the team wants to build the first dashboard",
+  body: "So nobody has to. Say which brand it is for and the assistant plans one out of what that brand has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. It shows the plan, names the panels that would come back empty, and builds only once someone approves it. Everyone starts from the same shape instead of their own, and that layout can be saved as a template and cloned across the rest of the accounts.",
+  prompt: "Build a dashboard for Tiffin Co.",
+  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+};
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
 const control = [
@@ -551,6 +565,15 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    sectionClass="bg-white px-6 pt-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ============================= OBJECTIONS ============================= -->
   <section class="bg-white px-6 py-24">

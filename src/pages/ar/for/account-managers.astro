@@ -5,6 +5,7 @@
 //
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
+import AiDashboard from "../../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -128,6 +129,16 @@ const argument = [
     gets: "يتابع كل الحسابات مباشرةً، دون أن يسحب أحدًا من عمله ليجمعها.",
   },
 ];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. Twin of the
+// English section: خطة يوافق عليها المستخدم، ثم البناء.
+const aiDashboard = {
+  heading: "كل عميل جديد يعني بناء أول تقرير من الصفر",
+  body: "أو تطلبه. قل لأي عميل هي اللوحة، فيضع المساعد خطة لوحة مما ربطه هذا العميل: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تصلك الخطة قبل أن يُبنى أي شيء، وفيها اللوحات التي ستأتي فارغة، وتنتظر موافقتك. بعدها الترتيب لك: حرّك ما تشاء، ثم احفظ التخطيط كقالب للعميل الذي يليه.",
+  prompt: "ابنِ لوحة للعميل الجديد Tiffin Co.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
+};
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
 const control = [
@@ -359,6 +370,16 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    locale="ar"
+    sectionClass="border-t border-zinc-100 bg-white px-6 pb-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ===================== DATA FLOW (animated) =====================
        Same diagram as the homepage; the framing and the terminal node are

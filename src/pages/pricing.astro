@@ -122,9 +122,16 @@ const groups: { title: string; rows: Row[] }[] = [
     ],
   },
   {
+    // Google Sheets is an import, one direction, in only (docs/what-ships.md).
+    // It sits here and not under sharing: nothing is ever pushed out to it.
+    title: "Data sources",
+    rows: [
+      { label: "Google Sheets import",  free: false, solo: true, growth: true, agency: true },
+    ],
+  },
+  {
     title: "Reporting & sharing",
     rows: [
-      { label: "Google Sheets connection",            free: false, solo: true, growth: true, agency: true },
       { label: "Change annotations",              free: false, solo: true, growth: true, agency: true },
       { label: "Live sharing (links + PDF)",      free: false, solo: true, growth: true, agency: true },
       { label: "Add-fund reminder & billing alerts", free: false, solo: true, growth: true, agency: true },
@@ -142,6 +149,7 @@ const groups: { title: string; rows: Row[] }[] = [
     title: "AI",
     rows: [
       { label: "AI assistant (chat)", free: false, solo: false, growth: true,    agency: true },
+      { label: "AI builds your dashboard", free: false, solo: false, growth: true, agency: true },
       { label: "AI MCP access",       free: false, solo: false, growth: true,    agency: true },
       { label: "AI credits / month",  free: "0",   solo: "0",   growth: "1,000", agency: "3,000" },
     ],

@@ -50,6 +50,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Capability | Notes |
 |---|---|
 | Dashboard builder | Freeform drag-and-drop canvas, not a fixed template |
+| AI dashboard builder | Ask for a dashboard and it gets built. Two-phase and never silent: the first call returns a plan (the sections, the widget list, the goal it assumed, and caveats naming the panels that would come back empty) and it only builds after you approve that plan. A goal-built dashboard is sectioned: an Overview with a KPI row per ad platform over a blended row, plus a store row when one is connected, then Performance over time, Campaigns, Geography, Demographics and Placement. Shaped around what the brand has actually connected. Available to the in-app assistant and to any MCP client, so it needs a plan that includes AI. Checked 22 September 2026 in `api/app/services/analytics/tool_registry.rb` (`create_dashboard`, `update_dashboard`) and `api/app/services/chat_assistant.rb` |
 | Widgets | KPI tiles, charts, tables, funnels, geo maps, timelines, creative galleries, product ROAS |
 | Versus prior period | Comparison on any tile, month over month inline |
 | Custom metrics | Plus conditional table rules and change annotations dated to what changed |

@@ -7,6 +7,7 @@ import Layout from "../../layouts/Layout.astro";
 import PlatformIcon from "../../components/PlatformIcon.astro";
 import DataFlow from "../../components/DataFlow.astro";
 import AnalysisStages from "../../components/AnalysisStages.astro";
+import AiDashboard from "../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -82,6 +83,17 @@ const analysisStages = {
     { key: "share",   name: "المشاركة",   owner: "auto", line: "رابط مباشر للعرض فقط أو ملف PDF، محدَّث كلما فتحه أحد." },
     { key: "act",     name: "التنفيذ",     owner: "you",  line: "يصنّف Pulse الحسابات إلى Scale أو Hold أو Cut حسب قواعدك. القرار يبقى لك، وعلى Meta وTikTok يمكنك تغيير الحالة والميزانية دون مغادرة AdFunnl." },
   ],
+};
+
+// ── Ask for the dashboard (AI dashboard builder) ──
+// Verified capability, docs/what-ships.md, checked 22 September 2026. Keep the
+// approval step in the copy: the assistant shows a plan first and builds only
+// after you approve it, so a line promising a finished dashboard from a single
+// sentence would be wrong. Twin of the English section on the homepage.
+const aiDashboard = {
+  heading: "بناء اللوحة الأولى هو الجزء الذي يؤجله الجميع",
+  body: "اطلبها بدل أن تبنيها. قل لأي علامة تجارية هي، فيضع المساعد خطة لوحة كاملة مما ربطته هذه العلامة فعلًا: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تقرأ الخطة أولًا، وفيها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل أن توافق. بعدها تصل على اللوحة نفسها التي يمكنك سحب عناصرها وترتيبها.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
 // ── Hero signature: the Blended Overview (e-commerce) dashboard ──
@@ -265,7 +277,7 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>الربط في دقائق</span>
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>مزامنة كل ساعة</span>
       <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>لوحات مباشرة قابلة للمشاركة</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>جاهز للوكالات وتعدد العملاء</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>لوحات يبنيها AI</span>
     </div>
   </section>
 
@@ -784,6 +796,15 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
           ></video>
         </div>
       </div>
+
+      <!-- Ask for the dashboard instead of building it -->
+      <AiDashboard
+        locale="ar"
+        sectionClass="mt-6"
+        heading={aiDashboard.heading}
+        body={aiDashboard.body}
+        meta={aiDashboard.meta}
+      />
 
       <!-- Month over month: spend + ROAS -->
       <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">

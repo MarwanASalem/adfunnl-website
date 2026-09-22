@@ -5,6 +5,7 @@
 //
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
+import AiDashboard from "../../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -207,6 +208,17 @@ const rollout = [
     body: "ادعُ الـ Media Buyers إلى مساحة العمل، وأرسل للعملاء روابط مشاركة مباشرة، فتتوقف أسئلتهم عن الوصول إلى فريقك كمقاطعات.",
   },
 ];
+
+// ── The AI dashboard builder ──────────────────────────────────────────
+// Verified in docs/what-ships.md, checked 22 September 2026. Twin of the
+// English section. The point for this persona: الفريق يبدأ من شكل واحد.
+// Never turn that into a claim about per-member views, which do not exist.
+const aiDashboard = {
+  heading: "لا أحد في الفريق يريد بناء اللوحة الأولى",
+  body: "ولا أحد مضطر. سمِّ العلامة التجارية فيضع المساعد خطة لوحة مما ربطته: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. يعرض الخطة، ويسمّي اللوحات التي ستأتي فارغة، ولا يبني إلا بعد موافقة أحدكم. يبدأ الجميع من الشكل نفسه بدل ستة أشكال، ويمكن حفظ هذا التخطيط كقالب واستنساخه على بقية الحسابات.",
+  prompt: "ابنِ لوحة لـ Tiffin Co.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
+};
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
 const control = [
@@ -538,6 +550,16 @@ const control = [
       </div>
     </div>
   </section>
+
+  <!-- ========================== AI DASHBOARD =========================== -->
+  <AiDashboard
+    locale="ar"
+    sectionClass="bg-white px-6 pt-20"
+    heading={aiDashboard.heading}
+    body={aiDashboard.body}
+    prompt={aiDashboard.prompt}
+    meta={aiDashboard.meta}
+  />
 
   <!-- ============================= OBJECTIONS ============================= -->
   <section class="bg-white px-6 py-24">

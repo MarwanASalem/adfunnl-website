@@ -1,0 +1,105 @@
+---
+// Arabic twin of src/pages/terms.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── شروط الخدمة ─────────────────────────────────────────────────────
+// This is the same policy the app serves at app.adfunnl.com/terms, mirrored
+// here so app stores and platform reviewers have a public URL on the marketing
+// domain to point at. The app is the source: if the policy changes there,
+// change it here too, and move the "Last updated" line on both.
+//
+// Deliberately low-visibility: linked from the footer only, and kept out of
+// the nav and the sitemap-facing pages. See privacy.astro for the sibling page.
+const LAST_UPDATED = "آخر تحديث: يونيو 2025";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "قبول الشروط",
+    body: [
+      "بإنشاء حساب أو استخدام AdFunnl، فإنك توافق على شروط الخدمة هذه. إذا لم توافق، فلا تستخدم الخدمة. تسري هذه الشروط على جميع مستخدمي المنصة.",
+    ],
+  },
+  {
+    title: "وصف الخدمة",
+    body: [
+      "AdFunnl منصة لتحليلات الإعلانات تجمع بيانات الأداء من المنصات الإعلانية المتصلة (Meta وGoogle Ads وTikTok وSnapchat) ومصادر البيانات (Google Sheets وShopify وغيرها) في لوحة موحّدة. نوفّر أدوات لعرض البيانات بصريًا وإعداد التقارير واستخلاص الرؤى.",
+    ],
+  },
+  {
+    title: "حسابك",
+    body: [
+      "أنت مسؤول عن الحفاظ على سرية بيانات اعتماد حسابك وعن كل نشاط يتم من خلاله. يجب أن تقدّم معلومات دقيقة عند التسجيل. ولا يجوز لك مشاركة حسابك مع الآخرين أو استخدام الخدمة لأي غرض غير قانوني.",
+      "يجب ألا يقل عمرك عن 18 عامًا لاستخدام AdFunnl.",
+    ],
+  },
+  {
+    title: "المنصات المتصلة والبيانات",
+    body: [
+      "عند ربط منصة تابعة لطرف ثالث (مثل Meta أو Google Ads)، فإنك تأذن لـ AdFunnl بالوصول إلى بيانات تلك المنصة وتخزينها نيابةً عنك. وأنت مسؤول عن التأكد من أن لك الحق في ربط تلك الحسابات وأن ذلك لا يخالف شروط تلك المنصات.",
+      "تظل بياناتك ملكًا لك، ولا ندّعي أي حقوق ملكية فكرية عليها.",
+    ],
+  },
+  {
+    title: "الاستخدام المقبول",
+    body: [
+      "توافق على ألا تقوم بما يلي:",
+      "• استخدام الخدمة لمخالفة أي قانون أو لائحة سارية.",
+      "• محاولة الوصول غير المصرّح به إلى أنظمتنا أو حسابات المستخدمين الآخرين.",
+      "• إجراء هندسة عكسية للمنصة أو تفكيكها أو محاولة استخراج شيفرتها المصدرية بأي طريقة.",
+      "• استخدام الخدمة بطريقة قد تُلحق الضرر ببنيتنا التحتية أو تعطّلها أو تُضعفها.",
+      "• إعادة بيع الوصول إلى الخدمة أو منح تراخيص فرعية له دون موافقتنا الكتابية.",
+    ],
+  },
+  {
+    title: "حدود المسؤولية",
+    body: [
+      "تُقدَّم AdFunnl «كما هي» دون ضمانات من أي نوع. لا نضمن أن تعمل الخدمة دون انقطاع أو أخطاء، ولا أن تكون البيانات المعروضة دقيقة تمامًا في جميع الأوقات، إذ تعتمد على توفر البيانات من منصات الأطراف الثالثة.",
+      "إلى أقصى حد يسمح به القانون، لا تتحمل AdFunnl المسؤولية عن أي أضرار غير مباشرة أو عرضية أو تبعية تنشأ عن استخدامك للخدمة.",
+    ],
+  },
+  {
+    title: "التعديلات وإنهاء الخدمة",
+    body: [
+      "قد نحدّث هذه الشروط من وقت لآخر، ويُعد استمرارك في استخدام الخدمة بعد نشر التعديلات قبولًا للشروط المحدّثة.",
+      "يمكنك إنهاء حسابك في أي وقت، ونحتفظ بحق تعليق الحسابات التي تخالف هذه الشروط أو إنهائها.",
+    ],
+  },
+];
+---
+
+<Layout
+  locale="ar"
+  title="شروط الخدمة"
+  description="الشروط التي تحكم استخدامك لـ AdFunnl، بما فيها حسابك والمنصات المتصلة والاستخدام المقبول وحدود المسؤولية."
+  noindex
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">شروط الخدمة</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      لديك أسئلة؟ تواصل معنا على{" "}
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+    </p>
+  </main>
+</Layout>

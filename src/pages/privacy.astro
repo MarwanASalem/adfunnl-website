@@ -9,9 +9,13 @@ const SUPPORT_EMAIL = "support@adfunnl.com";
 // domain to point at. The app is the source: if the policy changes there,
 // change it here too, and move the "Last updated" line on both.
 //
+// Exception: "Website analytics and advertising" is about this site's own
+// tracking (GTM, GA4, Meta Pixel, see docs/analytics.md) and is site-only.
+// If the app's tags change, check this section still matches.
+//
 // Deliberately low-visibility: linked from the footer only, and kept out of
 // the nav and the sitemap-facing pages.
-const LAST_UPDATED = "Last updated: August 2026";
+const LAST_UPDATED = "Last updated: September 2026";
 
 type Section = { title: string; body: string[] };
 
@@ -39,7 +43,18 @@ const SECTIONS: Section[] = [
       "• Displaying your advertising performance metrics in your dashboard.",
       "• Syncing and storing historical campaign data so you can analyze trends over time.",
       "• Sending transactional emails (account verification, password reset, workspace invitations).",
-      "We do not use your data for advertising, profiling, or any purpose unrelated to providing the service.",
+      "We do not use your account or workspace data for advertising, profiling, or any purpose unrelated to providing the service.",
+    ],
+  },
+  {
+    title: "Website analytics and advertising",
+    body: [
+      "Our website, adfunnl.com, uses Google Tag Manager to load Google Analytics and the Meta Pixel. These tools set cookies in your browser. They show us how people use the site and which of our ads bring visitors to it.",
+      "• What is recorded: the pages you view, the buttons and links you click, how far you scroll, how long a page stays open, the language you read it in, and the ad or link that brought you to the site. Like any website, Google and Meta also receive your IP address and basic browser details.",
+      "• What is not sent: your name, your email address, or anything from your AdFunnl workspace.",
+      "• Who receives it: Google (Google Analytics) and Meta (Meta Pixel), each under its own privacy policy. Meta may use it to show you AdFunnl ads on Facebook and Instagram.",
+      "This is separate from the data in your workspace, which is never used for advertising.",
+      "To opt out, block or clear cookies in your browser settings, or install Google's opt-out add-on at tools.google.com/dlpage/gaoptout. To control the ads Meta shows you, go to your ad preferences at facebook.com/adpreferences.",
     ],
   },
   {
@@ -73,7 +88,7 @@ const SECTIONS: Section[] = [
   {
     title: "Third-party sharing",
     body: [
-      "We do not sell, rent, or share your personal data or Google user data with third parties for their own purposes. We may share data with service providers who assist us in operating the platform, such as Railway for hosting and Resend for email delivery, under confidentiality obligations. We may disclose data if required by law.",
+      "We do not sell, rent, or share your personal data or Google user data with third parties for their own purposes. We may share data with service providers who assist us in operating the platform, such as Railway for hosting and Resend for email delivery, under confidentiality obligations. Website usage data goes to Google and Meta as described under Website analytics and advertising. We may disclose data if required by law.",
     ],
   },
   {

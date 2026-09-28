@@ -1,9 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import PlatformIcon from "../components/PlatformIcon.astro";
-import DataFlow from "../components/DataFlow.astro";
-import AnalysisStages from "../components/AnalysisStages.astro";
-import AiDashboard from "../components/AiDashboard.astro";
+// Arabic twin of src/pages/index.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
+import PlatformIcon from "../../components/PlatformIcon.astro";
+import DataFlow from "../../components/DataFlow.astro";
+import AnalysisStages from "../../components/AnalysisStages.astro";
+import AiDashboard from "../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -52,12 +56,12 @@ const storeSpend = [
 // with the reader's problem, see R11 in docs/voice.md. An age chart goes into
 // `shots` next to gender and device once the corrected screenshot is in.
 const breakdowns = {
-  heading: "How long would it take you to see your breakdowns?",
-  body: "Age, gender, device and location show you who your ads reach and who actually buys. In the ad platform you get them one campaign at a time, one breakdown at a time, then export and stitch the files together. Connect your accounts and AdFunnl adds them up across all your Meta and Snapchat campaigns, already drawn as charts.",
+  heading: "كم يأخذ منك الوصول إلى الـ Breakdowns؟",
+  body: "العمر والجنس والجهاز والموقع تُظهر لك من تصل إليه إعلاناتك ومن يشتري فعلًا. في المنصة الإعلانية تحصل عليها حملةً بعد حملة وbreakdown بعد آخر، ثم تصدّر الملفات وتجمعها بنفسك. اربط حساباتك وسيجمعها AdFunnl عبر كل حملاتك على Meta وSnapchat، مرسومة جاهزة كرسوم بيانية.",
   shots: [
-    { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "AdFunnl geo map widget shading ad spend by region across Egypt, darkest around Cairo." },
-    { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "AdFunnl donut chart of Meta purchases by gender: male, female and unknown." },
-    { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "AdFunnl bar chart of Meta purchases and cost per purchase by device, from iPhone and Android phones to desktop and tablets." },
+    { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "خريطة جغرافية في AdFunnl تلوّن الإنفاق الإعلاني حسب المنطقة في مصر، وأغمقها حول القاهرة." },
+    { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "رسم دائري في AdFunnl لمشتريات Meta حسب الجنس: ذكر وأنثى وغير معروف." },
+    { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "رسم أعمدة في AdFunnl لمشتريات Meta وتكلفة الشراء حسب الجهاز، من هواتف iPhone وAndroid إلى أجهزة الكمبيوتر والتابلت." },
   ],
 };
 
@@ -69,15 +73,15 @@ const breakdowns = {
 // server and the dashboard builder (checked 10 September 2026). Keep AI out
 // of those two stages. owner: "you" | "auto" | "ai".
 const analysisStages = {
-  heading: "How much time are you spending gathering data instead of analyzing it?",
-  body: "Data analysis passes through 5 stages. Preparing and processing is the slow part 🫠 this is where you open many tabs, take many screenshots, do mental math trying to normalize all currencies, export data and import it into sheets to analyze and filter. Instead, your time should focus on actually analyzing and acting.",
-  slowLabel: "The slow part 🫠",
+  heading: "كم من وقتك يذهب في جمع البيانات بدل تحليلها؟",
+  body: "يمر تحليل البيانات بخمس مراحل. التجهيز والمعالجة هما الجزء البطيء 🫠 هنا تفتح تبويبات كثيرة، وتلتقط صورًا كثيرة للشاشة، وتحسب في رأسك لتوحيد العملات، وتصدّر البيانات ثم تستوردها إلى Sheets لتحللها وتفلترها. وقتك يجب أن يذهب إلى التحليل واتخاذ القرار.",
+  slowLabel: "الجزء البطيء 🫠",
   stages: [
-    { key: "prepare", name: "Preparing data",  owner: "auto", line: "Every ad platform and store connects once, then syncs every hour." },
-    { key: "process", name: "Processing data", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
-    { key: "analyze", name: "Analyzing data",  owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
-    { key: "share",   name: "Share",   owner: "auto", line: "A live view-only link or a PDF, current whenever someone opens it." },
-    { key: "act",     name: "Act",     owner: "you",  line: "Pulse flags accounts Scale, Hold or Cut against your rules. The decision stays yours, and on Meta and TikTok you can change status and budget without leaving AdFunnl." },
+    { key: "prepare", name: "تجهيز البيانات",  owner: "auto", line: "تُربط كل منصة إعلانية وكل متجر مرة واحدة، ثم تتم المزامنة كل ساعة." },
+    { key: "process", name: "معالجة البيانات", owner: "auto", line: "تُوحَّد أرقام كل منصة وتُحوَّل إلى عملة تقاريرك، فيأتي blended ROAS صحيحًا." },
+    { key: "analyze", name: "تحليل البيانات",  owner: "ai",   line: "تُبنى اللوحات من بيانات مباشرة، ويجيب مساعد AI عن أسئلتك عنها بلغة بسيطة." },
+    { key: "share",   name: "المشاركة",   owner: "auto", line: "رابط مباشر للعرض فقط أو ملف PDF، محدَّث كلما فتحه أحد." },
+    { key: "act",     name: "التنفيذ",     owner: "you",  line: "يصنّف Pulse الحسابات إلى Scale أو Hold أو Cut حسب قواعدك. القرار يبقى لك، وعلى Meta وTikTok يمكنك تغيير الحالة والميزانية دون مغادرة AdFunnl." },
   ],
 };
 
@@ -85,22 +89,22 @@ const analysisStages = {
 // Verified capability, docs/what-ships.md, checked 22 September 2026. Keep the
 // approval step in the copy: the assistant shows a plan first and builds only
 // after you approve it, so a line promising a finished dashboard from a single
-// sentence would be wrong.
+// sentence would be wrong. Twin of the English section on the homepage.
 const aiDashboard = {
-  heading: "Building the first dashboard is the part everyone puts off",
-  body: "So ask for it instead. Say which brand it is for, and the assistant plans one out of what that brand has actually connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. You read the plan first, including which panels would come back empty, and nothing gets built until you approve it. Then it lands on the same canvas you can still drag around.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+  heading: "بناء اللوحة الأولى هو الجزء الذي يؤجله الجميع",
+  body: "اطلبها بدل أن تبنيها. قل لأي علامة تجارية هي، فيضع المساعد خطة لوحة كاملة مما ربطته هذه العلامة فعلًا: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تقرأ الخطة أولًا، وفيها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل أن توافق. بعدها تصل على اللوحة نفسها التي يمكنك سحب عناصرها وترتيبها.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
 // ── Hero signature: the Blended Overview (e-commerce) dashboard ──
 // Faithful to the real template: per-platform metric cards + a blended row.
 // Numbers are anonymized demo data (no real client/account).
 const ovCols = [
-  { label: "Spend",     cur: true },
-  { label: "Purchases", cur: false, hideSm: true },
-  { label: "Cost/Conv.",cur: true,  hideSm: true },
+  { label: "الإنفاق",     cur: true },
+  { label: "المشتريات", cur: false, hideSm: true },
+  { label: "تكلفة التحويل",cur: true,  hideSm: true },
   { label: "ROAS",      cur: false },
-  { label: "Revenue",   cur: true },
+  { label: "الإيرادات",   cur: true },
 ];
 // cell = [value, deltaPct, up?, good?]
 const ovRows = [
@@ -110,21 +114,21 @@ const ovRows = [
   { name: "Snapchat", key: "snapchat",   color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
 ];
 const ovBlended = [
-  { label: "Total spend",  v: "26,323", cur: true },
-  { label: "Conversions",  v: "363",    cur: false, hideSm: true },
+  { label: "إجمالي الإنفاق",  v: "26,323", cur: true },
+  { label: "التحويلات",  v: "363",    cur: false, hideSm: true },
   { label: "Blended CPP",  v: "74",     cur: true,  hideSm: true },
   { label: "Blended ROAS", v: "6.69×",  cur: false },
-  { label: "Revenue",      v: "180,138",cur: true },
+  { label: "الإيرادات",      v: "180,138",cur: true },
 ];
 
 // ── Month-over-month showcase: spend (bars, $k) + ROAS (line, ×) ──
 const momRows = [
-  { m: "Feb", spend: 32, roas: 3.1 },
-  { m: "Mar", spend: 41, roas: 3.6 },
-  { m: "Apr", spend: 38, roas: 4.0 },
-  { m: "May", spend: 55, roas: 4.3 },
-  { m: "Jun", spend: 61, roas: 4.8 },
-  { m: "Jul", spend: 72, roas: 5.2 },
+  { m: "فبراير", spend: 32, roas: 3.1 },
+  { m: "مارس", spend: 41, roas: 3.6 },
+  { m: "أبريل", spend: 38, roas: 4.0 },
+  { m: "مايو", spend: 55, roas: 4.3 },
+  { m: "يونيو", spend: 61, roas: 4.8 },
+  { m: "يوليو", spend: 72, roas: 5.2 },
 ];
 const MOM_W = 480, MOM_H = 220, MOM_PL = 14, MOM_PR = 14, MOM_PT = 16, MOM_PB = 30;
 const momPlotW = MOM_W - MOM_PL - MOM_PR;
@@ -135,7 +139,8 @@ const momMaxRoas = Math.max(...momRows.map((r) => r.roas)) + 0.4;
 const momStep = momPlotW / momRows.length;
 const momBarW = momStep * 0.46;
 const momBars = momRows.map((r, i) => {
-  const cx = MOM_PL + momStep * i + momStep / 2;
+  // Mirrored: the earliest month sits on the right, as in the app's Arabic charts.
+  const cx = MOM_W - (MOM_PL + momStep * i + momStep / 2);
   const h = (r.spend / momMaxSpend) * momPlotH;
   return { x: cx - momBarW / 2, y: MOM_PT + momPlotH - h, w: momBarW, h, cx, m: r.m };
 });
@@ -147,12 +152,13 @@ const momLine = momLinePts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join
 const momBaseY = MOM_PT + momPlotH;
 
 // Shared cell classes for the two dark-section tables.
-const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
+const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
 ---
 
 <Layout
-  title="Less time collecting numbers, more time using them"
-  description="AdFunnl gathers every ad platform and your store revenue into one live dashboard, so your week starts with decisions instead of a report to put together."
+  locale="ar"
+  title="وقت أقل في جمع الأرقام، ووقت أكثر في استخدامها"
+  description="AdFunnl يجمع كل منصاتك الإعلانية وإيرادات متجرك في لوحة مباشرة واحدة، فيبدأ أسبوعك بالقرارات بدل تقرير ينتظر التجميع."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -161,21 +167,19 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
 
     <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
       <!-- Copy -->
-      <div class="text-center lg:text-left">
+      <div class="text-center lg:text-start">
         <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
-          Less time collecting numbers, more time <em class="text-brand-600">using</em> them
+          وقت أقل في جمع الأرقام، ووقت أكثر في <em class="text-brand-600">استخدامها</em>
         </h1>
 
         <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 lg:mx-0">
-          AdFunnl gathers every ad platform and your store revenue into one live
-          dashboard, so your week starts with decisions instead of a report to put
-          together.
+          AdFunnl يجمع كل منصاتك الإعلانية وإيرادات متجرك في لوحة مباشرة واحدة، فيبدأ أسبوعك بالقرارات بدل تقرير ينتظر التجميع.
         </p>
 
         <div class="mt-9 flex flex-col items-center gap-4 sm:flex-row lg:justify-start justify-center">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
-            Start free
+            ابدأ مجانًا
           </a>
         </div>
       </div>
@@ -189,13 +193,13 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
             <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
             <div class="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-700">
               <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">BD</span>
-              Brand Data
+              بيانات العلامة
             </div>
-            <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
-            <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">vs. last period</span>
+            <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">هذا الشهر</span>
+            <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">مقارنة بالفترة السابقة</span>
             <div class="ms-auto flex items-center gap-1.5">
-              <span class="hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">Share</span>
-              <span class="rounded-md bg-brand-600 px-2 py-0.5 text-[10px] font-semibold text-white">+ Widget</span>
+              <span class="hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">مشاركة</span>
+              <span class="rounded-md bg-brand-600 px-2 py-0.5 text-[10px] font-semibold text-white">+ عنصر</span>
             </div>
           </div>
 
@@ -203,9 +207,9 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <div class="space-y-2.5 bg-zinc-50/50 p-3.5">
             <!-- Overview banner -->
             <div class="flex items-center justify-between rounded-lg bg-brand-600 px-3.5 py-2 shadow-sm shadow-brand-900/20">
-              <span class="font-display text-sm font-bold tracking-tight text-white">Overview</span>
+              <span class="font-display text-sm font-bold tracking-tight text-white">نظرة عامة</span>
               <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
-                <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-300"></span>Live
+                <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-300"></span>مباشر
               </span>
             </div>
 
@@ -222,7 +226,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                     <div class={`rounded-lg border border-zinc-100 bg-white px-2 py-1.5 ${ovCols[i].hideSm ? "hidden sm:block" : ""}`}>
                       <p class="truncate text-[8px] font-medium uppercase tracking-wide text-zinc-400">{ovCols[i].label}</p>
                       <p class="mt-0.5 truncate font-display text-[12px] font-bold leading-tight text-zinc-900">
-                        {ovCols[i].cur && <span class="text-[8px] font-semibold text-zinc-400">SAR </span>}{c[0]}
+                        <bdi dir="ltr">{ovCols[i].cur && <span class="text-[8px] font-semibold text-zinc-400">SAR </span>}{c[0]}</bdi>
                       </p>
                       <p class={`mt-0.5 flex items-center gap-0.5 text-[8px] font-semibold ${c[3] ? "text-emerald-600" : "text-rose-500"}`}>
                         <span>{c[2] ? "▲" : "▼"}</span>{c[1]}%
@@ -247,8 +251,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                   <div class={`rounded-lg border border-brand-100 bg-brand-50/60 px-2 py-1.5 ${b.hideSm ? "hidden sm:block" : ""}`}>
                     <p class="truncate text-[8px] font-medium uppercase tracking-wide text-brand-400">{b.label}</p>
                     <p class="mt-0.5 truncate font-display text-[13px] font-bold leading-tight text-brand-900">
-                      {b.cur && <span class="text-[8px] font-semibold text-brand-400">SAR </span>}
-                      {i === 3 ? <span class="count" data-value={b.v}>{b.v}</span> : b.v}
+                      <bdi dir="ltr">{b.cur && <span class="text-[8px] font-semibold text-brand-400">SAR </span>}{i === 3 ? <span class="count" data-value={b.v}>{b.v}</span> : b.v}</bdi>
                     </p>
                   </div>
                 ))}
@@ -258,10 +261,10 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
         </div>
 
         <!-- floating assistant bubble -->
-        <div class="absolute -bottom-4 -left-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl lg:block">
+        <div class="absolute -bottom-4 -start-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl lg:block">
           <div class="flex items-start gap-2">
             <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
-            <p class="text-[11px] leading-snug text-zinc-600">"Which campaigns wasted budget last week?"</p>
+            <p class="text-[11px] leading-snug text-zinc-600">"ما الحملات التي أهدرت الميزانية الأسبوع الماضي؟"</p>
           </div>
         </div>
       </div>
@@ -271,18 +274,18 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
   <!-- ========================= SOCIAL PROOF ========================= -->
   <section class="border-y border-zinc-100 bg-zinc-50/70">
     <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 text-sm font-medium text-zinc-500">
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Connect in minutes</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Synced hourly</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Shareable live dashboards</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Dashboards built by AI</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>الربط في دقائق</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>مزامنة كل ساعة</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>لوحات مباشرة قابلة للمشاركة</span>
+      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>لوحات يبنيها AI</span>
     </div>
   </section>
 
   <!-- ===================== DATA FLOW (animated) ===================== -->
-  <DataFlow dark sectionId="integrations" heading="Observe and share data in a couple of clicks." />
+  <DataFlow locale="ar" dark sectionId="integrations" heading="راقب بياناتك وشاركها بنقرتين." />
 
   <!-- ============== DATA ANALYSIS STAGES (animated time bar) ============== -->
-  <AnalysisStages {...analysisStages} />
+  <AnalysisStages locale="ar" {...analysisStages} />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">
@@ -290,11 +293,10 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Check campaign performance live &amp; side by side.
+          تابع أداء الحملات مباشرةً وجنبًا إلى جنب.
         </h2>
         <p class="mt-4 text-lg text-zinc-400">
-          Instead of multiple tabs to see your ads, just open AdFunnl.. Imagine the
-          time saved which can be re-invested where it truly matters.
+          بدل تبويبات كثيرة لرؤية إعلاناتك، افتح AdFunnl فقط.. تخيّل الوقت الذي توفّره لتستثمره فيما يهم فعلًا.
         </p>
       </div>
 
@@ -305,25 +307,25 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · All platforms · Acme Cosmetics
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · كل المنصات · Acme Cosmetics
           </div>
-          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Scaling verdicts</span>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">قرارات Scale</span>
         </div>
         <div class="p-5 sm:p-6">
           <div class="mb-3 flex items-center justify-between">
-            <p class="text-sm font-semibold text-zinc-800">Active campaigns</p>
-            <p class="text-xs text-zinc-400">Rule: ROAS ≥ 3.0 to scale</p>
+            <p class="text-sm font-semibold text-zinc-800">الحملات النشطة</p>
+            <p class="text-xs text-zinc-400">القاعدة: <bdi dir="ltr">ROAS ≥ 3.0</bdi> للـ Scale</p>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full min-w-[560px] text-left text-sm">
+            <table class="w-full min-w-[560px] text-start text-sm">
               <thead>
                 <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
-                  <th class="py-2 pe-3 font-semibold">Campaign</th>
-                  <th class="py-2 px-3 text-right font-semibold">Spend</th>
-                  <th class="py-2 px-3 text-right font-semibold">Revenue</th>
-                  <th class="py-2 px-3 text-right font-semibold">ROAS</th>
-                  <th class="py-2 px-3 text-right font-semibold">CTR</th>
-                  <th class="py-2 ps-3 text-right font-semibold">Verdict</th>
+                  <th class="py-2 pe-3 font-semibold">الحملة</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإنفاق</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإيرادات</th>
+                  <th class="py-2 px-3 text-end font-semibold">ROAS</th>
+                  <th class="py-2 px-3 text-end font-semibold">CTR</th>
+                  <th class="py-2 ps-3 text-end font-semibold">الحكم</th>
                 </tr>
               </thead>
               <tbody>
@@ -337,11 +339,11 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                         {r.name}
                       </span>
                     </td>
-                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.spend}</td>
-                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.revenue}</td>
-                    <td class="py-3 px-3 text-right font-semibold tabular-nums lining-nums text-zinc-900" data-roas>{r.roas}</td>
-                    <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.ctr}</td>
-                    <td class="py-3 ps-3 text-right">
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.spend}</bdi></td>
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.revenue}</bdi></td>
+                    <td class="py-3 px-3 text-end font-semibold tabular-nums lining-nums text-zinc-900" ><bdi dir="ltr" data-roas>{r.roas}</bdi></td>
+                    <td class="py-3 px-3 text-end tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{r.ctr}</bdi></td>
+                    <td class="py-3 ps-3 text-end">
                       <span class="verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium" data-verdict={r.verdict}></span>
                     </td>
                   </tr>
@@ -359,30 +361,30 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Table widget · Ad level · Primary Report
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>عنصر جدول · مستوى الإعلان · التقرير الرئيسي
           </div>
-          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Conditional formatting</span>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">تنسيق شرطي</span>
         </div>
         <div class="p-5 sm:p-6">
           <div class="mb-3 flex items-center justify-between gap-4">
             <div>
-              <p class="text-sm font-semibold text-zinc-800">Down to the individual ad</p>
-              <p class="mt-0.5 text-xs text-zinc-400">Campaign, ad set and ad level, with the creative in the row</p>
+              <p class="text-sm font-semibold text-zinc-800">حتى مستوى الإعلان الواحد</p>
+              <p class="mt-0.5 text-xs text-zinc-400">مستوى الحملة والمجموعة الإعلانية والإعلان، مع الـ Creative داخل الصف</p>
             </div>
-            <p class="shrink-0 text-xs text-zinc-400">Sorted by spend</p>
+            <p class="shrink-0 text-xs text-zinc-400">مرتّب حسب الإنفاق</p>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full min-w-[700px] text-left text-sm">
+            <table class="w-full min-w-[700px] text-start text-sm">
               <thead>
                 <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
-                  <th class="py-2 pe-3 font-semibold">Ad</th>
-                  <th class="py-2 px-3 font-semibold">Thumb</th>
-                  <th class="py-2 px-3 font-semibold">Status</th>
-                  <th class="py-2 px-3 font-semibold">Campaign</th>
-                  <th class="py-2 px-3 text-right font-semibold">Spend</th>
-                  <th class="py-2 px-3 text-right font-semibold">Purchases</th>
-                  <th class="bg-emerald-50/80 py-2 px-3 text-right font-semibold text-emerald-700">Cost / purchase</th>
-                  <th class="py-2 ps-3 text-right font-semibold">ROAS</th>
+                  <th class="py-2 pe-3 font-semibold">الإعلان</th>
+                  <th class="py-2 px-3 font-semibold">الصورة</th>
+                  <th class="py-2 px-3 font-semibold">الحالة</th>
+                  <th class="py-2 px-3 font-semibold">الحملة</th>
+                  <th class="py-2 px-3 text-end font-semibold">الإنفاق</th>
+                  <th class="py-2 px-3 text-end font-semibold">المشتريات</th>
+                  <th class="bg-emerald-50/80 py-2 px-3 text-end font-semibold text-emerald-700">تكلفة الشراء</th>
+                  <th class="py-2 ps-3 text-end font-semibold">ROAS</th>
                 </tr>
               </thead>
               <tbody>
@@ -400,20 +402,20 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                       <span class="relative flex h-10 w-8 items-end justify-center overflow-hidden rounded bg-zinc-200 ring-1 ring-zinc-200/90">
                         <img src={a.photo} alt="" loading="lazy" width="32" height="40" class="absolute inset-0 h-full w-full object-cover" />
                         {a.video && (
-                          <span class="absolute right-0.5 top-0.5 flex h-[11px] w-[11px] items-center justify-center rounded-full bg-black/50">
+                          <span class="absolute end-0.5 top-0.5 flex h-[11px] w-[11px] items-center justify-center rounded-full bg-black/50">
                             <svg class="ms-px h-1.5 w-1.5" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                           </span>
                         )}
                       </span>
                     </td>
                     <td class="px-3 py-2.5">
-                      <span class="block h-2 w-2 rounded-full bg-brand-500" title="Active" aria-label="Active"></span>
+                      <span class="block h-2 w-2 rounded-full bg-brand-500" title="نشط" aria-label="نشط"></span>
                     </td>
-                    <td class="px-3 py-2.5 text-xs text-zinc-600">{a.campaign}</td>
-                    <td class={numCell}>{a.spend}</td>
-                    <td class={numCell}>{a.purchases}</td>
-                    <td class="bg-emerald-50/80 px-3 py-2.5 text-right font-semibold tabular-nums lining-nums text-emerald-700">{a.cpp}</td>
-                    <td class="ps-3 py-2.5 text-right font-semibold tabular-nums lining-nums text-zinc-900">{a.roas}</td>
+                    <td class="px-3 py-2.5 text-xs text-zinc-600"><bdi dir="ltr">{a.campaign}</bdi></td>
+                    <td class={numCell}><bdi dir="ltr">{a.spend}</bdi></td>
+                    <td class={numCell}><bdi dir="ltr">{a.purchases}</bdi></td>
+                    <td class="bg-emerald-50/80 px-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-emerald-700"><bdi dir="ltr">{a.cpp}</bdi></td>
+                    <td class="ps-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-zinc-900"><bdi dir="ltr">{a.roas}</bdi></td>
                   </tr>
                 ))}
               </tbody>
@@ -425,12 +427,11 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
       <!-- ── Creative reports ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          Then go deeper, with ready-made creative reports
+          ثم تعمّق أكثر مع تقارير Creatives جاهزة
         </h3>
         <p class="mt-3.5 text-base leading-relaxed text-zinc-400">
-          The Best Creatives Calculator scores every ad on the outcomes you care
-          about and ranks them, so your top performers surface in a click.<br />
-          Psst.. We have other ready built templates too 👀
+          تقيّم Best Creatives Calculator كل إعلان حسب النتائج التي تهمك وترتّبها، فتظهر أفضل إعلاناتك بنقرة.<br />
+          وبالمناسبة.. لدينا قوالب جاهزة أخرى أيضًا 👀
         </p>
       </div>
 
@@ -440,17 +441,17 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Creatives analysis · Best Creatives Calculator
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>تحليل الـ Creatives · Best Creatives Calculator
           </div>
         </div>
         <div class="grid md:grid-cols-[190px_1fr]">
           <!-- app sidebar -->
           <div class="border-b border-zinc-100 bg-zinc-50/70 px-4 py-5 md:border-b-0 md:border-e">
-            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Creatives analysis</p>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">تحليل الـ Creatives</p>
             <nav class="flex flex-col gap-1 text-xs">
               <span class="rounded-lg bg-brand-50 px-3 py-2.5 font-semibold text-brand-700">Best Creatives Calculator</span>
               <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Hook &amp; Hold Rates</span>
-              <span class="py-1.5 pe-3 ps-6 text-zinc-500">Overview</span>
+              <span class="py-1.5 pe-3 ps-6 text-zinc-500">نظرة عامة</span>
               <span class="py-1.5 pe-3 ps-6 text-zinc-500">Brand Leaderboard</span>
               <span class="rounded-lg px-3 py-2.5 font-medium text-zinc-600">Ad Fatigue</span>
             </nav>
@@ -459,10 +460,10 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <div class="min-w-0 p-5">
             <!-- filter chips -->
             <div class="mb-4 flex flex-wrap items-center gap-2 text-xs">
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Showing <strong class="font-bold text-zinc-800">11 of 41 ads</strong></span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Min spend <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">Avg purchases <strong class="font-bold text-zinc-800">4.2</strong></span>
-              <span class="text-zinc-400">Averages cover all 41 ads, before filters</span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">المعروض <strong class="font-bold text-zinc-800">11 من 41 إعلانًا</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">الحد الأدنى للإنفاق <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">متوسط المشتريات <strong class="font-bold text-zinc-800">4.2</strong></span>
+              <span class="text-zinc-400">المتوسطات تشمل كل الإعلانات الـ 41 قبل الفلاتر</span>
             </div>
 
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -470,26 +471,26 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                 <div class="overflow-hidden rounded-[10px] border border-zinc-200 bg-white">
                   <div class={`relative aspect-[9/14] w-full overflow-hidden border-b border-zinc-200 bg-zinc-200 ${c.top ? "shadow-[inset_0_0_0_2px_#34d399]" : ""}`}>
                     <img src={c.photo} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
-                    <span class={`absolute left-1.5 top-1.5 rounded px-1.5 py-px text-[9px] font-bold text-white ${c.top ? "bg-emerald-600" : "bg-zinc-800/85"}`}>#{c.rank}</span>
-                    <span class="absolute right-1.5 top-1.5 rounded bg-white/90 px-1.5 py-px text-[9px] font-semibold text-zinc-800">Score {c.score}</span>
-                    <span class="absolute left-1/2 top-1/2 flex h-[30px] w-[30px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/40">
+                    <span class={`absolute start-1.5 top-1.5 rounded px-1.5 py-px text-[9px] font-bold text-white ${c.top ? "bg-emerald-600" : "bg-zinc-800/85"}`}>#{c.rank}</span>
+                    <span class="absolute end-1.5 top-1.5 rounded bg-white/90 px-1.5 py-px text-[9px] font-semibold text-zinc-800">النقاط {c.score}</span>
+                    <span class="absolute start-1/2 top-1/2 flex h-[30px] w-[30px] -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/40">
                       <svg class="ms-0.5 h-3 w-3" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                     </span>
                   </div>
                   <div class="px-3 pb-3 pt-2.5">
                     <p class="truncate text-[12px] font-semibold text-zinc-800">{c.name}</p>
                     <p class="mt-0.5 truncate text-[10px] text-zinc-400">{c.campaign}</p>
-                    <span class="mt-2 inline-block rounded bg-brand-50 px-1.5 py-px text-[10px] font-semibold text-brand-700">Video</span>
+                    <span class="mt-2 inline-block rounded bg-brand-50 px-1.5 py-px text-[10px] font-semibold text-brand-700">فيديو</span>
                     <div class="mt-2.5 flex flex-col gap-1.5 text-[11px]">
-                      {[["Spend", c.spend], ["Link CTR", c.ctr], ["Purchases", c.purchases]].map(([k, v]) => (
+                      {[["الإنفاق", c.spend], ["Link CTR", c.ctr], ["المشتريات", c.purchases]].map(([k, v]) => (
                         <span class="flex items-baseline justify-between gap-2">
                           <span class="text-zinc-400">{k}</span>
-                          <span class="font-semibold tabular-nums lining-nums text-zinc-700">{v}</span>
+                          <span class="font-semibold tabular-nums lining-nums text-zinc-700"><bdi dir="ltr">{v}</bdi></span>
                         </span>
                       ))}
                       <span class="flex items-baseline justify-between gap-2">
                         <span class="text-zinc-400">ROAS</span>
-                        <span class="font-bold tabular-nums lining-nums text-brand-600">{c.roas}</span>
+                        <span class="font-bold tabular-nums lining-nums text-brand-600"><bdi dir="ltr">{c.roas}</bdi></span>
                       </span>
                     </div>
                   </div>
@@ -527,12 +528,10 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
       <!-- ── Chat with your data, either way ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
-          Chat with your data, either way
+          تحدّث مع بياناتك بالطريقة التي تفضّلها
         </h3>
         <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
-          Connect an MCP and query your unified numbers from the AI assistant you
-          already use, or just ask AdFunnl directly inside the app. Same data, same
-          answer, whichever side you start on.
+          اربط MCP واسأل عن أرقامك الموحّدة من مساعد AI الذي تستخدمه بالفعل، أو اسأل AdFunnl مباشرة داخل التطبيق. البيانات نفسها والإجابة نفسها، من أي جهة بدأت.
         </p>
       </div>
 
@@ -552,12 +551,12 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                 <span class="whitespace-nowrap text-xs font-semibold text-[#0d0d0d]">ChatGPT</span>
                 <span class="whitespace-nowrap rounded-md border border-[#e5e5e5] bg-white px-2 py-0.5 text-[10px] font-medium text-[#8f8f8f]">GPT-5</span>
                 <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e5e5e5] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#8f8f8f]">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl متصل
                 </span>
               </div>
               <div class="flex flex-1 flex-col gap-4 p-5">
                 <div class="flex justify-end">
-                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">لخّص لي TikTok مقابل Meta هذا الشهر. أين أهدرنا الميزانية؟</p>
                 </div>
                 <div class="flex gap-3">
                   <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
@@ -566,13 +565,13 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                   <div class="min-w-0 flex-1">
                     <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e5e5e5] bg-[#f7f7f8] px-2.5 py-1.5 text-xs font-medium text-[#8f8f8f]">
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
-                      Used <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
+                      استخدم <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
                     </div>
                     <p class="text-sm leading-[1.7] text-[#0d0d0d]"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e5e5e5] bg-white px-3.5 py-2.5">
-                  <span class="flex-1 whitespace-nowrap text-xs text-[#8f8f8f]">Ask anything</span>
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#8f8f8f]">اسأل عن أي شيء</span>
                   <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0d0d0d] text-white">
                     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
                   </span>
@@ -589,12 +588,12 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                 <span class="whitespace-nowrap text-xs font-semibold text-[#3d3929]">Claude</span>
                 <span class="whitespace-nowrap rounded-md border border-[#e2dbcd] bg-[#faf9f6] px-2 py-0.5 text-[10px] font-medium text-[#7c7565]">Sonnet 4.5</span>
                 <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e2dbcd] bg-[#faf9f6] px-2.5 py-1 text-[10px] font-semibold text-[#7c7565]">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl متصل
                 </span>
               </div>
               <div class="flex flex-1 flex-col gap-4 p-5">
                 <div class="flex justify-end">
-                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">لخّص لي TikTok مقابل Meta هذا الشهر. أين أهدرنا الميزانية؟</p>
                 </div>
                 <div class="flex gap-3">
                   <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
@@ -603,13 +602,13 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                   <div class="min-w-0 flex-1">
                     <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e2dbcd] bg-[#f3efe7] px-2.5 py-1.5 text-xs font-medium text-[#7c7565]">
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
-                      Used <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
+                      استخدم <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
                     </div>
                     <p class="text-sm leading-[1.7] text-[#3d3929]"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e2dbcd] bg-white px-3.5 py-2.5">
-                  <span class="flex-1 whitespace-nowrap text-xs text-[#7c7565]">Reply to Claude…</span>
+                  <span class="flex-1 whitespace-nowrap text-xs text-[#7c7565]">رد على Claude…</span>
                   <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] bg-[#D97757] text-white">
                     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
                   </span>
@@ -623,7 +622,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <div class="assistant-handle pointer-events-none absolute top-1/2 flex h-[34px] w-[34px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg>
           </div>
-          <div class="pointer-events-none absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">Drag to switch assistant</div>
+          <div class="pointer-events-none absolute bottom-2.5 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">اسحب للتبديل بين المساعدَين</div>
         </div>
 
         <!-- Right: the in-app assistant -->
@@ -633,33 +632,33 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>AdFunnl Assistant · Primary Report
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>مساعد AdFunnl · التقرير الرئيسي
             </div>
-            <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">In app</span>
+            <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">داخل التطبيق</span>
           </div>
           <div class="flex flex-col gap-3 p-5">
             <div class="flex justify-end">
-              <p class="max-w-[85%] rounded-2xl rounded-br-sm bg-brand-600 px-3.5 py-2 text-sm text-white">Which creative should I put more budget behind this week?</p>
+              <p class="max-w-[85%] rounded-2xl rounded-ee-sm bg-brand-600 px-3.5 py-2 text-sm text-white">أي Creative يستحق ميزانية أكبر هذا الأسبوع؟</p>
             </div>
             <div class="flex gap-2.5">
               <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
               </span>
               <div class="min-w-0 flex-1">
-                <p class="rounded-2xl rounded-bl-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
+                <p class="rounded-2xl rounded-es-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
                   <span data-inapp-stream></span><span class="stream-caret text-brand-600">▍</span>
                 </p>
                 <div class="mt-2.5 flex flex-wrap gap-1.5">
-                  {["Show the ad", "Compare to last month", "Add to report"].map((chip) => (
+                  {["اعرض الإعلان", "قارن بالشهر الماضي", "أضف إلى التقرير"].map((chip) => (
                     <span class="rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium text-zinc-600">{chip}</span>
                   ))}
                 </div>
               </div>
             </div>
             <div class="mt-1 flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
-              <span class="flex-1 text-xs text-zinc-400">Ask anything about this report</span>
+              <span class="flex-1 text-xs text-zinc-400">اسأل عن أي شيء في هذا التقرير</span>
               <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600 text-white">
-                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <svg class="rtl:-scale-x-100 h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </span>
             </div>
           </div>
@@ -669,12 +668,10 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
       <!-- ── Store revenue ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
-          Add your store, and the return gets honest
+          اربط متجرك ليصبح العائد حقيقيًا
         </h3>
         <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
-          Connect Shopify or Salla and AdFunnl sets ad spend against the revenue
-          your store actually recorded. The platforms each claim their own
-          conversions; your store settles it.
+          اربط Shopify أو سلة، وسيضع AdFunnl الإنفاق الإعلاني أمام الإيرادات التي سجّلها متجرك فعلًا. كل منصة تنسب التحويلات لنفسها، ومتجرك هو الحَكَم.
         </p>
       </div>
 
@@ -684,17 +681,17 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Spend vs. store revenue · This month
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>الإنفاق مقابل إيرادات المتجر · هذا الشهر
           </div>
           <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Store connected
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>المتجر متصل
           </span>
         </div>
 
         <div class="grid items-center gap-6 px-6 py-7 lg:grid-cols-[1fr_96px_1fr] lg:gap-0">
           <!-- spend -->
           <div>
-            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Ad spend, all platforms</p>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">الإنفاق الإعلاني، كل المنصات</p>
             <div class="flex flex-col gap-2">
               {storeSpend.map((s) => (
                 <div class="flex items-center gap-2.5 rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
@@ -702,45 +699,45 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
                     <PlatformIcon platform={s.key} class="h-4 w-4" />
                   </span>
                   <span class="flex-1 text-ui font-semibold text-zinc-700">{s.name}</span>
-                  <span class="text-ui font-semibold tabular-nums lining-nums text-zinc-600">{s.amount}</span>
+                  <span class="text-ui font-semibold tabular-nums lining-nums text-zinc-600"><bdi dir="ltr">{s.amount}</bdi></span>
                 </div>
               ))}
             </div>
             <div class="mt-2.5 flex items-center justify-between rounded-[10px] bg-zinc-100 px-3 py-2.5">
-              <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">Total spend</span>
-              <span class="text-base font-bold tabular-nums lining-nums text-zinc-900">EGP 107,731</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">إجمالي الإنفاق</span>
+              <span class="text-base font-bold tabular-nums lining-nums text-zinc-900"><bdi dir="ltr">EGP 107,731</bdi></span>
             </div>
           </div>
 
           <!-- the vs. hinge -->
           <div class="flex items-center justify-center gap-2 lg:flex-col">
-            <span class="h-px w-10 bg-gradient-to-r from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-b"></span>
-            <span class="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-bold text-zinc-400">vs</span>
-            <span class="h-px w-10 bg-gradient-to-l from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-t"></span>
+            <span class="h-px w-10 bg-gradient-to-l from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-b"></span>
+            <span class="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-bold text-zinc-400">مقابل</span>
+            <span class="h-px w-10 bg-gradient-to-r from-transparent to-zinc-200 lg:h-10 lg:w-px lg:bg-gradient-to-t"></span>
           </div>
 
           <!-- store revenue -->
           <div>
-            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">Revenue, recorded by your store</p>
+            <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">الإيرادات كما سجّلها متجرك</p>
             <div class="rounded-xl border border-[#d7ecc4] bg-[rgba(240,250,232,0.6)] p-4">
               <div class="flex items-center gap-2.5">
                 <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center overflow-hidden rounded-[7px] bg-white ring-1 ring-zinc-200/90">
                   <PlatformIcon platform="shopify" class="h-4 w-4" />
                 </span>
                 <span class="flex-1 text-ui font-semibold text-zinc-700">Shopify</span>
-                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#4a7c2f]">Source of truth</span>
+                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#4a7c2f]">المرجع</span>
               </div>
               <p class="mt-3.5 font-display text-metric-lg font-bold tabular-nums lining-nums text-zinc-900">EGP 517,109</p>
-              <p class="mt-1 text-xs text-zinc-500">4,182 orders · 1,193 new customers</p>
+              <p class="mt-1 text-xs text-zinc-500">4,182 طلبًا · 1,193 عميلًا جديدًا</p>
             </div>
             <div class="mt-2.5 grid grid-cols-2 gap-2.5">
               <div class="rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Platforms claim</p>
-                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-zinc-400">6.42×</p>
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">ما تنسبه المنصات لنفسها</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-zinc-400"><bdi dir="ltr">6.42×</bdi></p>
               </div>
               <div class="rounded-[10px] border border-brand-200 bg-brand-50 px-3 py-2.5">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-500">Store-verified ROAS</p>
-                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-brand-900">4.80×</p>
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-500">ROAS موثّق من المتجر</p>
+                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-brand-900"><bdi dir="ltr">4.80×</bdi></p>
               </div>
             </div>
           </div>
@@ -748,9 +745,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
 
         <div class="border-t border-zinc-100 bg-zinc-50/70 px-6 py-3.5">
           <p class="text-xs text-zinc-500">
-            In this example, adding up the conversions each platform reports for
-            itself overcounts by a third. AdFunnl reports the number your store can
-            back up, down to product and category.
+            في هذا المثال، جمع التحويلات التي تعلنها كل منصة عن نفسها يرفع الرقم بنحو الثلث. AdFunnl يعرض الرقم الذي يستطيع متجرك إثباته، حتى مستوى المنتج والفئة.
           </p>
         </div>
       </div>
@@ -762,7 +757,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Then share ALL of this in one drag and drop, customizable dashboard 🤯
+          ثم شارك كل هذا في لوحة واحدة قابلة للتخصيص بالسحب والإفلات 🤯
         </h2>
       </div>
 
@@ -771,18 +766,15 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
         <div>
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-            Drag &amp; drop builder
+            منشئ بالسحب والإفلات
           </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Reports that match how you think</h3>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">تقارير تشبه طريقة تفكيرك</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
-            A freeform canvas, not a rigid template. Drag KPI tiles, charts, funnels,
-            geo maps, tables and creative galleries wherever they make sense. Add
-            period-over-period comparisons, custom metrics and annotations that mark
-            exactly what you changed and when. Save any layout as a reusable template.
+            مساحة حرة بدل قالب جامد. اسحب مربعات KPI والرسوم البيانية ومسارات التحويل والخرائط والجداول ومعارض الـ Creatives إلى حيث تريد. أضف المقارنة بالفترة السابقة، ومقاييس مخصّصة، وملاحظات توثّق ما غيّرته ومتى. واحفظ أي تصميم كقالب تعيد استخدامه.
           </p>
-          <a href="/features/dashboard" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:gap-2.5 transition-all">
-            Explore the builder
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <a href="/ar/features/dashboard" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:gap-2.5 transition-all">
+            استكشف المنشئ
+            <svg class="rtl:-scale-x-100 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
         <!-- the real thing: a screen recording of the builder, in browser chrome -->
@@ -791,15 +783,15 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
             <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
             <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
             <span class="h-[9px] w-[9px] rounded-full bg-zinc-300"></span>
-            <span class="ms-1.5 text-[11px] font-medium text-zinc-400">app.adfunnl.com · Report builder</span>
+            <span class="ms-1.5 text-[11px] font-medium text-zinc-400">app.adfunnl.com · منشئ التقارير</span>
             <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
-              <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>Screen recording
+              <span class="live-dot h-1.5 w-1.5 rounded-full bg-brand-500"></span>تسجيل شاشة
             </span>
           </div>
           <video
             src="/builder-demo.mp4"
             autoplay muted loop playsinline preload="metadata"
-            aria-label="Screen recording of the AdFunnl report builder"
+            aria-label="تسجيل شاشة لمنشئ التقارير في AdFunnl"
             class="block h-auto w-full bg-zinc-950"
           ></video>
         </div>
@@ -807,6 +799,7 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
 
       <!-- Ask for the dashboard instead of building it -->
       <AiDashboard
+        locale="ar"
         sectionClass="mt-6"
         heading={aiDashboard.heading}
         body={aiDashboard.body}
@@ -818,22 +811,20 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
         <div>
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>
-            Trends
+            الاتجاهات
           </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">See the trajectory, month over month</h3>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">تابع الاتجاه شهرًا بعد شهر</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
-            Track spend and blended ROAS side by side across every month, so you can see
-            whether scaling budget is actually buying efficiency, or quietly eroding it.
-            Spend climbs as bars; ROAS rides the line above it.
+            تابع الإنفاق وblended ROAS جنبًا إلى جنب لكل شهر، لترى هل زيادة الميزانية تشتري كفاءة فعلًا أم تستنزفها بصمت. الإنفاق يظهر كأعمدة، والـ ROAS كخط فوقها.
           </p>
           <div class="mt-6 flex flex-wrap gap-4 text-sm">
-            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-2.5 rounded-sm bg-brand-500"></span>Spend ($k)</span>
+            <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-2.5 rounded-sm bg-brand-500"></span>الإنفاق (ألف $)</span>
             <span class="inline-flex items-center gap-2 font-medium text-zinc-600"><span class="h-2.5 w-4 rounded-full bg-emerald-500"></span>ROAS (×)</span>
           </div>
         </div>
         <!-- animated grouped bars + ROAS line -->
         <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
-          <svg class="mom-chart w-full" viewBox={`0 0 ${MOM_W} ${MOM_H}`} role="img" aria-label="Month-over-month spend bars with a rising ROAS line">
+          <svg class="mom-chart w-full" viewBox={`0 0 ${MOM_W} ${MOM_H}`} role="img" aria-label="أعمدة الإنفاق الشهري مع خط ROAS صاعد">
             {[0.25, 0.5, 0.75, 1].map((g) => (
               <line x1={MOM_PL} y1={MOM_PT + momPlotH - g * momPlotH} x2={MOM_W - MOM_PR} y2={MOM_PT + momPlotH - g * momPlotH} stroke="#eceaf5" stroke-width="1" />
             ))}
@@ -871,29 +862,26 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
             ))}
           </div>
           <div class="my-3 flex items-center justify-center gap-2 text-zinc-300">
-            <span class="h-px w-16 bg-gradient-to-r from-transparent to-zinc-300"></span>
-            <svg class="cur-arrow h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
             <span class="h-px w-16 bg-gradient-to-l from-transparent to-zinc-300"></span>
+            <svg class="cur-arrow h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            <span class="h-px w-16 bg-gradient-to-r from-transparent to-zinc-300"></span>
           </div>
           <div class="rounded-xl border border-brand-200 bg-brand-50/70 px-4 py-3">
-            <p class="text-[11px] font-semibold uppercase tracking-wide text-brand-500">Unified revenue</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-brand-500">الإيرادات الموحّدة</p>
             <p class="mt-0.5 font-display text-2xl font-bold text-brand-900">
-              <span class="text-sm font-semibold text-brand-400">SAR </span><span class="cur-total">1,932,540</span>
+              <bdi dir="ltr"><span class="text-sm font-semibold text-brand-400">SAR </span><span class="cur-total">1,932,540</span></bdi>
             </p>
           </div>
         </div>
         <div class="order-1 lg:order-2">
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>
-            Currency
+            العملة
           </span>
-          <h3 class="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-zinc-950">No more mental math</h3>
-          <p class="mt-2.5 text-lg font-semibold text-brand-600">Every currency, converted into yours</p>
+          <h3 class="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-zinc-950">لا مزيد من الحساب الذهني</h3>
+          <p class="mt-2.5 text-lg font-semibold text-brand-600">كل العملات، محوّلة إلى عملتك</p>
           <p class="mt-3 leading-relaxed text-zinc-500">
-            Selling in four markets means four currencies, and a conversion someone is
-            doing in their head. AdFunnl converts every platform and store into your
-            reporting currency automatically, using the right rate, so blended ROAS and
-            revenue add up to a single number you can defend.
+            البيع في أكثر من سوق يعني أكثر من عملة، وتحويلًا يجريه أحدهم في رأسه. AdFunnl يحوّل أرقام كل منصة ومتجر إلى عملة تقاريرك تلقائيًا وبالسعر الصحيح، فيجتمع blended ROAS والإيرادات في رقم واحد تستطيع الدفاع عنه.
           </p>
         </div>
       </div>
@@ -903,21 +891,18 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
         <div>
           <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-            Collaborate
+            التعاون
           </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">Invite your team in seconds</h3>
+          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">ادعُ فريقك في ثوانٍ</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
-            Bring in analysts and account managers with a single invite, as an admin
-            or a member. Everyone works from the same live numbers, and clients
-            follow along through a share link, with no exports flying around and no
-            version everyone disagrees on.
+            أضف المحللين والـ Account Managers بدعوة واحدة، وحدّد دور كل شخص، مسؤولًا أو عضوًا. يعمل الجميع على الأرقام المباشرة نفسها، ويتابع العميل عبر رابط مشاركة، دون ملفات متناقلة أو نسخ يختلف عليها الجميع.
           </p>
         </div>
         <!-- animated members card -->
         <div class="rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
           <div class="mb-4 flex items-center justify-between">
-            <p class="text-sm font-semibold text-zinc-800">Workspace members</p>
-            <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">5 seats</span>
+            <p class="text-sm font-semibold text-zinc-800">أعضاء مساحة العمل</p>
+            <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">5 مقاعد</span>
           </div>
           <div class="mb-4 flex items-center">
             {[
@@ -934,13 +919,13 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
           </div>
           <div class="flex gap-2">
             <div class="flex flex-1 items-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-400">teammate@brand.com</div>
-            <button class="rounded-lg bg-brand-600 px-3.5 py-2 text-xs font-semibold text-white">Invite</button>
+            <button class="rounded-lg bg-brand-600 px-3.5 py-2 text-xs font-semibold text-white">دعوة</button>
           </div>
           <div class="mt-3 space-y-1.5">
             {[
-              { n: "Hussein M.", r: "Owner", rc: "bg-brand-50 text-brand-700" },
-              { n: "Sara A.", r: "Admin", rc: "bg-sky-50 text-sky-700" },
-              { n: "Karim R.", r: "Member", rc: "bg-zinc-100 text-zinc-500" },
+              { n: "Hussein M.", r: "المالك", rc: "bg-brand-50 text-brand-700" },
+              { n: "Sara A.", r: "مسؤول", rc: "bg-sky-50 text-sky-700" },
+              { n: "Karim R.", r: "عضو", rc: "bg-zinc-100 text-zinc-500" },
             ].map((m) => (
               <div class="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-xs">
                 <span class="font-medium text-zinc-700">{m.n}</span>
@@ -958,15 +943,15 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          See all your ad spend clearly, in one place, shared with your clients.
+          شاهد إنفاقك الإعلاني كله بوضوح في مكان واحد، مشتركًا مع عملائك.
         </h2>
         <p class="mt-4 text-lg text-zinc-400">
-          Connect your first account in minutes. No spreadsheet surgery required.
+          اربط حسابك الأول في دقائق، دون ترقيع في الجداول.
         </p>
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
-            Start free
+            ابدأ مجانًا
           </a>
         </div>
       </div>
@@ -1159,8 +1144,8 @@ const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
     }
 
     // ── Assistant typewriters (shared counter, loops) ──────────────
-    const MCP_ANSWER = "TikTok took 62% of spend but returned only 38% of revenue. Two Meta retargeting sets carried blended ROAS this month, so shifting ~$4.2k out of TikTok prospecting into them is the clearest win.";
-    const INAPP_ANSWER = "IG Post · Leakproof test is your clearest case: EGP 5,002 spent, 87 purchases and a 24.16× return, well ahead of the next ad on the list. It is still under your average spend, so there is room to scale it before fatigue shows up.";
+    const MCP_ANSWER = "استحوذ TikTok على 62% من الإنفاق لكنه جلب 38% فقط من الإيرادات. مجموعتا retargeting على Meta حملتا blended ROAS هذا الشهر، لذلك نقل حوالي $4.2k من prospecting على TikTok إليهما هو المكسب الأوضح.";
+    const INAPP_ANSWER = "الإعلان IG Post · Leakproof test هو الأوضح: إنفاق EGP 5,002 و87 عملية شراء وROAS يبلغ 24.16x، متقدمًا بفارق كبير على الإعلان التالي. وما زال تحت متوسط إنفاقك، فهناك مجال لعمل Scale له قبل أن يظهر عليه الـ fatigue.";
     const mcpEls = document.querySelectorAll("[data-mcp-stream]");
     const inAppEls = document.querySelectorAll("[data-inapp-stream]");
     const longest = Math.max(MCP_ANSWER.length, INAPP_ANSWER.length);

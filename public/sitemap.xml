@@ -1,38 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.adfunnl.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar" />
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.adfunnl.com/ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar" />
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
     <loc>https://www.adfunnl.com/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/pricing" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/pricing" />
     <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.adfunnl.com/ar/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/pricing" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/pricing" />
+    <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.adfunnl.com/features/dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/features/dashboard" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/features/dashboard" />
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.adfunnl.com/ar/features/dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/features/dashboard" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/features/dashboard" />
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.adfunnl.com/for/account-managers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/account-managers" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/account-managers" />
     <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.adfunnl.com/ar/for/account-managers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/account-managers" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/account-managers" />
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.adfunnl.com/for/team-leads</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/team-leads" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/team-leads" />
     <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.adfunnl.com/ar/for/team-leads</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/team-leads" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/team-leads" />
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.adfunnl.com/for/media-buyers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/media-buyers" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/media-buyers" />
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.adfunnl.com/ar/for/media-buyers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/for/media-buyers" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/for/media-buyers" />
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.adfunnl.com/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/about" />
     <lastmod>2026-09-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.adfunnl.com/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.adfunnl.com/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.adfunnl.com/ar/about" />
+    <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

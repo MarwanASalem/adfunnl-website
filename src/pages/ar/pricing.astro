@@ -1,5 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
+// Arabic twin of src/pages/pricing.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 const SUPPORT_EMAIL = "support@adfunnl.com";
@@ -25,77 +29,76 @@ const plans: Plan[] = [
   {
     key: "free",
     name: "Free",
-    tagline: "Try it: one brand, the basics.",
+    tagline: "للتجربة: علامة تجارية واحدة والأساسيات.",
     egp: 0,
     usd: 0,
     requestable: false,
-    cta: "Start free",
+    cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup`,
     highlights: [
-      "1 brand",
-      "3 ad accounts · 2 platforms",
-      "3 dashboards",
-      "12-hour data refresh",
-      "3 months of history",
-      "Creative calculator",
+      "علامة تجارية واحدة",
+      "3 حسابات إعلانية · منصتان",
+      "3 لوحات",
+      "تحديث البيانات كل 12 ساعة",
+      "سجل 3 أشهر",
+      "حاسبة الـ Creatives",
     ],
   },
   {
     key: "solo",
     name: "Solo",
-    tagline: "Freelancers and single operators.",
+    tagline: "للمستقلين ومن يعملون بمفردهم.",
     egp: 990,
     usd: 29,
     requestable: true,
-    cta: "Start free",
+    cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup?plan=solo`,
-    highlightsLead: "Everything in Free, plus",
+    highlightsLead: "كل ما في Free، بالإضافة إلى",
     highlights: [
-      "3 brands · 15 ad accounts",
-      "All platforms · unlimited dashboards",
-      "1 year of history",
-      "Google Sheets & change annotations",
+      "3 علامات تجارية · 15 حسابًا إعلانيًا",
+      "كل المنصات · لوحات بلا حدود",
+      "سجل سنة",
+      "Google Sheets وملاحظات التغييرات",
       "Hook & Hold + Creative Fatigue",
-      "Live sharing, view-only links & PDF",
-      "Add-fund & billing alerts",
+      "مشاركة مباشرة وروابط للعرض فقط وPDF",
+      "تنبيهات شحن الرصيد والفوترة",
     ],
   },
   {
     key: "growth",
     name: "Growth",
-    tagline: "Small teams, with the AI assistant.",
+    tagline: "للفرق الصغيرة، مع مساعد AI.",
     egp: 2490,
     usd: 79,
     requestable: true,
     popular: true,
-    cta: "Start free",
+    cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup?plan=growth`,
-    highlightsLead: "Everything in Solo, plus",
+    highlightsLead: "كل ما في Solo، بالإضافة إلى",
     highlights: [
-      "AI assistant (chat) + MCP access",
-      "1,000 AI credits / month",
-      "3 team seats",
-      "10 brands · 50 ad accounts",
-      "3 years of history",
-      "6-hour data refresh",
+      "مساعد AI (محادثة) + وصول MCP",
+      "1,000 رصيد AI شهريًا",
+      "3 مقاعد للفريق",
+      "10 علامات تجارية · 50 حسابًا إعلانيًا",
+      "سجل 3 سنوات",
     ],
   },
   {
     key: "agency",
     name: "Agency",
-    tagline: "Agencies: most scale, hourly refresh.",
+    tagline: "للوكالات: أعلى سعة وتحديث كل ساعة.",
     egp: 4990,
     usd: 149,
     requestable: true,
-    cta: "Start free",
+    cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup?plan=agency`,
-    highlightsLead: "Everything in Growth, plus",
+    highlightsLead: "كل ما في Growth، بالإضافة إلى",
     highlights: [
-      "Hourly data refresh",
-      "3,000 AI credits / month",
-      "10 team seats",
-      "30 brands · 150 ad accounts",
-      "5 years of history",
+      "تحديث البيانات كل ساعة",
+      "3,000 رصيد AI شهريًا",
+      "10 مقاعد للفريق",
+      "30 علامة تجارية · 150 حسابًا إعلانيًا",
+      "سجل 5 سنوات",
     ],
   },
 ];
@@ -111,37 +114,37 @@ const creditPacks = [
 type Row = { label: string; free: string | boolean; solo: string | boolean; growth: string | boolean; agency: string | boolean };
 const groups: { title: string; rows: Row[] }[] = [
   {
-    title: "Limits",
+    title: "الحدود",
     rows: [
-      { label: "Team seats",        free: "1",        solo: "1",       growth: "3",       agency: "10" },
-      { label: "Brands",            free: "1",       solo: "3",       growth: "10",      agency: "30" },
-      { label: "Ad accounts",       free: "3",        solo: "15",      growth: "50",      agency: "150" },
-      { label: "Ad platforms",      free: "2",        solo: "All",     growth: "All",     agency: "All" },
-      { label: "Dashboards",        free: "3",        solo: "∞",       growth: "∞",       agency: "∞" },
-      { label: "Data refresh",      free: "12h",      solo: "12h",     growth: "6h",      agency: "Hourly" },
-      { label: "History retained",  free: "3 months", solo: "1 year",  growth: "3 years", agency: "5 years" },
+      { label: "مقاعد الفريق",        free: "1",        solo: "1",       growth: "3",       agency: "10" },
+      { label: "العلامات التجارية",            free: "1",       solo: "3",       growth: "10",      agency: "30" },
+      { label: "الحسابات الإعلانية",       free: "3",        solo: "15",      growth: "50",      agency: "150" },
+      { label: "المنصات الإعلانية",      free: "2",        solo: "الكل",     growth: "الكل",     agency: "الكل" },
+      { label: "اللوحات",        free: "3",        solo: "∞",       growth: "∞",       agency: "∞" },
+      { label: "تحديث البيانات",      free: "12 ساعة",      solo: "12 ساعة",     growth: "12 ساعة",     agency: "كل ساعة" },
+      { label: "مدة حفظ السجل",  free: "3 أشهر", solo: "سنة",  growth: "3 سنوات", agency: "5 سنوات" },
     ],
   },
   {
-    // Google Sheets is an import, one direction, in only (docs/what-ships.md).
-    // It sits here and not under sharing: nothing is ever pushed out to it.
-    title: "Data sources",
+    // Google Sheets استيراد في اتجاه واحد، للداخل فقط (docs/what-ships.md)،
+    // فمكانه هنا وليس ضمن المشاركة: لا شيء يُرسَل إليه.
+    title: "مصادر البيانات",
     rows: [
-      { label: "Google Sheets import",  free: false, solo: true, growth: true, agency: true },
+      { label: "استيراد من Google Sheets", free: false, solo: true, growth: true, agency: true },
     ],
   },
   {
-    title: "Reporting & sharing",
+    title: "التقارير والمشاركة",
     rows: [
-      { label: "Change annotations",              free: false, solo: true, growth: true, agency: true },
-      { label: "Live sharing (links + PDF)",      free: false, solo: true, growth: true, agency: true },
-      { label: "Add-fund reminder & billing alerts", free: false, solo: true, growth: true, agency: true },
+      { label: "ملاحظات التغييرات",              free: false, solo: true, growth: true, agency: true },
+      { label: "المشاركة المباشرة (روابط + PDF)",      free: false, solo: true, growth: true, agency: true },
+      { label: "تذكير شحن الرصيد وتنبيهات الفوترة", free: false, solo: true, growth: true, agency: true },
     ],
   },
   {
-    title: "Creative analysis",
+    title: "تحليل الـ Creatives",
     rows: [
-      { label: "Creative calculator",  free: true,  solo: true, growth: true, agency: true },
+      { label: "حاسبة الـ Creatives",  free: true,  solo: true, growth: true, agency: true },
       { label: "Creative Hook & Hold", free: false, solo: true, growth: true, agency: true },
       { label: "Creative Fatigue",     free: false, solo: true, growth: true, agency: true },
     ],
@@ -149,38 +152,38 @@ const groups: { title: string; rows: Row[] }[] = [
   {
     title: "AI",
     rows: [
-      { label: "AI assistant (chat)", free: false, solo: false, growth: true,    agency: true },
-      { label: "AI builds your dashboard", free: false, solo: false, growth: true, agency: true },
-      { label: "AI MCP access",       free: false, solo: false, growth: true,    agency: true },
-      { label: "AI credits / month",  free: "0",   solo: "0",   growth: "1,000", agency: "3,000" },
+      { label: "مساعد AI (محادثة)", free: false, solo: false, growth: true,    agency: true },
+      { label: "AI يبني لوحتك", free: false, solo: false, growth: true, agency: true },
+      { label: "وصول MCP",       free: false, solo: false, growth: true,    agency: true },
+      { label: "رصيد AI شهريًا",  free: "0",   solo: "0",   growth: "1,000", agency: "3,000" },
     ],
   },
 ];
 
 const faqs = [
   {
-    q: "Is there a free trial on paid plans?",
-    a: "Yes. Every paid plan comes with a full-access free trial with all features unlocked. When the trial ends it simply reverts to the Free plan, no charge unless you confirm payment.",
+    q: "هل توجد تجربة مجانية للباقات المدفوعة؟",
+    a: "نعم. كل باقة مدفوعة تأتي بتجربة مجانية كاملة بكل المزايا. عند انتهاء التجربة تعود إلى باقة Free تلقائيًا، ولا يُخصم أي مبلغ ما لم تؤكد الدفع.",
   },
   {
-    q: "How does billing work, and is it instant checkout?",
-    a: "You request a plan and we enable it once payment is confirmed. It's a request → manual-approval flow rather than instant self-checkout, so you always talk to a real person before anything is charged.",
+    q: "كيف تتم الفوترة، وهل الدفع فوري؟",
+    a: "تطلب الباقة ونفعّلها بعد تأكيد الدفع. العملية طلب ثم موافقة يدوية وليست دفعًا ذاتيًا فوريًا، لذلك تتحدث دائمًا مع شخص حقيقي قبل أي خصم.",
   },
   {
-    q: "How much do I save with annual billing?",
-    a: "Annual is billed at ten months for twelve, so two months free. Switch the toggle above to see each plan's yearly price.",
+    q: "كم أوفّر مع الاشتراك السنوي؟",
+    a: "الاشتراك السنوي بسعر عشرة أشهر مقابل اثني عشر، أي شهران مجانًا. استخدم زر التبديل في الأعلى لرؤية السعر السنوي لكل باقة.",
   },
   {
-    q: "Which currencies can I pay in?",
-    a: "EGP and USD. EGP is our primary launch-market currency; USD is available for international teams. Use the currency switch above to compare.",
+    q: "بأي عملات يمكنني الدفع؟",
+    a: "بالجنيه المصري (EGP) والدولار الأمريكي (USD). الجنيه هو عملة سوق الإطلاق الأساسي، والدولار متاح للفرق الدولية. استخدم زر العملة في الأعلى للمقارنة.",
   },
   {
-    q: "What are AI credits and when do I need top-ups?",
-    a: "Growth and Agency include a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out, so you never lose what you paid for.",
+    q: "ما رصيد AI، ومتى أحتاج إلى شحنه؟",
+    a: "باقتا Growth وAgency تتضمنان رصيد AI شهريًا للمساعد. الرصيد ينتقل إلى الشهر التالي، وباقات الشحن لا تُستهلك إلا بعد نفاد رصيدك الشهري، فلا تخسر ما دفعت مقابله.",
   },
   {
-    q: "Which plan includes the AI assistant?",
-    a: "The AI assistant and MCP access start on Growth. Agency adds hourly data refresh, the largest seat and brand caps, five years of history and 3,000 monthly AI credits.",
+    q: "أي باقة تتضمن مساعد AI؟",
+    a: "يبدأ مساعد AI ووصول MCP من باقة Growth. وتضيف Agency تحديث البيانات كل ساعة، وأكبر عدد من المقاعد والعلامات التجارية، وسجل خمس سنوات، و3,000 رصيد AI شهريًا.",
   },
 ];
 
@@ -188,8 +191,9 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 ---
 
 <Layout
-  title="Pricing"
-  description="AdFunnl pricing: Free, Solo, Growth and Agency plans for agencies and media buyers. Multi-platform ad analytics and shareable dashboards. Monthly or annual (two months free), in EGP or USD."
+  locale="ar"
+  title="الأسعار"
+  description="أسعار AdFunnl: باقات Free وSolo وGrowth وAgency للوكالات والـ Media Buyers. تحليلات إعلانية لكل المنصات ولوحات قابلة للمشاركة، شهريًا أو سنويًا مع شهرين مجانًا، بالجنيه أو الدولار."
 >
 
   <!-- Hero + toggles -->
@@ -201,24 +205,23 @@ const fmt = (n: number) => n.toLocaleString("en-US");
     <div class="mx-auto max-w-6xl text-center">
       <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
         <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Simple, honest pricing
+        أسعار بسيطة وواضحة
       </span>
       <h1 class="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
-        Every platform in one workspace, priced for how you grow
+        كل المنصات في مساحة عمل واحدة، بسعر يناسب نموّك
       </h1>
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
-        Multi-platform ad analytics and shareable dashboards for agencies and media buyers.
-        Start free, upgrade when your team does. Two months free on annual.
+        تحليلات إعلانية لكل المنصات ولوحات قابلة للمشاركة للوكالات والـ Media Buyers. ابدأ مجانًا، ورقِّ باقتك حين يكبر فريقك. شهران مجانًا مع الاشتراك السنوي.
       </p>
 
       <!-- Toggles -->
       <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
         <!-- Billing -->
         <div id="billing-toggle" class="inline-flex items-center rounded-xl border border-zinc-200 bg-zinc-50 p-1 text-sm font-semibold">
-          <button type="button" data-billing="monthly" class="rounded-lg px-4 py-2 transition">Monthly</button>
+          <button type="button" data-billing="monthly" class="rounded-lg px-4 py-2 transition">شهري</button>
           <button type="button" data-billing="annual"  class="rounded-lg px-4 py-2 transition">
-            Annual
-            <span class="ml-1.5 rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">2 months free</span>
+            سنوي
+            <span class="ms-1.5 rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700">شهران مجانًا</span>
           </button>
         </div>
         <!-- Currency -->
@@ -242,8 +245,8 @@ const fmt = (n: number) => n.toLocaleString("en-US");
           }`}
         >
           {p.popular && (
-            <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg shadow-brand-300">
-              Most popular
+            <span class="absolute -top-3 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg shadow-brand-300">
+              الأكثر اختيارًا
             </span>
           )}
 
@@ -253,21 +256,21 @@ const fmt = (n: number) => n.toLocaleString("en-US");
           <!-- Price -->
           <div class="mt-4">
             {p.egp === 0 ? (
-              <p class="font-display text-4xl font-bold text-zinc-950">Free</p>
+              <p class="font-display text-4xl font-bold text-zinc-950">مجانًا</p>
             ) : (
-              <p class="flex items-baseline gap-1">
+              <p class="flex flex-wrap items-baseline gap-x-1">
                 <span
-                  class="price-amount num font-display text-4xl font-bold text-zinc-950"
+                  class="price-amount num whitespace-nowrap font-display text-4xl font-bold text-zinc-950"
                   data-egp-m={p.egp}
                   data-egp-y={p.egp * ANNUAL_MONTHS}
                   data-usd-m={p.usd}
                   data-usd-y={p.usd * ANNUAL_MONTHS}
                 >EGP {fmt(p.egp)}</span>
-                <span class="price-period text-sm font-medium text-zinc-400">/mo</span>
+                <span class="price-period text-sm font-medium text-zinc-400">/شهريًا</span>
               </p>
             )}
             <p class={`price-sub mt-1 min-h-[1.25rem] text-xs text-zinc-400 ${p.egp === 0 ? "" : ""}`}>
-              {p.egp === 0 ? "Free forever" : "Billed monthly"}
+              {p.egp === 0 ? "مجاني دائمًا" : "فوترة شهرية"}
             </p>
           </div>
 
@@ -284,7 +287,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
             {p.cta}
           </a>
           {p.requestable && (
-            <p class="mt-2 text-center text-[11px] text-zinc-400">Request a plan, enabled once payment is confirmed</p>
+            <p class="mt-2 text-center text-[11px] text-zinc-400">اطلب الباقة، وتُفعَّل بعد تأكيد الدفع</p>
           )}
 
           <!-- Highlights -->
@@ -305,7 +308,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
       ))}
     </div>
     <p class="mx-auto mt-6 max-w-6xl text-center text-xs text-zinc-400">
-      All paid plans include a full-access free trial that reverts to Free when it ends.
+      كل الباقات المدفوعة تشمل تجربة مجانية كاملة تعود إلى Free عند انتهائها.
     </p>
   </section>
 
@@ -313,19 +316,19 @@ const fmt = (n: number) => n.toLocaleString("en-US");
   <section class="bg-white px-6 py-20">
     <div class="mx-auto max-w-6xl">
       <div class="mx-auto max-w-2xl text-center">
-        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Compare every plan</h2>
-        <p class="mt-4 text-lg text-zinc-500">The exact limits and features each tier unlocks.</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">قارن بين كل الباقات</h2>
+        <p class="mt-4 text-lg text-zinc-500">الحدود والمزايا الدقيقة في كل باقة.</p>
       </div>
 
       <div class="mt-12 overflow-x-auto">
         <table class="w-full min-w-[720px] border-collapse text-sm">
           <thead>
             <tr class="border-b border-zinc-200">
-              <th class="w-2/5 py-4 pr-4 text-left font-display text-base font-bold text-zinc-950">Features</th>
+              <th class="w-2/5 py-4 pe-4 text-start font-display text-base font-bold text-zinc-950">المزايا</th>
               {plans.map((p) => (
                 <th class={`px-3 py-4 text-center font-display text-base font-bold ${p.popular ? "text-brand-700" : "text-zinc-950"}`}>
                   {p.name}
-                  {p.popular && <span class="ml-1 align-middle text-[10px] font-bold uppercase tracking-wide text-brand-500">★</span>}
+                  {p.popular && <span class="ms-1 align-middle text-[10px] font-bold uppercase tracking-wide text-brand-500">★</span>}
                 </th>
               ))}
             </tr>
@@ -334,11 +337,11 @@ const fmt = (n: number) => n.toLocaleString("en-US");
             {groups.map((g) => (
               <>
                 <tr>
-                  <td colspan={5} class="bg-zinc-50/70 px-0 py-2.5 pl-1 text-xs font-semibold uppercase tracking-widest text-zinc-400">{g.title}</td>
+                  <td colspan={5} class="bg-zinc-50/70 px-0 py-2.5 ps-1 text-xs font-semibold uppercase tracking-widest text-zinc-400"><bdi dir="ltr">{g.title}</bdi></td>
                 </tr>
                 {g.rows.map((r) => (
                   <tr class="border-b border-zinc-100">
-                    <td class="py-3 pr-4 text-zinc-600">{r.label}</td>
+                    <td class="py-3 pe-4 text-zinc-600"><bdi dir="ltr">{r.label}</bdi></td>
                     {[r.free, r.solo, r.growth, r.agency].map((v) => (
                       <td class="px-3 py-3 text-center">
                         {typeof v === "boolean" ? (
@@ -369,10 +372,9 @@ const fmt = (n: number) => n.toLocaleString("en-US");
         <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
           Growth &amp; Agency
         </span>
-        <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">AI credit top-ups</h2>
+        <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">شحن رصيد AI</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Need more than your monthly allowance? Add credits any time. They carry over and are
-          only spent once your monthly allowance runs out.
+          تحتاج أكثر من رصيدك الشهري؟ أضف رصيدًا في أي وقت. ينتقل إلى الأشهر التالية ولا يُستهلك إلا بعد نفاد رصيدك الشهري.
         </p>
       </div>
 
@@ -380,12 +382,12 @@ const fmt = (n: number) => n.toLocaleString("en-US");
         {creditPacks.map((pack) => (
           <div class={`relative rounded-2xl border bg-white p-7 text-center ${pack.popular ? "border-brand-300 ring-1 ring-brand-200" : "border-zinc-200"}`}>
             {pack.popular && (
-              <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                Best value
+              <span class="absolute -top-3 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                أفضل قيمة
               </span>
             )}
             <p class="num font-display text-3xl font-bold text-zinc-950">{pack.credits}</p>
-            <p class="mt-1 text-sm text-zinc-500">credits</p>
+            <p class="mt-1 text-sm text-zinc-500">رصيد</p>
             <p
               class="pack-price num mt-4 font-display text-xl font-bold text-brand-700"
               data-egp={pack.egp}
@@ -402,17 +404,16 @@ const fmt = (n: number) => n.toLocaleString("en-US");
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-8 py-12 sm:px-12">
       <div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div class="max-w-xl">
-          <h2 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">Enterprise</h2>
+          <h2 class="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">باقة المؤسسات</h2>
           <p class="mt-3 text-base leading-relaxed text-zinc-400">
-            Custom limits, guided onboarding and priority support for larger agencies and
-            in-house teams. Tell us what you need and we'll shape a plan around it.
+            حدود مخصّصة، وإعداد بمرافقة فريقنا، ودعم بأولوية للوكالات الكبيرة والفرق الداخلية. أخبرنا بما تحتاجه وسنصمم باقة تناسبه.
           </p>
         </div>
         <a
           href={`mailto:${SUPPORT_EMAIL}?subject=AdFunnl%20Enterprise%20enquiry`}
           class="shrink-0 rounded-xl bg-white px-7 py-3.5 text-center text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
         >
-          Contact sales
+          تواصل مع المبيعات
         </a>
       </div>
     </div>
@@ -422,24 +423,24 @@ const fmt = (n: number) => n.toLocaleString("en-US");
   <section class="bg-white px-6 pb-24">
     <div class="mx-auto max-w-3xl">
       <div class="text-center">
-        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Questions, answered</h2>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">أسئلة وإجابات</h2>
       </div>
       <div class="mt-12 divide-y divide-zinc-100 border-y border-zinc-100">
         {faqs.map((f) => (
           <details class="group py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-start">
               <span class="font-display text-base font-semibold text-zinc-900">{f.q}</span>
               <svg class="h-5 w-5 shrink-0 text-zinc-400 transition-transform duration-200 group-open:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             </summary>
-            <p class="mt-3 pr-9 text-sm leading-relaxed text-zinc-500">{f.a}</p>
+            <p class="mt-3 pe-9 text-sm leading-relaxed text-zinc-500">{f.a}</p>
           </details>
         ))}
       </div>
 
       <div class="mt-12 text-center">
-        <p class="text-sm text-zinc-500">Still deciding?</p>
+        <p class="text-sm text-zinc-500">ما زلت تفكّر؟</p>
         <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href={`${APP_URL}/signup`} class="w-full rounded-xl bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">Start free</a>        </div>
+          <a href={`${APP_URL}/signup`} class="w-full rounded-xl bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">ابدأ مجانًا</a>        </div>
       </div>
     </div>
   </section>
@@ -472,11 +473,11 @@ const fmt = (n: number) => n.toLocaleString("en-US");
           const sub = card ? card.querySelector(".price-sub") : null;
           if (billing === "monthly") {
             el.textContent = sym() + nf(monthly);
-            if (sub) sub.textContent = "Billed monthly";
+            if (sub) sub.textContent = "فوترة شهرية";
           } else {
             const effMonthly = Math.round(yearly / 12);
             el.textContent = sym() + nf(effMonthly);
-            if (sub) sub.textContent = sym() + nf(yearly) + " billed yearly · 2 months free";
+            if (sub) sub.textContent = sym() + nf(yearly) + " سنويًا · شهران مجانًا";
           }
         });
 

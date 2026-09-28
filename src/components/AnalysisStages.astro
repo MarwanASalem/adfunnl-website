@@ -1,0 +1,252 @@
+---
+// The stages of data analysis, drawn as one bar of your week.
+//
+// Each stage's width is how much of the week it takes. The bar starts "by
+// hand", where preparing and processing swallow it, then animates to "with
+// AdFunnl": those two shrink to thin automatic strips and analyzing and
+// acting widen into the time that frees up. The widths are illustrative proportions,
+// so the bar carries no numbers (CLAUDE.md rule 6: no measured results).
+//
+// Capability notes (docs/what-ships.md): Prepare, Process and Share are
+// automated sync, normalization and live links, not AI. AI is only claimed on
+// Analyze. The page passes the copy in; each stage's line is kept as a hover
+// tooltip and in a list for screen readers.
+interface Stage {
+  key: string;
+  name: string;
+  owner: string;
+  line: string;
+}
+
+interface Props {
+  sectionId?: string;
+  sectionClass?: string;
+  heading: string;
+  body: string;
+  slowLabel: string;
+  stages: Stage[];
+  locale?: "en" | "ar";
+}
+
+const {
+  sectionId = "stages",
+  sectionClass = "relative overflow-hidden border-t border-zinc-100 bg-white px-6 py-16 sm:py-20",
+  heading,
+  body,
+  slowLabel,
+  stages,
+  locale = "en",
+} = Astro.props;
+
+// [by hand, with AdFunnl] share of the week, as flex-grow weights.
+const TIME: Record<string, [number, number]> = {
+  prepare: [4, 0.8], process: [4, 0.8], analyze: [1.2, 3.2], share: [0.8, 0.8], act: [1, 2.4],
+};
+const MAX = 4; // largest weight in either state; the phone rows scale to it
+const MANUAL = new Set(["prepare", "process", "share"]); // hatched in the by-hand state
+const SLOW = new Set(["prepare", "process"]);            // under the slow-part bracket
+
+// The bar's own labels. The page passes the rest of the copy in. Layout uses
+// logical classes (start, end) so the same markup reads right to left.
+const COPY = {
+  en: {
+    before: "By hand",
+    after: "With AdFunnl",
+    automatic: "Automatic",
+    legendAuto: "AdFunnl, automatic",
+    legendYours: "Your time",
+    you: "You",
+    owner: { you: "You", ai: "You + AI", auto: "AdFunnl" },
+  },
+  ar: {
+    before: "يدويًا",
+    after: "مع AdFunnl",
+    automatic: "تلقائي",
+    legendAuto: "AdFunnl، تلقائيًا",
+    legendYours: "وقتك",
+    you: "أنت",
+    owner: { you: "أنت", ai: "أنت + AI", auto: "AdFunnl" },
+  },
+};
+const LABEL = COPY[locale];
+const OWNER_AFTER: Record<string, string> = LABEL.owner;
+
+const time = (key: string) => TIME[key] ?? [1, 1];
+const beforeKind = (key: string) => (MANUAL.has(key) ? "hand" : "thin");
+const afterKind = (owner: string) => (owner === "auto" ? "auto" : "you");
+const pct = (v: number) => `${Math.round((v / MAX) * 1000) / 10}%`;
+
+// Desktop track items. Prepare and Process share one item so the bracket can
+// span both of them while the widths animate.
+const slowStages = stages.filter((s) => SLOW.has(s.key));
+const items: { group: boolean; stages: Stage[] }[] = [];
+for (const s of stages) {
+  if (!SLOW.has(s.key)) items.push({ group: false, stages: [s] });
+  else if (s === slowStages[0]) items.push({ group: true, stages: slowStages });
+}
+const grow = (ss: Stage[], i: 0 | 1) => ss.reduce((sum, s) => sum + time(s.key)[i], 0);
+---
+
+<section id={sectionId} class={sectionClass}>
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{heading}</h2>
+      <p class="mt-4 text-base leading-relaxed text-zinc-500 sm:text-lg">{body}</p>
+    </div>
+
+    <!-- `is-after` is the no-JS state; the script resets it and plays it in. -->
+    <div class="tb is-after reveal mx-auto mt-10 max-w-5xl rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6" data-timebar>
+      <div class="mb-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <div class="flex items-center gap-3">
+          <span class="grid font-display text-base font-bold text-zinc-900" aria-hidden="true">
+            <span class="tb-when-before col-start-1 row-start-1">{LABEL.before}</span>
+            <span class="tb-when-after col-start-1 row-start-1">{LABEL.after}</span>
+          </span>
+        </div>
+        <ul class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-zinc-500 sm:gap-x-4 sm:text-xs" aria-hidden="true">
+          <li class="flex items-center gap-1.5"><span class="tb-swatch-hand h-3 w-3 rounded-sm"></span>{LABEL.before}</li>
+          <li class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-[#ece8fd] ring-1 ring-brand-200"></span>{LABEL.legendAuto}</li>
+          <li class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-brand-600"></span>{LABEL.legendYours}</li>
+        </ul>
+      </div>
+
+      <!-- Desktop: one bar. Below lg the automatic strips get too narrow to
+           label, so tablets use the rows below instead. -->
+      <div class="tb-track hidden gap-1.5 lg:flex" aria-hidden="true">
+        {items.map((it) => (
+          <div class="tb-item flex min-w-0 flex-col gap-2" style={`--g0:${grow(it.stages, 0)};--g1:${grow(it.stages, 1)}`}>
+            <div class="grid h-5 text-[11px] font-semibold">
+              {it.group && (
+                <>
+                  <span class="tb-when-before col-start-1 row-start-1 flex min-w-0 items-center gap-2 text-rose-600">
+                    <span class="h-px flex-1 bg-rose-200"></span><span class="whitespace-nowrap">{slowLabel}</span><span class="h-px flex-1 bg-rose-200"></span>
+                  </span>
+                  <span class="tb-when-after col-start-1 row-start-1 flex min-w-0 items-center gap-1.5 text-brand-700">
+                    <span class="h-px flex-1 bg-brand-200"></span><span class="truncate">{LABEL.automatic}</span><span class="h-px flex-1 bg-brand-200"></span>
+                  </span>
+                </>
+              )}
+            </div>
+            <!-- The strips carry colour and one icon only; names sit underneath,
+                 where they get the full column width. -->
+            <div class="flex gap-1.5">
+              {it.stages.map((s) => (
+                <div class="tb-fill relative flex h-12 min-w-0 flex-1 items-center justify-center overflow-hidden rounded-xl" data-before={beforeKind(s.key)} data-after={afterKind(s.owner)} title={s.line}>
+                  <span class="tb-when-after relative flex items-center">
+                    {s.owner === "auto" && (
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M3 21v-5h5"/></svg>
+                    )}
+                    {s.owner === "ai" && <span class="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-bold">AI</span>}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div class="flex gap-1.5">
+              {it.stages.map((s) => (
+                <span class="flex min-w-0 flex-1 flex-col items-center text-center">
+                  <!-- Wraps to two lines under the narrow automatic strips; the
+                       fixed height keeps the card from jumping as they shrink. -->
+                  <span class="flex min-h-[2rem] w-full items-start justify-center text-xs font-bold leading-tight text-zinc-800">{s.name}</span>
+                  <span class="grid w-full text-[11px] font-medium text-zinc-500">
+                    <span class="tb-when-before col-start-1 row-start-1 truncate">{LABEL.you}</span>
+                    <span class="tb-when-after col-start-1 row-start-1 truncate">{OWNER_AFTER[s.owner] ?? LABEL.you}</span>
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Phones and tablets: one row per stage, the bar length is the share of the week. -->
+      <ol class="grid gap-2 lg:hidden" aria-hidden="true">
+        {stages.map((s) => (
+          <li class="grid grid-cols-[6.5rem_minmax(0,1fr)_4rem] items-center gap-2.5">
+            <span class="text-xs font-bold leading-tight text-zinc-800">
+              {s.name}{SLOW.has(s.key) && <span class="tb-when-before"> 🫠</span>}
+            </span>
+            <span class="relative h-6 rounded-md bg-zinc-50">
+              <span class="tb-fill tb-row-fill absolute inset-y-0 start-0 overflow-hidden rounded-md" data-before={beforeKind(s.key)} data-after={afterKind(s.owner)} style={`--w0:${pct(time(s.key)[0])};--w1:${pct(time(s.key)[1])}`}></span>
+            </span>
+            <span class="grid text-end text-[11px] font-medium text-zinc-500">
+              <span class="tb-when-before col-start-1 row-start-1">{LABEL.you}</span>
+              <span class="tb-when-after col-start-1 row-start-1">{OWNER_AFTER[s.owner] ?? LABEL.you}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <ol class="sr-only">
+        {stages.map((s) => (
+          <li>{s.name}, {OWNER_AFTER[s.owner] ?? LABEL.you}: {s.line}</li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* ── Data analysis time bar ── */
+  .tb .tb-item { flex: var(--g0) 1 0%; transition: flex-grow 1.4s cubic-bezier(.65, 0, .35, 1); }
+  .tb.is-after .tb-item { flex-grow: var(--g1); }
+  .tb .tb-row-fill { width: var(--w0); transition: width 1.4s cubic-bezier(.65, 0, .35, 1); }
+  .tb.is-after .tb-row-fill { width: var(--w1); }
+
+  /* Colour: hatched rose is by hand, pale purple is automatic, solid purple
+     is the reader's own time. The hatch is an overlay so it can fade out. */
+  .tb .tb-fill { transition: background-color .8s ease .3s, color .8s ease .3s, box-shadow .8s ease .3s; }
+  .tb .tb-fill::before {
+    content: ""; position: absolute; inset: 0; opacity: 0;
+    background: repeating-linear-gradient(135deg, #ffe4e6 0 7px, #fecdd3 7px 14px);
+    transition: opacity .8s ease .3s;
+  }
+  .tb .tb-fill[data-before="hand"] { color: #9f1239; }
+  .tb .tb-fill[data-before="hand"]::before { opacity: 1; }
+  .tb .tb-fill[data-before="thin"] { background-color: #f4f4f5; color: #71717a; }
+  .tb.is-after .tb-fill::before { opacity: 0; }
+  .tb.is-after .tb-fill[data-after="auto"] { background-color: #ece8fd; color: #4b2fb3; }
+  .tb.is-after .tb-fill[data-after="you"] { background-color: #5738c9; color: #fff; box-shadow: 0 6px 16px rgba(87, 56, 201, .22); }
+  .tb .tb-swatch-hand { background: repeating-linear-gradient(135deg, #ffe4e6 0 3px, #fda4af 3px 6px); }
+
+  /* Labels that swap between the two states. */
+  .tb .tb-when-before, .tb .tb-when-after { transition: opacity .45s ease .35s; }
+  .tb .tb-when-after { opacity: 0; }
+  .tb.is-after .tb-when-before { opacity: 0; }
+  .tb.is-after .tb-when-after { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tb *, .tb *::before { transition: none !important; }
+  }
+</style>
+
+<script>
+  // Loops between the by-hand bar and the AdFunnl bar while the card is on
+  // screen. By hand holds long enough to read, the swap animates, the AdFunnl
+  // bar holds longer, then it animates back and the loop starts again. It
+  // pauses while the card is off screen. With reduced motion it shows the
+  // AdFunnl bar and stays there.
+  const SWAP = 1400;        // matches the 1.4s width transition in the CSS
+  const READ_BEFORE = 2600; // by-hand bar at rest
+  const READ_AFTER = 6000;  // AdFunnl bar at rest
+
+  const bar = document.querySelector<HTMLElement>("[data-timebar]");
+  if (bar && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let timer = 0;
+    const toAfter = () => {
+      bar.classList.add("is-after");
+      timer = window.setTimeout(toBefore, SWAP + READ_AFTER);
+    };
+    const toBefore = () => {
+      bar.classList.remove("is-after");
+      timer = window.setTimeout(toAfter, SWAP + READ_BEFORE);
+    };
+
+    bar.classList.remove("is-after");
+    new IntersectionObserver(([entry]) => {
+      window.clearTimeout(timer);
+      if (entry.intersectionRatio < 0.4) return;
+      if (bar.classList.contains("is-after")) toBefore();
+      else timer = window.setTimeout(toAfter, READ_BEFORE);
+    }, { threshold: [0, 0.4] }).observe(bar);
+  }
+</script>

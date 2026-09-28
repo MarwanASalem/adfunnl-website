@@ -21,9 +21,10 @@ These are not preferences. A copy change that breaks one of these is wrong.
    The audience is **media buyers** and **performance marketers**, always
    written in full. Never drop the "media": on its own the short form reads as
    somebody making a purchase. The hook enforces this.
-4. **CTAs are fixed and plain.** The allowed set is `Try it now`, `Start free`
-   (both to `${APP_URL}/signup`) and `Book a demo` (to `${APP_URL}/demo`). No
-   witty or metaphorical button text.
+4. **CTAs are fixed and plain.** The one call to action is `Start free` (in Arabic `ابدأ مجانًا`),
+   both to `${APP_URL}/signup`. No witty or metaphorical button text. There is
+   no demo button: demos are not offered right now, and the app has no `/demo`
+   page. Do not add one back until that changes.
 5. **Never claim a capability without checking `docs/what-ships.md`.** That file
    is the list of what the site may claim, and it has a "Do not claim" section
    for things that sound true and are not. This repo and the app repo are not
@@ -53,3 +54,18 @@ for a new page until the copy block has been reviewed.
 Page data and prose live in `const` blocks in the Astro frontmatter, so a whole
 page's copy can be read and revised in one screen without touching markup. Keep
 new pages to that pattern: strings at the top, markup consumes them.
+
+## Arabic site
+
+Every page has an Arabic twin under `src/pages/ar/` at the same path (`/pricing`
+and `/ar/pricing`). **A change to one page's copy, claims or markup belongs in
+its twin in the same change.** A new English page is not finished until its
+Arabic twin exists and the sitemap lists both.
+
+- `<Layout locale="ar">` sets `dir="rtl"`, localizes the nav and footer, and
+  wires the EN / ع switch and hreflang. `DataFlow` and `AnalysisStages` take
+  `locale="ar"` too.
+- Fonts stay the app's: Archivo, with Zain reached for Arabic script. Never
+  Cairo, never a locale-driven font swap.
+- Media-buying and technical terms stay in English, lightly. The glossary is
+  section 7 of `docs/voice.md`. Read it before writing any Arabic.

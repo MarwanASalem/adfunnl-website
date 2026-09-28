@@ -1,7 +1,11 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import DataFlow from "../../components/DataFlow.astro";
-import AiDashboard from "../../components/AiDashboard.astro";
+// Arabic twin of src/pages/for/team-leads.astro. Keep the two in step: a change to one
+// page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../../layouts/Layout.astro";
+import DataFlow from "../../../components/DataFlow.astro";
+import AiDashboard from "../../../components/AiDashboard.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -24,9 +28,9 @@ const blendedRoas    = totalRevenue / totalSpend;
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 const blended = [
-  { label: "Spend",     value: `SAR ${fmt(totalSpend)}` },
-  { label: "Purchases", value: fmt(totalPurchases) },
-  { label: "Revenue",   value: `SAR ${fmt(totalRevenue)}` },
+  { label: "الإنفاق", value: `SAR ${fmt(totalSpend)}` },
+  { label: "المشتريات", value: fmt(totalPurchases) },
+  { label: "الإيرادات", value: `SAR ${fmt(totalRevenue)}` },
   { label: "Blended ROAS", value: `${blendedRoas.toFixed(2)}×`, strong: true },
 ];
 
@@ -38,26 +42,26 @@ const blended = [
 const lanes = [
   {
     key: "today",
-    eyebrow: "How the number gets made today",
-    elapsed: "Most of a morning, every time.",
+    eyebrow: "كيف يُصنع الرقم اليوم",
+    elapsed: "معظم الصباح، في كل مرة.",
     tone: "bad",
     stops: [
-      { t: "Tab 1", s: "Meta. Read the numbers, hold them in your head, move on." },
-      { t: "Tab 2, 3, 4", s: "TikTok, Snapchat, Google. Each one names the columns differently and counts a conversion over its own window, so none of it lines up." },
-      { t: "The maths", s: "One account buys in riyals and bills in dirhams. You are converting as you go, and you are the only check on it." },
-      { t: "The report", s: "Then all of it has to become something a client can read, which is where the rest of the day goes." },
+      { t: "التبويب 1", s: "Meta. اقرأ الأرقام، واحفظها في رأسك، وانتقل." },
+      { t: "التبويبات التالية", s: "TikTok وSnapchat وGoogle. كل منصة تسمّي الأعمدة بطريقتها وتحسب التحويل ضمن attribution window خاصة بها، فلا شيء يتطابق." },
+      { t: "الحساب", s: "حساب يشتري بالريال ويُفوتر بالدرهم. أنت تحوّل العملات أثناء العمل، ولا أحد يراجع غيرك." },
+      { t: "التقرير", s: "ثم يجب أن يتحول كل ذلك إلى شيء يقرؤه العميل، وهنا يذهب باقي اليوم." },
     ],
   },
   {
     key: "adfunnl",
-    eyebrow: "How it goes with AdFunnl",
-    elapsed: "About two minutes.",
+    eyebrow: "كيف يسير الأمر مع AdFunnl",
+    elapsed: "دقيقتان تقريبًا.",
     tone: "good",
     stops: [
-      { t: "One screen", s: "Every platform side by side, blended, already converted into one currency. Nothing to hold in your head." },
-      { t: "The decision", s: "You are straight onto which account needs you today, which is the part you were actually hired for." },
+      { t: "شاشة واحدة", s: "كل المنصات جنبًا إلى جنب، مدمجة ومحوّلة إلى عملة واحدة. لا شيء تحفظه في رأسك." },
+      { t: "القرار", s: "تنتقل مباشرة إلى الحساب الذي يحتاجك اليوم، وهذا هو الجزء الذي وُظّفت من أجله." },
     ],
-    note: "There is no step three. The screen was current before you opened it.",
+    note: "لا توجد خطوة ثالثة. الشاشة كانت محدّثة قبل أن تفتحها.",
   },
 ];
 
@@ -77,10 +81,10 @@ const lanes = [
 
 // The multiplication, as the reader's own arithmetic.
 const multiplication = [
-  { n: "5", label: "media buyers", note: "each with their own way of reporting" },
-  { n: "4", label: "clients each", note: "and none of them wait for the first of the month" },
-  { n: "4", label: "platforms per client", note: "different column names, different attribution windows" },
-  { n: "2", label: "currencies", note: "converted in someone's head, unchecked" },
+  { n: "5", label: "Media Buyers", note: "لكلٍّ منهم طريقته في التقارير" },
+  { n: "4", label: "عملاء لكل منهم", note: "ولا أحد منهم ينتظر أول الشهر" },
+  { n: "4", label: "منصات لكل عميل", note: "أسماء أعمدة مختلفة وattribution windows مختلفة" },
+  { n: "2", label: "عملات", note: "تُحوَّل في رأس أحدهم دون مراجعة" },
 ];
 
 // ── Us versus them (R12) ──────────────────────────────────────────────
@@ -88,39 +92,39 @@ const multiplication = [
 // as a fair description of the reader's week, because it is theirs.
 const compare = [
   {
-    job: "Seeing how the whole roster is doing",
-    old: "Ask each media buyer, wait, then reconcile what they send you.",
-    now: "Open one screen. Every client, blended, already current.",
+    job: "معرفة أداء كل الحسابات",
+    old: "تسأل كل Media Buyer، وتنتظر، ثم توفّق بين ما يرسلونه.",
+    now: "تفتح شاشة واحدة، فيها كل العملاء مدمجين ومحدَّثين.",
   },
   {
-    job: "Comparing platforms against each other",
-    old: "A tab per platform, each with its own date picker and its own column names.",
-    now: "Meta, TikTok, Snapchat and Google on one line, with blended totals underneath.",
+    job: "مقارنة المنصات ببعضها",
+    old: "تبويب لكل منصة، ولكل تبويب منتقي تاريخ وأسماء أعمدة خاصة به.",
+    now: "Meta وTikTok وSnapchat وGoogle في صف واحد، والإجماليات المدمجة تحتها.",
   },
   {
-    job: "Two currencies in one roster",
-    old: "Somebody converts by hand and nobody checks the cell.",
-    now: "Everything unified into your reporting currency at the right rate.",
+    job: "أكثر من عملة في الحسابات نفسها",
+    old: "أحدهم يحوّل يدويًا ولا أحد يراجع الخلية.",
+    now: "كل شيء موحّد بعملة تقاريرك وبالسعر الصحيح.",
   },
   {
-    job: "Tying spend to actual revenue",
-    old: "The ad platforms say one thing, Shopify says another.",
-    now: "Store revenue sits beside ad spend, down to product level.",
+    job: "ربط الإنفاق بالإيرادات الفعلية",
+    old: "المنصات الإعلانية تقول شيئًا، وShopify يقول شيئًا آخر.",
+    now: "إيرادات المتجر بجانب الإنفاق الإعلاني، حتى مستوى المنتج.",
   },
   {
-    job: "Finding the winner among thousands of ads",
-    old: "Scroll each platform separately and go on what you remember.",
-    now: "Every creative ranked on the metric you choose, thumbnails in the page.",
+    job: "إيجاد الإعلان الرابح بين آلاف الإعلانات",
+    old: "تتصفح كل منصة على حدة وتعتمد على ذاكرتك.",
+    now: "كل Creative مرتّب حسب المقياس الذي تختاره، مع الصور المصغّرة في الصفحة.",
   },
   {
-    job: "Answering a one-off question",
-    old: "Rebuild a view, or put a media buyer on it for an hour.",
-    now: "Ask the assistant in plain English and get the answer with its data shown.",
+    job: "الإجابة عن سؤال طارئ",
+    old: "تعيد بناء عرض، أو تشغل Media Buyer به لساعة.",
+    now: "تسأل المساعد بلغة عادية وتحصل على الإجابة مع البيانات التي استخدمها.",
   },
   {
-    job: "Getting the deliverable to the client",
-    old: "Assemble it, format it, send a PDF that ages immediately.",
-    now: "A live link with their logo on it, or a PDF when they insist.",
+    job: "تسليم التقرير للعميل",
+    old: "تجمعه، وتنسّقه، وترسل PDF يتقادم فورًا.",
+    now: "رابط مباشر عليه شعاره، أو PDF حين يصر.",
   },
 ];
 
@@ -129,20 +133,20 @@ const compare = [
 // or delete the row: a weak answer is worse than no section.
 const objections = [
   {
-    q: "My media buyers already do their own reporting.",
-    a: "They do, and no two of them do it the same way. That is the part that costs you: nothing is comparable, so every roster-level question turns into a round of asking. One template applied across every account makes the comparison free.",
+    q: "الـ Media Buyers عندي يعدّون تقاريرهم بأنفسهم.",
+    a: "صحيح، ولا يعدّها اثنان منهم بالطريقة نفسها. وهذا ما يكلّفك: لا شيء قابل للمقارنة، فيتحول كل سؤال عن الحسابات كلها إلى جولة من الاستفسارات. قالب واحد على كل الحسابات يجعل المقارنة بلا تكلفة.",
   },
   {
-    q: "Setting this up will eat a week I don't have.",
-    a: "Connect one client, build the view the way you actually want an account read, then save it as a template. Every account after that starts from it. The thinking happens once.",
+    q: "إعداد هذا سيأخذ أسبوعًا لا أملكه.",
+    a: "اربط عميلًا واحدًا، وابنِ العرض بالطريقة التي تريد أن يُقرأ بها أي حساب، ثم احفظه كقالب. كل حساب بعده يبدأ منه، والتفكير يحدث مرة واحدة.",
   },
   {
-    q: "The numbers won't match the ad platforms.",
-    a: "Every metric has a published methodology page showing how it is calculated. Data logs and sync times show when each account last updated, and a snapshot freezes exactly what you sent so it cannot shift under you later.",
+    q: "الأرقام لن تطابق المنصات الإعلانية.",
+    a: "لكل مقياس صفحة منهجية منشورة توضّح طريقة حسابه. سجلات البيانات وأوقات المزامنة تُظهر آخر تحديث لكل حساب، واللقطة الثابتة تحفظ ما أرسلته كما هو فلا يتغير لاحقًا.",
   },
   {
-    q: "My clients expect a report that looks like theirs.",
-    a: "Reports carry the client's logo and their reporting currency, and go out as a live view-only link or a clean PDF. For a client who runs their own BI, there is a Looker Studio connection to the same data.",
+    q: "عملائي يتوقعون تقريرًا يحمل هويتهم.",
+    a: "التقارير تحمل شعار العميل وعملة تقاريره، وتُرسل كرابط مباشر للعرض فقط أو كملف PDF مرتب. وللعميل الذي يستخدم أداة BI خاصة به، يوجد ربط مع Looker Studio على البيانات نفسها.",
   },
 ];
 
@@ -152,11 +156,11 @@ const objections = [
 // Hold for video. Ad-level creative data is Meta and Snapchat, and Hook & Hold
 // is Meta only. It said Meta and TikTok until this check.
 const creativePoints = [
-  "Every running ad ranked on the metric you pick, so the top and the bottom of the list are both one glance away",
-  "The creative itself in the page, not an ad id you have to go and look up",
-  "Meta and Snapchat ads side by side, rather than one platform's opinion at a time",
-  "Hook and hold retention for video, showing where viewers actually leave",
-  "Ad fatigue tracked across platforms, so you cut before performance does",
+  "كل إعلان نشط مرتّب حسب المقياس الذي تختاره، فتصل إلى أعلى القائمة وأسفلها بنظرة واحدة",
+  "الـ Creative نفسه في الصفحة، لا رقم إعلان تبحث عنه",
+  "إعلانات Meta وSnapchat جنبًا إلى جنب، بدل رأي منصة واحدة في كل مرة",
+  "نسب Hook & Hold للفيديو، لترى أين يغادر المشاهدون فعلًا",
+  "متابعة الـ Ad fatigue على كل المنصات، لتوقف الإعلان قبل أن يتراجع الأداء",
 ];
 
 // ── The client deliverable ────────────────────────────────────────────
@@ -165,11 +169,11 @@ const creativePoints = [
 // report digests (the app sends no report emails at all, only account and
 // billing ones). Do not reintroduce either.
 const reportPoints = [
-  "The client's own logo and reporting currency on the report they open",
-  "A live view-only link, so what they see is current whenever they look",
-  "A clean paginated PDF for the clients who still want a document",
-  "A Looker Studio connection for the clients who want it in their own BI tool",
-  "A frozen snapshot of anything you sent, so last month cannot move",
+  "شعار العميل وعملة تقاريره على التقرير الذي يفتحه",
+  "رابط مباشر للعرض فقط، فما يراه محدَّث كلما نظر",
+  "ملف PDF مرتب بصفحات للعملاء الذين ما زالوا يريدون مستندًا",
+  "ربط مع Looker Studio للعملاء الذين يريدون البيانات في أداة BI خاصة بهم",
+  "لقطة ثابتة لكل ما أرسلته، فلا تتغير أرقام الشهر الماضي",
 ];
 
 // The old `changes` feature grid lived here. It was removed deliberately: the
@@ -179,43 +183,41 @@ const reportPoints = [
 
 // ── Breadth: the rest of what's on the same screen ────────────────────
 const alsoOnScreen = [
-  { label: "Synced hourly", note: "The screen is current before anyone opens it" },
-  { label: "Versus prior period", note: "Month-over-month movement inline on any tile" },
-  { label: "Product-level ROAS", note: "Store revenue attributed down to product and category" },
-  { label: "Geo maps & funnels", note: "Performance by region, and step-by-step drop-off" },
-  { label: "Change annotations", note: "What changed, and the date it changed on" },
-  { label: "Live links & PDF", note: "View-only client links, or a document when they insist" },
-  { label: "Methodology & snapshots", note: "How every metric is calculated, and a frozen copy of what you sent" },
-  { label: "Arabic, right-to-left", note: "Fully localized, charts included" },
+  { label: "مزامنة كل ساعة", note: "الشاشة محدَّثة قبل أن يفتحها أحد" },
+  { label: "مقارنة بالفترة السابقة", note: "التغيّر الشهري داخل أي مربع" },
+  { label: "ROAS على مستوى المنتج", note: "إيرادات المتجر منسوبة حتى المنتج والفئة" },
+  { label: "الخرائط ومسارات التحويل", note: "الأداء حسب المنطقة، والتسرّب خطوة بخطوة" },
+  { label: "ملاحظات التغييرات", note: "ما الذي تغيّر، وتاريخ تغيّره" },
+  { label: "روابط مباشرة وPDF", note: "روابط للعرض فقط للعملاء، أو مستند حين يصرّون" },
+  { label: "المنهجية واللقطات الثابتة", note: "كيف يُحسب كل مقياس، ونسخة ثابتة مما أرسلته" },
+  { label: "عربي من اليمين إلى اليسار", note: "تعريب كامل، والرسوم البيانية معه" },
 ];
 
 // ── Rolling it out ────────────────────────────────────────────────────
 const rollout = [
   {
-    step: "Set up one account properly",
-    body: "Build the view the way you actually want an account read, then save it as a template. This is the only part that takes real thought.",
+    step: "جهّز حسابًا واحدًا كما يجب",
+    body: "ابنِ العرض بالطريقة التي تريد أن يُقرأ بها أي حساب، ثم احفظه كقالب. هذا هو الجزء الوحيد الذي يحتاج تفكيرًا حقيقيًا.",
   },
   {
-    step: "Clone it across every account",
-    body: "Every other account starts from that template, so the whole team reports the same way without a style guide or a meeting about it.",
+    step: "انسخه على كل الحسابات",
+    body: "كل حساب آخر يبدأ من ذلك القالب، فيعدّ الفريق كله التقارير بالطريقة نفسها دون دليل أو اجتماع.",
   },
   {
-    step: "Add the team, then the clients",
-    body: "Invite media buyers into the workspace and send clients a live share link, so client questions stop landing on your team as interruptions.",
+    step: "أضف الفريق، ثم العملاء",
+    body: "ادعُ الـ Media Buyers إلى مساحة العمل، وأرسل للعملاء روابط مشاركة مباشرة، فتتوقف أسئلتهم عن الوصول إلى فريقك كمقاطعات.",
   },
 ];
 
 // ── The AI dashboard builder ──────────────────────────────────────────
-// Verified in docs/what-ships.md, checked 22 September 2026. Two-phase:
-// a plan somebody approves, then the build. For this persona the point is
-// that the team starts from one shape instead of six. Do not turn that into
-// a claim about per-member views, which do not exist (voice.md, capability
-// truth).
+// Verified in docs/what-ships.md, checked 22 September 2026. Twin of the
+// English section. The point for this persona: الفريق يبدأ من شكل واحد.
+// Never turn that into a claim about per-member views, which do not exist.
 const aiDashboard = {
-  heading: "Nobody on the team wants to build the first dashboard",
-  body: "So nobody has to. Say which brand it is for and the assistant plans one out of what that brand has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. It shows the plan, names the panels that would come back empty, and builds only once someone approves it. Everyone starts from the same shape instead of their own, and that layout can be saved as a template and cloned across the rest of the accounts.",
-  prompt: "Build a dashboard for Tiffin Co.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+  heading: "لا أحد في الفريق يريد بناء اللوحة الأولى",
+  body: "ولا أحد مضطر. سمِّ العلامة التجارية فيضع المساعد خطة لوحة مما ربطته: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. يعرض الخطة، ويسمّي اللوحات التي ستأتي فارغة، ولا يبني إلا بعد موافقة أحدكم. يبدأ الجميع من الشكل نفسه بدل ستة أشكال، ويمكن حفظ هذا التخطيط كقالب واستنساخه على بقية الحسابات.",
+  prompt: "ابنِ لوحة لـ Tiffin Co.",
+  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
@@ -228,8 +230,9 @@ const control = [
 ---
 
 <Layout
-  title="Managing a team of media buyers is hard"
-  description="Several media buyers, several accounts each, several platforms under every account, and you answer for all of it. AdFunnl puts the whole picture on one live screen."
+  locale="ar"
+  title="إدارة فريق من الـ Media Buyers أمر صعب"
+  description="عدة Media Buyers، ولكلٍّ منهم عدة حسابات، وتحت كل حساب عدة منصات، وأنت المسؤول عن كل ذلك. AdFunnl يضع الصورة كاملة على شاشة مباشرة واحدة."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -238,43 +241,39 @@ const control = [
 
     <div class="relative mx-auto max-w-6xl">
       <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-500">
-        <a href="/" class="hover:text-zinc-300 transition">Home</a>
+        <a href="/ar" class="hover:text-zinc-300 transition">الرئيسية</a>
         <span>/</span>
-        <span>AdFunnl For</span>
+        <span>حسب دورك</span>
         <span>/</span>
-        <span class="font-medium text-zinc-300">Team Leads</span>
+        <span class="font-medium text-zinc-300">Team Leads</span>
       </nav>
 
       <div class="mx-auto max-w-3xl text-center">
         <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-          AdFunnl For · Team Leads
+          AdFunnl لـ Team Leads
         </span>
 
         <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
-          Managing a team of<br class="hidden sm:block" /> media buyers is hard.
+          إدارة فريق من<br class="hidden sm:block" /> الـ Media Buyers أمر صعب.
         </h1>
 
         <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-          Each media buyer holds several accounts. Each account runs on several
-          platforms, in more than one currency, and you are the one who answers
-          for how all of it is performing. Seeing it today means opening it one
-          account at a time, and that is most of a morning gone before you have
-          made a single decision.
+          كل Media Buyer يدير عدة حسابات. وكل حساب يعمل على عدة منصات وبأكثر من عملة، وأنت من يُسأل عن أداء كل ذلك. رؤيته اليوم تعني فتحه حسابًا بعد حساب، فيضيع معظم الصباح قبل أن تتخذ قرارًا واحدًا.
         </p>
 
         <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white">
-          AdFunnl puts the whole picture on one live screen.
+          AdFunnl يضع الصورة كاملة على شاشة مباشرة واحدة.
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
-            Start free
+            ابدأ مجانًا
           </a>
           <a href="#what-changes"
              class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
-            See what changes
+            شاهد ما الذي يتغير
           </a>
         </div>
       </div>
@@ -289,9 +288,9 @@ const control = [
             Acme Cosmetics
             <svg class="h-3 w-3 text-zinc-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
           </span>
-          <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
+          <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">هذا الشهر</span>
           <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Live
+            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>مباشر
           </span>
         </div>
 
@@ -300,7 +299,7 @@ const control = [
           {blended.map((b) => (
             <div class:list={["p-3.5 sm:p-4", b.strong ? "bg-brand-600" : "bg-white"]}>
               <p class:list={["text-[9px] font-semibold uppercase tracking-widest", b.strong ? "text-brand-200" : "text-zinc-400"]}>{b.label}</p>
-              <p class:list={["mt-1 font-display text-lg font-bold tracking-tight sm:text-xl", b.strong ? "text-white" : "text-zinc-900"]}>{b.value}</p>
+              <p class:list={["mt-1 font-display text-lg font-bold tracking-tight sm:text-xl", b.strong ? "text-white" : "text-zinc-900"]}><bdi dir="ltr">{b.value}</bdi></p>
             </div>
           ))}
         </div>
@@ -308,8 +307,8 @@ const control = [
         <!-- per-platform contribution -->
         <div class="border-t border-zinc-100 p-3.5 sm:p-4">
           <div class="mb-2.5 flex items-center justify-between">
-            <p class="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Where it came from</p>
-            <p class="hidden text-[10px] text-zinc-400 sm:block">Share of spend</p>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">مصدر الأرقام</p>
+            <p class="hidden text-[10px] text-zinc-400 sm:block">حصة الإنفاق</p>
           </div>
           <div class="space-y-1.5">
             {platforms.map((p) => {
@@ -323,14 +322,14 @@ const control = [
                          small bar rather than a rendering artefact -->
                     <span class="board-bar block h-full rounded-full" style={`width:max(${share.toFixed(1)}%, 8px);background:${p.color}`}></span>
                   </span>
-                  <span class="w-16 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:w-20">SAR {fmt(p.spend)}</span>
-                  <span class="hidden w-12 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:block">{p.purchases}</span>
-                  <span class="w-12 shrink-0 text-right text-[11px] font-bold tabular-nums text-zinc-900">{roas.toFixed(1)}×</span>
+                  <span class="w-16 shrink-0 text-end text-[11px] tabular-nums text-zinc-500 sm:w-20">SAR {fmt(p.spend)}</span>
+                  <span class="hidden w-12 shrink-0 text-end text-[11px] tabular-nums text-zinc-500 sm:block"><bdi dir="ltr">{p.purchases}</bdi></span>
+                  <span class="w-12 shrink-0 text-end text-[11px] font-bold tabular-nums text-zinc-900"><bdi dir="ltr">{roas.toFixed(1)}×</bdi></span>
                 </div>
               );
             })}
           </div>
-          <p class="mt-3 text-[10px] text-zinc-400">Every platform in one currency, with no export.</p>
+          <p class="mt-3 text-[10px] text-zinc-400">كل المنصات بعملة واحدة ودون أي تصدير.</p>
         </div>
       </div>
     </div>
@@ -343,11 +342,10 @@ const control = [
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Nobody has the overview, because it multiplies
+          لا أحد يملك الصورة الكاملة، لأنها تتضاعف
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          You are accountable for performance you cannot see without asking
-          somebody to go and assemble it. Here is why it is never just a question.
+          أنت مسؤول عن أداء لا تستطيع رؤيته دون أن تطلب من أحد تجميعه. وهذا سبب أنه لا يكون مجرد سؤال أبدًا.
         </p>
       </div>
 
@@ -362,10 +360,7 @@ const control = [
       </div>
 
       <p class="reveal mx-auto mt-8 max-w-2xl text-center leading-relaxed text-zinc-600">
-        That is eighty places to look before anyone has had an opinion about any
-        of them, and two of those places disagree about what a conversion is. The
-        overview is not slow because your team is slow. It is slow because it
-        multiplies.
+        هذه ثمانون خانة يجب النظر فيها قبل أن يكوّن أحد رأيًا في أيٍّ منها، ومكانان منها يختلفان على تعريف التحويل. الصورة الكاملة لا تتأخر لأن فريقك بطيء، بل لأنها تتضاعف.
       </p>
     </div>
   </section>
@@ -375,12 +370,10 @@ const control = [
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          The same morning, twice
+          الصباح نفسه، مرتين
         </h2>
         <p class="mt-4 text-lg text-zinc-600">
-          Reading every platform in its own tab is like judging a race by watching
-          each runner on a separate screen. You can do it. You just cannot see
-          who is winning.
+          قراءة كل منصة في تبويب منفصل تشبه تحكيم سباق وأنت تشاهد كل عدّاء على شاشة مستقلة. يمكنك فعل ذلك، لكنك لن ترى من يفوز.
         </p>
       </div>
 
@@ -410,7 +403,7 @@ const control = [
                   <!-- connector rail (desktop only) -->
                   <span
                     class:list={[
-                      "absolute left-0 top-1.5 hidden h-px sm:block",
+                      "absolute start-0 top-1.5 hidden h-px sm:block",
                       i === lane.stops.length - 1 ? "w-2.5" : "w-[calc(100%+1.25rem)]",
                       lane.tone === "bad" ? "bg-zinc-300" : "bg-brand-200",
                     ]}
@@ -418,7 +411,7 @@ const control = [
                   ></span>
                   <span
                     class:list={[
-                      "absolute left-0 top-1.5 hidden h-2.5 w-2.5 -translate-y-1/2 rounded-full sm:block",
+                      "absolute start-0 top-1.5 hidden h-2.5 w-2.5 -translate-y-1/2 rounded-full sm:block",
                       lane.tone === "bad"
                         ? (i === lane.stops.length - 1 ? "bg-zinc-500" : "bg-zinc-300")
                         : (i === lane.stops.length - 1 ? "bg-brand-600" : "bg-brand-300"),
@@ -436,7 +429,7 @@ const control = [
             </ol>
 
             {lane.note && (
-              <p class="mt-6 border-t border-zinc-100 pt-5 text-sm italic leading-relaxed text-zinc-400">
+              <p class="mt-6 border-t border-zinc-100 pt-5 text-sm leading-relaxed text-zinc-400">
                 {lane.note}
               </p>
             )}
@@ -452,20 +445,19 @@ const control = [
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          The same job, both ways
+          المهمة نفسها بطريقتين
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Every row is something you already do this week. The left column is
-          how it goes now.
+          كل صف مهمة تقوم بها هذا الأسبوع، وعمود «بدون AdFunnl» يصف كيف تسير الآن.
         </p>
       </div>
 
       <div class="reveal mt-14 overflow-hidden rounded-2xl border border-zinc-200 bg-white">
         <!-- column headers (desktop) -->
         <div class="hidden border-b border-zinc-200 bg-zinc-50/80 md:grid md:grid-cols-[1.1fr_1fr_1.2fr]">
-          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">The job</p>
-          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">Without AdFunnl</p>
-          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-brand-600">With AdFunnl</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">المهمة</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">بدون AdFunnl</p>
+          <p class="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-brand-600">مع AdFunnl</p>
         </div>
 
         {compare.map((row, i) => (
@@ -496,17 +488,13 @@ const control = [
       <div class="reveal grid items-start gap-12 lg:grid-cols-2">
         <div>
           <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-            Nobody can hold three thousand ads in their head
+            لا أحد يستطيع حفظ ثلاثة آلاف إعلان في رأسه
           </h2>
           <p class="mt-5 text-lg leading-relaxed text-zinc-500">
-            Across a roster this size there are thousands of creatives running at
-            once. Which ones deserve more budget is the highest-value call your
-            team makes all week, and it is usually made from memory, one platform
-            at a time.
+            في حسابات بهذا الحجم تعمل آلاف الإعلانات في وقت واحد. تحديد أيها يستحق ميزانية أكبر هو أهم قرار يتخذه فريقك طوال الأسبوع، وغالبًا ما يُتخذ من الذاكرة، منصةً بعد منصة.
           </p>
           <p class="mt-4 leading-relaxed text-zinc-600">
-            Creative analysis lives inside AdFunnl, on the same data as everything
-            else, so the answer is a sort rather than an investigation.
+            تحليل الـ Creatives موجود داخل AdFunnl، على البيانات نفسها، فتصبح الإجابة ترتيبًا بسيطًا لا تحقيقًا.
           </p>
         </div>
 
@@ -528,13 +516,10 @@ const control = [
       <div class="reveal grid items-start gap-12 lg:grid-cols-2">
         <div>
           <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-            The report is the part the client judges you on
+            التقرير هو ما يحكم عليك العميل من خلاله
           </h2>
           <p class="mt-5 text-lg leading-relaxed text-zinc-500">
-            They do not see the work, the testing or the restructure. They see
-            the document that arrives. When that document takes a day to build
-            and is out of date by the time it lands, you are being judged on your
-            weakest artefact.
+            العميل لا يرى العمل ولا الاختبارات ولا إعادة الهيكلة، بل يرى المستند الذي يصله. وحين يستغرق بناؤه يومًا ويصل وقد تقادم، فأنت تُقيَّم على أضعف ما تقدّمه.
           </p>
         </div>
 
@@ -550,7 +535,7 @@ const control = [
 
       <!-- Breadth: the page shouldn't read as one feature -->
       <div class="reveal mt-12 rounded-2xl border border-zinc-200/70 bg-white p-7 sm:p-8">
-        <p class="text-sm font-semibold text-zinc-900">And on the same canvas</p>
+        <p class="text-sm font-semibold text-zinc-900">وعلى المساحة نفسها</p>
         <div class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
           {alsoOnScreen.map((a) => (
             <div class="flex items-start gap-2.5">
@@ -568,6 +553,7 @@ const control = [
 
   <!-- ========================== AI DASHBOARD =========================== -->
   <AiDashboard
+    locale="ar"
     sectionClass="bg-white px-6 pt-20"
     heading={aiDashboard.heading}
     body={aiDashboard.body}
@@ -580,7 +566,7 @@ const control = [
     <div class="mx-auto max-w-4xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          What you're probably thinking
+          ما الذي تفكر فيه على الأرجح
         </h2>
       </div>
 
@@ -598,26 +584,25 @@ const control = [
   <!-- ===================== DATA FLOW (animated) =====================
        Placed after the objections on purpose: how it works only matters
        once the reader has accepted that the problem is worth solving (R11). -->
-  <DataFlow
+  <DataFlow locale="ar"
     sectionClass="relative overflow-hidden border-y border-zinc-100 bg-white px-6 py-24"
-    heading="Every platform in, one live view out"
-    body="Each account's ad platforms and store stream in continuously. AdFunnl unifies and normalizes them the same way every time, so two accounts run by two different people are genuinely comparable, and the media buyer, you and the client are all reading the same screen."
-    outLabel="One screen"
-    outSub="for the whole team"
-    alt="Data flows from Meta, Google Ads, Shopify, TikTok, Snapchat and Bosta into AdFunnl, which unifies and visualizes it into one live screen shared by the team and the client."
+    heading="كل المنصات تدخل، وعرض مباشر واحد يخرج"
+    body="تتدفق بيانات المنصات الإعلانية والمتجر لكل حساب باستمرار. AdFunnl يوحّدها ويعايرها بالطريقة نفسها في كل مرة، فيصبح حسابان يديرهما شخصان مختلفان قابلين للمقارنة فعلًا، ويقرأ الـ Media Buyer وأنت والعميل الشاشة نفسها."
+    outLabel="شاشة واحدة"
+    outSub="للفريق كله"
+    alt="تتدفق البيانات من Meta وGoogle Ads وShopify وTikTok وSnapchat وبوسطة إلى AdFunnl، الذي يوحّدها ويعرضها على شاشة مباشرة واحدة يشاركها الفريق والعميل."
   />
 
   <!-- ========================== ROLLING IT OUT ========================== -->
   <section class="bg-white px-6 py-24">
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">Rolling it out</p>
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-600">خطوات التطبيق</p>
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          Three steps, and only one of them is work
+          ثلاث خطوات، وواحدة منها فقط تحتاج جهدًا
         </h2>
         <p class="mt-4 text-lg text-zinc-500">
-          You're the one who'll have to run this rollout, so here's the honest
-          shape of it.
+          أنت من سيقود التطبيق، فهذه صورته كما هي.
         </p>
       </div>
 
@@ -641,11 +626,9 @@ const control = [
           <svg style="width:1.125rem;height:1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
         </span>
         <div class="min-w-0">
-          <h2 class="font-display text-lg font-bold text-zinc-950">Where control stands today</h2>
+          <h2 class="font-display text-lg font-bold text-zinc-950">أين وصل التحكم اليوم</h2>
           <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-            Changing campaign status and budgets from inside the dashboard, without
-            opening the ad platform, is live for Meta and TikTok. Snapchat and Google
-            are in progress. Reporting works across every platform today.
+            تغيير حالة الحملات والميزانيات من داخل اللوحة، دون فتح المنصة الإعلانية، متاح الآن على Meta وTikTok، والعمل جارٍ على Snapchat وGoogle. أما التقارير فتعمل على كل المنصات اليوم.
           </p>
           <ul class="mt-5 flex flex-wrap gap-2">
             {control.map((c) => (
@@ -661,7 +644,7 @@ const control = [
                   <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
                 )}
                 <span class="font-semibold text-zinc-800">{c.platform}</span>
-                <span>· {c.status}</span>
+                <span>· {c.status === "Live" ? "متاح" : "قيد التطوير"}</span>
               </li>
             ))}
           </ul>
@@ -675,18 +658,15 @@ const control = [
     <div class="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
       <div class="mx-auto max-w-2xl">
         <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Start with one account
+          ابدأ بحساب واحد
         </h2>
         <p class="mt-5 text-lg leading-relaxed text-zinc-400">
-          Connect one client's platforms and run it for a couple of weeks. Once
-          the screen reads the way you want an account read, save it as a
-          template and clone it across every brand you manage, until one hub
-          holds all of them.
+          اربط منصات عميل واحد وجرّبه لأسبوعين. وحين تُقرأ الشاشة بالطريقة التي تريدها، احفظها كقالب وانسخها على كل علامة تجارية تديرها، حتى يجمعها كلها مركز واحد.
         </p>
         <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
-            Start free
+            ابدأ مجانًا
           </a>
         </div>
       </div>
@@ -704,7 +684,7 @@ const control = [
 
     /* Contribution bars fill on load: the glance assembling itself */
     @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-    .board-bar { transform-origin: left; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
+    .board-bar { transform-origin: right; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
 
     /* Ambient live indicator */
     @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }

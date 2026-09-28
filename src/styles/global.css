@@ -13,6 +13,9 @@
    download when Arabic is painted.
    ────────────────────────────────────────────────────────────────────── */
 @import "@fontsource-variable/archivo/index.css";
+/* Real italic for emphasis words (the homepage hero), so the browser never
+   fakes the slant. Only downloads when italic text is painted. */
+@import "@fontsource-variable/archivo/wght-italic.css";
 @import "@fontsource/zain/400.css";
 @import "@fontsource/zain/700.css";
 @import "@fontsource/dm-mono/400.css";
@@ -45,5 +48,40 @@
     font-family: theme("fontFamily.mono");
     font-variant-numeric: slashed-zero lining-nums tabular-nums;
     letter-spacing: -0.01em;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Arabic: the /ar pages, rendered with dir="rtl" on <html>.
+
+   The fonts do not change. The sans stack above already hands Arabic
+   script to Zain and keeps Latin and every digit on Archivo, exactly as
+   the app does. Do not add a locale-driven font swap here.
+
+   What changes is spacing. Arabic is a joined script: tracking pulls the
+   letters of a word apart, and the negative tracking the display sizes
+   carry breaks the joins outright. Zain also has no italic, and a slant
+   the browser invents on Arabic reads as a rendering fault.
+   ────────────────────────────────────────────────────────────────────── */
+@layer base {
+  [dir="rtl"],
+  [dir="rtl"] * {
+    letter-spacing: 0 !important;
+  }
+
+  [dir="rtl"] :is(em, i, .italic) {
+    font-style: normal;
+  }
+
+  /* Arabic headings need more room between lines than the Latin ladder
+     gives them: the display sizes close to 1.05, which lets Zain's tall
+     letters and dots collide across lines. The selector outranks the
+     leading and text-size utilities, so no page has to override them. */
+  [dir="rtl"] h1 {
+    line-height: 1.35;
+  }
+
+  [dir="rtl"] :is(h2, h3) {
+    line-height: 1.45;
   }
 }

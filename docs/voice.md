@@ -22,7 +22,8 @@ disagree, `CLAUDE.md` wins.
   full every time. Dropping the "media" is wrong: the entire app is built for
   media buyers, and the short form reads as somebody making a purchase. The
   hook enforces this, which is why this line does not spell out the short form.
-- CTAs are plain: `Try it now`, `Start free`, `Book a demo`. Nothing else.
+- The CTA is `Start free`, on every page. Nothing else. No demo button,
+  because demos are not offered right now.
 - No invented numbers, customers, testimonials or percentages.
 - Capability claims come from `what-ships.md`, including its "Do not claim"
   list. The app repo is not connected to this one, so nothing warns you when
@@ -122,9 +123,9 @@ metaphorical.
 ```
 WAS:  Put your book on one screen
       Set up one account with me
-NOW:  Try it now
-RULE: A clever CTA makes the reader decode instead of click. Allowed set:
-      Try it now, Start free, Book a demo.
+NOW:  Start free
+RULE: A clever CTA makes the reader decode instead of click. The call to
+      action is Start free, on every page.
 ```
 
 ### R6. No coined vocabulary
@@ -207,6 +208,17 @@ RULE: Open a section with the cost the reader already feels. Mention the
 
 Practical test for any persona page: could this section exist on a competitor's
 site with the product name swapped? If yes, it is feature copy.
+
+The same applies to section headlines on the homepage: open with the problem
+the reader already has, and let the body bring the fix.
+
+```
+WAS:  See who your ads actually reach
+NOW:  How long would it take you to see your breakdowns?
+RULE: An outcome headline asks the reader to want something. A problem
+      headline makes them recognise their own week first. The fix belongs in
+      the body, after the pain has landed.
+```
 
 ### R12. Us versus them, side by side
 
@@ -299,3 +311,66 @@ body copy.
   `../../AdFunnl/adfunnl-landing-copy.md` and the app repo's docs. Use them as
   a source of capability truth, not as a model for voice: that file is written
   in exactly the register this guide rejects.
+
+## 7. Arabic
+
+Every English page has an Arabic twin under `src/pages/ar/`, at the same path
+with `/ar` in front. Every rule above applies to the Arabic copy as well: no
+dashes, no filler, no invented numbers, capability claims from `what-ships.md`,
+one heading per idea, no three-beat rhythm outside the slogan.
+
+**Register.** Modern Standard Arabic, direct and plain, addressed to "you"
+(أنت). The readers are in Egypt and the Gulf, so nothing dialect-specific.
+Arabic has its own filler that does the job the banned English list does:
+بسلاسة، بكل سهولة، أطلق العنان، نقلة نوعية، ثوري. Keep it out for the same
+reason.
+
+**Terminology: Hussein's rule.** Media-buying and technical terms stay in
+English, written in Latin script. Everything else is Arabic. It should not be
+overdone: a page that reads as half English is wrong.
+
+| Stays in English | Examples in context |
+|---|---|
+| Metrics and acronyms | ROAS, blended ROAS, CTR, Outbound CTR, CPA, CAC, KPI |
+| Platform and tool names | Meta, TikTok, Snapchat, Google Ads, Shopify, Ads Manager, Looker Studio |
+| Media-buying jargon | Creative / Creatives, breakdowns, attribution window, retargeting, prospecting, UGC, Scale |
+| Product and feature names | Pulse, Best Creatives Calculator, Hook & Hold, Ad Fatigue, MCP, AI |
+| Pulse verdicts | Scale, Hold, Cut |
+| Personas (fixed terms) | Account Managers, Team Leads, Media Buyers |
+| Plan names | Free, Solo, Growth, Agency |
+
+| In Arabic | Word |
+|---|---|
+| dashboard | لوحة / لوحة المعلومات (the app's own word) |
+| campaign, ad set, ad account | حملة، مجموعة إعلانية، حساب إعلاني |
+| spend, revenue, purchases, conversions | الإنفاق، الإيرادات، المشتريات، التحويلات |
+| template, workspace, snapshot | قالب، مساحة العمل، لقطة ثابتة |
+| live link, view-only | رابط مباشر، للعرض فقط |
+| reporting currency | عملة التقارير |
+| Salla, Bosta | سلة، بوسطة (as the app writes them) |
+
+Notes that come up every time:
+
+- The app's own `ar.ts` translates ROAS. The site deliberately does not.
+- Platforms in a list: "Meta وTikTok وSnapchat وGoogle", same order, the و
+  joined to the next name. Still no count (R14).
+- CTA: `ابدأ مجانًا` (Start free). Nothing else.
+- Slogan: `اربط. اعرض. شارك.`
+- The Arabic article before an English term is fine where Arabic grammar wants
+  it (الـ Creatives), but do not put it on every occurrence.
+- On the Arabic pages the two words of each persona name are joined with a
+  no-break space, so a name such as Team Leads or Media Buyers never splits
+  across two lines. Keep it when editing those strings.
+- A number carrying a symbol that is not a digit (5.2×, +18%) can jump to the
+  wrong side inside Arabic text. Wrap it in `<bdi dir="ltr">`. In prose, write
+  the multiplier as a Latin x (5.00x), which does not move.
+
+**Type.** Fonts do not change for Arabic. Archivo leads the stack and draws
+Latin and every digit; Zain draws Arabic script by per-character fallback,
+exactly as in the app. Do not switch the Arabic face to Cairo or add a
+locale-driven font swap. `global.css` resets tracking and italics under
+`dir="rtl"`, because both break joined script.
+
+**Layout.** Use logical classes (`ms-`, `pe-`, `start-`, `text-end`) in shared
+components so the same markup serves both directions. Charts and pipelines
+that run through time go right to left in Arabic, as the app's charts do.

@@ -1,0 +1,95 @@
+---
+// Arabic twin of src/pages/security.astro. Keep the two in step: a change to
+// one page's copy or markup belongs in the other. Media-buying and technical
+// terms stay in English, see the Arabic section of docs/voice.md.
+//
+import Layout from "../../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── Security ─────────────────────────────────────────────────────────────
+// Trust page: what actually protects a workspace's data. Every claim here is
+// a real, shipped control, not a roadmap item. Linked from the footer only,
+// same visibility as Privacy and Terms.
+const LAST_UPDATED = "آخر تحديث: سبتمبر 2026";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "نظرة عامة",
+    body: [
+      "يحتفظ AdFunnl بحساباتك الإعلانية المرتبطة، وبيانات متجرك، وأرقام عملائك. توضح هذه الصفحة الضوابط التي تحمي هذه البيانات: كيف تُؤمَّن الحسابات، وكيف تُفصَل كل مساحة عمل عن الأخرى، وكيف تُخزَّن بيانات الاعتماد.",
+    ],
+  },
+  {
+    title: "أمان الحساب",
+    body: [
+      "كل حساب يتطلب التحقق بخطوتين. لا توجد طريقة لتسجيل الدخول بكلمة مرور وحدها.",
+      "كلمات المرور مُشفَّرة بخوارزمية bcrypt، ولا تُخزَّن كنص عادي أبدًا. محاولات تسجيل الدخول وإعادة تعيين كلمة المرور محدودة المعدّل لمنع التخمين الآلي.",
+      "تسجيل الخروج من كل الأجهزة، أو تغيير كلمة المرور، يُبطل فورًا كل جلسة قائمة، لا الجلسة الحالية فقط.",
+    ],
+  },
+  {
+    title: "الفصل بين مساحات العمل",
+    body: [
+      "كل طلب مرتبط بمساحة العمل التي يخصّها فقط. عضو في مساحة عمل لا يمكنه رؤية أو التعامل مع عملاء أو حسابات إعلانية أو لوحات معلومات تخصّ مساحة عمل أخرى، بغض النظر عن محاولات تخمين المعرّف أو تعديل الرابط.",
+      "داخل مساحة العمل نفسها، العضو المقيَّد بعملاء محدّدين لا يرى إلا بيانات هؤلاء العملاء، سواء في التطبيق أو عبر مساعد AI ووصول MCP.",
+    ],
+  },
+  {
+    title: "التشفير",
+    body: [
+      "كل حركة البيانات من وإلى AdFunnl تمر عبر HTTPS.",
+      "رموز OAuth لكل منصة مرتبطة، Meta وTikTok وSnapchat وGoogle، إضافة إلى Shopify وسلة، مشفَّرة بخوارزمية AES-256 قبل وصولها إلى قاعدة البيانات. نسخة من قاعدة البيانات وحدها لا تكشف بيانات اعتماد قابلة للاستخدام.",
+    ],
+  },
+  {
+    title: "وصول فريق AdFunnl",
+    body: [
+      "فريق AdFunnl لا يملك وصولًا دائمًا إلى بيانات مساحات العمل. وصول الدعم صلاحية منفصلة وضيّقة، تُمنح لحسابات محددة ويمكن تتبّعها، وليست نتيجة تلقائية للعمل في AdFunnl.",
+    ],
+  },
+  {
+    title: "البنية التحتية",
+    body: [
+      "يعمل AdFunnl على Railway. الوصول إلى بيئة الإنتاج مقصور على الأفراد المخوَّلين.",
+    ],
+  },
+  {
+    title: "الإبلاغ عن مشكلة",
+    body: [
+      "إذا اكتشفت مشكلة أمنية في AdFunnl، تواصل معنا على العنوان أدناه مع تفاصيل ما وجدته وكيفية إعادة إنتاجه. نرد على كل بلاغ.",
+    ],
+  },
+];
+---
+
+<Layout
+  locale="ar"
+  title="الأمان"
+  description="كيف يحمي AdFunnl بياناتك: أمان الحساب، والتشفير، والفصل بين مساحات العمل، وضوابط وصول الفريق."
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">الأمان</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      أسئلة حول كيفية حماية بياناتك؟ تواصل معنا على{" "}
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+    </p>
+  </main>
+</Layout>

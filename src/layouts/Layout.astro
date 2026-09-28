@@ -63,6 +63,7 @@ const COPY = {
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
+    security: "Security",
     forPersona: (s: string) => `For ${s}`,
     rights: "AdFunnl. All rights reserved.",
     powered: "Powered by Funnl Suite",
@@ -92,6 +93,7 @@ const COPY = {
     about: "من نحن",
     privacy: "الخصوصية",
     terms: "الشروط",
+    security: "الأمان",
     forPersona: (s: string) => `لـ ${s}`,
     rights: "AdFunnl. جميع الحقوق محفوظة.",
     powered: "من تطوير Funnl Suite",
@@ -332,9 +334,10 @@ const forSectionActive = basePath === "/for" || basePath.startsWith("/for/");
             <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">{T.company}</p>
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
               <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">{T.startFree}</a>
-              <a href={L("/about")}   class="hover:text-zinc-900 transition">{T.about}</a>
-              <a href={L("/privacy")} class="hover:text-zinc-900 transition">{T.privacy}</a>
-              <a href={L("/terms")}   class="hover:text-zinc-900 transition">{T.terms}</a>
+              <a href={L("/about")}    class="hover:text-zinc-900 transition">{T.about}</a>
+              <a href={L("/security")} class="hover:text-zinc-900 transition">{T.security}</a>
+              <a href={L("/privacy")}  class="hover:text-zinc-900 transition">{T.privacy}</a>
+              <a href={L("/terms")}    class="hover:text-zinc-900 transition">{T.terms}</a>
             </nav>
           </div>
         </div>

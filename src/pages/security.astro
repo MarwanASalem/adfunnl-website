@@ -1,0 +1,91 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── Security ─────────────────────────────────────────────────────────────
+// Trust page: what actually protects a workspace's data, written the same
+// way about.astro and privacy.astro are, as plain fact rather than persona
+// copy. Every claim here is a real, shipped control, not a roadmap item.
+// Linked from the footer only, same visibility as Privacy and Terms.
+const LAST_UPDATED = "Last updated: September 2026";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "Overview",
+    body: [
+      "AdFunnl holds your connected ad accounts, your store data and your clients' numbers. This page describes the controls that protect that data: how accounts are secured, how one workspace is kept separate from another, and how credentials are stored.",
+    ],
+  },
+  {
+    title: "Account security",
+    body: [
+      "Every account requires two-factor authentication. There is no way to sign in with a password alone.",
+      "Passwords are hashed with bcrypt, never stored in plain text. Sign-in and password-reset attempts are rate-limited to stop automated guessing.",
+      "Signing out everywhere, or changing your password, immediately invalidates every existing session, not just the one you're using.",
+    ],
+  },
+  {
+    title: "Workspace isolation",
+    body: [
+      "Every request is scoped to the workspace it belongs to. A member of one workspace cannot read, list or act on another workspace's clients, ad accounts or dashboards, regardless of ID guessing or URL editing.",
+      "Within a workspace, a member restricted to specific clients only ever sees those clients' data, in the app and through the AI assistant and MCP access alike.",
+    ],
+  },
+  {
+    title: "Encryption",
+    body: [
+      "All traffic to and from AdFunnl runs over HTTPS.",
+      "OAuth tokens for every connected platform, Meta, TikTok, Snapchat and Google, plus Shopify and Salla, are encrypted at rest with AES-256 before they reach the database. A database copy alone does not expose a usable credential.",
+    ],
+  },
+  {
+    title: "Staff access",
+    body: [
+      "AdFunnl staff do not have standing access to workspace data. Support access is a separate, narrow permission, granted to specific accounts and auditable, not a side effect of working at AdFunnl.",
+    ],
+  },
+  {
+    title: "Infrastructure",
+    body: [
+      "AdFunnl runs on Railway. Production access is restricted to authorized personnel.",
+    ],
+  },
+  {
+    title: "Reporting an issue",
+    body: [
+      "If you believe you've found a security issue in AdFunnl, contact us at the address below with what you found and how to reproduce it. We respond to every report.",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Security"
+  description="How AdFunnl protects your workspace: account security, encryption, workspace isolation and staff access controls."
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">Security</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      Questions about how we protect your data? Contact us at{" "}
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+    </p>
+  </main>
+</Layout>

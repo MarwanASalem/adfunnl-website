@@ -22,7 +22,6 @@ const SECTIONS: Section[] = [
   {
     title: "Account security",
     body: [
-      "Every account requires two-factor authentication. There is no way to sign in with a password alone.",
       "Passwords are hashed with bcrypt, never stored in plain text. Sign-in and password-reset attempts are rate-limited to stop automated guessing.",
       "Signing out everywhere, or changing your password, immediately invalidates every existing session, not just the one you're using.",
     ],

@@ -153,6 +153,10 @@ const momBaseY = MOM_PT + momPlotH;
 
 // Shared cell classes for the two dark-section tables.
 const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
+// Assistant answers. Rendered once invisibly so each chat card reserves its
+// full height, then typed out over that space by the script below.
+const mcpAnswer = "استحوذ TikTok على 62% من الإنفاق لكنه جلب 38% فقط من الإيرادات. مجموعتا retargeting على Meta حملتا blended ROAS هذا الشهر، لذلك نقل حوالي $4.2k من prospecting على TikTok إليهما هو المكسب الأوضح.";
+const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح: إنفاق EGP 5,002 و87 عملية شراء وROAS يبلغ 24.16x، متقدمًا بفارق كبير على الإعلان التالي. وما زال تحت متوسط إنفاقك، فهناك مجال لعمل Scale له قبل أن يظهر عليه الـ fatigue.";
 ---
 
 <Layout
@@ -567,7 +571,7 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
                       استخدم <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
                     </div>
-                    <p class="text-sm leading-[1.7] text-[#0d0d0d]"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></p>
+                    <p class="grid text-sm leading-[1.7] text-[#0d0d0d]"><span class="invisible col-start-1 row-start-1" aria-hidden="true"><span data-mcp-ghost>{mcpAnswer}</span>▍</span><span class="col-start-1 row-start-1"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></span></p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e5e5e5] bg-white px-3.5 py-2.5">
@@ -604,7 +608,7 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
                       استخدم <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
                     </div>
-                    <p class="text-sm leading-[1.7] text-[#3d3929]"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></p>
+                    <p class="grid text-sm leading-[1.7] text-[#3d3929]"><span class="invisible col-start-1 row-start-1" aria-hidden="true"><span data-mcp-ghost>{mcpAnswer}</span>▍</span><span class="col-start-1 row-start-1"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></span></p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e2dbcd] bg-white px-3.5 py-2.5">
@@ -645,8 +649,9 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
               </span>
               <div class="min-w-0 flex-1">
-                <p class="rounded-2xl rounded-es-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
-                  <span data-inapp-stream></span><span class="stream-caret text-brand-600">▍</span>
+                <p class="grid rounded-2xl rounded-es-sm bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-700">
+                  <span class="invisible col-start-1 row-start-1" aria-hidden="true"><span data-inapp-ghost>{inAppAnswer}</span>▍</span>
+                  <span class="col-start-1 row-start-1"><span data-inapp-stream></span><span class="stream-caret text-brand-600">▍</span></span>
                 </p>
                 <div class="mt-2.5 flex flex-wrap gap-1.5">
                   {["اعرض الإعلان", "قارن بالشهر الماضي", "أضف إلى التقرير"].map((chip) => (
@@ -1148,8 +1153,8 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
     }
 
     // ── Assistant typewriters (shared counter, loops) ──────────────
-    const MCP_ANSWER = "استحوذ TikTok على 62% من الإنفاق لكنه جلب 38% فقط من الإيرادات. مجموعتا retargeting على Meta حملتا blended ROAS هذا الشهر، لذلك نقل حوالي $4.2k من prospecting على TikTok إليهما هو المكسب الأوضح.";
-    const INAPP_ANSWER = "الإعلان IG Post · Leakproof test هو الأوضح: إنفاق EGP 5,002 و87 عملية شراء وROAS يبلغ 24.16x، متقدمًا بفارق كبير على الإعلان التالي. وما زال تحت متوسط إنفاقك، فهناك مجال لعمل Scale له قبل أن يظهر عليه الـ fatigue.";
+    const MCP_ANSWER = document.querySelector("[data-mcp-ghost]").textContent;
+    const INAPP_ANSWER = document.querySelector("[data-inapp-ghost]").textContent;
     const mcpEls = document.querySelectorAll("[data-mcp-stream]");
     const inAppEls = document.querySelectorAll("[data-inapp-stream]");
     const longest = Math.max(MCP_ANSWER.length, INAPP_ANSWER.length);

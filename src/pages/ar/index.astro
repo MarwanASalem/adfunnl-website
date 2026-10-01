@@ -847,15 +847,19 @@ const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
         <div class="cur-viz order-2 lg:order-1 rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
           <div class="grid grid-cols-2 gap-2.5">
             {[
-              { c: "USD", flag: "$", amt: "142,880" },
-              { c: "AED", flag: "د.إ", amt: "318,400" },
-              { c: "EGP", flag: "£", amt: "2,940,000" },
-              { c: "KWD", flag: "د.ك", amt: "18,220" },
+              { c: "USD", flag: "$", amt: "142,880", p: "meta", name: "Meta" },
+              { c: "AED", flag: "د.إ", amt: "318,400", p: "tiktok", name: "TikTok" },
+              { c: "EGP", flag: "£", amt: "2,940,000", p: "shopify", name: "Shopify" },
+              { c: "KWD", flag: "د.ك", amt: "18,220", p: "snapchat", name: "Snapchat" },
             ].map((x, i) => (
               <div class="cur-chip rounded-lg border border-zinc-200 bg-white px-3 py-2.5" style={`transition-delay:${i * 110}ms`}>
                 <div class="flex items-center gap-1.5">
                   <span class="flex h-5 w-5 items-center justify-center rounded bg-zinc-100 text-[10px] font-bold text-zinc-500">{x.flag}</span>
                   <span class="text-[11px] font-semibold text-zinc-500">{x.c}</span>
+                  <span class="ms-auto flex h-5 w-5 items-center justify-center" title={x.name}>
+                    <PlatformIcon platform={x.p} class="h-4 w-4" />
+                    <span class="sr-only">{x.name}</span>
+                  </span>
                 </div>
                 <p class="mt-1 font-display text-sm font-bold text-zinc-800">{x.amt}</p>
               </div>

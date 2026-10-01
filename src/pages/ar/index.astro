@@ -539,13 +539,13 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </p>
       </div>
 
-      <div class="mt-8 grid items-start gap-6 lg:grid-cols-2">
+      <div class="mt-8 grid items-stretch gap-6 lg:grid-cols-2">
         <!-- Left: drag-to-compare assistant slider. Two full copies of the same
              conversation stacked in one grid cell; the Claude layer is clipped. -->
         <div id="assistant-split"
              class="assistant-split reveal relative select-none overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10"
              style="--split:50%">
-          <div class="grid">
+          <div class="grid h-full">
             <!-- ChatGPT layer (bottom) -->
             <div class="col-start-1 row-start-1 flex flex-col bg-white">
               <div class="flex items-center gap-2.5 border-b border-[#e5e5e5] bg-[#f7f7f8] px-4 py-2.5">
@@ -630,7 +630,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </div>
 
         <!-- Right: the in-app assistant -->
-        <div class="reveal overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
+        <div class="reveal flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
           <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
@@ -640,7 +640,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
             </div>
             <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">داخل التطبيق</span>
           </div>
-          <div class="flex flex-col gap-3 p-5">
+          <div class="flex flex-1 flex-col gap-3 p-5">
             <div class="flex justify-end">
               <p class="max-w-[85%] rounded-2xl rounded-ee-sm bg-brand-600 px-3.5 py-2 text-sm text-white">أي Creative يستحق ميزانية أكبر هذا الأسبوع؟</p>
             </div>
@@ -660,7 +660,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
                 </div>
               </div>
             </div>
-            <div class="mt-1 flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
+            <div class="mt-auto flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
               <span class="flex-1 text-xs text-zinc-400">اسأل عن أي شيء في هذا التقرير</span>
               <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600 text-white">
                 <svg class="rtl:-scale-x-100 h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>

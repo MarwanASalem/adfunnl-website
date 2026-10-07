@@ -39,6 +39,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Google Ads | Insights only |
 | Shopify | Products and daily product sales, powers product-level ROAS |
 | Salla | Orders and revenue |
+| Zid | Daily store revenue over OAuth, same shape as Salla. On the Connections page. Checked 7 October 2026 in `api/lib/connectors/zid.rb`, `api/lib/connectors/registry.rb` and `web/src/pages/ConnectionsPage.tsx`. Shown as a store in the hero film |
 | Bosta | Daily fulfilment snapshot |
 | Easy Orders | Orders |
 | Google Sheets | Manual import as a data source, one direction, in only |

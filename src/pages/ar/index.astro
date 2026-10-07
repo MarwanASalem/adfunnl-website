@@ -96,30 +96,13 @@ const aiDashboard = {
   meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
-// ── Hero signature: the Blended Overview (e-commerce) dashboard ──
-// Faithful to the real template: per-platform metric cards + a blended row.
-// Numbers are anonymized demo data (no real client/account).
-const ovCols = [
-  { label: "الإنفاق",     cur: true },
-  { label: "المشتريات", cur: false, hideSm: true },
-  { label: "تكلفة التحويل",cur: true,  hideSm: true },
-  { label: "ROAS",      cur: false },
-  { label: "الإيرادات",   cur: true },
-];
-// cell = [value, deltaPct, up?, good?]
-const ovRows = [
-  { name: "Meta",     key: "meta",       color: "#1877F2", cells: [["18,824","17.6",false,true],["223","20.5",true,true],["84.41","31.6",false,true],["5.79×","42.8",true,true],["108,976","17.6",true,true]] },
-  { name: "TikTok",   key: "tiktok",     color: "#111111", cells: [["3,767","19.5",false,true],["43","23.2",false,false],["87.60","4.8",true,false],["5.75×","2.6",false,false],["21,653","21.6",false,false]] },
-  { name: "Google",   key: "google_ads", color: "#EA4335", cells: [["417","13.9",false,true],["20","60.1",false,false],["21.18","55.6",true,false],["24.5×","51.6",true,true],["10,256","58.3",true,true]] },
-  { name: "Snapchat", key: "snapchat",   color: "#FFC300", cells: [["7,081","1.9",true,false],["120","10.1",true,true],["59.01","7.5",false,true],["8.60×","8.1",true,true],["60,906","8.7",true,true]] },
-];
-const ovBlended = [
-  { label: "إجمالي الإنفاق",  v: "26,323", cur: true },
-  { label: "التحويلات",  v: "363",    cur: false, hideSm: true },
-  { label: "Blended CPP",  v: "74",     cur: true,  hideSm: true },
-  { label: "Blended ROAS", v: "6.69×",  cur: false },
-  { label: "الإيرادات",      v: "180,138",cur: true },
-];
+// ── Hero signature: the explainer film ──
+// Plays muted on a loop. The button restarts it with the voiceover.
+const heroFilm = {
+  label: "فيديو تعريفي عن AdFunnl: ربط منصات الإعلانات والمتاجر، بناء dashboard، سؤال بياناتك ومشاركة تقرير حي",
+  soundOn: "شغّل بالصوت",
+  soundOff: "اكتم الصوت",
+};
 
 // ── Month-over-month showcase: spend (bars, $k) + ROAS (line, ×) ──
 const momRows = [
@@ -188,88 +171,29 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </div>
       </div>
 
-      <!-- Signature: the real Blended Overview (e-commerce) dashboard, in an
-           app window. Anonymized demo data, reveals + count-up on load. -->
+      <!-- Signature: the explainer film. Muted autoplay on a loop, the
+           button restarts it with sound. -->
       <div class="hero-app relative mx-auto w-full max-w-md lg:max-w-none">
-        <div class="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04]">
-          <!-- app top bar -->
-          <div class="flex items-center gap-2 border-b border-zinc-100 bg-white px-3.5 py-2.5">
-            <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
-            <div class="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-700">
-              <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">BD</span>
-              بيانات العلامة
-            </div>
-            <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">هذا الشهر</span>
-            <span class="hidden rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700 sm:inline-block">مقارنة بالفترة السابقة</span>
-            <div class="ms-auto flex items-center gap-1.5">
-              <span class="hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">مشاركة</span>
-              <span class="rounded-md bg-brand-600 px-2 py-0.5 text-[10px] font-semibold text-white">+ عنصر</span>
-            </div>
-          </div>
-
-          <!-- dashboard body -->
-          <div class="space-y-2.5 bg-zinc-50/50 p-3.5">
-            <!-- Overview banner -->
-            <div class="flex items-center justify-between rounded-lg bg-brand-600 px-3.5 py-2 shadow-sm shadow-brand-900/20">
-              <span class="font-display text-sm font-bold tracking-tight text-white">نظرة عامة</span>
-              <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
-                <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-300"></span>مباشر
-              </span>
-            </div>
-
-            <!-- per-platform metric rows -->
-            {ovRows.map((row) => (
-              <div class="flex items-stretch gap-2">
-                <div class="flex w-7 shrink-0 items-center justify-center">
-                  <span class="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg" title={row.name} aria-label={row.name}>
-                    <PlatformIcon platform={row.key} class="h-5 w-5" />
-                  </span>
-                </div>
-                <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
-                  {row.cells.map((c, i) => (
-                    <div class={`rounded-lg border border-zinc-100 bg-white px-2 py-1.5 ${ovCols[i].hideSm ? "hidden sm:block" : ""}`}>
-                      <p class="truncate text-[8px] font-medium uppercase tracking-wide text-zinc-400">{ovCols[i].label}</p>
-                      <p class="mt-0.5 truncate font-display text-[12px] font-bold leading-tight text-zinc-900">
-                        <bdi dir="ltr">{ovCols[i].cur && <span class="text-[8px] font-semibold text-zinc-400">SAR </span>}{c[0]}</bdi>
-                      </p>
-                      <p class={`mt-0.5 flex items-center gap-0.5 text-[8px] font-semibold ${c[3] ? "text-emerald-600" : "text-rose-500"}`}>
-                        <span>{c[2] ? "▲" : "▼"}</span>{c[1]}%
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            <div class="border-t border-dashed border-zinc-200"></div>
-
-            <!-- blended row (highlighted) -->
-            <div class="flex items-stretch gap-2">
-              <div class="flex w-7 shrink-0 items-center justify-center">
-                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm">
-                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>
-                </span>
-              </div>
-              <div class="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5">
-                {ovBlended.map((b, i) => (
-                  <div class={`rounded-lg border border-brand-100 bg-brand-50/60 px-2 py-1.5 ${b.hideSm ? "hidden sm:block" : ""}`}>
-                    <p class="truncate text-[8px] font-medium uppercase tracking-wide text-brand-400">{b.label}</p>
-                    <p class="mt-0.5 truncate font-display text-[13px] font-bold leading-tight text-brand-900">
-                      <bdi dir="ltr">{b.cur && <span class="text-[8px] font-semibold text-brand-400">SAR </span>}{i === 3 ? <span class="count" data-value={b.v}>{b.v}</span> : b.v}</bdi>
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- floating assistant bubble -->
-        <div class="absolute -bottom-4 -start-3 hidden max-w-[15rem] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl lg:block">
-          <div class="flex items-start gap-2">
-            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">AI</span>
-            <p class="text-[11px] leading-snug text-zinc-600">"ما الحملات التي أهدرت الميزانية الأسبوع الماضي؟"</p>
-          </div>
+        <div class="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-ink shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04]">
+          <video
+            id="hero-film"
+            src="/video/hero-film.mp4"
+            poster="/video/hero-film-poster.jpg"
+            autoplay muted loop playsinline preload="metadata"
+            aria-label={heroFilm.label}
+            class="block aspect-video h-auto w-full bg-ink"
+          ></video>
+          <button
+            id="hero-film-sound"
+            type="button"
+            aria-pressed="false"
+            data-on={heroFilm.soundOn}
+            data-off={heroFilm.soundOff}
+            class="absolute bottom-3 end-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-2 text-xs font-semibold text-zinc-900 shadow-lg transition hover:bg-white"
+          >
+            <svg class="h-4 w-4 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            <span>{heroFilm.soundOn}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1068,26 +992,20 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
       }
     }
 
-    // ── Hero KPI count-up ──────────────────────────────────────────
-    function countUp(el) {
-      const raw = el.dataset.value || el.textContent || "";
-      const m = raw.match(/^([^0-9.-]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
-      if (!m) return;
-      const [, prefix, numStr, suffix] = m;
-      const target = parseFloat(numStr);
-      const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
-      if (rm) { el.textContent = raw; return; }
-      const dur = 1200; const start = performance.now();
-      function tick(now) {
-        const p = Math.min(1, (now - start) / dur);
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
-        if (p < 1) requestAnimationFrame(tick);
-        else el.textContent = raw;
-      }
-      requestAnimationFrame(tick);
+    // ── Hero film: sound toggle ─────────────────────────────────────
+    const film = document.getElementById("hero-film");
+    const filmBtn = document.getElementById("hero-film-sound");
+    if (film && filmBtn) {
+      // Reduced motion: no autoplay, the visitor starts it themselves.
+      if (rm) { film.removeAttribute("autoplay"); film.pause(); film.controls = true; }
+      filmBtn.addEventListener("click", () => {
+        const turnOn = film.muted;
+        film.muted = !turnOn;
+        if (turnOn) { film.currentTime = 0; film.play(); }
+        filmBtn.setAttribute("aria-pressed", String(turnOn));
+        filmBtn.querySelector("span").textContent = turnOn ? filmBtn.dataset.off : filmBtn.dataset.on;
+      });
     }
-    document.querySelectorAll(".count").forEach((el) => countUp(el));
 
     // ── Pulse verdict badges + featured-row flip ───────────────────
     const VERDICT = {

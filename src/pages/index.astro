@@ -146,7 +146,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
   <section class="relative overflow-hidden bg-white px-6 pt-14 pb-14 sm:pt-16 sm:pb-16">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
 
-    <div class="mx-auto max-w-5xl">
+    <div class="mx-auto flex max-w-5xl flex-col">
       <!-- Copy -->
       <div class="mx-auto max-w-4xl text-center">
         <h1 class="font-display text-[2.6rem] font-bold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl">
@@ -158,19 +158,21 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
           dashboard, so your week starts with decisions instead of a report to put
           together.
         </p>
+      </div>
 
-        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <!-- Under the film on phones, above it from lg up -->
+      <div class="order-3 mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row lg:order-2 lg:mt-9">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
             Start free
           </a>
-        </div>
       </div>
 
       <!-- Signature: the explainer film. Muted autoplay on a loop, the
            button restarts it with sound. -->
-      <div class="hero-app relative mx-auto mt-12 w-full sm:mt-14">
-        <div class="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-ink shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04]">
+      <div class="hero-app relative order-2 mx-auto mt-9 w-full lg:order-3 lg:mt-14">
+        <div class="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(101,73,221,0.28),transparent_70%)] blur-2xl" aria-hidden="true"></div>
+        <div class="relative overflow-hidden rounded-2xl bg-ink shadow-[0_30px_70px_-28px_rgba(66,42,150,0.55)] ring-1 ring-brand-500/20">
           <video
             id="hero-film"
             src="/video/hero-film.mp4"

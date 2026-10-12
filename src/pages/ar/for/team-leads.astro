@@ -6,6 +6,7 @@
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
+import HeroFilm from "../../../components/HeroFilm.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -240,7 +241,7 @@ const control = [
   <section class="relative overflow-hidden bg-ink px-6 pt-14 pb-20 sm:pt-16">
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-5%,rgba(101,73,221,0.35),transparent)]"></div>
 
-    <div class="relative mx-auto max-w-6xl">
+    <div class="relative mx-auto max-w-7xl">
       <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-500">
         <a href="/ar" class="hover:text-zinc-300 transition">الرئيسية</a>
         <span>/</span>
@@ -249,34 +250,37 @@ const control = [
         <span class="font-medium text-zinc-300">Team Leads</span>
       </nav>
 
-      <div class="mx-auto max-w-3xl text-center">
-        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+      <!-- Copy beside the film from lg up. Below lg the wrapper is display:
+           contents, so the film sits between the headline and the description,
+           as on the homepage. -->
+      <div class="flex flex-col lg:grid lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-x-12">
+      <div class="contents text-center lg:block lg:text-start">
+        <span class="order-1 inline-flex items-center gap-2 self-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
           AdFunnl لـ Team Leads
         </span>
 
-        <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
-          إدارة فريق من<br class="hidden sm:block" /> الـ Media Buyers أمر صعب.
+        <h1 class="order-2 mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-[3.2rem] lg:leading-[1.08]">
+          إدارة فريق من<br class="hidden sm:block lg:hidden" /> الـ Media Buyers أمر صعب.
         </h1>
 
-        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
+        <p class="order-4 mx-auto mt-6 max-w-2xl lg:mx-0 text-lg leading-relaxed text-zinc-400">
           كل Media Buyer يدير عدة حسابات. وكل حساب يعمل على عدة منصات وبأكثر من عملة، وأنت من يُسأل عن أداء كل ذلك. رؤيته اليوم تعني فتحه حسابًا بعد حساب، فيضيع معظم الصباح قبل أن تتخذ قرارًا واحدًا.
         </p>
 
-        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white">
+        <p class="order-5 mx-auto mt-5 max-w-2xl lg:mx-0 text-lg leading-relaxed text-white">
           AdFunnl يضع الصورة كاملة على شاشة مباشرة واحدة.
         </p>
 
-        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div class="order-6 mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
             ابدأ مجانًا
           </a>
-          <a href="#what-changes"
-             class="w-full rounded-xl border border-white/20 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto">
-            شاهد ما الذي يتغير
-          </a>
         </div>
+      </div>
+
+      <HeroFilm locale="ar" class="order-3 mt-8 lg:mt-0" />
       </div>
 
       <!-- The bird's-eye board: blended totals first, contributions underneath -->

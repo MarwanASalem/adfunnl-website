@@ -6,6 +6,7 @@
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
+import HeroFilm from "../../../components/HeroFilm.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -332,7 +333,7 @@ const control = [
     <div class="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_-10%,#422a96,transparent)]"></div>
     <div class="pointer-events-none absolute inset-0 -z-0 opacity-[0.06] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:44px_44px]"></div>
 
-    <div class="relative mx-auto max-w-6xl">
+    <div class="relative mx-auto max-w-7xl">
       <nav class="mb-8 flex items-center gap-2 text-sm text-white/40">
         <a href="/ar" class="transition hover:text-white/80">الرئيسية</a>
         <span>/</span>
@@ -341,34 +342,37 @@ const control = [
         <span class="font-medium text-white/80">Media Buyers</span>
       </nav>
 
-      <div class="mx-auto max-w-3xl text-center">
-        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
+      <!-- Copy beside the film from lg up. Below lg the wrapper is display:
+           contents, so the film sits between the headline and the description,
+           as on the homepage. -->
+      <div class="flex flex-col lg:grid lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-x-12">
+      <div class="contents text-center lg:block lg:text-start">
+        <span class="order-1 inline-flex items-center gap-2 self-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-brand-200">
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
           AdFunnl لـ Media Buyers
         </span>
 
-        <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
-          ضعف عدد العملاء،<br class="hidden sm:block" /> دون أن يقل نصيب أيٍّ منهم منك.
+        <h1 class="order-2 mt-5 font-display text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-[3.2rem] lg:leading-[1.08]">
+          ضعف عدد العملاء،<br class="hidden sm:block lg:hidden" /> دون أن يقل نصيب أيٍّ منهم منك.
         </h1>
 
-        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/60">
+        <p class="order-4 mx-auto mt-6 max-w-2xl lg:mx-0 text-lg leading-relaxed text-white/60">
           الساعات التي تذهب في تجميع الأرقام هي سبب عجزك عن استلام حساب إضافي. هذا العمل يكون منجزًا قبل أن تجلس إلى مكتبك.
         </p>
 
-        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div class="order-6 mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition hover:bg-brand-500 sm:w-auto">
             ابدأ مجانًا
           </a>
-          <a href="#creatives"
-             class="w-full rounded-xl border border-white/15 bg-white/5 px-8 py-3.5 text-base font-semibold text-white/90 transition hover:bg-white/10 sm:w-auto">
-            شاهد ترتيب الـ Creatives
-          </a>
         </div>
       </div>
 
+      <HeroFilm locale="ar" class="order-3 mt-8 lg:mt-0" />
+      </div>
+
       <!-- Roster board: every client already current -->
-      <figure class="mt-14">
+      <figure class="mx-auto mt-14 max-w-6xl">
         <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/40 backdrop-blur-sm sm:rounded-3xl">
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
             <div class="flex items-center gap-2.5">

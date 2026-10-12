@@ -1,0 +1,90 @@
+---
+// The explainer film from the homepage hero, for the persona pages. Plays
+// muted on a loop; the button restarts it with the voiceover. One per page:
+// the script below finds it by id.
+interface Props {
+  locale?: "en" | "ar";
+  class?: string;
+}
+
+const { locale = "en", class: className } = Astro.props;
+
+const FILM = {
+  en: {
+    src: "/video/hero-film.mp4?v=3",
+    poster: "/video/hero-film-poster.jpg",
+    label: "AdFunnl explainer video: connect ad platforms and stores, build a dashboard, ask your data questions and share a live report",
+    soundOn: "Play with sound",
+    soundOff: "Mute",
+  },
+  ar: {
+    src: "/video/hero-film-ar.mp4",
+    poster: "/video/hero-film-ar-poster.jpg",
+    label: "فيديو تعريفي عن AdFunnl: ربط منصات الإعلانات والمتاجر، بناء dashboard، سؤال بياناتك ومشاركة تقرير حي",
+    soundOn: "شغّل بالصوت",
+    soundOff: "اكتم الصوت",
+  },
+};
+const film = FILM[locale];
+---
+
+<div class:list={["hero-film relative w-full", className]}>
+  <div class="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(101,73,221,0.28),transparent_70%)] blur-2xl" aria-hidden="true"></div>
+  <div class="relative overflow-hidden rounded-2xl bg-ink shadow-[0_30px_70px_-28px_rgba(66,42,150,0.55)] ring-1 ring-brand-500/20">
+    <video
+      id="hero-film"
+      src={film.src}
+      poster={film.poster}
+      autoplay muted loop playsinline preload="metadata"
+      aria-label={film.label}
+      class="block aspect-video h-auto w-full bg-ink"
+    ></video>
+    <!-- Icon only. The label lives in aria-label and the tooltip. -->
+    <button
+      id="hero-film-sound"
+      type="button"
+      aria-pressed="false"
+      aria-label={film.soundOn}
+      title={film.soundOn}
+      data-on={film.soundOn}
+      data-off={film.soundOff}
+      class="absolute bottom-3 end-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-brand-600 shadow-lg transition hover:bg-white"
+    >
+      <svg data-icon="muted" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg>
+      <svg data-icon="sound" class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  /* CSS-only entrance, so the film never waits on JS */
+  @keyframes heroFilmIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  .hero-film { animation: heroFilmIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-film { animation: none; }
+  }
+</style>
+
+<script>
+  const film = document.getElementById("hero-film");
+  const btn = document.getElementById("hero-film-sound");
+  if (film instanceof HTMLVideoElement && btn) {
+    // Reduced motion: no autoplay, the visitor starts it themselves.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      film.removeAttribute("autoplay");
+      film.pause();
+      film.controls = true;
+    }
+    btn.addEventListener("click", () => {
+      const turnOn = film.muted;
+      film.muted = !turnOn;
+      if (turnOn) { film.currentTime = 0; film.play(); }
+      btn.setAttribute("aria-pressed", String(turnOn));
+      const label = (turnOn ? btn.dataset.off : btn.dataset.on) ?? "";
+      btn.setAttribute("aria-label", label);
+      btn.title = label;
+      btn.querySelector('[data-icon="muted"]')?.classList.toggle("hidden", turnOn);
+      btn.querySelector('[data-icon="sound"]')?.classList.toggle("hidden", !turnOn);
+    });
+  }
+</script>

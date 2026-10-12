@@ -6,6 +6,7 @@
 import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
+import HeroFilm from "../../../components/HeroFilm.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -160,7 +161,7 @@ const control = [
   <section class="relative overflow-hidden bg-white px-6 pt-14 pb-16 sm:pt-16">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
 
-    <div class="mx-auto max-w-6xl">
+    <div class="mx-auto max-w-7xl">
       <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-400">
         <a href="/ar" class="hover:text-zinc-700 transition">الرئيسية</a>
         <span>/</span>
@@ -169,68 +170,34 @@ const control = [
         <span class="font-medium text-zinc-700">Account Managers</span>
       </nav>
 
-      <div class="mx-auto max-w-3xl text-center">
-        <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+      <!-- Copy beside the film from lg up. Below lg the wrapper is display:
+           contents, so the film sits between the headline and the description,
+           as on the homepage. -->
+      <div class="flex flex-col lg:grid lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-x-12">
+      <div class="contents text-center lg:block lg:text-start">
+        <span class="order-1 inline-flex items-center gap-2 self-center rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           AdFunnl لـ Account Managers
         </span>
 
-        <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-6xl">
-          أنت من يقف<br class="hidden sm:block" /> في المنتصف.
+        <h1 class="order-2 mt-5 font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-6xl lg:text-[3.2rem] lg:leading-[1.08]">
+          أنت من يقف<br class="hidden sm:block lg:hidden" /> في المنتصف.
         </h1>
 
-        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-500">
+        <p class="order-4 mx-auto mt-6 max-w-2xl lg:mx-0 text-lg leading-relaxed text-zinc-500">
           كل طرف يريد إجابة مختلفة من الأرقام نفسها، وأنت من عليه أن يقدّمها.
         </p>
 
-        <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div class="order-6 mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
           <a href={`${APP_URL}/signup`}
              class="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
             ابدأ مجانًا
           </a>
-          <a href="#what-changes"
-             class="w-full rounded-xl border border-zinc-200 bg-white px-8 py-3.5 text-base font-semibold text-zinc-700 transition hover:bg-zinc-50 sm:w-auto">
-            شاهد ما الذي يتغير
-          </a>
         </div>
       </div>
 
-      <!-- Hero video -->
-      <figure class="hero-video relative mt-14">
-        <div class="group relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-ink shadow-2xl shadow-brand-900/20 ring-1 ring-zinc-900/[0.04] sm:rounded-3xl">
-          <video
-            id="hero-video"
-            class="block aspect-video h-auto w-full bg-ink"
-            poster="/video/hero-film-ar-poster.jpg"
-            preload="metadata"
-            autoplay
-            muted
-            loop
-            playsinline
-            aria-label="فيديو تعريفي عن AdFunnl: ربط منصات الإعلانات والمتاجر، بناء dashboard، سؤال بياناتك ومشاركة تقرير حي"
-          >
-            <source src="/video/hero-film-ar.mp4" type="video/mp4" />
-            متصفحك لا يدعم تشغيل الفيديو.
-            <a href="/video/hero-film-ar.mp4" class="underline">شاهد الجولة</a> بدلًا من ذلك.
-          </video>
-
-          <!-- Sound toggle: the walkthrough is narrated, so make audio reachable
-               without breaking muted autoplay. -->
-          <button
-            type="button"
-            id="hero-video-sound"
-            class="absolute bottom-3 end-3 inline-flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-sm transition hover:bg-black/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:bottom-4 sm:end-4"
-            aria-pressed="false"
-          >
-            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-              <g data-sound-off><path d="M22 9l-6 6M16 9l6 6"/></g>
-              <g data-sound-on class="hidden"><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
-            </svg>
-            <span data-sound-label>تشغيل الصوت</span>
-          </button>
-        </div>
-      </figure>
+      <HeroFilm locale="ar" class="order-3 mt-8 lg:mt-0" />
+      </div>
     </div>
   </section>
 
@@ -479,10 +446,6 @@ const control = [
     .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
     .js .reveal.in { opacity: 1; transform: none; }
 
-    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
-    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-    .hero-video { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
-
     /* Stakeholder spine: pressure travelling down toward "you" */
     .spine-pulse {
       position: absolute;
@@ -502,7 +465,7 @@ const control = [
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-video, .spine-pulse { animation: none !important; transition: none !important; }
+      .reveal, .spine-pulse { animation: none !important; transition: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
       .spine-pulse { display: none; }
     }
@@ -510,7 +473,6 @@ const control = [
 
   <script>
     document.documentElement.classList.add("js");
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // ── Scroll reveal ──────────────────────────────────────────────
     const io = new IntersectionObserver((entries) => {
@@ -519,52 +481,6 @@ const control = [
       }
     }, { threshold: 0.15 });
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
-
-    // ── Hero video ─────────────────────────────────────────────────
-    const video = document.getElementById("hero-video");
-    const soundBtn = document.getElementById("hero-video-sound");
-
-    if (video instanceof HTMLVideoElement) {
-      // Reduced motion: don't loop a moving picture at someone unprompted.
-      if (rm) {
-        video.autoplay = false;
-        video.loop = false;
-        video.controls = true;
-        video.pause();
-      }
-
-      if (soundBtn) {
-        const label = soundBtn.querySelector("[data-sound-label]");
-        const iconOn = soundBtn.querySelector("[data-sound-on]");
-        const iconOff = soundBtn.querySelector("[data-sound-off]");
-
-        const paint = () => {
-          const on = !video.muted;
-          soundBtn.setAttribute("aria-pressed", String(on));
-          if (label) label.textContent = on ? "كتم الصوت" : "تشغيل الصوت";
-          iconOn?.classList.toggle("hidden", !on);
-          iconOff?.classList.toggle("hidden", on);
-          // Native controls carry their own volume button, and ours would sit
-          // on top of them, so it only exists while they're hidden.
-          soundBtn.classList.toggle("hidden", video.controls);
-        };
-
-        soundBtn.addEventListener("click", () => {
-          video.muted = !video.muted;
-          if (!video.muted) {
-            // Sound means they're watching it properly: stop looping,
-            // hand over the real controls, and start from the top.
-            video.loop = false;
-            video.controls = true;
-            video.currentTime = 0;
-            video.play().catch(() => {});
-          }
-          paint();
-        });
-
-        paint();
-      }
-    }
   </script>
 
 </Layout>

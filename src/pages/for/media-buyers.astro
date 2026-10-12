@@ -34,24 +34,7 @@ const APP_URL = "https://app.adfunnl.com";
 //     imply a per-person view.
 //   - R14: never put a number on the platforms. No "four tabs", no "all four".
 
-// ── Hero: the roster on one screen ────────────────────────────────────
-// Anonymized demo data, same convention as the homepage and Team Leads mocks.
-// ROAS is computed from the two figures beside it, so the arithmetic on screen
-// cannot be caught out.
-const roster = [
-  { client: "Client A", spend: 41280, revenue: 227040, synced: "9 min ago" },
-  { client: "Client B", spend: 28715, revenue: 108117, synced: "9 min ago" },
-  { client: "Client C", spend: 19460, revenue: 132328, synced: "24 min ago" },
-  { client: "Client D", spend: 15230, revenue: 51782, synced: "24 min ago" },
-  { client: "Client E", spend: 11905, revenue: 79363, synced: "41 min ago" },
-  { client: "Client F", spend: 7640, revenue: 22920, synced: "41 min ago" },
-];
-
 const fmt = (n: number) => n.toLocaleString("en-US");
-const roas = (r: number, s: number) => (r / s).toFixed(2);
-
-const rosterSpend = roster.reduce((a, c) => a + c.spend, 0);
-const rosterRevenue = roster.reduce((a, c) => a + c.revenue, 0);
 
 // ── Where the morning goes ────────────────────────────────────────────
 // The recognisable pain (R8): a tab per platform, each with its own everything,
@@ -239,8 +222,7 @@ const creativeReports = [
 ];
 
 // ── The assistant (R9) ────────────────────────────────────────────────
-// Keep these consistent with the `roster` board in the hero: a reader who
-// checks one against the other has to find them agreeing.
+// Anonymized demo figures, same convention as the homepage mocks.
 const assistantAnswer = [
   "Blended ROAS across your accounts is 5.00x this week, against 4.63x last week.",
   "Client C moved most: 6.80x, up from 5.24x, on 9% less spend.",
@@ -368,45 +350,6 @@ const control = [
 
       <HeroFilm class="order-3 mt-8 lg:mt-0" />
       </div>
-
-      <!-- Roster board: every client already current -->
-      <figure class="mx-auto mt-14 max-w-6xl">
-        <div class="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/40 backdrop-blur-sm sm:rounded-3xl">
-          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
-            <div class="flex items-center gap-2.5">
-              <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
-              <span class="text-sm font-semibold text-white">Your accounts</span>
-              <span class="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/60">Synced hourly</span>
-            </div>
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-white/50">
-              <span>Spend <span class="font-semibold text-white/90">SAR {fmt(rosterSpend)}</span></span>
-              <span>Revenue <span class="font-semibold text-white/90">SAR {fmt(rosterRevenue)}</span></span>
-              <span>Blended ROAS <span class="font-semibold text-brand-200">{roas(rosterRevenue, rosterSpend)}×</span></span>
-            </div>
-          </div>
-
-          <div class="grid gap-px bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
-            {roster.map((c) => (
-              <div class="bg-ink/60 px-5 py-4">
-                <div class="flex items-baseline justify-between">
-                  <span class="text-sm font-semibold text-white">{c.client}</span>
-                  <span class="font-display text-lg font-bold text-brand-200">{roas(c.revenue, c.spend)}×</span>
-                </div>
-                <div class="mt-2 flex items-center justify-between text-[11px] text-white/40">
-                  <span>SAR {fmt(c.spend)} spend</span>
-                  <span>Updated {c.synced}</span>
-                </div>
-                <div class="mt-2.5 h-1 overflow-hidden rounded-full bg-white/10">
-                  <div class="h-full rounded-full bg-brand-400" style={`width:${Math.min(100, (c.revenue / c.spend) * 14)}%`}></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <figcaption class="mt-4 text-center text-xs text-white/35">
-          A recreation of the product with anonymized data, not a real client account.
-        </figcaption>
-      </figure>
     </div>
   </section>
 

@@ -6,31 +6,6 @@ import HeroFilm from "../../components/HeroFilm.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
-// ── Hero board: the bird's-eye view ───────────────────────────────────
-// Anonymized demo data (no real client or account), same convention as the
-// homepage mocks. Kept internally consistent: the blended row is the sum of
-// the platform rows, so nobody can check the arithmetic and find it wrong.
-const platforms = [
-  { key: "meta",     name: "Meta",     spend: 18824, purchases: 223, revenue: 108976, color: "#0082FB" },
-  { key: "snapchat", name: "Snapchat", spend: 7081,  purchases: 120, revenue: 60906,  color: "#F5C518" },
-  { key: "tiktok",   name: "TikTok",   spend: 3767,  purchases: 43,  revenue: 21653,  color: "#111111" },
-  { key: "google",   name: "Google",   spend: 417,   purchases: 20,  revenue: 10256,  color: "#EA4335" },
-];
-
-const totalSpend     = platforms.reduce((a, p) => a + p.spend, 0);
-const totalPurchases = platforms.reduce((a, p) => a + p.purchases, 0);
-const totalRevenue   = platforms.reduce((a, p) => a + p.revenue, 0);
-const blendedRoas    = totalRevenue / totalSpend;
-
-const fmt = (n: number) => n.toLocaleString("en-US");
-
-const blended = [
-  { label: "Spend",     value: `SAR ${fmt(totalSpend)}` },
-  { label: "Purchases", value: fmt(totalPurchases) },
-  { label: "Revenue",   value: `SAR ${fmt(totalRevenue)}` },
-  { label: "Blended ROAS", value: `${blendedRoas.toFixed(2)}×`, strong: true },
-];
-
 // ── The signature: one routine, two ways ──────────────────────────────
 // The gap between the elapsed badges is the argument. Keep those badges
 // vague on purpose: a precise figure here would be an invented measurement,
@@ -282,61 +257,6 @@ const control = [
       </div>
 
       <HeroFilm class="order-3 mt-8 lg:mt-0" />
-      </div>
-
-      <!-- The bird's-eye board: blended totals first, contributions underneath -->
-      <div class="hero-board mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/50">
-        <!-- app top bar -->
-        <div class="flex items-center gap-2 border-b border-zinc-100 px-3.5 py-2.5">
-          <span class="flex h-5 w-5 items-center justify-center rounded-md bg-brand-600 text-[10px] font-bold text-white">A</span>
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
-            <span class="flex h-4 w-4 items-center justify-center rounded bg-brand-100 text-[8px] font-bold text-brand-700">AC</span>
-            Acme Cosmetics
-            <svg class="h-3 w-3 text-zinc-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
-          </span>
-          <span class="ms-1 hidden rounded-md border border-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-500 sm:inline-block">This month</span>
-          <span class="ms-auto inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-            <span class="live-dot h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Live
-          </span>
-        </div>
-
-        <!-- blended totals: the glance -->
-        <div class="grid grid-cols-2 gap-px bg-zinc-100 sm:grid-cols-4">
-          {blended.map((b) => (
-            <div class:list={["p-3.5 sm:p-4", b.strong ? "bg-brand-600" : "bg-white"]}>
-              <p class:list={["text-[9px] font-semibold uppercase tracking-widest", b.strong ? "text-brand-200" : "text-zinc-400"]}>{b.label}</p>
-              <p class:list={["mt-1 font-display text-lg font-bold tracking-tight sm:text-xl", b.strong ? "text-white" : "text-zinc-900"]}>{b.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <!-- per-platform contribution -->
-        <div class="border-t border-zinc-100 p-3.5 sm:p-4">
-          <div class="mb-2.5 flex items-center justify-between">
-            <p class="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Where it came from</p>
-            <p class="hidden text-[10px] text-zinc-400 sm:block">Share of spend</p>
-          </div>
-          <div class="space-y-1.5">
-            {platforms.map((p) => {
-              const share = (p.spend / totalSpend) * 100;
-              const roas = p.revenue / p.spend;
-              return (
-                <div class="flex items-center gap-2.5 sm:gap-3">
-                  <span class="w-14 shrink-0 text-[11px] font-semibold text-zinc-700 sm:w-16">{p.name}</span>
-                  <span class="h-2 flex-1 overflow-hidden rounded-full bg-zinc-100">
-                    <!-- max() keeps a genuinely tiny share (Google, ~1%) reading as a
-                         small bar rather than a rendering artefact -->
-                    <span class="board-bar block h-full rounded-full" style={`width:max(${share.toFixed(1)}%, 8px);background:${p.color}`}></span>
-                  </span>
-                  <span class="w-16 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:w-20">SAR {fmt(p.spend)}</span>
-                  <span class="hidden w-12 shrink-0 text-right text-[11px] tabular-nums text-zinc-500 sm:block">{p.purchases}</span>
-                  <span class="w-12 shrink-0 text-right text-[11px] font-bold tabular-nums text-zinc-900">{roas.toFixed(1)}×</span>
-                </div>
-              );
-            })}
-          </div>
-          <p class="mt-3 text-[10px] text-zinc-400">Every platform in one currency, with no export.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -703,22 +623,9 @@ const control = [
     .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
     .js .reveal.in { opacity: 1; transform: none; }
 
-    /* Hero entrance: CSS-only so above-the-fold content never depends on JS */
-    @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-    .hero-board { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: .1s; }
-
-    /* Contribution bars fill on load: the glance assembling itself */
-    @keyframes barFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-    .board-bar { transform-origin: left; animation: barFill .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
-
-    /* Ambient live indicator */
-    @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-    .live-dot { animation: livePulse 1.6s ease-in-out infinite; }
-
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-board, .live-dot, .board-bar { animation: none !important; transition: none !important; }
+      .reveal { animation: none !important; transition: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
-      .board-bar { transform: none; }
     }
   </style>
 

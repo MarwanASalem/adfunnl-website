@@ -60,7 +60,17 @@ new pages to that pattern: strings at the top, markup consumes them.
 Every page has an Arabic twin under `src/pages/ar/` at the same path (`/pricing`
 and `/ar/pricing`). **A change to one page's copy, claims or markup belongs in
 its twin in the same change.** A new English page is not finished until its
-Arabic twin exists and the sitemap lists both.
+Arabic twin exists. The sitemap is generated from the pages on disk
+(`src/pages/sitemap.xml.ts`), so it lists both without an edit.
+
+## Search metadata
+
+- `<Layout>` writes the canonical link, share tags and JSON-LD for every page.
+  A page's `seoTitle` is the `<title>` and share title only, and is never
+  shown on the page. It follows the copy rules like any other string.
+- `public/llms.txt` and `public/pricing.md` are hand-written summaries for AI
+  assistants. A change to plans, prices or the page list belongs in them too,
+  and their claims come from `docs/what-ships.md` like everything else.
 
 - `<Layout locale="ar">` sets `dir="rtl"`, localizes the nav and footer, and
   wires the EN / ع switch and hreflang. `DataFlow` and `AnalysisStages` take

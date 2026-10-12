@@ -1,0 +1,35 @@
+# AdFunnl
+
+> AdFunnl is a marketing analytics and ad reporting platform for agencies, media buyers and performance marketers. It connects ad accounts on Meta, TikTok, Snapchat and Google with store revenue from Shopify, Salla and Zid, converts everything into one reporting currency, and shows it in one live dashboard that can be shared with clients as a view-only link or a PDF.
+
+AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in Alexandria, Egypt. The app and this site are available in English and Arabic. There is a free plan, and paid plans are priced in USD and EGP.
+
+## What it does
+
+- Connect: Meta, TikTok, Snapchat and Google Ads, plus Shopify, Salla, Zid, Bosta, Easy Orders and Google Sheets import. Data syncs on a schedule set by the plan, from every 12 hours down to hourly.
+- Visualize: a freeform drag-and-drop dashboard builder with KPI tiles, charts, tables, funnels, geo maps and creative galleries. Blended ROAS, spend, purchases and revenue across platforms, product-level ROAS from store data, and comparison against the prior period.
+- Creative analysis: ads ranked by a composite score (Best Creatives), ad fatigue tracking, and hook and hold video retention on Meta.
+- Pulse: watches accounts against rules you set and flags them Scale, Hold or Cut.
+- Share: live view-only links, frozen report snapshots, PDF export, the client's logo on their dashboard, and a Looker Studio connector.
+- Ask: an in-app AI assistant that answers questions about the data and can build a dashboard after you approve its plan, plus an MCP server so Claude, ChatGPT or any MCP client can query the same data.
+
+## Pages
+
+- [Home](https://www.adfunnl.com/): overview of the product
+- [Pricing](https://www.adfunnl.com/pricing): Free, Solo, Growth and Agency plans
+- [Pricing as plain text](https://www.adfunnl.com/pricing.md): plan prices and limits in markdown
+- [Dashboards](https://www.adfunnl.com/features/dashboard): the dashboard builder
+- [For Account Managers](https://www.adfunnl.com/for/account-managers): client reporting
+- [For Team Leads](https://www.adfunnl.com/for/team-leads): overseeing many accounts
+- [For Media Buyers](https://www.adfunnl.com/for/media-buyers): daily analysis and creative ranking
+- [About](https://www.adfunnl.com/about): who operates AdFunnl
+- [Security](https://www.adfunnl.com/security): how workspace data is protected
+
+## Arabic
+
+- [الرئيسية](https://www.adfunnl.com/ar)
+- [الأسعار](https://www.adfunnl.com/ar/pricing)
+
+## Contact
+
+support@adfunnl.com

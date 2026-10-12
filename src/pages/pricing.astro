@@ -185,10 +185,49 @@ const faqs = [
 ];
 
 const fmt = (n: number) => n.toLocaleString("en-US");
+
+// ── Structured data, read by search engines and AI assistants ──
+// Built from `plans` and `faqs` above, so it cannot drift from the page.
+// public/pricing.md is a hand-written copy of the same prices: update it
+// whenever a plan changes.
+const schema = [
+  {
+    "@type": "SoftwareApplication",
+    "@id": "https://www.adfunnl.com/#software",
+    name: "AdFunnl",
+    url: "https://www.adfunnl.com/",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description: "Ad reporting and marketing analytics for agencies, media buyers and performance marketers. AdFunnl brings Meta, TikTok, Snapchat and Google together with store revenue in one live dashboard.",
+    offers: plans.flatMap((p) =>
+      (["USD", "EGP"] as const).map((currency) => {
+        const price = currency === "USD" ? p.usd : p.egp;
+        return {
+          "@type": "Offer",
+          name: p.name,
+          price,
+          priceCurrency: currency,
+          url: "https://www.adfunnl.com/pricing",
+          priceSpecification: { "@type": "UnitPriceSpecification", price, priceCurrency: currency, unitCode: "MON" },
+        };
+      }),
+    ),
+  },
+  {
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
 ---
 
 <Layout
   title="Pricing"
+  seoTitle="AdFunnl pricing: Free, Solo, Growth and Agency plans"
+  schema={schema}
   description="AdFunnl pricing: Free, Solo, Growth and Agency plans for agencies and media buyers. Multi-platform ad analytics and shareable dashboards. Monthly or annual (two months free), in EGP or USD."
 >
 

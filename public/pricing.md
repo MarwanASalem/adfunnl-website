@@ -1,0 +1,56 @@
+# AdFunnl pricing
+
+AdFunnl is a marketing analytics and ad reporting platform for agencies, media buyers and performance marketers. Prices are per month, in USD or EGP. Annual billing costs ten months for twelve, so two months are free. Every paid plan starts with a full-access free trial that falls back to the Free plan when it ends.
+
+Sign up: https://app.adfunnl.com/signup
+Full pricing page: https://www.adfunnl.com/pricing
+
+## Free
+
+- Price: $0 / EGP 0 per month
+- For: trying it with one brand
+- Limits: 1 team seat, 1 brand, 3 ad accounts, 2 ad platforms, 3 dashboards
+- Data refresh: every 12 hours
+- History: 3 months
+- Includes: creative calculator
+
+## Solo
+
+- Price: $29 / EGP 990 per month ($290 / EGP 9,900 per year)
+- For: freelancers and single operators
+- Limits: 1 team seat, 3 brands, 15 ad accounts, all ad platforms, unlimited dashboards
+- Data refresh: every 12 hours
+- History: 1 year
+- Includes: everything in Free, plus Google Sheets import, change annotations, Hook & Hold, Creative Fatigue, live sharing with view-only links and PDF, add-fund reminders and billing alerts
+
+## Growth
+
+- Price: $79 / EGP 2,490 per month ($790 / EGP 24,900 per year)
+- For: small teams that want the AI assistant
+- Limits: 3 team seats, 10 brands, 50 ad accounts, all ad platforms, unlimited dashboards
+- Data refresh: every 6 hours
+- History: 3 years
+- Includes: everything in Solo, plus the AI assistant, AI-built dashboards, MCP access and 1,000 AI credits per month
+
+## Agency
+
+- Price: $149 / EGP 4,990 per month ($1,490 / EGP 49,900 per year)
+- For: agencies
+- Limits: 10 team seats, 30 brands, 150 ad accounts, all ad platforms, unlimited dashboards
+- Data refresh: hourly
+- History: 5 years
+- Includes: everything in Growth, plus 3,000 AI credits per month
+
+## AI credit top-ups (Growth and Agency)
+
+- 500 credits: $15 / EGP 490
+- 1,500 credits: $39 / EGP 1,290
+- 5,000 credits: $105 / EGP 3,490
+
+Monthly credits carry over, and top-up credits are only spent after the monthly allowance runs out.
+
+## Billing
+
+Paid plans are enabled after payment is confirmed. You request a plan and a person approves it, so there is no instant self-checkout. Payment is accepted in EGP and USD.
+
+Questions: support@adfunnl.com

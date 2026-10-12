@@ -189,11 +189,50 @@ const faqs = [
 ];
 
 const fmt = (n: number) => n.toLocaleString("en-US");
+
+// ── Structured data, read by search engines and AI assistants ──
+// Built from `plans` and `faqs` above, so it cannot drift from the page.
+// public/pricing.md is a hand-written copy of the same prices: update it
+// whenever a plan changes.
+const schema = [
+  {
+    "@type": "SoftwareApplication",
+    "@id": "https://www.adfunnl.com/#software",
+    name: "AdFunnl",
+    url: "https://www.adfunnl.com/ar",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description: "AdFunnl منصة لتقارير الإعلانات وتحليلات التسويق للوكالات والـ Media Buyers، تجمع Meta وTikTok وSnapchat وGoogle مع إيرادات المتجر في لوحة مباشرة واحدة.",
+    offers: plans.flatMap((p) =>
+      (["USD", "EGP"] as const).map((currency) => {
+        const price = currency === "USD" ? p.usd : p.egp;
+        return {
+          "@type": "Offer",
+          name: p.name,
+          price,
+          priceCurrency: currency,
+          url: "https://www.adfunnl.com/ar/pricing",
+          priceSpecification: { "@type": "UnitPriceSpecification", price, priceCurrency: currency, unitCode: "MON" },
+        };
+      }),
+    ),
+  },
+  {
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
 ---
 
 <Layout
   locale="ar"
   title="الأسعار"
+  seoTitle="أسعار AdFunnl: باقات Free وSolo وGrowth وAgency"
+  schema={schema}
   description="أسعار AdFunnl: باقات Free وSolo وGrowth وAgency للوكالات والـ Media Buyers. تحليلات إعلانية لكل المنصات ولوحات قابلة للمشاركة، شهريًا أو سنويًا مع شهرين مجانًا، بالجنيه أو الدولار."
 >
 

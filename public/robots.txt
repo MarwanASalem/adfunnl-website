@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
+# Search and AI crawlers are welcome. A plain-text summary for AI assistants
+# is at /llms.txt and plan prices are at /pricing.md.
 Sitemap: https://www.adfunnl.com/sitemap.xml

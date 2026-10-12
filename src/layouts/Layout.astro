@@ -4,8 +4,15 @@ import "../styles/global.css";
 
 interface Props {
   title: string;
+  /** Full text of the <title> tag and the share title, for search results and
+      link previews. Nothing on the page reads it. Falls back to the page
+      title with the brand appended. */
+  seoTitle?: string;
   description?: string;
   ogImage?: string;
+  /** Extra schema.org nodes for this page (FAQPage, SoftwareApplication...),
+      added to the site-wide JSON-LD graph. */
+  schema?: Record<string, unknown>[];
   /** Keep a page out of search results. For legal pages that exist to be
       linked to directly, not found. */
   noindex?: boolean;
@@ -16,8 +23,10 @@ interface Props {
 
 const {
   title,
+  seoTitle,
   description,
-  ogImage = "/logo-1024.png",
+  ogImage = "/og-image.png",
+  schema = [],
   noindex = false,
   locale = "en",
 } = Astro.props;
@@ -58,6 +67,7 @@ const COPY = {
     footerLine: "Every ad platform. Every store. One source of truth, shared live with your clients.",
     product: "Product",
     dashboards: "Dashboards",
+    home: "Home",
     features: "Features",
     company: "Company",
     about: "About",
@@ -89,6 +99,7 @@ const COPY = {
     footerLine: "كل منصاتك الإعلانية ومتاجرك في مصدر أرقام واحد، تشاركه مع عملائك مباشرةً.",
     product: "المنتج",
     dashboards: "لوحات المعلومات",
+    home: "الرئيسية",
     features: "المزايا",
     company: "الشركة",
     about: "من نحن",
@@ -166,6 +177,73 @@ const socials = [
 
 const isCurrent = (href: string) => basePath === href.replace(/\/+$/, "");
 const forSectionActive = basePath === "/for" || basePath.startsWith("/for/");
+
+// ── Search and share metadata ─────────────────────────────────────────
+// None of this is visible on the page. URLs carry no trailing slash except
+// the English home, matching the hreflang links and the sitemap.
+const abs = (p: string) => `${SITE}${p === "/" ? "/" : p}`;
+const canonical = abs(path);
+const fullTitle = seoTitle ?? `${title} · AdFunnl`;
+const shareImage = new URL(ogImage, SITE).href;
+
+// Breadcrumb labels reuse the nav and footer strings, keyed by English path.
+const crumbLabels: Record<string, string> = {
+  "/pricing": T.pricing,
+  "/features/dashboard": T.dashboards,
+  "/about": T.about,
+  "/security": T.security,
+  ...Object.fromEntries(personas.map((p) => [p.href, T.forPersona(p.label)])),
+};
+const crumb = crumbLabels[basePath];
+
+const ORG_ID = `${SITE}/#organization`;
+const SITE_ID = `${SITE}/#website`;
+const graph = [
+  {
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: "AdFunnl",
+    url: `${SITE}/`,
+    logo: `${SITE}/logo-1024.png`,
+    email: "support@adfunnl.com",
+    sameAs: socials.map((s) => s.href),
+    parentOrganization: {
+      "@type": "Organization",
+      name: "Funnl Suite LLC",
+      address: { "@type": "PostalAddress", addressLocality: "Alexandria", addressCountry: "EG" },
+    },
+  },
+  {
+    "@type": "WebSite",
+    "@id": SITE_ID,
+    name: "AdFunnl",
+    url: `${SITE}/`,
+    inLanguage: ["en", "ar"],
+    publisher: { "@id": ORG_ID },
+  },
+  {
+    "@type": "WebPage",
+    "@id": `${canonical}#webpage`,
+    url: canonical,
+    name: fullTitle,
+    description: pageDescription,
+    inLanguage: locale,
+    isPartOf: { "@id": SITE_ID },
+    about: { "@id": ORG_ID },
+  },
+  ...(crumb
+    ? [{
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: T.home, item: abs(ar ? "/ar" : "/") },
+          { "@type": "ListItem", position: 2, name: crumb, item: canonical },
+        ],
+      }]
+    : []),
+  ...schema,
+];
+// "<" is escaped so no string in the graph can close the script tag early.
+const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c");
 ---
 
 <!DOCTYPE html>
@@ -184,25 +262,33 @@ const forSectionActive = basePath === "/for" || basePath.startsWith("/for/");
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageDescription} />
     {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={canonical} />
 
-    <link rel="alternate" hreflang="en" href={`${SITE}${enHref === "/" ? "/" : enHref}`} />
-    <link rel="alternate" hreflang="ar" href={`${SITE}${arHref}`} />
-    <link rel="alternate" hreflang="x-default" href={`${SITE}${enHref === "/" ? "/" : enHref}`} />
+    <link rel="alternate" hreflang="en" href={abs(enHref)} />
+    <link rel="alternate" hreflang="ar" href={abs(arHref)} />
+    <link rel="alternate" hreflang="x-default" href={abs(enHref)} />
 
-    <meta property="og:title"       content={`${title} · AdFunnl`} />
+    <meta property="og:site_name"   content="AdFunnl" />
+    <meta property="og:title"       content={fullTitle} />
     <meta property="og:description" content={pageDescription} />
-    <meta property="og:image"       content={ogImage} />
+    <meta property="og:url"         content={canonical} />
+    <meta property="og:image"       content={shareImage} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:type"        content="website" />
     <meta property="og:locale"      content={ar ? "ar_AR" : "en_US"} />
+    <meta property="og:locale:alternate" content={ar ? "en_US" : "ar_AR"} />
 
     <meta name="twitter:card"        content="summary_large_image" />
-    <meta name="twitter:title"       content={`${title} · AdFunnl`} />
+    <meta name="twitter:title"       content={fullTitle} />
     <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image"       content={ogImage} />
+    <meta name="twitter:image"       content={shareImage} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <title>{title} · AdFunnl</title>
+    <script type="application/ld+json" is:inline set:html={jsonLd} />
+
+    <title>{fullTitle}</title>
     <script>import "../scripts/analytics.ts";</script>
   </head>
   <body class="bg-white text-zinc-900 antialiased font-sans">

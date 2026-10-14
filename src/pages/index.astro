@@ -4,7 +4,6 @@ import PlatformIcon from "../components/PlatformIcon.astro";
 import DataFlow from "../components/DataFlow.astro";
 import AnalysisStages from "../components/AnalysisStages.astro";
 import AiDashboard from "../components/AiDashboard.astro";
-import AdControlSafety from "../components/AdControlSafety.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -88,8 +87,8 @@ const analysisStages = {
 // after you approve it, so a line promising a finished dashboard from a single
 // sentence would be wrong.
 const aiDashboard = {
-  heading: "Building the first dashboard is the part everyone puts off",
-  body: "So ask for it instead. Say which brand it is for, and the assistant plans one out of what that brand has actually connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. You read the plan first, including which panels would come back empty, and nothing gets built until you approve it. Then it lands on the same canvas you can still drag around.",
+  heading: "Or let AI build it for you",
+  body: "Name the brand and the assistant plans a dashboard from what it has connected. You approve the plan, then it lands on the same canvas, ready to rearrange.",
   meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
 };
 
@@ -674,9 +673,6 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         </div>
       </div>
 
-      <!-- ── Why letting it act is safe ── -->
-      <AdControlSafety class="reveal mt-14" />
-
       <!-- ── Store revenue ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
@@ -819,6 +815,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       <!-- Ask for the dashboard instead of building it -->
       <AiDashboard
         sectionClass="mt-6"
+        eyebrow={false}
         heading={aiDashboard.heading}
         body={aiDashboard.body}
         meta={aiDashboard.meta}

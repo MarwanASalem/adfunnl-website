@@ -29,6 +29,8 @@ interface Props {
   /** Small line under the body: where it works and which plans have it. */
   meta?: string;
   locale?: "en" | "ar";
+  /** false drops the "Built by AI" pill, for a heading that already says it (R1). */
+  eyebrow?: boolean;
 }
 
 const {
@@ -39,6 +41,7 @@ const {
   prompt,
   meta,
   locale = "en",
+  eyebrow = true,
 } = Astro.props;
 
 const rtl = locale === "ar";
@@ -143,11 +146,13 @@ const ageBars = [38, 72, 90, 54, 30, 18];
       <div class="relative">
         <!-- Copy -->
         <div class="mx-auto max-w-2xl text-center">
-          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-brand-100">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
-            {T.eyebrow}
-          </span>
-          <h2 class="mt-5 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{heading}</h2>
+          {eyebrow && (
+            <span class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-brand-100">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+              {T.eyebrow}
+            </span>
+          )}
+          <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{heading}</h2>
           <p class="mt-4 text-base leading-relaxed text-zinc-300 sm:text-lg">{body}</p>
           {meta && <p class="mt-4 text-sm text-zinc-400">{meta}</p>}
         </div>

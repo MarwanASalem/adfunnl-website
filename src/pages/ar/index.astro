@@ -8,7 +8,6 @@ import PlatformIcon from "../../components/PlatformIcon.astro";
 import DataFlow from "../../components/DataFlow.astro";
 import AnalysisStages from "../../components/AnalysisStages.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
-import AdControlSafety from "../../components/AdControlSafety.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -92,8 +91,8 @@ const analysisStages = {
 // after you approve it, so a line promising a finished dashboard from a single
 // sentence would be wrong. Twin of the English section on the homepage.
 const aiDashboard = {
-  heading: "بناء اللوحة الأولى هو الجزء الذي يؤجله الجميع",
-  body: "اطلبها بدل أن تبنيها. قل لأي علامة تجارية هي، فيضع المساعد خطة لوحة كاملة مما ربطته هذه العلامة فعلًا: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تقرأ الخطة أولًا، وفيها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل أن توافق. بعدها تصل على اللوحة نفسها التي يمكنك سحب عناصرها وترتيبها.",
+  heading: "أو دع AI يبنيها لك",
+  body: "سمِّ العلامة التجارية، فيضع المساعد خطة لوحة مما ربطته. توافق على الخطة، ثم تصل على اللوحة نفسها جاهزة لإعادة الترتيب.",
   meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
@@ -673,9 +672,6 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </div>
       </div>
 
-      <!-- ── Why letting it act is safe ── -->
-      <AdControlSafety locale="ar" class="reveal mt-14" />
-
       <!-- ── Store revenue ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
@@ -812,6 +808,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
       <AiDashboard
         locale="ar"
         sectionClass="mt-6"
+        eyebrow={false}
         heading={aiDashboard.heading}
         body={aiDashboard.body}
         meta={aiDashboard.meta}

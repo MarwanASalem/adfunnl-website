@@ -86,6 +86,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | In-app assistant | On every page, natural language, streamed answers that show the data used, per-workspace memory |
 | MCP server | Claude, ChatGPT or any MCP client can query the same unified data |
 | AI credits | Assistant usage runs on a per-workspace credit balance |
+| Ad control (changing ads from Claude or ChatGPT) | Over MCP, after the user approves each change: on and off and budgets on Meta, TikTok, Snapchat and Google; duplicate and edit on Meta, TikTok and Snapchat; new campaigns on TikTok and Snapchat. Included on paid Growth and Agency, a Solo add-on (EGP 500) on top of the AI add-on (EGP 390), never on a trial. Do NOT claim new Meta campaigns for customers: that waits on Meta's review of pages_manage_ads. Checked 14 October 2026 in `api/app/services/analytics/ad_management.rb`, `api/app/models/workspace.rb` (`ad_control?`) and `api/app/models/plan_config.rb` (`ADDON_PRICING`) |
 
 ## Trust
 

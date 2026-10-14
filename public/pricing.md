@@ -16,7 +16,7 @@ Full pricing page: https://www.adfunnl.com/pricing
 
 ## Solo
 
-- Price: $29 / EGP 990 per month ($290 / EGP 9,900 per year)
+- Price: $19 / EGP 990 per month ($190 / EGP 9,900 per year)
 - For: freelancers and single operators
 - Limits: 1 team seat, 3 brands, 15 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: every 12 hours
@@ -25,27 +25,34 @@ Full pricing page: https://www.adfunnl.com/pricing
 
 ## Growth
 
-- Price: $79 / EGP 2,490 per month ($790 / EGP 24,900 per year)
+- Price: $49 / EGP 2,490 per month ($490 / EGP 24,900 per year)
 - For: small teams that want the AI assistant
 - Limits: 3 team seats, 10 brands, 50 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: every 6 hours
 - History: 3 years
-- Includes: everything in Solo, plus the AI assistant, AI-built dashboards, MCP access and 1,000 AI credits per month
+- Includes: everything in Solo, plus the AI assistant, AI-built dashboards, MCP access, ad control (changing your ads from Claude or ChatGPT) and 1,000 AI credits per month
 
 ## Agency
 
-- Price: $149 / EGP 4,990 per month ($1,490 / EGP 49,900 per year)
+- Price: $95 / EGP 4,990 per month ($950 / EGP 49,900 per year)
 - For: agencies
 - Limits: 10 team seats, 30 brands, 150 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: hourly
 - History: 5 years
 - Includes: everything in Growth, plus 3,000 AI credits per month
 
+## Solo add-ons
+
+- AI add-on: $8 / EGP 390 per month. The AI assistant with 300 credits a month, and MCP access so Claude or ChatGPT can read your AdFunnl data.
+- Ad control: $10 / EGP 500 per month, on top of the AI add-on. Claude or ChatGPT can change your ads after you approve each change. Details: https://www.adfunnl.com/ai-ad-control
+
+Growth and Agency include both. Ad control is not part of the free trial.
+
 ## AI credit top-ups (Growth and Agency)
 
-- 500 credits: $15 / EGP 490
-- 1,500 credits: $39 / EGP 1,290
-- 5,000 credits: $105 / EGP 3,490
+- 500 credits: $9 / EGP 490
+- 1,500 credits: $25 / EGP 1,290
+- 5,000 credits: $65 / EGP 3,490
 
 Monthly credits carry over, and top-up credits are only spent after the monthly allowance runs out.
 

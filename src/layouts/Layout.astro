@@ -67,6 +67,7 @@ const COPY = {
     footerLine: "Every ad platform. Every store. One source of truth, shared live with your clients.",
     product: "Product",
     dashboards: "Dashboards",
+    adControl: "AI ad control",
     home: "Home",
     features: "Features",
     company: "Company",
@@ -99,6 +100,7 @@ const COPY = {
     footerLine: "كل منصاتك الإعلانية ومتاجرك في مصدر أرقام واحد، تشاركه مع عملائك مباشرةً.",
     product: "المنتج",
     dashboards: "لوحات المعلومات",
+    adControl: "التحكم في الإعلانات بالـ AI",
     home: "الرئيسية",
     features: "المزايا",
     company: "الشركة",
@@ -190,6 +192,7 @@ const shareImage = new URL(ogImage, SITE).href;
 const crumbLabels: Record<string, string> = {
   "/pricing": T.pricing,
   "/features/dashboard": T.dashboards,
+  "/ai-ad-control": T.adControl,
   "/about": T.about,
   "/security": T.security,
   ...Object.fromEntries(personas.map((p) => [p.href, T.forPersona(p.label)])),
@@ -461,6 +464,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">{T.product}</p>
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
               <a href={L("/features/dashboard")} class="hover:text-zinc-900 transition">{T.dashboards}</a>
+              <a href={L("/ai-ad-control")}      class="hover:text-zinc-900 transition">{T.adControl}</a>
               <a href={L("/#features")}          class="hover:text-zinc-900 transition">{T.features}</a>
               <a href={L("/#integrations")}      class="hover:text-zinc-900 transition">{T.integrations}</a>
               <a href={L("/pricing")}            class="hover:text-zinc-900 transition">{T.pricing}</a>

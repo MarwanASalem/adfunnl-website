@@ -1,6 +1,6 @@
 # What AdFunnl actually does
 
-**Last checked against the app: 18 August 2026.**
+**Last checked against the app: 18 August 2026. Ad control checked 14 October 2026.**
 
 This is the list of what the website is allowed to claim. It exists because the
 website repo and the app repo are not connected in any way: nothing here updates
@@ -35,8 +35,8 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 |---|---|
 | Meta | Insights, ad level, breakdowns, campaign control, billing |
 | TikTok | Insights, ad level, campaign control |
-| Snapchat | Insights only |
-| Google Ads | Insights only |
+| Snapchat | Insights. Campaign control only from Claude or ChatGPT (ad control, under Ask) |
+| Google Ads | Insights. On and off and budgets only from Claude or ChatGPT (ad control, under Ask) |
 | Shopify | Products and daily product sales, powers product-level ROAS |
 | Salla | Orders and revenue |
 | Zid | Daily store revenue over OAuth, same shape as Salla. On the Connections page. Checked 7 October 2026 in `api/lib/connectors/zid.rb`, `api/lib/connectors/registry.rb` and `web/src/pages/ConnectionsPage.tsx`. Shown as a store in the hero film |
@@ -86,7 +86,14 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | In-app assistant | On every page, natural language, streamed answers that show the data used, per-workspace memory |
 | MCP server | Claude, ChatGPT or any MCP client can query the same unified data |
 | AI credits | Assistant usage runs on a per-workspace credit balance |
-| Ad control (changing ads from Claude or ChatGPT) | Over MCP, after the user approves each change: on and off and budgets on Meta, TikTok, Snapchat and Google; duplicate and edit on Meta, TikTok and Snapchat; new campaigns on TikTok and Snapchat. Included on paid Growth and Agency, a Solo add-on (EGP 500) on top of the AI add-on (EGP 390), never on a trial. Do NOT claim new Meta campaigns for customers: that waits on Meta's review of pages_manage_ads. Checked 14 October 2026 in `api/app/services/analytics/ad_management.rb`, `api/app/models/workspace.rb` (`ad_control?`) and `api/app/models/plan_config.rb` (`ADDON_PRICING`) |
+| Ad control (changing ads from Claude or ChatGPT) | Over MCP. Every change is two-phase: the first call changes nothing and returns a plan, and only a second call after the user approves it applies it. An applied change lands in the brand's Change Log. Included on paid Growth and Agency, a Solo add-on (EGP 500 / $10) on top of the AI add-on (EGP 390 / $8), never on a trial. Checked 14 October 2026 in `api/app/services/analytics/ad_management.rb`, `api/app/models/workspace.rb` (`ad_control?`) and `api/app/models/plan_config.rb` (`ADDON_PRICING`) |
+| Ad control, platform status | Owner's labels, decided 14 October 2026: **TikTok and Snapchat are Live, Meta and Google are Beta.** Use these labels wherever a platform's ad control is named |
+| Ad control, every platform | Pause and turn on, and change budgets, on Meta, TikTok, Snapchat and Google. **Google is campaigns only** for both. A budget rise over 50% is held back unless asked for explicitly. Checked 14 October 2026 (`set_ad_status`, `set_ad_budget`, `set_ad_budgets`) |
+| Ad control, Meta, TikTok and Snapchat | Duplicate (the copy is always created paused), rename, delete, edit the audience, edit ad text, and set URL tracking tags. Checked 14 October 2026 (`duplicate_ad_item`, `update_ad_item`, `set_ad_url_tags`, `delete_ad_item`, `ITEM_PLATFORMS`) |
+| Ad control, new campaigns and ads | TikTok and Snapchat: new campaigns from videos and images on Google Drive, new ad groups or ad sets and new ads added to running campaigns, everything created switched off. TikTok can also run posts already on the profile as ads. Meta: the same tools exist (new campaigns, new ads in an existing ad set, existing Facebook and Instagram posts as ads) but are **early access only**, see "Do not claim". Checked 14 October 2026 in `ad_management/tiktok_creation.rb`, `ad_management/snapchat_creation.rb`, `ad_management/creation.rb` |
+| Ad control, Snapchat extras | Catalog ads (with catalog templates) and call ads. Checked 14 October 2026 in `ad_management/snapchat_catalogs.rb` and `snapchat_creation.rb` |
+| Ad control, Meta extras | Automated rules, budget schedules, custom and lookalike audiences, custom conversions. Checked 14 October 2026 in `ad_management/automation.rb`, `ad_management/audiences.rb` and `ad_management/account_tools.rb` |
+| Ad control, read-only option | The approval screen has a box, "Also allow it to make changes". Untick it and the assistant connects read-only. Checked 14 October 2026 in `api/app/views/doorkeeper/authorizations/new.html.erb` |
 
 ## Trust
 
@@ -118,6 +125,9 @@ not built. Each one has been checked.
 | **Your agency's branding on reports** | Only the **client's** logo is supported. Agency white-labelling is a candidate in `BACKLOG.md`, not shipped |
 | **Scheduled email report digests** | The app sends no report emails at all. Its only emails are account and billing ones: welcome, password reset, verification, invitation, plan approved, credits added, trial ending, billing alerts. The Digest page is an in-app view, not a mailout. This was on the Team Leads page and has been removed |
 | **Pushing data out to warehouses or Sheets** | No push adapters exist. The tables were designed for it and the code was never written. Data out is pull-only: Looker Studio and share links. Google Sheets is import only |
-| **Campaign control on Snapchat or Google** | Changing status and budget from inside AdFunnl is Meta and TikTok only. The site already says the other two are in progress, which is correct |
+| **Campaign control on Snapchat or Google, inside the app** | Changing status and budget from inside the AdFunnl dashboard is Meta and TikTok only. From Claude or ChatGPT (ad control, above) it covers every ad platform. Keep the two apart |
+| **New Meta campaigns or ads from Claude or ChatGPT, for everyone** | Creating Meta campaigns, adding new Meta ads and turning existing posts into Meta ads are early access only, until Meta approves the `pages_manage_ads` permission. Show them with an early-access footnote, never a plain tick. Checked 14 October 2026 in `api/app/controllers/api/v1/oauth_controller.rb` |
+| **More than on and off and budgets on Google** | Google ad control is pause, turn on and budgets, at campaign level only. No duplicating, editing, audiences or new campaigns. Checked 14 October 2026 |
+| **A time it takes to connect** | Nothing measures how long connecting Claude or ChatGPT takes. Do not write "about a minute" |
 | **Audience breakdowns on every platform** | Age, gender, device and location come from Meta and Snapchat only. TikTok and Google connectors fetch no breakdown rows. Checked 10 September 2026 |
 | **Any customer name, testimonial, or measured result** | We have published none. Not a capability question, a standing rule |

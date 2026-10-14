@@ -28,7 +28,9 @@ const APP_URL = "https://app.adfunnl.com";
 //     write "all your creatives" without that qualifier nearby.
 //   - Hook and hold is Meta only.
 //   - Ad fatigue genuinely does cover every ad platform.
-//   - Campaign control is Meta and TikTok. Snapchat and Google are in progress.
+//   - Campaign control INSIDE the app is Meta and TikTok, Snapchat and Google
+//     in progress. From Claude or ChatGPT (ad control, /ai-ad-control) it is
+//     every ad platform, but Google is only on and off and budgets.
 //   - There is no media buyer dimension in the app. Grouping is Workspace,
 //     then Client, then Ad Account, and every member sees every client. Never
 //     imply a per-person view.
@@ -292,6 +294,14 @@ const objections = [
 ];
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
+// The same job from Claude or ChatGPT (docs/what-ships.md, ad control,
+// checked 14 October 2026). Links to the page with the per-platform table.
+const fromAi = {
+  body: "From Claude or ChatGPT it already reaches every ad platform. Spot the waste in AdFunnl, then ask your assistant to pause it or move the budget, and approve the change in the chat instead of opening each platform in its own tab.",
+  link: "What it can change on each platform",
+  href: "/ai-ad-control",
+};
+
 const control = [
   { platform: "Meta", status: "Live" },
   { platform: "TikTok", status: "Live" },
@@ -698,6 +708,11 @@ const control = [
             </div>
           ))}
         </div>
+        <p class="mt-6 leading-relaxed text-zinc-500">{fromAi.body}</p>
+        <a href={fromAi.href} class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-all hover:gap-2.5">
+          {fromAi.link}
+          <svg class="h-4 w-4 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
     </div>
   </section>

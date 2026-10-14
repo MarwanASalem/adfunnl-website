@@ -4,6 +4,7 @@ import PlatformIcon from "../components/PlatformIcon.astro";
 import DataFlow from "../components/DataFlow.astro";
 import AnalysisStages from "../components/AnalysisStages.astro";
 import AiDashboard from "../components/AiDashboard.astro";
+import AdControlSafety from "../components/AdControlSafety.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -77,7 +78,7 @@ const analysisStages = {
     { key: "process", name: "Processing data", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
     { key: "analyze", name: "Analyzing data",  owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
     { key: "share",   name: "Share",   owner: "auto", line: "A live view-only link or a PDF, current whenever someone opens it." },
-    { key: "act",     name: "Act",     owner: "you",  line: "Pulse flags accounts Scale, Hold or Cut against your rules. The decision stays yours, and on Meta and TikTok you can change status and budget without leaving AdFunnl." },
+    { key: "act",     name: "Act",     owner: "ai",   line: "Pulse flags accounts Scale, Hold or Cut against your rules. Then Claude or ChatGPT can make the change, from pausing and scaling on Meta, TikTok, Snapchat and Google to launching new campaigns on TikTok and Snapchat. Nothing changes until you approve it." },
   ],
 };
 
@@ -133,7 +134,39 @@ const momBaseY = MOM_PT + momPlotH;
 const numCell = "px-3 py-2.5 text-right tabular-nums lining-nums text-zinc-600";
 // Assistant answers. Rendered once invisibly so each chat card reserves its
 // full height, then typed out over that space by the script below.
-const mcpAnswer = "TikTok took 62% of spend but returned only 38% of revenue. Two Meta retargeting sets carried blended ROAS this month, so shifting ~$4.2k out of TikTok prospecting into them is the clearest win.";
+// ── Ask, then let it act (ad control over MCP) ──
+// docs/what-ships.md, ad control, checked 14 October 2026. Platform labels are
+// the owner's: TikTok and Snapchat Live, Meta and Google Beta. The chat is a
+// short story driven by the typewriter script below: the answer types out,
+// the preview card appears, then the approval and the result. The two ads are
+// the two highest cost per purchase in Website sales in adRows above, so the
+// numbers agree with the rest of the page. No model names on the mockups:
+// "Claude" and "ChatGPT" do not go stale.
+const adControl = {
+  heading: "Ask your AI, then let it make the change",
+  body: "Connect AdFunnl to Claude or ChatGPT and it does more than answer. Ask which ads are wasting budget, then ask it to pause them. Ask for a new TikTok campaign from the videos in your Google Drive, and it builds it switched off, ready for you to check. Or stay inside AdFunnl and ask the in-app assistant about the same numbers.",
+  platforms: [
+    { name: "Meta", key: "meta", beta: true },
+    { name: "TikTok", key: "tiktok", beta: false },
+    { name: "Snapchat", key: "snapchat", beta: false },
+    { name: "Google", key: "google_ads", beta: true },
+  ],
+  beta: "Beta",
+  link: "What it can change on each platform",
+};
+const acChat = {
+  ask: "Pause the two ads with the highest cost per purchase in Website sales.",
+  tool: "set_ad_status",
+  cardTitle: "Pause 2 ads",
+  rows: [
+    { ad: "Reel · Bento unboxing", key: "meta", cpp: "EGP 91.66 / purchase" },
+    { ad: "Reel · Leakproof test", key: "tiktok", cpp: "EGP 90.14 / purchase" },
+  ],
+  approve: "Approve",
+  approved: "Approved",
+  done: "Done. Both ads are paused, and the change is in Tiffin Co.'s Change Log.",
+};
+const mcpAnswer = "These two cost the most per purchase in Website sales. Approve below and I will pause both.";
 const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 spent, 87 purchases and a 24.16× return, well ahead of the next ad on the list. It is still under your average spend, so there is room to scale it before fatigue shows up.";
 ---
 
@@ -458,16 +491,24 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         ))}
       </div>
 
-      <!-- ── Chat with your data, either way ── -->
+      <!-- ── Ask, then let it act ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
         <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
-          Chat with your data, either way
+          {adControl.heading}
         </h3>
-        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
-          Connect an MCP and query your unified numbers from the AI assistant you
-          already use, or just ask AdFunnl directly inside the app. Same data, same
-          answer, whichever side you start on.
-        </p>
+        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">{adControl.body}</p>
+        <ul class="mt-5 flex flex-wrap items-center justify-center gap-2">
+          {adControl.platforms.map((p) => (
+            <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+              <PlatformIcon platform={p.key} class="h-3.5 w-3.5" />{p.name}
+              {p.beta && <span class="rounded bg-brand-50 px-1.5 py-px text-[10px] font-bold text-brand-700">{adControl.beta}</span>}
+            </li>
+          ))}
+        </ul>
+        <a href="/ai-ad-control" class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-all hover:gap-2.5">
+          {adControl.link}
+          <svg class="h-4 w-4 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
 
       <div class="mt-8 grid items-stretch gap-6 lg:grid-cols-2">
@@ -484,14 +525,13 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                   <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
                 </span>
                 <span class="whitespace-nowrap text-xs font-semibold text-[#0d0d0d]">ChatGPT</span>
-                <span class="whitespace-nowrap rounded-md border border-[#e5e5e5] bg-white px-2 py-0.5 text-[10px] font-medium text-[#8f8f8f]">GPT-5</span>
                 <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e5e5e5] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#8f8f8f]">
                   <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
                 </span>
               </div>
               <div class="flex flex-1 flex-col gap-4 p-5">
                 <div class="flex justify-end">
-                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                  <p class="max-w-[85%] rounded-2xl bg-[#f0f0f0] px-3.5 py-2.5 text-sm leading-relaxed text-[#0d0d0d]">{acChat.ask}</p>
                 </div>
                 <div class="flex gap-3">
                   <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
@@ -500,9 +540,26 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                   <div class="min-w-0 flex-1">
                     <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e5e5e5] bg-[#f7f7f8] px-2.5 py-1.5 text-xs font-medium text-[#8f8f8f]">
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
-                      Used <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · get_insights
+                      Used <strong class="font-semibold text-[#0d0d0d]">AdFunnl</strong> · {acChat.tool}
                     </div>
                     <p class="grid text-sm leading-[1.7] text-[#0d0d0d]"><span class="invisible col-start-1 row-start-1" aria-hidden="true"><span data-mcp-ghost>{mcpAnswer}</span>▍</span><span class="col-start-1 row-start-1"><span data-mcp-stream></span><span class="stream-caret text-[#0d0d0d]">▍</span></span></p>
+                    <div class="ac-card mt-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+                      <p class="text-xs font-semibold text-zinc-900">{acChat.cardTitle}</p>
+                      <ul class="mt-2 space-y-1.5">
+                        {acChat.rows.map((r) => (
+                          <li class="flex items-center gap-2 text-[11px] text-zinc-600">
+                            <PlatformIcon platform={r.key} class="h-3.5 w-3.5 shrink-0" />
+                            <span class="min-w-0 flex-1 truncate" dir="ltr">{r.ad}</span>
+                            <span class="shrink-0 tabular-nums lining-nums">{r.cpp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <span class="ac-approve mt-2.5 inline-grid rounded-md px-2.5 py-1 text-[11px] font-semibold text-white">
+                        <span class="ac-label-approve col-start-1 row-start-1">{acChat.approve}</span>
+                        <span class="ac-label-approved col-start-1 row-start-1">✓ {acChat.approved}</span>
+                      </span>
+                    </div>
+                    <p class="ac-done mt-3 text-sm leading-relaxed">{acChat.done}</p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e5e5e5] bg-white px-3.5 py-2.5">
@@ -521,14 +578,13 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                   <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
                 </span>
                 <span class="whitespace-nowrap text-xs font-semibold text-[#3d3929]">Claude</span>
-                <span class="whitespace-nowrap rounded-md border border-[#e2dbcd] bg-[#faf9f6] px-2 py-0.5 text-[10px] font-medium text-[#7c7565]">Sonnet 4.5</span>
                 <span class="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#e2dbcd] bg-[#faf9f6] px-2.5 py-1 text-[10px] font-semibold text-[#7c7565]">
                   <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>AdFunnl connected
                 </span>
               </div>
               <div class="flex flex-1 flex-col gap-4 p-5">
                 <div class="flex justify-end">
-                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">Recap TikTok vs Meta this month. Where did we waste budget?</p>
+                  <p class="max-w-[85%] rounded-2xl bg-[#ece7dd] px-3.5 py-2.5 text-sm leading-relaxed text-[#3d3929]">{acChat.ask}</p>
                 </div>
                 <div class="flex gap-3">
                   <span class="mt-px flex h-6 w-6 shrink-0 items-center justify-center">
@@ -537,9 +593,26 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                   <div class="min-w-0 flex-1">
                     <div class="mb-2.5 inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-[#e2dbcd] bg-[#f3efe7] px-2.5 py-1.5 text-xs font-medium text-[#7c7565]">
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
-                      Used <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · get_insights
+                      Used <strong class="font-semibold text-[#3d3929]">AdFunnl</strong> · {acChat.tool}
                     </div>
                     <p class="grid text-sm leading-[1.7] text-[#3d3929]"><span class="invisible col-start-1 row-start-1" aria-hidden="true"><span data-mcp-ghost>{mcpAnswer}</span>▍</span><span class="col-start-1 row-start-1"><span data-mcp-stream></span><span class="stream-caret text-[#D97757]">▍</span></span></p>
+                    <div class="ac-card mt-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+                      <p class="text-xs font-semibold text-zinc-900">{acChat.cardTitle}</p>
+                      <ul class="mt-2 space-y-1.5">
+                        {acChat.rows.map((r) => (
+                          <li class="flex items-center gap-2 text-[11px] text-zinc-600">
+                            <PlatformIcon platform={r.key} class="h-3.5 w-3.5 shrink-0" />
+                            <span class="min-w-0 flex-1 truncate" dir="ltr">{r.ad}</span>
+                            <span class="shrink-0 tabular-nums lining-nums">{r.cpp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <span class="ac-approve mt-2.5 inline-grid rounded-md px-2.5 py-1 text-[11px] font-semibold text-white">
+                        <span class="ac-label-approve col-start-1 row-start-1">{acChat.approve}</span>
+                        <span class="ac-label-approved col-start-1 row-start-1">✓ {acChat.approved}</span>
+                      </span>
+                    </div>
+                    <p class="ac-done mt-3 text-sm leading-relaxed">{acChat.done}</p>
                   </div>
                 </div>
                 <div class="mt-auto flex items-center gap-2 rounded-xl border border-[#e2dbcd] bg-white px-3.5 py-2.5">
@@ -600,6 +673,9 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
           </div>
         </div>
       </div>
+
+      <!-- ── Why letting it act is safe ── -->
+      <AdControlSafety class="reveal mt-14" />
 
       <!-- ── Store revenue ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
@@ -947,6 +1023,17 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     .assistant-divider { left: var(--split); }
     .assistant-handle { left: var(--split); }
 
+    /* ── Ad control story: answer, then the preview card, then approval ──
+       Driven by data-ac-step on #assistant-split. Hidden only with JS, so the
+       whole story shows without it. */
+    .js .ac-card, .js .ac-done { opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
+    [data-ac-step="1"] .ac-card, [data-ac-step="2"] .ac-card, [data-ac-step="2"] .ac-done { opacity: 1; transform: none; }
+    .ac-approve { background-color: #18181b; transition: background-color .3s ease; }
+    .ac-label-approved { visibility: hidden; }
+    [data-ac-step="2"] .ac-approve { background-color: #059669; }
+    [data-ac-step="2"] .ac-label-approve { visibility: hidden; }
+    [data-ac-step="2"] .ac-label-approved { visibility: visible; }
+
     /* ── Month-over-month chart (reveal-triggered) ── */
     .mom-bar { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); }
     .reveal.in .mom-bar { transition: transform .9s cubic-bezier(.2,.7,.2,1); transform: scaleY(1); }
@@ -1107,16 +1194,29 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       nodes.forEach((el) => { el.textContent = slice; });
     }
 
+    // The ad control story rides the same counter: the preview card appears
+    // once the answer is typed, the approval about 1.7s later, then it holds.
+    const CARD_AT = MCP_ANSWER.length + 8;
+    const DONE_AT = CARD_AT + 60;
+    const LOOP_AT = Math.max(longest, DONE_AT) + 110;
+    const setStep = (n) => {
+      if (!split) return;
+      const step = n >= DONE_AT ? "2" : n >= CARD_AT ? "1" : "0";
+      if (split.dataset.acStep !== step) split.dataset.acStep = step;
+    };
+
     if (rm) {
       writeAll(mcpEls, MCP_ANSWER, MCP_ANSWER.length);
       writeAll(inAppEls, INAPP_ANSWER, INAPP_ANSWER.length);
+      setStep(DONE_AT);
     } else {
       let n = 0;
       setInterval(() => {
         if (dragging) return;
-        n = n > longest + 40 ? 0 : n + 1;
+        n = n > LOOP_AT ? 0 : n + 1;
         writeAll(mcpEls, MCP_ANSWER, n);
         writeAll(inAppEls, INAPP_ANSWER, n);
+        setStep(n);
       }, 28);
     }
   </script>

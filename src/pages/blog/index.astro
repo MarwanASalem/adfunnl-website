@@ -1,0 +1,56 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { POSTS } from "../../data/blog";
+
+// ── Blog index ────────────────────────────────────────────────────────────
+// Lists every post in src/data/blog.ts, newest first. Posts answer one
+// question a media buyer would type into a search box or an AI assistant,
+// with the answer early: a definition, a formula, a worked example.
+const page = {
+  heading: "Blog",
+  intro: "Guides for media buyers and performance marketers on measuring and reporting ads across Meta, TikTok, Snapchat and Google.",
+  readLabel: "Read the guide",
+};
+
+const SITE = "https://www.adfunnl.com";
+const fmtDate = (iso: string) =>
+  new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+    .format(new Date(`${iso}T00:00:00Z`));
+
+const schema = [
+  {
+    "@type": "Blog",
+    "@id": `${SITE}/blog#blog`,
+    name: "AdFunnl Blog",
+    url: `${SITE}/blog`,
+    inLanguage: "en",
+    publisher: { "@id": `${SITE}/#organization` },
+    blogPost: POSTS.map((p) => ({ "@id": `${SITE}/blog/${p.slug}#article` })),
+  },
+];
+---
+
+<Layout
+  title="Blog"
+  seoTitle="AdFunnl Blog: guides for media buyers and performance marketers"
+  description="Guides for media buyers and performance marketers on measuring and reporting ads across Meta, TikTok, Snapchat and Google."
+  schema={schema}
+>
+  <main class="mx-auto max-w-3xl px-6 pt-12 pb-20 sm:pt-16">
+    <h1 class="font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">{page.heading}</h1>
+    <p class="mt-5 text-lg leading-relaxed text-zinc-500">{page.intro}</p>
+
+    <ul class="mt-12 divide-y divide-zinc-100 border-y border-zinc-100">
+      {POSTS.map((p) => (
+        <li class="py-8">
+          <time datetime={p.published} class="text-sm text-zinc-400">{fmtDate(p.published)}</time>
+          <h2 class="mt-2 font-display text-2xl font-bold tracking-tight text-zinc-950">
+            <a href={`/blog/${p.slug}`} class="hover:text-brand-700 transition">{p.en.title}</a>
+          </h2>
+          <p class="mt-3 text-[17px] leading-relaxed text-zinc-600">{p.en.description}</p>
+          <a href={`/blog/${p.slug}`} class="mt-4 inline-block text-sm font-semibold text-brand-700 hover:underline">{page.readLabel}</a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

@@ -171,6 +171,8 @@ function pageType(path: string): string {
   if (p.startsWith("/for/")) return "persona";
   if (p.startsWith("/features")) return "features";
   if (p === "/pricing") return "pricing";
+  if (p === "/blog") return "blog";
+  if (p.startsWith("/blog/")) return "blog_post";
   if (p === "/privacy" || p === "/terms") return "legal";
   return p.slice(1).replace(/\//g, "_");
 }

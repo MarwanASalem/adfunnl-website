@@ -1,0 +1,137 @@
+---
+import BlogArticle from "../../components/BlogArticle.astro";
+import type { Post } from "../../data/blog";
+
+// ── Blended ROAS guide ────────────────────────────────────────────────────
+// Brief (approved 15 October 2026):
+//   Who: media buyers and performance marketers running ads on more than one
+//   platform, often with accounts in more than one currency.
+//   Promise: you will calculate blended ROAS correctly across every platform
+//   and currency, and know what it cannot tell you.
+//   Action: Start free.
+//
+// Product facts used here, all in docs/what-ships.md: the blended ROAS and
+// store ROAS presets, currency conversion at the current market rate with a
+// per-currency override, report snapshots, and the 3-day re-fetch on sync.
+// The example figures are arithmetic, not a customer: keep them round.
+// Title, description and date are repeated in src/data/blog.ts.
+const POST: Post = {
+  slug: "how-to-calculate-blended-roas",
+  published: "2026-10-15",
+  title: "How to calculate blended ROAS across every ad platform",
+  seoTitle: "Blended ROAS: how to calculate it across platforms and currencies",
+  description:
+    "How to calculate blended ROAS across Meta, TikTok, Snapchat and Google, without counting a sale twice or mixing currencies. Worked example inside.",
+  lead:
+    "The formula is one line. The hard parts are sales counted twice and accounts in different currencies, and this guide covers both.",
+
+  sections: [
+    {
+      id: "formula",
+      heading: "What blended ROAS is, and the formula",
+      blocks: [
+        { type: "p", text: "Blended ROAS is the revenue your ads brought in across every platform, divided by everything you spent on those platforms, over the same dates and in one currency." },
+        { type: "formula", text: "Blended ROAS = total revenue ÷ total ad spend" },
+        { type: "p", text: "Spend 140,000 across Meta, TikTok, Snapchat and Google, bring in 350,000 in revenue, and blended ROAS is 2.50x. Each platform's own ROAS tells you how that platform did by its own count. Blended ROAS tells you how the whole budget did." },
+      ],
+    },
+    {
+      id: "wrong-number",
+      heading: "Why adding up each platform's ROAS gives you the wrong number",
+      blocks: [
+        { type: "p", text: "Two shortcuts look right and are not." },
+        { type: "p", text: "The first is averaging the platforms' ROAS. An average treats a platform you spent 2,000 on the same as one you spent 200,000 on. Blended ROAS has to be weighted by spend, so you add up spend and revenue first and divide once at the end." },
+        { type: "p", text: "The second is harder to see: adding up each platform's reported revenue counts some sales twice. Each platform claims any sale it touched inside its own attribution window. A customer who watched a TikTok video on Sunday and clicked a Meta ad on Tuesday before buying can show up as a purchase in both Ads Manager and TikTok. Add the two together and that one order is counted twice. The more platforms you run, the more room there is for overlap." },
+      ],
+    },
+    {
+      id: "platform-or-store",
+      heading: "Platform revenue or store revenue: which one to divide by",
+      blocks: [
+        { type: "p", text: "You can fill the top of the formula two ways, and they answer different questions." },
+        { type: "p", text: "**Platform revenue** is the sum of what each ad platform reports. You have it for every account and it splits by platform and campaign, but it overstates whenever platforms share credit for the same sale." },
+        { type: "p", text: "**Store revenue** is what your Shopify, Salla or Zid store actually took over the same dates. Every order is counted once, so there is no double counting. It overstates in the other direction, because it includes sales no ad touched: returning customers, email, organic search." },
+        { type: "p", text: "Use platform revenue to compare platforms and campaigns against each other. Use store revenue to answer whether the total budget is paying for itself. When both are on the same screen, watch the gap: when platform revenue climbs and store revenue does not, the platforms are claiming more of the same sales." },
+      ],
+    },
+    {
+      id: "worked-example",
+      heading: "A worked example across three currencies",
+      blocks: [
+        { type: "p", text: "Say a brand runs Meta in Egyptian pounds, TikTok in Saudi riyals and Google in US dollars, and reports to its client in dollars. For the example, take 1 USD = 50 EGP and 1 USD = 3.75 SAR." },
+        {
+          type: "table",
+          head: ["Platform", "Currency", "Spend", "Revenue", "ROAS", "Spend in USD", "Revenue in USD"],
+          rows: [
+            ["Meta", "EGP", "250,000", "1,000,000", "4.00x", "5,000", "20,000"],
+            ["TikTok", "SAR", "15,000", "45,000", "3.00x", "4,000", "12,000"],
+            ["Google", "USD", "10,000", "15,000", "1.50x", "10,000", "15,000"],
+          ],
+          foot: ["Total", "USD", "", "", "", "19,000", "47,000"],
+        },
+        { type: "p", text: "Blended ROAS is 47,000 ÷ 19,000 = **2.47x**." },
+        { type: "p", text: "The two shortcuts give different answers from the same numbers:" },
+        {
+          type: "list",
+          items: [
+            { lead: "Averaging the three ROAS figures gives 2.83x.", text: "Google's weak 1.50x counts as one third of the answer, when Google carries more than half the spend." },
+            { lead: "Adding up the raw figures without converting gives 1,060,000 ÷ 275,000 = 3.85x.", text: "Egyptian pounds swamp everything else. This is the easy one to miss, because the total looks plausible." },
+          ],
+        },
+        { type: "p", text: "If the store took USD 38,000 over the same dates, store ROAS is 38,000 ÷ 19,000 = **2.00x**. The platforms together claim 9,000 more than the store took in, so some of the same sales are being claimed more than once." },
+      ],
+    },
+    {
+      id: "exchange-rate",
+      heading: "Which exchange rate to use, and when",
+      blocks: [
+        { type: "p", text: "Inside one account, the rate does not change ROAS: spend and revenue are converted by the same number. What the rate changes is how much weight each account carries in the blend. In the example, a weaker pound shrinks Meta's share of spend in dollars and pulls blended ROAS toward TikTok and Google." },
+        { type: "p", text: "Your options:" },
+        {
+          type: "list",
+          items: [
+            { lead: "The rate on each day of spend.", text: "The most accurate, and the hardest to keep by hand." },
+            { lead: "One rate for the whole period,", text: "such as the month's average. Easy to explain to a client." },
+            { lead: "A fixed rate agreed in advance,", text: "often the one the budget was planned at. It keeps month-to-month comparisons steady when a currency moves sharply." },
+            { lead: "Today's rate.", text: "The simplest, but past months shift every time the currency moves." },
+          ],
+        },
+        { type: "p", text: "Whichever you pick, convert spend and revenue at the same rate and keep the method the same from one report to the next. AdFunnl converts at the current market rate, refreshed every few hours, and lets you set your own rate per currency in a dashboard's settings. Report snapshots freeze what you sent, so last month's number does not move after the client has seen it." },
+      ],
+    },
+    {
+      id: "limits",
+      heading: "What blended ROAS won't tell you",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            { lead: "Which platform is working.", text: "A healthy blend can hide one platform losing money behind another doing well. Read it next to each platform's own numbers." },
+            { lead: "Whether the ads caused the sales.", text: "Neither version measures what would have sold with no ads at all. That takes a holdout test." },
+            { lead: "Whether you made money.", text: "ROAS is revenue, before product cost, shipping and returns. Break-even ROAS is 1 divided by your gross margin: at a 40% margin, you need 2.50x just to cover the ad spend." },
+          ],
+        },
+      ],
+    },
+  ],
+
+  faq: {
+    id: "faq",
+    heading: "Questions media buyers ask about blended ROAS",
+    items: [
+      { q: "What is a good blended ROAS?", a: "It depends on your margin. Work out break-even first, 1 divided by gross margin, and judge everything against that. A 2.00x blend loses money at a 30% margin and makes money at 60%." },
+      { q: "Is blended ROAS the same as MER?", a: "Close. MER, marketing efficiency ratio, is usually total store revenue divided by total marketing spend. That makes it the store-revenue version of blended ROAS, with every marketing cost counted, not only ads." },
+      { q: "Why does yesterday's blended ROAS keep changing?", a: "Platforms keep adding conversions for days after a click, as late purchases land inside the attribution window. Treat the last few days as provisional. AdFunnl re-fetches the last three days on every sync for this reason." },
+      { q: "How do I calculate blended ROAS for lead generation?", a: "Without a revenue figure, you can't. Use blended cost per lead instead: total ad spend divided by total leads, with the same currency rules." },
+    ],
+  },
+
+  close: {
+    id: "close",
+    heading: "Blended ROAS in one dashboard",
+    body: "AdFunnl connects Meta, TikTok, Snapchat and Google with your Shopify, Salla or Zid store, converts every account into one reporting currency, and shows blended ROAS and store ROAS next to each platform's own numbers. Start with one account, then add the rest.",
+  },
+};
+---
+
+<BlogArticle post={POST} />

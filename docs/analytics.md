@@ -18,7 +18,7 @@ Every event also carries `site_section` and `locale` (`en` or `ar`).
 
 | Event | When | Parameters |
 | --- | --- | --- |
-| `web_page_view` | Every page load | `page_path`, `page_title`, `page_type` (home, persona, features, pricing, legal, about) |
+| `web_page_view` | Every page load | `page_path`, `page_title`, `page_type` (home, persona, features, pricing, blog, blog_post, legal, about) |
 | `web_signup_click` | Click on any link to `app.adfunnl.com/signup` (every `Start free`) | `cta_text`, `cta_location`, `link_url`, `plan` (solo, growth, agency or none) |
 | `web_signin_click` | Click on `Sign in` | `cta_text`, `cta_location`, `link_url` |
 | `web_app_link_click` | Click on any other app link | `cta_text`, `cta_location`, `link_url` |

@@ -44,7 +44,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Easy Orders | Orders |
 | Google Sheets | Manual import as a data source, one direction, in only |
 | Sync cadence | Hourly. Full backfill of 90 days on a new account, last 3 days re-fetched every sync for late conversions |
-| Currency | Everything unified into one reporting currency at the right rate |
+| Currency | Everything unified into one reporting currency. The rate is the current market rate, refreshed every few hours, not the rate on the day of spend. A dashboard's settings let you set your own rate per currency instead. Checked 15 October 2026 in `api/lib/currency_conversion_service.rb` and `web/src/components/builder/DashboardSettingsDrawer.tsx` (`rate_overrides`) |
 
 ## Visualize
 
@@ -56,7 +56,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Versus prior period | Comparison on any tile, month over month inline |
 | Custom metrics | Plus conditional table rules and change annotations dated to what changed |
 | Templates | Save a layout personally or app-wide, then clone it across accounts |
-| Blended totals | Cross-platform blended ROAS, spend, purchases and revenue |
+| Blended totals | Cross-platform blended ROAS, spend, purchases and revenue. The blended ROAS preset is platform-reported revenue over ad spend (`ads.revenue / ads.spend`). A second preset, store ROAS, is store revenue over ad spend (`stores.revenue / ads.spend`), so both can sit side by side. Checked 15 October 2026 in `web/src/lib/custom-metric-presets.ts` |
 | Product-level ROAS | Store revenue attributed down to product and category |
 | Creative analysis | Best Creatives, with the creative itself in the page. Ranked by a composite score, not one metric: ecommerce mode weights ROAS 40%, cost per purchase 40% and outbound CTR 20%, each standardised across the ads currently in view. Messaging mode is Meta only and weights cost per message 80%, CTR 20%. Ad level is **Meta and Snapchat**, several accounts at once. Checked 19 August 2026 in `web/src/lib/creative-score.ts` and `web/src/pages/BestCreativesPage.tsx` |
 | Creative filters | Minimum spend threshold, defaulting to the average spend across the ads in view, so low-spend noise drops out of the ranking. Plus filters on platform, campaign and objective, a date range, list or grid view, and a one-click PDF of the page. Checked 19 August 2026 |

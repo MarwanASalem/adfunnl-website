@@ -26,12 +26,19 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [For Media Buyers](https://www.adfunnl.com/for/media-buyers): daily analysis and creative ranking
 - [About](https://www.adfunnl.com/about): who operates AdFunnl
 - [Security](https://www.adfunnl.com/security): how workspace data is protected
+- [Blog](https://www.adfunnl.com/blog): guides for media buyers and performance marketers
+
+## Guides
+
+- [How to calculate blended ROAS across every ad platform](https://www.adfunnl.com/blog/how-to-calculate-blended-roas): the formula, why averaging platform ROAS or adding up platform revenue gives the wrong number, platform revenue against store revenue, a worked example in EGP, SAR and USD, and which exchange rate to use
 
 ## Arabic
 
 - [الرئيسية](https://www.adfunnl.com/ar)
 - [الأسعار](https://www.adfunnl.com/ar/pricing)
 - [التحكم في الإعلانات بالـ AI](https://www.adfunnl.com/ar/ai-ad-control)
+- [المدونة](https://www.adfunnl.com/ar/blog)
+- [كيف تحسب blended ROAS عبر كل منصاتك الإعلانية](https://www.adfunnl.com/ar/blog/how-to-calculate-blended-roas)
 
 ## Contact
 

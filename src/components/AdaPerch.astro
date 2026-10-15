@@ -1,0 +1,95 @@
+---
+// Ada, the AI character from the app, sitting on the top edge of the hero
+// film with her legs dangling over it, the way she sits on the message bar
+// on the app's Home page. Purely decorative.
+//
+// Place it inside a `relative` box that is exactly the film card, and not
+// inside anything with overflow hidden. The box is square; its bottom sits
+// on the card's top edge and is nudged down 25% of its own height, because
+// the "perch" framing puts the line she sits on 25% up from the canvas's
+// bottom (PERCH_FLOOR in scripts/ada/adaScene.ts).
+//
+// The still picture shows first, and stays for reduced motion and devices
+// without 3D. The live character (three.js, copied from the app repo at
+// web/src/components/chat/ada3d/adaScene.ts; keep the two in step) loads
+// after the page is idle, then fades in over the still.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={["ada-perch pointer-events-none absolute bottom-full z-10 aspect-square translate-y-[25%] select-none", className]}
+  aria-hidden="true"
+>
+  <img src="/ada-sit.webp" alt="" width="256" height="256" decoding="async" class="ada-still absolute inset-0 h-full w-full" />
+  <canvas class="ada-live absolute inset-0 block h-full w-full opacity-0"></canvas>
+</div>
+
+<style>
+  .ada-still, .ada-live { transition: opacity .4s ease; }
+  .ada-perch.is-live .ada-live { opacity: 1; }
+  .ada-perch.is-live .ada-still { opacity: 0; }
+</style>
+
+<script>
+  const host = document.querySelector<HTMLElement>(".ada-perch");
+  const canvas = host?.querySelector("canvas");
+
+  function canUseWebGL() {
+    try {
+      const c = document.createElement("canvas");
+      return !!(c.getContext("webgl2") || c.getContext("webgl"));
+    } catch {
+      return false;
+    }
+  }
+
+  async function boot(host: HTMLElement, canvas: HTMLCanvasElement) {
+    let scene;
+    try {
+      const { createAdaScene } = await import("../scripts/ada/adaScene");
+      scene = createAdaScene(canvas, { framing: "perch" });
+    } catch {
+      return; // the still stays
+    }
+    const live = scene;
+    const box = canvas.getBoundingClientRect();
+    live.resize(box.width, box.height);
+    new ResizeObserver(([entry]) => live.resize(entry.contentRect.width, entry.contentRect.height)).observe(canvas);
+
+    // Draw only while she is on screen and the tab is in front.
+    let onScreen = true;
+    const update = () => (onScreen && !document.hidden ? live.start() : live.stop());
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      update();
+    }).observe(canvas);
+    document.addEventListener("visibilitychange", update);
+
+    // Her eyes follow the pointer anywhere on the page.
+    window.addEventListener("pointermove", (e) => {
+      const r = canvas.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height * 0.45;
+      live.setLook((e.clientX - cx) / (window.innerWidth / 2), -(e.clientY - cy) / (window.innerHeight / 2));
+    }, { passive: true });
+
+    live.setMood("hi");
+    update();
+    // Swap out the still once the first frames are on the canvas, and wave
+    // for a moment before settling.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      host.classList.add("is-live");
+      setTimeout(() => live.setMood("idle"), 2500);
+    }));
+  }
+
+  if (host && canvas && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && canUseWebGL()) {
+    // Wait for the page to settle so three.js never slows the first paint.
+    const start = () => boot(host, canvas);
+    if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 2000 });
+    else setTimeout(start, 600);
+  }
+</script>

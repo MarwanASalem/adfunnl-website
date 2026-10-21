@@ -136,9 +136,8 @@ const argument = [
 // English section: خطة يوافق عليها المستخدم، ثم البناء.
 const aiDashboard = {
   heading: "كل عميل جديد يعني بناء أول تقرير من الصفر",
-  body: "أو تطلبه. قل لأي عميل هي اللوحة، فيضع المساعد خطة لوحة مما ربطه هذا العميل: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تصلك الخطة قبل أن يُبنى أي شيء، وفيها اللوحات التي ستأتي فارغة، وتنتظر موافقتك. بعدها الترتيب لك: حرّك ما تشاء، ثم احفظ التخطيط كقالب للعميل الذي يليه.",
+  body: "قل لأي عميل هي اللوحة، فيضع المساعد خطة لوحة مما ربطه هذا العميل. توافق على الخطة ثم يبنيها، ويمكنك حفظ التخطيط كقالب للعميل التالي.",
   prompt: "ابنِ لوحة للعميل الجديد Tiffin Co.",
-  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
 };
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
@@ -346,7 +345,6 @@ const control = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
     prompt={aiDashboard.prompt}
-    meta={aiDashboard.meta}
   />
 
   <!-- ===================== DATA FLOW (animated) =====================

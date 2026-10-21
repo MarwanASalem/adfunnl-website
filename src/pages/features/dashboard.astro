@@ -9,8 +9,7 @@ const APP_URL = "https://app.adfunnl.com";
 // approval in the copy, and keep the canvas as the thing you get back.
 const aiDashboard = {
   heading: "The first one is always the one you put off",
-  body: "So ask for it. Say which brand the dashboard is for, and the assistant plans one out of what that brand has actually connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. The plan comes back first, with the panels that would be empty already named, and nothing is built until you approve it. What you get is an ordinary dashboard on the same canvas, so every tile is still yours to move, retitle or delete.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
+  body: "Say which brand the dashboard is for and the assistant plans it from what that brand has connected. You approve the plan, then it builds an ordinary dashboard where every tile is still yours to move, retitle or delete.",
 };
 
 const tileTypes = [
@@ -185,7 +184,6 @@ const capabilities = [
     sectionClass="border-t border-zinc-100 bg-zinc-50/60 px-6 py-20"
     heading={aiDashboard.heading}
     body={aiDashboard.body}
-    meta={aiDashboard.meta}
   />
 
   <!-- CTA -->

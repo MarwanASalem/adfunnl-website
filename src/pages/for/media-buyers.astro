@@ -240,9 +240,8 @@ const assistantSources = ["Meta", "TikTok", "Snapchat", "Google", "Shopify"];
 // Two-phase and never silent: plan first, approval, then the build.
 const aiDashboard = {
   heading: "When you do want the dashboard, ask for that too",
-  body: "Name the brand and the assistant plans the whole thing out of what it has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. You read the plan first, panels that would come back empty included, and nothing is built until you approve it. What lands is an ordinary dashboard on the usual canvas, still yours to rearrange.",
+  body: "Name the brand and the assistant plans the dashboard from what it has connected. You approve the plan, then it builds an ordinary dashboard you can still rearrange.",
   prompt: "Build me a dashboard for Tiffin Co.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
 };
 
 // ── Where the capacity comes from ─────────────────────────────────────
@@ -639,7 +638,6 @@ const control = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
     prompt={aiDashboard.prompt}
-    meta={aiDashboard.meta}
   />
 
   <!-- ============================== CAPACITY ============================== -->

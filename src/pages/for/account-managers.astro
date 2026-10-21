@@ -133,9 +133,8 @@ const argument = [
 // this answers is the one every new client raises, the first report.
 const aiDashboard = {
   heading: "A new client still means building the first report from scratch",
-  body: "Or you ask for it. Say which client the dashboard is for and the assistant plans one out of what that client has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. The plan arrives before anything is built, with the panels that would come back empty named, and it waits for your approval. After that the layout is yours: move what you want, then save it as a template for the client after this one.",
+  body: "Say which client it is for and the assistant plans a dashboard from what that client has connected. You approve the plan, then it builds, and you can save the layout as a template for the next client.",
   prompt: "Build a dashboard for the new client, Tiffin Co.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
 };
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
@@ -348,7 +347,6 @@ const control = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
     prompt={aiDashboard.prompt}
-    meta={aiDashboard.meta}
   />
 
   <!-- ===================== DATA FLOW (animated) =====================

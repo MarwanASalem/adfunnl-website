@@ -189,9 +189,8 @@ const rollout = [
 // truth).
 const aiDashboard = {
   heading: "Nobody on the team wants to build the first dashboard",
-  body: "So nobody has to. Say which brand it is for and the assistant plans one out of what that brand has connected: a row per ad platform over a blended row, then performance over time, campaigns, geography, demographics and placement. It shows the plan, names the panels that would come back empty, and builds only once someone approves it. Everyone starts from the same shape instead of their own, and that layout can be saved as a template and cloned across the rest of the accounts.",
+  body: "Say which brand it is for and the assistant plans a dashboard from what that brand has connected. Someone approves the plan, then it builds, and the layout can be saved as a template and cloned across the other accounts.",
   prompt: "Build a dashboard for Tiffin Co.",
-  meta: "Inside the app, or from Claude or ChatGPT over MCP. On Growth and Agency.",
 };
 
 // ── Roadmap: campaign status & budget control from inside the dashboard ─
@@ -497,7 +496,6 @@ const control = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
     prompt={aiDashboard.prompt}
-    meta={aiDashboard.meta}
   />
 
   <!-- ============================= OBJECTIONS ============================= -->

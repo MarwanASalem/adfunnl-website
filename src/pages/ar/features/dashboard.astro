@@ -12,8 +12,7 @@ const APP_URL = "https://app.adfunnl.com";
 // Two-phase: خطة تقرأها وتوافق عليها، ثم البناء. Keep the approval in the copy.
 const aiDashboard = {
   heading: "اللوحة الأولى هي التي تؤجلها دائمًا",
-  body: "فاطلبها. قل لأي علامة تجارية هي، فيضع المساعد خطة لوحة مما ربطته هذه العلامة فعلًا: صف لكل منصة إعلانية فوق صف مدمج، ثم الأداء عبر الوقت والحملات والجغرافيا والديموغرافيا وPlacement. تصلك الخطة أولًا وفيها اللوحات التي ستأتي فارغة، ولا يُبنى شيء قبل موافقتك. وما تحصل عليه لوحة عادية على اللوحة نفسها، كل عنصر فيها قابل للتحريك أو إعادة التسمية أو الحذف.",
-  meta: "داخل التطبيق، أو من Claude أو ChatGPT عبر MCP. في خطتي Growth وAgency.",
+  body: "قل لأي علامة تجارية هي اللوحة، فيضع المساعد خطتها مما ربطته هذه العلامة. توافق على الخطة ثم يبني لوحة عادية، كل عنصر فيها قابل للتحريك أو إعادة التسمية أو الحذف.",
 };
 
 const tileTypes = [
@@ -187,7 +186,6 @@ const capabilities = [
     sectionClass="border-t border-zinc-100 bg-zinc-50/60 px-6 py-20"
     heading={aiDashboard.heading}
     body={aiDashboard.body}
-    meta={aiDashboard.meta}
   />
 
   <!-- CTA -->

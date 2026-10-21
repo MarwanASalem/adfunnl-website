@@ -25,7 +25,7 @@ const COPY = {
     before: "No more ",
     mark: "mental math",
     after: "",
-    body: "Selling in four markets means four currencies, and a conversion someone is doing in their head. AdFunnl converts every platform and store into your reporting currency automatically, using the right rate, so blended ROAS and revenue add up to a single number you can defend.",
+    body: "Every platform and store is converted into your reporting currency automatically, so blended ROAS adds up to one number you can defend.",
     total: "Unified revenue",
     inYours: "In your reporting currency",
     alt: "Revenue in US dollars, UAE dirhams, Egyptian pounds and Kuwaiti dinars converts, platform by platform, into one total in Saudi riyals.",
@@ -34,7 +34,7 @@ const COPY = {
     before: "لا مزيد من ",
     mark: "الحساب الذهني",
     after: "",
-    body: "البيع في أكثر من سوق يعني أكثر من عملة، وتحويلًا يجريه أحدهم في رأسه. AdFunnl يحوّل أرقام كل منصة ومتجر إلى عملة تقاريرك تلقائيًا وبالسعر الصحيح، فيجتمع blended ROAS والإيرادات في رقم واحد تستطيع الدفاع عنه.",
+    body: "يحوّل AdFunnl أرقام كل منصة ومتجر إلى عملة تقاريرك تلقائيًا، فيجتمع blended ROAS في رقم واحد تستطيع الدفاع عنه.",
     total: "الإيرادات الموحّدة",
     inYours: "بعملة تقاريرك",
     alt: "تتحوّل الإيرادات بالدولار الأمريكي والدرهم الإماراتي والجنيه المصري والدينار الكويتي، منصةً بعد منصة، إلى إجمالي واحد بالريال السعودي.",
@@ -93,8 +93,12 @@ const fmt = (n: number) => n.toLocaleString("en-US");
           <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-200">{T.total}</p>
           <p class="mt-0.5 hidden text-xs text-brand-200/80 sm:block">{T.inYours}</p>
         </div>
-        <bdi dir="ltr" class="ms-auto font-display font-bold tabular-nums lining-nums">
-          <span class="me-1.5 text-base font-semibold text-brand-200 sm:text-lg">SAR</span><span class="cm-total-num text-3xl text-white sm:text-4xl" data-cm-total>{fmt(TOTAL)}</span>
+        <bdi dir="ltr" class="ms-auto flex shrink-0 items-baseline font-display font-bold tabular-nums lining-nums">
+          <span class="me-1.5 text-sm font-semibold text-brand-200 sm:text-lg">SAR</span>
+          <span class="grid text-end text-2xl text-white sm:text-4xl">
+            <span class="invisible col-start-1 row-start-1" aria-hidden="true">{fmt(TOTAL)}</span>
+            <span class="col-start-1 row-start-1" data-cm-total>{fmt(TOTAL)}</span>
+          </span>
         </bdi>
       </div>
     </div>
@@ -152,7 +156,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 
   /* ── Total ── */
   .cm-total {
-    display: flex; align-items: center; gap: 1rem; border-radius: 1.25rem; padding: 1.1rem 1.25rem;
+    display: flex; align-items: center; gap: .75rem; min-width: 0; border-radius: 1.25rem; padding: 1.1rem 1.25rem;
     background: linear-gradient(120deg, #5738c9, #6549dd 60%, #7b62e6);
     box-shadow: 0 22px 40px -20px rgba(87, 56, 201, .65), inset 0 1px 0 rgba(255, 255, 255, .2);
     transition: transform .3s cubic-bezier(.34,1.56,.64,1);

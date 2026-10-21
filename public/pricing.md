@@ -41,12 +41,14 @@ Full pricing page: https://www.adfunnl.com/pricing
 - History: 5 years
 - Includes: everything in Growth, plus 3,000 AI credits per month
 
-## Solo add-ons
+## Add-ons (billed monthly)
 
 - AI add-on: $8 / EGP 390 per month. The AI assistant with 300 credits a month, and MCP access so Claude or ChatGPT can read your AdFunnl data.
 - Ad control: $10 / EGP 500 per month, on top of the AI add-on. Claude or ChatGPT can change your ads after you approve each change. Details: https://www.adfunnl.com/ai-ad-control
 
-Growth and Agency include both. Ad control is not part of the free trial.
+- Extra seat: $8 / EGP 400 per seat per month, on Solo and Growth. Adds one more teammate who can sign in and work on your brands. Solo includes 1 seat and Growth includes 3. Agency includes 10 seats; beyond that is Enterprise.
+
+Growth and Agency include the AI add-on and ad control. Add-ons are requested and approved by the AdFunnl team. Ad control is not part of the free trial.
 
 ## AI credit top-ups (Growth and Agency)
 

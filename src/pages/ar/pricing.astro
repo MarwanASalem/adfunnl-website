@@ -109,21 +109,35 @@ const plans: Plan[] = [
 // Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo,
 // and soloAddons on the English page. Meta campaign creation is left out on
 // purpose: it waits on Meta's review of pages_manage_ads.
-const soloAddons = [
+const addons = [
   {
     name: "إضافة AI",
     egp: 390,
     usd: 8,
+    unit: "شهريًا",
+    onPlans: "لباقة Solo. باقتا Growth وAgency تشملانها.",
     body: "مساعد AI مع 300 رصيد شهريًا. ويربط أيضًا Claude أو ChatGPT ببياناتك على AdFunnl لتسأل عن إعلاناتك من هناك.",
   },
   {
     name: "التحكم في الإعلانات",
     egp: 500,
     usd: 10,
+    unit: "شهريًا",
+    onPlans: "لباقة Solo. باقتا Growth وAgency تشملانه.",
     needs: "تتطلب إضافة AI.",
     body: "يعدّل Claude أو ChatGPT إعلاناتك بدلًا منك: التشغيل والإيقاف وتغيير الميزانيات على Meta وTikTok وSnapchat وGoogle، والنسخ والتعديل على Meta وTikTok وSnapchat، وإنشاء حملات جديدة على TikTok وSnapchat. لا يتغير شيء قبل موافقتك.",
   },
+  {
+    name: "مقعد إضافي",
+    egp: 400,
+    usd: 8,
+    unit: "للمقعد شهريًا",
+    onPlans: "لباقتي Solo وGrowth. باقة Agency تشمل 10 مقاعد.",
+    body: "يضيف زميلًا آخر يمكنه تسجيل الدخول والعمل على علاماتك التجارية. تشمل Solo مقعدًا واحدًا وتشمل Growth ثلاثة مقاعد. تحتاج أكثر من 10؟ تواصل معنا بخصوص Enterprise.",
+  },
 ];
+
+const addonSubject = (name: string) => `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`AdFunnl add-on request: ${name}`)}`;
 
 // AI credit top-up packs (Growth / Agency only).
 const creditPacks = [
@@ -203,6 +217,14 @@ const faqs = [
   {
     q: "ما رصيد AI، ومتى أحتاج إلى شحنه؟",
     a: "باقتا Growth وAgency تتضمنان رصيد AI شهريًا للمساعد. الرصيد ينتقل إلى الشهر التالي، وباقات الشحن لا تُستهلك إلا بعد نفاد رصيدك الشهري، فلا تخسر ما دفعت مقابله.",
+  },
+  {
+    q: "كيف أضيف زميلًا إلى الفريق؟",
+    a: "كل باقة تشمل عددًا من المقاعد: مقعد واحد في Free وSolo، و3 في Growth، و10 في Agency. في Solo وGrowth يمكنك إضافة المزيد بإضافة المقعد الإضافي بسعر 400 جنيه شهريًا للمقعد. وفوق 10 مقاعد تواصل معنا بخصوص Enterprise.",
+  },
+  {
+    q: "كيف أحصل على إضافة؟",
+    a: "استخدم زر اطلب هذه الإضافة. الإضافات يطلبها العميل ويوافق عليها فريق AdFunnl، لذلك لا يُخصم شيء قبل أن نؤكد معك.",
   },
   {
     q: "أي باقة تتضمن مساعد AI؟",
@@ -436,29 +458,36 @@ const schema = [
     <div class="mx-auto max-w-5xl">
       <div class="mx-auto max-w-2xl text-center">
         <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
-          Solo
+          الإضافات
         </span>
-        <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">إضافات باقة Solo</h2>
+        <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">أضف إلى باقتك</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          أضف AI إلى Solo دون الانتقال إلى باقة أعلى. باقتا Growth وAgency تشملان الإضافتين بالفعل.
+          أضف AI أو التحكم في الإعلانات أو مقاعد إضافية دون الانتقال إلى باقة أعلى. الفوترة شهرية، ونؤكد كل طلب معك قبل أي خصم.
         </p>
       </div>
 
-      <div class="mt-12 grid gap-5 sm:grid-cols-2">
-        {soloAddons.map((addon) => (
+      <div class="mt-12 grid gap-5 md:grid-cols-3">
+        {addons.map((addon) => (
           <div class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7">
-            <div class="flex items-baseline justify-between gap-4">
+            <div class="flex flex-col gap-1">
               <h3 class="font-display text-xl font-bold text-zinc-950">{addon.name}</h3>
-              <p class="shrink-0 text-sm text-zinc-500">
+              <p class="text-sm text-zinc-500">
                 <span
                   class="pack-price num font-display text-xl font-bold text-brand-700"
                   data-egp={addon.egp}
                   data-usd={addon.usd}
-                >EGP {fmt(addon.egp)}</span> شهريًا
+                >EGP {fmt(addon.egp)}</span> {addon.unit}
               </p>
             </div>
+            <p class="mt-1 text-xs font-medium text-zinc-400">{addon.onPlans}</p>
             <p class="mt-4 flex-1 text-sm leading-relaxed text-zinc-600">{addon.body}</p>
             {addon.needs && <p class="mt-3 text-sm font-medium text-zinc-500">{addon.needs}</p>}
+            <a
+              href={addonSubject(addon.name)}
+              class="mt-6 rounded-xl bg-zinc-900 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-zinc-800"
+            >
+              اطلب هذه الإضافة
+            </a>
           </div>
         ))}
       </div>

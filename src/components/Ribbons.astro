@@ -10,6 +10,12 @@
 // has no visible jump. In Arabic the slide runs the other way, matching reading
 // direction. Reduced motion stops both ribbons where they are.
 //
+// It is also the seam between the white hero and the dark section below.
+// The next section slides up underneath it, and a white layer above it is
+// cut along the front ribbon's centre line at the same angle, so the change
+// from white to dark happens under the ribbon and there is no flat line
+// between the two sections.
+//
 // Capability notes (docs/what-ships.md): Meta, TikTok, Snapchat and Google ads;
 // Shopify, Salla, Zid and Bosta stores; live share links; AI dashboard builder;
 // ad control from Claude or ChatGPT.
@@ -77,7 +83,12 @@ const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z
 </section>
 
 <style is:global>
-  .rbn { position: relative; height: 8.5rem; overflow: hidden; background: #fff; }
+  .rbn { --cut: 50%; position: relative; z-index: 5; height: 7.5rem; margin-bottom: -5rem; overflow: hidden; }
+  /* the white above the seam, its bottom edge on the front ribbon's centre */
+  .rbn::before {
+    content: ""; position: absolute; inset-inline: -10%; top: -6rem; bottom: calc(100% - var(--cut));
+    background: #fff; transform: rotate(-2.2deg); transform-origin: 50% 100%;
+  }
   .rbn-band { position: absolute; inset-inline: -4%; top: 50%; display: flex; }
   .rbn-front {
     transform: translateY(-50%) rotate(-2.2deg);
@@ -110,12 +121,13 @@ const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z
   /* On a narrow screen the two angles barely part, so the back ribbon would
      hide behind the front one. Stagger them instead of crossing them. */
   @media (max-width: 767.98px) {
-    .rbn-front { top: 44%; }
-    .rbn-back { top: 66%; }
+    .rbn { --cut: 40%; }
+    .rbn-front { top: 40%; }
+    .rbn-back { top: 64%; }
   }
 
   @media (min-width: 768px) {
-    .rbn { height: 10rem; }
+    .rbn { height: 10rem; margin-bottom: -7rem; }
     .rbn-item { font-size: 1.35rem; gap: 2rem; padding-inline-start: 2rem; }
     .rbn-back .rbn-item { font-size: 1.05rem; }
   }

@@ -908,6 +908,9 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       .assistant-row { display: flex; gap: .875rem; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -1.5rem; padding: .25rem 1.5rem 1.25rem; scrollbar-width: none; }
       .assistant-row::-webkit-scrollbar { display: none; }
       .assistant-split, .assistant-layers { display: contents; }
+      /* the slider's pan-y would trap the carousel's swipes; give the gestures back to the browser */
+      .assistant-split, .assistant-split * { touch-action: auto; cursor: auto; }
+      .assistant-row { overscroll-behavior-x: contain; }
       .assistant-layer, .assistant-inapp {
         flex: 0 0 86%; min-width: 0; scroll-snap-align: center; overflow: hidden;
         border-radius: 1rem; border: 1px solid #e4e4e7; box-shadow: 0 20px 25px -5px rgba(43, 29, 97, .1);

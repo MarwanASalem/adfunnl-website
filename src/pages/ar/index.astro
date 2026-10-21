@@ -464,7 +464,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         <p class="mt-4 text-lg leading-relaxed text-zinc-500">{breakdowns.body}</p>
       </div>
 
-      <div class="mt-10 grid gap-5 md:grid-cols-2">
+      <div class="mt-10 grid gap-5 md:grid-cols-2 m-snap">
         {breakdowns.shots.map((s) => (
           <figure class={`reveal overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10 ${s.wide ? "md:col-span-2" : ""}`}>
             <img src={s.src} width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" class="block h-auto w-full" />

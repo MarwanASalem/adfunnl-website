@@ -1,11 +1,21 @@
 ---
-// Five jobs AdFunnl takes off a media buyer's week, as one row of compact cards.
+// Five jobs AdFunnl takes off a media buyer's week.
 //
-// On desktop the row is an accordion: one card is open and the others fold down
-// to a title, and pointing at (or focusing) a card opens it and plays a small
-// piece of the real app inside it. Under lg every card is open and stacked, so
-// touch devices lose nothing. The mini screens are drawn in HTML, with
-// anonymised demo data in the same style as the homepage's other recreations.
+// Two parts that answer each other. Above, five cards, each with one small
+// object drawn for its job. Below, a stage that shows how AdFunnl does that job:
+// one sentence and a piece of the real app playing. Pointing at (or focusing, or
+// tapping) a card opens it: the card tilts toward the pointer, its object lifts
+// out of the frame, and the stage swaps to that job.
+//
+// Under lg the cards become a swipeable carousel, so the section costs one
+// card of height instead of five, and the stage follows whichever card is
+// centred.
+//
+// The objects are hand-built SVG (isometric prisms with three flat shades, a
+// soft contact shadow and one highlight edge), not images, so they stay sharp,
+// weigh almost nothing and take the brand colours. The mini screens are HTML
+// with anonymised demo data, in the same style as the homepage's other
+// recreations.
 //
 // Capability notes (docs/what-ships.md): blended ROAS and one reporting
 // currency (Connect, Visualize); Best Creatives weights ROAS, cost per purchase
@@ -23,8 +33,9 @@ const { sectionId, locale = "en" } = Astro.props;
 
 const COPY = {
   en: {
-    heading: "Five jobs that eat a media buyer's week",
-    hint: "Point at a card to see the job done.",
+    heading: "Five jobs that eat a media buyer's week, and how AdFunnl helps",
+    helps: "How AdFunnl helps",
+    dots: "Job",
     cards: [
       { title: "Comparing platforms", body: "Meta, TikTok, Snapchat and Google side by side in one reporting currency, with blended ROAS on top." },
       { title: "Finding the winning ad", body: "Best Creatives ranks ads on ROAS, cost per purchase and outbound CTR, with the creative in the row." },
@@ -46,8 +57,9 @@ const COPY = {
     applied: "Applied",
   },
   ar: {
-    heading: "خمس مهام تلتهم أسبوع الـ Media Buyer",
-    hint: "مرّر المؤشر على بطاقة لترى المهمة تُنجَز.",
+    heading: "خمس مهام تلتهم أسبوع الـ Media Buyer، وكيف يساعد AdFunnl",
+    helps: "كيف يساعد AdFunnl",
+    dots: "المهمة",
     cards: [
       { title: "مقارنة المنصات", body: "Meta وTikTok وSnapchat وGoogle جنبًا إلى جنب بعملة تقارير واحدة، وفوقها blended ROAS." },
       { title: "إيجاد الإعلان الرابح", body: "يرتّب Best Creatives الإعلانات حسب ROAS وتكلفة الشراء وOutbound CTR، والـ Creative أمامك في الصف نفسه." },
@@ -90,168 +102,311 @@ const verdicts = [
 ];
 const paused = ["Reel · Keeps food warm 6h", "Reel · Bento unboxing"];
 
-const ICONS = [
-  `<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>`,
-  `<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>`,
-  `<path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/>`,
-  `<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>`,
-  `<path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>`,
+// ── The objects ──
+// Each card gets one 200 x 170 drawing. Three depth layers move at different
+// rates under the pointer: the contact shadow, the body, and the floating
+// accents (sparkles, the star), which is most of what makes them feel solid.
+const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mix = (h: string, t: number, to: string) => {
+  const a = hex(h), b = hex(to);
+  return "#" + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, "0")).join("");
+};
+const tone = (base: string) => ({ top: mix(base, 0.38, "#ffffff"), left: base, right: mix(base, 0.3, "#000000") });
+
+// An isometric block whose top face is centred on (cx, cy): w and d are the
+// half-width and half-depth of the top, h the height of the sides.
+const prism = (cx: number, cy: number, w: number, d: number, h: number, base: string) => {
+  const c = tone(base);
+  const top = `${cx},${cy - d} ${cx + w},${cy} ${cx},${cy + d} ${cx - w},${cy}`;
+  const left = `${cx - w},${cy} ${cx},${cy + d} ${cx},${cy + d + h} ${cx - w},${cy + h}`;
+  const right = `${cx},${cy + d} ${cx + w},${cy} ${cx + w},${cy + h} ${cx},${cy + d + h}`;
+  return `<g stroke-linejoin="round" stroke-width="3">`
+    + `<polygon points="${left}" fill="${c.left}" stroke="${c.left}"/>`
+    + `<polygon points="${right}" fill="${c.right}" stroke="${c.right}"/>`
+    + `<polygon points="${top}" fill="${c.top}" stroke="${c.top}"/>`
+    + `<polyline points="${cx - w},${cy} ${cx},${cy + d} ${cx + w},${cy}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.3" stroke-linecap="round"/>`
+    + `</g>`;
+};
+const sparkle = (x: number, y: number, r: number, fill: string) =>
+  `<path transform="translate(${x} ${y})" d="M0,${-r} L${r * 0.3},${-r * 0.3} L${r},0 L${r * 0.3},${r * 0.3} L0,${r} L${-r * 0.3},${r * 0.3} L${-r},0 L${-r * 0.3},${-r * 0.3}Z" fill="${fill}" stroke="${fill}" stroke-width="1.5" stroke-linejoin="round"/>`;
+const star = (cx: number, cy: number, ro: number, ri: number) => {
+  const pts = Array.from({ length: 10 }, (_, i) => {
+    const r = i % 2 ? ri : ro, a = -Math.PI / 2 + (i * Math.PI) / 5;
+    return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
+  });
+  return pts.join(" ");
+};
+const shadow = (i: number, rx = 58) =>
+  `<ellipse class="art-shadow" cx="100" cy="152" rx="${rx}" ry="9" fill="#2b1d61" opacity=".22" filter="url(#bl${i})"/>`;
+const defs = (i: number, extra = "") =>
+  `<defs><filter id="bl${i}" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>${extra}</defs>`;
+
+const art: string[] = [
+  // 1. Comparing platforms: a base with three bars of different heights.
+  defs(0) + shadow(0, 66)
+    + `<g class="art-body">${prism(100, 112, 72, 40, 16, "#6549dd")}`
+    + [-1, 0, 1].map((k, n) => {
+        const H = [24, 40, 56][n], col = ["#67e8f9", "#c4b5fd", "#fde68a"][n];
+        const bx = 100 + k * 30, by = 108 + k * 16.8;
+        return prism(bx, by - H, 12, 6.7, H, col);
+      }).join("")
+    + `</g><g class="art-float">${sparkle(160, 36, 9, "#fde68a")}${sparkle(40, 60, 6, "#fff")}</g>`,
+
+  // 2. Finding the winning ad: a creative card with a star above it.
+  defs(1, `<linearGradient id="st1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>`) + shadow(1, 62)
+    + `<g class="art-body">${prism(100, 112, 66, 37, 12, "#f5a524")}${prism(100, 108, 50, 28, 3, "#fff3cf")}`
+    + `<g opacity=".9"><polygon points="86,106 100,98 114,106 100,114" fill="#fcd9a0"/></g></g>`
+    + `<g class="art-float"><g class="art-bob"><polygon points="${star(100, 62, 27, 12)}" fill="url(#st1)" stroke="url(#st1)" stroke-width="6" stroke-linejoin="round"/>`
+    + `<polygon points="${star(100, 62, 27, 12)}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.4" stroke-linejoin="round" transform="translate(-1.5 -1.5) scale(.94) translate(6 4)"/></g>${sparkle(158, 46, 8, "#fff")}${sparkle(44, 78, 6, "#fde68a")}</g>`,
+
+  // 3. Deciding what to scale: three verdict pills, stepped.
+  defs(2) + shadow(2, 60)
+    + `<g class="art-body">`
+    + [
+        { x: 66, y: 98, c: "#ef6a82", g: "M-9,3 l9,-8 l9,8" },
+        { x: 46, y: 70, c: "#f5a524", g: "M-9,-2 h18 M-9,4 h18" },
+        { x: 26, y: 42, c: "#22c55e", g: "M-9,-3 l9,8 l9,-8" },
+      ].map((p) => {
+        const side = mix(p.c, 0.3, "#000000"), top = mix(p.c, 0.3, "#ffffff");
+        return `<g transform="translate(${p.x} ${p.y})"><rect x="0" y="7" width="104" height="30" rx="15" fill="${side}"/>`
+          + `<rect x="0" y="0" width="104" height="30" rx="15" fill="${p.c}"/>`
+          + `<rect x="4" y="2.5" width="96" height="12" rx="6" fill="${top}" opacity=".55"/>`
+          + `<g transform="translate(24 15)" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="${p.g}"/></g>`
+          + `<rect x="46" y="12" width="40" height="6" rx="3" fill="#fff" opacity=".85"/></g>`;
+      }).join("")
+    + `</g><g class="art-float">${sparkle(164, 38, 8, "#c4b5fd")}${sparkle(36, 130, 6, "#fff")}</g>`,
+
+  // 4. Sending the report: a folded paper plane.
+  defs(3) + shadow(3, 50)
+    + `<g class="art-body"><g stroke-linejoin="round" stroke-width="3.5">`
+    + `<polygon points="172,34 38,84 96,102" fill="#f4fbff" stroke="#f4fbff"/>`
+    + `<polygon points="172,34 96,102 124,112" fill="#9bdcfb" stroke="#9bdcfb"/>`
+    + `<polygon points="96,102 124,112 92,138" fill="#38bdf8" stroke="#38bdf8"/>`
+    + `<polygon points="172,34 124,112 150,80" fill="#60c8f7" stroke="#60c8f7"/>`
+    + `<polyline points="38,84 172,34 124,112" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.3" stroke-linecap="round"/>`
+    + `</g></g><g class="art-float"><path d="M20 140 C 46 150 60 128 78 134" fill="none" stroke="#7dd3fc" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>${sparkle(166, 98, 7, "#fde68a")}${sparkle(44, 38, 7, "#fff")}</g>`,
+
+  // 5. Changing ads: an approval switch, switched on.
+  defs(4, `<linearGradient id="tg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#16a34a"/></linearGradient><radialGradient id="kn4" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e4e4e7"/></radialGradient>`) + shadow(4, 56)
+    + `<g class="art-body"><rect x="34" y="82" width="132" height="62" rx="31" fill="#0f7a37"/>`
+    + `<rect x="34" y="72" width="132" height="62" rx="31" fill="url(#tg4)"/>`
+    + `<rect x="44" y="76" width="112" height="22" rx="11" fill="#fff" opacity=".28"/>`
+    + `<g class="art-knob"><ellipse cx="134" cy="136" rx="22" ry="5" fill="#064e1f" opacity=".35"/><circle cx="134" cy="103" r="25" fill="url(#kn4)" stroke="#fff" stroke-width="1.5"/>`
+    + `<path d="M123 103 l8 8 l14 -17" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></g>`
+    + `<g class="art-float">${sparkle(52, 38, 9, "#fde68a")}${sparkle(158, 40, 6, "#fff")}${sparkle(34, 56, 5, "#c4b5fd")}</g>`,
+];
+
+// Soft tint behind each card, and the accent that carries into its shadow.
+const tints = [
+  { tint: "#ece8fd", acc: "#6549dd" },
+  { tint: "#fff1d6", acc: "#f5a524" },
+  { tint: "#dff5e7", acc: "#22c55e" },
+  { tint: "#dcf1fc", acc: "#38bdf8" },
+  { tint: "#e6e9ff", acc: "#5b6cf0" },
 ];
 ---
 
-<section id={sectionId} class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
-  <div class="mx-auto max-w-6xl">
+<section id={sectionId} class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-20 sm:py-24">
+  <div class="mx-auto max-w-6xl" data-usecases>
     <div class="reveal mx-auto max-w-2xl text-center">
       <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{T.heading}</h2>
-      <p class="mt-3 hidden text-sm text-zinc-400 lg:block">{T.hint}</p>
     </div>
 
-    <div class="uc-row reveal mt-12" data-usecases>
-      {T.cards.map((c, i) => (
-        <article class={`uc${i === 0 ? " is-open" : ""}`} tabindex="0" data-uc>
-          <div class="uc-head">
-            <span class="uc-icon">
-              <svg viewBox="0 0 24 24" class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]} />
-            </span>
-            <h3 class="uc-title">{c.title}</h3>
-          </div>
+    <div class="reveal mt-10">
+      <!-- The cards. Swipeable under lg. -->
+      <div class="uc-track" data-uc-track>
+        {T.cards.map((c, i) => (
+          <article class={`ucard${i === 0 ? " is-open" : ""}`} tabindex="0" data-uc style={`--tint:${tints[i].tint};--acc:${tints[i].acc}`}>
+            <div class="ucard-bg" aria-hidden="true"></div>
+            <svg class="ucard-art" viewBox="0 0 200 170" aria-hidden="true" set:html={art[i]} />
+            <h3 class="ucard-title">{c.title}</h3>
+          </article>
+        ))}
+      </div>
 
-          <div class="uc-more">
-            <p class="uc-body">{c.body}</p>
+      <div class="uc-dots" role="tablist" aria-label={T.dots}>
+        {T.cards.map((c, i) => (
+          <button type="button" class={`uc-dot${i === 0 ? " is-open" : ""}`} data-uc-dot aria-label={c.title}></button>
+        ))}
+      </div>
 
-            <div class="uc-mini" aria-hidden="true">
-              {i === 0 && (
-                <div class="space-y-2">
-                  {platforms.map((p, k) => (
-                    <div class="flex items-center gap-2.5 text-xs" style={`--k:${k}`}>
-                      <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white ring-1 ring-zinc-200/90"><PlatformIcon platform={p.key} class="h-3 w-3" /></span>
-                      <span class="w-16 shrink-0 font-medium text-zinc-600">{p.name}</span>
-                      <span class="relative h-2 flex-1 overflow-hidden rounded-full bg-white ring-1 ring-brand-100">
-                        <span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-400" style={`width:${(p.roas / 6) * 100}%`}></span>
-                      </span>
-                      <bdi dir="ltr" class="w-9 shrink-0 text-end font-semibold tabular-nums text-zinc-700">{p.roas.toFixed(1)}×</bdi>
-                    </div>
-                  ))}
-                  <div class="uc-pop flex items-center justify-between border-t border-brand-100 pt-2.5 text-xs" style="--k:4">
-                    <span class="font-semibold text-brand-800">{T.blended}</span>
-                    <bdi dir="ltr" class="rounded-full bg-brand-600 px-2.5 py-0.5 font-bold tabular-nums text-white">3.3×</bdi>
-                  </div>
-                </div>
-              )}
+      <!-- The stage: how AdFunnl does the job on the open card. -->
+      <div class="ucs-wrap">
+        <div class="ucs-glow" aria-hidden="true"></div>
+        <div class="ucs-stack">
+          {T.cards.map((c, i) => (
+            <div class={`ucs${i === 0 ? " is-open" : ""}`} data-ucs>
+              <div class="ucs-copy">
+                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-300">{T.helps}</p>
+                <p class="mt-3 text-xl font-semibold leading-snug text-white sm:text-2xl">{c.body}</p>
+              </div>
 
-              {i === 1 && (
-                <ol class="space-y-2">
-                  {creatives.map((a, k) => (
-                    <li class="uc-row-in flex items-center gap-2.5 rounded-lg bg-white p-1.5 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
-                      <span class="relative h-9 w-7 shrink-0 overflow-hidden rounded bg-zinc-200">
-                        <img src={a.photo} alt="" loading="lazy" width="28" height="36" class="absolute inset-0 h-full w-full object-cover" />
-                      </span>
-                      <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{a.name}</bdi>
-                      {k === 0
-                        ? <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-emerald-200">{T.best}</span>
-                        : <span class="relative h-1.5 w-12 overflow-hidden rounded-full bg-zinc-100"><span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-300" style={`width:${a.score * 100}%`}></span></span>}
-                    </li>
-                  ))}
-                </ol>
-              )}
-
-              {i === 2 && (
-                <div class="space-y-2">
-                  <p class="text-[11px] font-medium text-zinc-400">{T.rule}</p>
-                  {verdicts.map((r, k) => (
-                    <div class="uc-row-in flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
-                      <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{r.name}</bdi>
-                      <bdi dir="ltr" class="font-semibold tabular-nums text-zinc-500">{r.roas}</bdi>
-                      <span class={`uc-pop inline-flex w-14 justify-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${r.v === "scale" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : r.v === "hold" ? "border-amber-200 bg-amber-50 text-amber-700" : "border-rose-200 bg-rose-50 text-rose-700"}`} style={`--k:${k + 2}`}>{T[r.v as "scale" | "hold" | "cut"]}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {i === 3 && (
-                <div class="space-y-2.5">
-                  <div class="flex items-center gap-2 rounded-lg bg-white px-2.5 py-2 text-xs ring-1 ring-brand-100">
-                    <span class="uc-live h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                    <span class="min-w-0 flex-1 truncate font-medium text-zinc-700">{T.link}</span>
-                    <span class="uc-pop flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500" style="--k:3">
-                      <svg viewBox="0 0 24 24" class="h-2.5 w-2.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-                    </span>
-                  </div>
-                  <div class="flex items-end gap-2">
-                    <div class="flex h-14 flex-1 items-end gap-1.5 rounded-lg bg-white px-2.5 pb-2 ring-1 ring-brand-100">
-                      {[0.5, 0.8, 0.4, 0.95, 0.65].map((h, k) => (
-                        <span class="uc-rise flex-1 rounded-sm bg-brand-300" style={`height:${h * 70}%;--k:${k}`}></span>
-                      ))}
-                    </div>
-                    <div class="flex flex-col gap-1.5 text-[10px] font-semibold">
-                      <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:2">{T.pdf}</span>
-                      <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:3">{T.logo}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {i === 4 && (
-                <div class="space-y-2">
-                  <p class="uc-row-in rounded-lg rounded-es-sm bg-white px-2.5 py-1.5 text-xs text-zinc-600 ring-1 ring-brand-100" style="--k:0">{T.ask}</p>
-                  <div class="uc-row-in rounded-lg bg-white p-2.5 text-xs ring-1 ring-brand-100" style="--k:1">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-600">{T.plan}</p>
-                    <ul class="space-y-1 text-zinc-600">
-                      {paused.map((n) => (
-                        <li class="flex items-center gap-1.5"><span class="rounded bg-rose-50 px-1.5 py-px text-[10px] font-semibold text-rose-700">{T.pause}</span><bdi dir="ltr" class="truncate">{n}</bdi></li>
-                      ))}
-                    </ul>
-                    <div class="mt-2.5 flex justify-end">
-                      <span class="uc-approve relative inline-flex h-6 min-w-[4.5rem] items-center justify-center rounded-md px-3 text-[11px] font-semibold text-white">
-                        <span class="uc-lab-a">{T.approve}</span>
-                        <span class="uc-lab-b absolute inset-0 flex items-center justify-center gap-1">
-                          <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{T.applied}
+              <div class="uc-mini" aria-hidden="true">
+                {i === 0 && (
+                  <div class="space-y-2.5">
+                    {platforms.map((p, k) => (
+                      <div class="flex items-center gap-3 text-xs" style={`--k:${k}`}>
+                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white ring-1 ring-zinc-200/90"><PlatformIcon platform={p.key} class="h-3.5 w-3.5" /></span>
+                        <span class="w-16 shrink-0 font-medium text-zinc-600">{p.name}</span>
+                        <span class="relative h-2 flex-1 overflow-hidden rounded-full bg-white ring-1 ring-brand-100">
+                          <span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-400" style={`width:${(p.roas / 6) * 100}%`}></span>
                         </span>
-                      </span>
+                        <bdi dir="ltr" class="w-9 shrink-0 text-end font-semibold tabular-nums text-zinc-700">{p.roas.toFixed(1)}×</bdi>
+                      </div>
+                    ))}
+                    <div class="uc-pop flex items-center justify-between border-t border-brand-100 pt-3 text-xs" style="--k:4">
+                      <span class="font-semibold text-brand-800">{T.blended}</span>
+                      <bdi dir="ltr" class="rounded-full bg-brand-600 px-2.5 py-0.5 font-bold tabular-nums text-white">3.3×</bdi>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </div>
+                )}
 
-          <span class="uc-plus" aria-hidden="true">
-            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          </span>
-        </article>
-      ))}
+                {i === 1 && (
+                  <ol class="space-y-2">
+                    {creatives.map((a, k) => (
+                      <li class="uc-row-in flex items-center gap-3 rounded-lg bg-white p-1.5 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
+                        <span class="relative h-10 w-8 shrink-0 overflow-hidden rounded bg-zinc-200">
+                          <img src={a.photo} alt="" loading="lazy" width="32" height="40" class="absolute inset-0 h-full w-full object-cover" />
+                        </span>
+                        <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{a.name}</bdi>
+                        {k === 0
+                          ? <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-emerald-200">{T.best}</span>
+                          : <span class="relative h-1.5 w-14 overflow-hidden rounded-full bg-zinc-100"><span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-300" style={`width:${a.score * 100}%`}></span></span>}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                {i === 2 && (
+                  <div class="space-y-2">
+                    <p class="text-[11px] font-medium text-zinc-400">{T.rule}</p>
+                    {verdicts.map((r, k) => (
+                      <div class="uc-row-in flex items-center gap-2 rounded-lg bg-white px-2.5 py-2 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
+                        <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{r.name}</bdi>
+                        <bdi dir="ltr" class="font-semibold tabular-nums text-zinc-500">{r.roas}</bdi>
+                        <span class={`uc-pop inline-flex w-14 justify-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${r.v === "scale" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : r.v === "hold" ? "border-amber-200 bg-amber-50 text-amber-700" : "border-rose-200 bg-rose-50 text-rose-700"}`} style={`--k:${k + 2}`}>{T[r.v as "scale" | "hold" | "cut"]}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {i === 3 && (
+                  <div class="space-y-2.5">
+                    <div class="flex items-center gap-2 rounded-lg bg-white px-2.5 py-2 text-xs ring-1 ring-brand-100">
+                      <span class="uc-live h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                      <span class="min-w-0 flex-1 truncate font-medium text-zinc-700">{T.link}</span>
+                      <span class="uc-pop flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500" style="--k:3">
+                        <svg viewBox="0 0 24 24" class="h-2.5 w-2.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                      </span>
+                    </div>
+                    <div class="flex items-end gap-2">
+                      <div class="flex h-16 flex-1 items-end gap-1.5 rounded-lg bg-white px-2.5 pb-2 ring-1 ring-brand-100">
+                        {[0.5, 0.8, 0.4, 0.95, 0.65].map((h, k) => (
+                          <span class="uc-rise flex-1 rounded-sm bg-brand-300" style={`height:${h * 70}%;--k:${k}`}></span>
+                        ))}
+                      </div>
+                      <div class="flex flex-col gap-1.5 text-[10px] font-semibold">
+                        <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:2">{T.pdf}</span>
+                        <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:3">{T.logo}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {i === 4 && (
+                  <div class="space-y-2">
+                    <p class="uc-row-in rounded-lg rounded-es-sm bg-white px-2.5 py-2 text-xs text-zinc-600 ring-1 ring-brand-100" style="--k:0">{T.ask}</p>
+                    <div class="uc-row-in rounded-lg bg-white p-2.5 text-xs ring-1 ring-brand-100" style="--k:1">
+                      <p class="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-600">{T.plan}</p>
+                      <ul class="space-y-1 text-zinc-600">
+                        {paused.map((n) => (
+                          <li class="flex items-center gap-1.5"><span class="rounded bg-rose-50 px-1.5 py-px text-[10px] font-semibold text-rose-700">{T.pause}</span><bdi dir="ltr" class="truncate">{n}</bdi></li>
+                        ))}
+                      </ul>
+                      <div class="mt-2.5 flex justify-end">
+                        <span class="uc-approve relative inline-flex h-6 min-w-[4.5rem] items-center justify-center rounded-md px-3 text-[11px] font-semibold text-white">
+                          <span class="uc-lab-a">{T.approve}</span>
+                          <span class="uc-lab-b absolute inset-0 flex items-center justify-center gap-1">
+                            <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{T.applied}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style is:global>
-  /* ── Use-case cards ── */
-  .uc-row { display: flex; flex-direction: column; gap: .75rem; }
-  .uc {
-    position: relative; overflow: hidden; border-radius: 1.5rem;
-    border: 1px solid #e4e4e7; background: #fff; padding: 1.25rem;
-    display: flex; flex-direction: column; outline: none;
-    transition: border-color .3s ease, box-shadow .4s ease;
+  /* ── Cards ── */
+  .uc-track { display: flex; gap: .875rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 3rem 1.5rem 1.25rem; margin-inline: -1.5rem; scrollbar-width: none; }
+  .uc-track::-webkit-scrollbar { display: none; }
+  .ucard {
+    --rx: 0deg; --ry: 0deg; --lift: 0px; --tx: 0px; --ty: 0px; --gx: 50%; --gy: 0%;
+    position: relative; flex: 0 0 66%; scroll-snap-align: center; outline: none; cursor: pointer;
+    border-radius: 1.75rem; padding: 0 1.25rem 1.4rem; text-align: start;
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 12px 24px -14px rgba(43, 29, 97, .22), 0 2px 4px rgba(43, 29, 97, .05);
+    transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+    will-change: transform;
   }
-  .uc:focus-visible { box-shadow: 0 0 0 3px #b0a1ef; }
-  .uc-head { display: flex; flex-direction: column; gap: .85rem; }
-  .uc-icon {
-    display: flex; height: 2.25rem; width: 2.25rem; align-items: center; justify-content: center;
-    border-radius: .75rem; background: #f2f0fd; color: #5738c9;
-    transition: background-color .3s ease, color .3s ease;
+  .ucard-bg {
+    position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, var(--tint) 0%, #fff 82%);
+    border: 1px solid rgba(43, 29, 97, .07);
   }
-  .uc-title { font-family: inherit; font-size: 1.0625rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; color: #18181b; }
-  .uc-more { margin-top: 1.25rem; }
-  .uc-body { font-size: .875rem; line-height: 1.55; color: #71717a; }
-  .uc-mini { margin-top: 1rem; border-radius: 1rem; background: #f2f0fd; padding: .75rem; border: 1px solid #e6e1fb; }
-  .uc-plus {
-    position: absolute; bottom: 1rem; inset-inline-end: 1rem; display: none;
-    height: 1.75rem; width: 1.75rem; align-items: center; justify-content: center;
-    border-radius: 9999px; background: #f4f4f5; color: #71717a;
-    transition: opacity .25s ease, transform .35s ease;
+  .ucard-bg::after {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s ease;
+    background: radial-gradient(circle at var(--gx) var(--gy), rgba(255,255,255,.85), transparent 55%);
+  }
+  .ucard-art {
+    position: relative; display: block; width: 100%; max-width: 13rem; margin: -2.75rem auto 0; overflow: visible; pointer-events: none;
+    filter: drop-shadow(0 10px 14px rgba(43, 29, 97, .1));
+    transform: translateY(0) scale(1); transition: transform .45s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+  }
+  .ucard-title { position: relative; margin-top: .25rem; font-size: 1.0625rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; color: #18181b; }
+  .ucard:focus-visible { box-shadow: 0 0 0 3px #b0a1ef, 0 12px 24px -14px rgba(43, 29, 97, .22); }
+
+  /* three depth layers inside each drawing */
+  .art-shadow { transition: translate .3s ease-out, scale .4s ease; transform-box: fill-box; transform-origin: center; translate: calc(var(--tx) * -.6) calc(var(--ty) * -.6); }
+  .art-body { transition: translate .3s ease-out; translate: calc(var(--tx) * 1) calc(var(--ty) * 1); }
+  .art-float { transition: translate .3s ease-out; translate: calc(var(--tx) * 2.2) calc(var(--ty) * 2.2); }
+  .art-knob { transition: translate .5s cubic-bezier(.34,1.56,.64,1); translate: -52px 0; }
+
+  .ucard.is-open { --lift: -10px; z-index: 2; box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 34px 46px -24px color-mix(in srgb, var(--acc) 55%, #1b1740), 0 0 0 1.5px color-mix(in srgb, var(--acc) 45%, white); }
+  .ucard.is-open .ucard-art { transform: translateY(-8px) scale(1.07); filter: drop-shadow(0 18px 18px color-mix(in srgb, var(--acc) 35%, transparent)); }
+  .ucard.is-open .art-shadow { scale: 1.12 1.15; opacity: .3; }
+  .ucard.is-open .art-knob { translate: 0 0; }
+  .ucard.is-open .ucard-bg::after { opacity: .55; }
+  .ucard.is-open .art-bob { animation: ucBob 2.6s ease-in-out infinite; }
+  .ucard.is-open .art-float { animation: ucTwinkle 2.4s ease-in-out infinite; }
+  @keyframes ucBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  @keyframes ucTwinkle { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+
+  /* ── Dots (carousel position, phones and tablets) ── */
+  .uc-dots { display: flex; justify-content: center; gap: .5rem; margin-top: .25rem; }
+  .uc-dot { height: .5rem; width: .5rem; border-radius: 9999px; background: #d4d4d8; transition: width .3s ease, background-color .3s ease; padding: 0; border: 0; cursor: pointer; }
+  .uc-dot.is-open { width: 1.5rem; background: #5738c9; }
+
+  /* ── Stage ── */
+  .ucs-wrap { position: relative; margin-top: 1.25rem; overflow: hidden; border-radius: 1.75rem; background: #02020b; padding: 1.5rem; }
+  .ucs-glow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(40rem 20rem at 85% 0%, rgba(101,73,221,.45), transparent 70%), radial-gradient(30rem 16rem at 0% 100%, rgba(139,115,230,.22), transparent 70%); }
+  .ucs-stack { position: relative; display: grid; }
+  .ucs { grid-area: 1 / 1; display: grid; gap: 1.25rem; align-items: center; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .3s ease, transform .4s ease, visibility 0s linear .3s; }
+  .ucs.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity .4s ease .1s, transform .5s cubic-bezier(.2,.8,.2,1) .1s, visibility 0s; }
+  .uc-mini { border-radius: 1rem; background: #f2f0fd; padding: .875rem; border: 1px solid #e6e1fb; width: 100%; max-width: 26rem; justify-self: center; }
+  @media (min-width: 768px) {
+    .ucs-wrap { padding: 2rem 2.5rem; }
+    .ucs { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
   }
 
-  /* Mini screens: idle state. They play when the card is open. */
+  /* Mini screens: idle state, played when the stage panel opens. */
   .uc-bar { transform-origin: left; transform: scaleX(0); }
   [dir="rtl"] .uc-bar { transform-origin: right; }
   .uc-row-in { opacity: 0; transform: translateY(8px); }
@@ -261,13 +416,13 @@ const ICONS = [
   .uc-approve { background: #18181b; }
   .uc-lab-b { opacity: 0; }
 
-  .in .uc.is-open .uc-bar { animation: ucBar .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 110ms + 250ms); }
-  .in .uc.is-open .uc-row-in { animation: ucIn .5s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 250ms); }
-  .in .uc.is-open .uc-pop { animation: ucPop .45s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 450ms); }
-  .in .uc.is-open .uc-rise { animation: ucRise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 90ms + 250ms); }
-  .in .uc.is-open .uc-approve { animation: ucApprove 5s ease-in-out 1s infinite; }
-  .in .uc.is-open .uc-lab-a { animation: ucLabA 5s ease-in-out 1s infinite; }
-  .in .uc.is-open .uc-lab-b { animation: ucLabB 5s ease-in-out 1s infinite; }
+  .reveal.in .ucs.is-open .uc-bar { animation: ucBar .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 110ms + 300ms); }
+  .reveal.in .ucs.is-open .uc-row-in { animation: ucIn .5s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 300ms); }
+  .reveal.in .ucs.is-open .uc-pop { animation: ucPop .45s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 500ms); }
+  .reveal.in .ucs.is-open .uc-rise { animation: ucRise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 90ms + 300ms); }
+  .reveal.in .ucs.is-open .uc-approve { animation: ucApprove 5s ease-in-out 1.2s infinite; }
+  .reveal.in .ucs.is-open .uc-lab-a { animation: ucLabA 5s ease-in-out 1.2s infinite; }
+  .reveal.in .ucs.is-open .uc-lab-b { animation: ucLabB 5s ease-in-out 1.2s infinite; }
   @keyframes ucBar { to { transform: scaleX(1); } }
   @keyframes ucIn { to { opacity: 1; transform: none; } }
   @keyframes ucPop { to { opacity: 1; transform: none; } }
@@ -277,38 +432,20 @@ const ICONS = [
   @keyframes ucLabA { 0%,40% { opacity: 1; } 50%,92% { opacity: 0; } 100% { opacity: 1; } }
   @keyframes ucLabB { 0%,40% { opacity: 0; } 50%,92% { opacity: 1; } 100% { opacity: 0; } }
 
-  /* Stacked, everything open: phones and tablets. */
-  @media (max-width: 1023.98px) {
-    .uc { transition: none; }
-    .uc-bar, .uc-row-in, .uc-pop, .uc-rise { animation-play-state: running; }
-    .in .uc .uc-bar { animation: ucBar .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 110ms + 250ms); }
-    .in .uc .uc-row-in { animation: ucIn .5s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 250ms); }
-    .in .uc .uc-pop { animation: ucPop .45s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 450ms); }
-    .in .uc .uc-rise { animation: ucRise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 90ms + 250ms); }
-    .in .uc .uc-approve { animation: ucApprove 5s ease-in-out 1s infinite; }
-    .in .uc .uc-lab-a { animation: ucLabA 5s ease-in-out 1s infinite; }
-    .in .uc .uc-lab-b { animation: ucLabB 5s ease-in-out 1s infinite; }
-  }
-
-  /* Accordion: desktop. */
+  /* ── Desktop: all five in a row, no carousel ── */
   @media (min-width: 1024px) {
-    .uc-row { flex-direction: row; height: 25rem; }
-    .uc { flex: 1 1 0; min-width: 0; cursor: pointer; transition: flex-grow .6s cubic-bezier(.2,.8,.2,1), border-color .3s ease, box-shadow .4s ease; }
-    .uc.is-open { flex-grow: 2.6; border-color: #cfc6f6; box-shadow: 0 24px 48px -24px rgba(43, 29, 97, .28); cursor: default; }
-    .uc.is-open .uc-icon { background: #5738c9; color: #fff; }
-    .uc:not(.is-open) { background: linear-gradient(180deg, #fff 35%, #f6f4fe); }
-    .uc-plus { display: flex; }
-    .uc.is-open .uc-plus { opacity: 0; transform: rotate(90deg) scale(.7); }
-    .uc:not(.is-open):hover .uc-plus { background: #e6e1fb; color: #422a96; }
-    /* The body keeps its open width, so the text never re-wraps while the card
-       grows: the card just reveals it. */
-    .uc-more { position: absolute; inset-inline-start: 1.25rem; bottom: 1.25rem; width: 20rem; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s ease, transform .3s ease; margin-top: 0; }
-    .uc.is-open .uc-more { opacity: 1; transform: none; pointer-events: auto; transition: opacity .4s ease .25s, transform .5s cubic-bezier(.2,.8,.2,1) .25s; }
+    .uc-track { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; overflow: visible; padding: 3rem 0 1.25rem; margin-inline: 0; }
+    .ucard { flex: none; }
+    .uc-dots { display: none; }
+    .ucs-wrap { margin-top: .5rem; }
   }
+  /* A card of the next size down keeps its title on two lines at most. */
+  @media (min-width: 640px) and (max-width: 1023.98px) { .ucard { flex-basis: 38%; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .uc, .uc-more, .uc-plus { transition: none !important; }
-    .uc *, .uc-live { animation: none !important; }
+    .ucard, .ucard-art, .art-shadow, .art-body, .art-float, .art-knob, .ucs { transition: none !important; }
+    .ucard * { animation: none !important; }
+    .ucs * { animation: none !important; }
     .uc-bar, .uc-rise { transform: none !important; }
     .uc-row-in, .uc-pop { opacity: 1 !important; transform: none !important; }
     .uc-lab-b { opacity: 0 !important; }
@@ -316,19 +453,66 @@ const ICONS = [
 </style>
 
 <script>
-  // One card open at a time, and one always open: the last card you pointed at
-  // or focused stays open when the pointer leaves. Under lg all cards are open
-  // by CSS, so the class does nothing there.
-  document.querySelectorAll<HTMLElement>("[data-usecases]").forEach((row) => {
-    const cards = [...row.querySelectorAll<HTMLElement>("[data-uc]")];
-    const open = (card: HTMLElement) => {
-      if (card.classList.contains("is-open")) return;
-      cards.forEach((c) => c.classList.toggle("is-open", c === card));
+  // One card open at a time, and one always open: the last card you pointed at,
+  // focused, tapped or swiped to. The card tilts toward a mouse and its drawing
+  // slides at three depths; touch gets the lift and the stage swap without the
+  // tilt.
+  document.querySelectorAll<HTMLElement>("[data-usecases]").forEach((root) => {
+    const track = root.querySelector<HTMLElement>("[data-uc-track]")!;
+    const cards = [...root.querySelectorAll<HTMLElement>("[data-uc]")];
+    const stages = [...root.querySelectorAll<HTMLElement>("[data-ucs]")];
+    const dots = [...root.querySelectorAll<HTMLElement>("[data-uc-dot]")];
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let active = 0;
+
+    const open = (i: number) => {
+      if (i === active) return;
+      active = i;
+      cards.forEach((c, k) => c.classList.toggle("is-open", k === i));
+      stages.forEach((s, k) => s.classList.toggle("is-open", k === i));
+      dots.forEach((d, k) => d.classList.toggle("is-open", k === i));
     };
-    cards.forEach((card) => {
-      card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") open(card); });
-      card.addEventListener("focus", () => open(card));
-      card.addEventListener("click", () => open(card));
+
+    const reset = (c: HTMLElement) => {
+      ["--rx", "--ry", "--tx", "--ty"].forEach((p) => c.style.removeProperty(p));
+      c.style.setProperty("--gx", "50%");
+      c.style.setProperty("--gy", "0%");
+    };
+
+    cards.forEach((card, i) => {
+      card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") open(i); });
+      card.addEventListener("focus", () => open(i));
+      card.addEventListener("click", () => open(i));
+      if (still) return;
+      card.addEventListener("pointermove", (e) => {
+        if (e.pointerType !== "mouse") return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty("--ry", `${(x * 12).toFixed(2)}deg`);
+        card.style.setProperty("--rx", `${(-y * 10).toFixed(2)}deg`);
+        card.style.setProperty("--tx", `${(x * 6).toFixed(2)}px`);
+        card.style.setProperty("--ty", `${(y * 5).toFixed(2)}px`);
+        card.style.setProperty("--gx", `${((x + 0.5) * 100).toFixed(0)}%`);
+        card.style.setProperty("--gy", `${((y + 0.5) * 100).toFixed(0)}%`);
+      });
+      card.addEventListener("pointerleave", () => reset(card));
     });
+
+    dots.forEach((d, i) => d.addEventListener("click", () => {
+      open(i);
+      cards[i].scrollIntoView({ inline: "center", block: "nearest", behavior: still ? "auto" : "smooth" });
+    }));
+
+    // Swiping the carousel opens the card that lands in the middle.
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (getComputedStyle(track).display === "grid") return;
+        for (const e of entries) {
+          if (e.isIntersecting) open(cards.indexOf(e.target as HTMLElement));
+        }
+      }, { root: track, threshold: 0.8 });
+      cards.forEach((c) => io.observe(c));
+    }
   });
 </script>

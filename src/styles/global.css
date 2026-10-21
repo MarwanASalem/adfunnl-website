@@ -85,3 +85,21 @@
     line-height: 1.45;
   }
 }
+
+/* ── Phone carousels ──
+   Put `m-snap` on a grid of equal cards and, under 768px, it becomes a
+   swipeable row instead of a tall stack. The next card peeks in from the edge
+   so it reads as swipeable. Tablets and up keep the grid. */
+@media (max-width: 767.98px) {
+  .m-snap {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: .875rem;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .m-snap::-webkit-scrollbar { display: none; }
+  .m-snap > * { flex: 0 0 84%; min-width: 0; scroll-snap-align: start; }
+}

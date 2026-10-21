@@ -343,7 +343,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </div>
         <div class="grid md:grid-cols-[190px_1fr]">
           <!-- app sidebar -->
-          <div class="border-b border-zinc-100 bg-zinc-50/70 px-4 py-5 md:border-b-0 md:border-e">
+          <div class="hidden border-b border-zinc-100 bg-zinc-50/70 px-4 py-5 md:block md:border-b-0 md:border-e">
             <p class="mb-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">تحليل الـ Creatives</p>
             <nav class="flex flex-col gap-1 text-xs">
               <span class="rounded-lg bg-brand-50 px-3 py-2.5 font-semibold text-brand-700">Best Creatives Calculator</span>
@@ -358,14 +358,14 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
             <!-- filter chips -->
             <div class="mb-4 flex flex-wrap items-center gap-2 text-xs">
               <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">المعروض <strong class="font-bold text-zinc-800">11 من 41 إعلانًا</strong></span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">الحد الأدنى للإنفاق <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500">متوسط المشتريات <strong class="font-bold text-zinc-800">4.2</strong></span>
-              <span class="text-zinc-400">المتوسطات تشمل كل الإعلانات الـ 41 قبل الفلاتر</span>
+              <span class="hidden items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500 sm:inline-flex">الحد الأدنى للإنفاق <strong class="font-bold text-zinc-800">EGP 4,680</strong></span>
+              <span class="hidden items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-zinc-500 sm:inline-flex">متوسط المشتريات <strong class="font-bold text-zinc-800">4.2</strong></span>
+              <span class="hidden text-zinc-400 sm:inline">المتوسطات تشمل كل الإعلانات الـ 41 قبل الفلاتر</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <div class="cr-track grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" data-cr-track>
               {bestCreatives.map((c) => (
-                <div class="overflow-hidden rounded-[10px] border border-zinc-200 bg-white">
+                <div class="cr-card overflow-hidden rounded-[10px] border border-zinc-200 bg-white" data-cr-card>
                   <div class={`relative aspect-[9/14] w-full overflow-hidden border-b border-zinc-200 bg-zinc-200 ${c.top ? "shadow-[inset_0_0_0_2px_#34d399]" : ""}`}>
                     <img src={c.photo} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
                     <span class={`absolute start-1.5 top-1.5 rounded px-1.5 py-px text-[9px] font-bold text-white ${c.top ? "bg-emerald-600" : "bg-zinc-800/85"}`}>#{c.rank}</span>
@@ -380,14 +380,14 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
                     <span class="mt-2 inline-block rounded bg-brand-50 px-1.5 py-px text-[10px] font-semibold text-brand-700">فيديو</span>
                     <div class="mt-2.5 flex flex-col gap-1.5 text-[11px]">
                       {[["الإنفاق", c.spend], ["Link CTR", c.ctr], ["المشتريات", c.purchases]].map(([k, v]) => (
-                        <span class="flex items-baseline justify-between gap-2">
+                        <span class="cr-stat flex items-baseline justify-between gap-2">
                           <span class="text-zinc-400">{k}</span>
                           <span class="font-semibold tabular-nums lining-nums text-zinc-700"><bdi dir="ltr">{v}</bdi></span>
                         </span>
                       ))}
-                      <span class="flex items-baseline justify-between gap-2">
+                      <span class="cr-stat flex items-baseline justify-between gap-2">
                         <span class="text-zinc-400">ROAS</span>
-                        <span class="font-bold tabular-nums lining-nums text-brand-600"><bdi dir="ltr">{c.roas}</bdi></span>
+                        <span class="cr-roas font-bold tabular-nums lining-nums text-brand-600"><bdi dir="ltr">{c.roas}</bdi></span>
                       </span>
                     </div>
                   </div>
@@ -902,6 +902,24 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
     @media (prefers-reduced-motion: reduce) { .ada-mini { animation: none; } }
     .assistant-clip { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
 
+    /* Phones: the creatives become a carousel. The centred card comes forward
+       and plays its numbers in, the way the "6 ways" cards do. */
+    @media (max-width: 767.98px) {
+      .cr-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: .75rem; margin-inline: -1.25rem; padding: .5rem 1.25rem 1.25rem; scrollbar-width: none; }
+      .cr-track::-webkit-scrollbar { display: none; }
+      .cr-card { flex: 0 0 64%; scroll-snap-align: center; opacity: .55; transform: scale(.92); transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease, box-shadow .45s ease; }
+      .cr-card.is-active { opacity: 1; transform: translateY(-4px); box-shadow: 0 20px 32px -20px rgba(43, 29, 97, .4); }
+      .cr-card.is-active .cr-stat { animation: crIn .4s cubic-bezier(.2,.7,.2,1) both; }
+      .cr-card.is-active .cr-stat:nth-child(2) { animation-delay: .08s; }
+      .cr-card.is-active .cr-stat:nth-child(3) { animation-delay: .16s; }
+      .cr-card.is-active .cr-stat:nth-child(4) { animation-delay: .24s; }
+      .cr-card.is-active .cr-roas { display: inline-block; animation: crPop .5s cubic-bezier(.34,1.56,.64,1) .35s both; }
+    }
+    @keyframes crIn { from { opacity: 0; transform: translateY(6px); } }
+    @keyframes crPop { from { opacity: 0; transform: scale(.6); } }
+    @media (prefers-reduced-motion: reduce) { .cr-card, .cr-card * { transition: none !important; animation: none !important; } }
+
+
     /* Phones and tablets: no slider. ChatGPT, Claude and the in-app assistant
        become three cards in one swipeable row. The slider's wrappers step out
        of the way (display: contents) so its two layers are the row's cards. */
@@ -1010,6 +1028,20 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         roasCell.style.color = seq[i].v === "hold" ? "#b45309" : "#0f766e";
         paint(badge, seq[i].v);
       }, 2200);
+    }
+
+    // ── Creatives carousel (phones) ────────────────────────────────
+    const crTrack = document.querySelector("[data-cr-track]");
+    if (crTrack) {
+      const crCards = [...crTrack.querySelectorAll("[data-cr-card]")];
+      crCards[0]?.classList.add("is-active");
+      const crIo = new IntersectionObserver((entries) => {
+        if (window.innerWidth >= 768) return;
+        for (const e of entries) {
+          if (e.isIntersecting) crCards.forEach((c) => c.classList.toggle("is-active", c === e.target));
+        }
+      }, { root: crTrack, threshold: 0.85 });
+      crCards.forEach((c) => crIo.observe(c));
     }
 
     // ── Drag-to-compare assistant slider ──────────────────────────

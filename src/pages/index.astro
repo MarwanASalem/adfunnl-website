@@ -6,6 +6,7 @@ import DataFlow from "../components/DataFlow.astro";
 import AnalysisStages from "../components/AnalysisStages.astro";
 import AiDashboard from "../components/AiDashboard.astro";
 import UseCases from "../components/UseCases.astro";
+import Ribbons from "../components/Ribbons.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -236,15 +237,8 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     </div>
   </section>
 
-  <!-- ========================= SOCIAL PROOF ========================= -->
-  <section class="border-y border-zinc-100 bg-zinc-50/70">
-    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 text-sm font-medium text-zinc-500">
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Connect in minutes</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Run ads with AI</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Shareable live dashboards</span>
-      <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Dashboards built by AI</span>
-    </div>
-  </section>
+  <!-- ======================= RIBBONS (animated) ======================= -->
+  <Ribbons />
 
   <!-- ===================== DATA FLOW (animated) ===================== -->
   <DataFlow dark sectionId="integrations" heading="Observe and share data in a couple of clicks, then act on it with AI." />

@@ -1,0 +1,126 @@
+---
+// Two crossing ribbons that scroll in opposite directions, under the hero.
+//
+// The front ribbon (brand purple) carries what AdFunnl does; the back ribbon
+// (lavender) carries what it connects to. Each item is followed by the same
+// four-point glint the glass illustrations use (docs/design.md), so the strip
+// reads as part of the same system rather than a borrowed effect.
+//
+// Each track holds its items twice and slides by half its width, so the loop
+// has no visible jump. In Arabic the slide runs the other way, matching reading
+// direction. Reduced motion stops both ribbons where they are.
+//
+// Capability notes (docs/what-ships.md): Meta, TikTok, Snapchat and Google ads;
+// Shopify, Salla, Zid and Bosta stores; live share links; AI dashboard builder;
+// ad control from Claude or ChatGPT.
+
+interface Props {
+  locale?: "en" | "ar";
+}
+
+const { locale = "en" } = Astro.props;
+
+const COPY = {
+  en: {
+    front: ["Connect in minutes", "Run ads with AI", "Shareable live dashboards", "Dashboards built by AI"],
+    back: ["Meta", "TikTok", "Snapchat", "Google", "Shopify", "Salla", "Zid", "Bosta"],
+    label: "Connect in minutes, run ads with AI, shareable live dashboards, dashboards built by AI.",
+  },
+  ar: {
+    front: ["الربط في دقائق", "أدِر إعلاناتك بالـ AI", "لوحات مباشرة قابلة للمشاركة", "لوحات يبنيها AI"],
+    back: ["Meta", "TikTok", "Snapchat", "Google", "Shopify", "سلة", "زد", "بوسطة"],
+    label: "الربط في دقائق، أدِر إعلاناتك بالـ AI، لوحات مباشرة قابلة للمشاركة، لوحات يبنيها AI.",
+  },
+};
+const T = COPY[locale];
+
+// Repeat a short list until one copy comfortably outruns a wide screen.
+const fill = (items: string[], n: number) => Array.from({ length: n }, () => items).flat();
+const front = fill(T.front, 3);
+const back = fill(T.back, 3);
+
+const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z"/>`;
+---
+
+<section class="rbn" aria-label={T.label}>
+  <!-- back ribbon: the sources -->
+  <div class="rbn-band rbn-back" aria-hidden="true">
+    <div class="rbn-track">
+      {[0, 1].map(() => (
+        <div class="rbn-set">
+          {back.map((t) => (
+            <span class="rbn-item">
+              <span>{t}</span>
+              <svg class="rbn-glint" viewBox="0 0 24 24" set:html={GLINT} />
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- front ribbon: what it does -->
+  <div class="rbn-band rbn-front" aria-hidden="true">
+    <div class="rbn-track">
+      {[0, 1].map(() => (
+        <div class="rbn-set">
+          {front.map((t) => (
+            <span class="rbn-item">
+              <span>{t}</span>
+              <svg class="rbn-glint" viewBox="0 0 24 24" set:html={GLINT} />
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .rbn { position: relative; height: 8.5rem; overflow: hidden; background: #fff; }
+  .rbn-band { position: absolute; inset-inline: -4%; top: 50%; display: flex; }
+  .rbn-front {
+    transform: translateY(-50%) rotate(-2.2deg);
+    background: linear-gradient(90deg, #5738c9, #6549dd 50%, #5738c9);
+    color: #fff; z-index: 2;
+    box-shadow: 0 14px 30px -14px rgba(43, 29, 97, .55), inset 0 1px 0 rgba(255, 255, 255, .25);
+  }
+  .rbn-back {
+    transform: translateY(-50%) rotate(2.4deg);
+    background: #e6e1fb; color: #422a96; z-index: 1;
+  }
+  .rbn-track { display: flex; width: max-content; animation: rbnSlide 46s linear infinite; }
+  .rbn-back .rbn-track { animation-duration: 58s; animation-direction: reverse; }
+  .rbn-set { display: flex; flex-shrink: 0; }
+  .rbn-item {
+    display: inline-flex; align-items: center; gap: 1.6rem; padding: .85rem 0 .85rem 1.6rem; white-space: nowrap;
+    font-family: "Archivo Variable", "Zain", ui-sans-serif, system-ui, sans-serif;
+    font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; text-transform: uppercase;
+  }
+  .rbn-back .rbn-item { padding-block: .55rem; font-size: .9rem; font-weight: 700; }
+  .rbn-glint { height: .85rem; width: .85rem; fill: currentColor; opacity: .7; flex-shrink: 0; }
+  .rbn-front .rbn-glint { fill: #c4b5fd; opacity: 1; }
+  @keyframes rbnSlide { to { transform: translateX(-50%); } }
+
+  [dir="rtl"] .rbn-item { padding: .85rem 1.6rem .85rem 0; text-transform: none; letter-spacing: 0; }
+  [dir="rtl"] .rbn-back .rbn-item { padding-block: .55rem; }
+  [dir="rtl"] .rbn-track { animation-name: rbnSlideRtl; }
+  @keyframes rbnSlideRtl { to { transform: translateX(50%); } }
+
+  /* On a narrow screen the two angles barely part, so the back ribbon would
+     hide behind the front one. Stagger them instead of crossing them. */
+  @media (max-width: 767.98px) {
+    .rbn-front { top: 44%; }
+    .rbn-back { top: 66%; }
+  }
+
+  @media (min-width: 768px) {
+    .rbn { height: 10rem; }
+    .rbn-item { font-size: 1.35rem; gap: 2rem; padding-inline-start: 2rem; }
+    .rbn-back .rbn-item { font-size: 1.05rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rbn-track { animation: none !important; }
+  }
+</style>

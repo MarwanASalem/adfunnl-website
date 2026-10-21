@@ -644,11 +644,15 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                 </div>
               </div>
             </div>
-            <div class="mt-auto flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
+            <!-- Ada sits on the message bar, as she does on the app's Home page -->
+            <div class="relative mt-auto pt-10">
+              <img src="/ada-sit.webp" alt="" width="64" height="64" loading="lazy" decoding="async" aria-hidden="true" class="ada-mini pointer-events-none absolute bottom-[2.6rem] end-6 z-10 h-16 w-16 select-none" />
+            <div class="flex items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-3 py-2.5">
               <span class="flex-1 text-xs text-zinc-400">Ask anything about this report</span>
               <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600 text-white">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </span>
+            </div>
             </div>
           </div>
         </div>
@@ -943,7 +947,11 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     /* ── Drag-to-compare assistant slider ──
        Both skins occupy the same grid cell; --split drives the clip and the
        overlay, so one custom property moves everything at once. */
-    .assistant-split { cursor: ew-resize; touch-action: none; }
+    .assistant-split { cursor: ew-resize; touch-action: pan-y; }
+    /* Ada's legs hang over the message bar's top edge; she bobs gently. */
+    .ada-mini { transform: translateY(25%); animation: adaBob 3.4s ease-in-out infinite; }
+    @keyframes adaBob { 0%,100% { transform: translateY(25%); } 50% { transform: translateY(18%); } }
+    @media (prefers-reduced-motion: reduce) { .ada-mini { animation: none; } }
     .assistant-clip { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
     .assistant-divider { left: var(--split); }
     .assistant-handle { left: var(--split); }
@@ -1092,18 +1100,34 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         pendingX = clientX;
         if (!raf) raf = requestAnimationFrame(apply);
       };
+      // A mouse drags straight away. A finger only drags once it has clearly
+      // moved sideways; an up or down swipe is left to the browser, so the
+      // page still scrolls through the slider on a phone (touch-action: pan-y).
       split.addEventListener("pointerdown", (e) => {
-        e.preventDefault();
-        dragging = true;
-        setFrom(e.clientX);
-        const move = (ev) => setFrom(ev.clientX);
+        const touch = e.pointerType !== "mouse";
+        const x0 = e.clientX, y0 = e.clientY;
+        if (!touch) {
+          e.preventDefault();
+          dragging = true;
+          setFrom(e.clientX);
+        }
+        const move = (ev) => {
+          if (!dragging) {
+            const dx = Math.abs(ev.clientX - x0), dy = Math.abs(ev.clientY - y0);
+            if (dx < 8 || dx < dy * 1.2) return;
+            dragging = true;
+          }
+          setFrom(ev.clientX);
+        };
         const up = () => {
           dragging = false;
           window.removeEventListener("pointermove", move);
           window.removeEventListener("pointerup", up);
+          window.removeEventListener("pointercancel", up);
         };
         window.addEventListener("pointermove", move);
         window.addEventListener("pointerup", up);
+        window.addEventListener("pointercancel", up);
       });
     }
 

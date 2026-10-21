@@ -1,5 +1,7 @@
 ---
-// Animated data-flow pipeline: sources → AdFunnl → live dashboard → recipient.
+// Animated data-flow pipeline: sources → AdFunnl, then two branches. The read
+// branch is live dashboard → recipient. The act branch is AI assistant (Claude
+// or ChatGPT over MCP) → your approval → changes back to the ad platforms.
 //
 // Shared by the homepage and the "AdFunnl For" persona pages. The diagram is
 // identical everywhere; only the framing copy changes, so every user-visible
@@ -54,6 +56,14 @@ const COPY = {
     live: "LIVE DASHBOARD",
     visualized: "Visualized",
     bosta: "Bosta",
+    ai: "AI assistant",
+    aiSub: "Claude or ChatGPT",
+    mcp: "MCP",
+    approveBtn: "Approve",
+    approve: "You approve",
+    approveSub: "Nothing runs without it",
+    back: "Changes go back to your ad platforms",
+    altAi: "An AI assistant, Claude or ChatGPT over MCP, can use the same data to prepare changes. Nothing is applied until you approve it, and then the changes go back to your ad platforms.",
   },
   ar: {
     heading: "من كل مصدر إلى تقرير جاهز للعميل",
@@ -65,6 +75,14 @@ const COPY = {
     live: "لوحة مباشرة",
     visualized: "عرض مرئي",
     bosta: "بوسطة",
+    ai: "مساعد AI",
+    aiSub: "Claude أو ChatGPT",
+    mcp: "MCP",
+    approveBtn: "وافق",
+    approve: "موافقتك",
+    approveSub: "لا يُنفَّذ شيء دونها",
+    back: "التغييرات تعود إلى منصاتك الإعلانية",
+    altAi: "يستطيع مساعد AI، وهو Claude أو ChatGPT عبر MCP، استخدام البيانات نفسها لتجهيز التغييرات. لا يُطبَّق شيء قبل موافقتك، ثم تعود التغييرات إلى منصاتك الإعلانية.",
   },
 };
 const T = COPY[locale];
@@ -78,9 +96,12 @@ const {
   body,
   outLabel = T.outLabel,
   outSub = T.outSub,
-  alt = T.alt,
+  alt: altIn = T.alt,
   uid = Math.random().toString(36).slice(2, 8),
 } = Astro.props;
+
+// The picture now has an act branch, so every page's description covers it too.
+const alt = `${altIn} ${T.altAi}`;
 
 // ── Mirroring (Arabic) ──
 // The landscape diagram is 1120 wide. In RTL every x is reflected, so the
@@ -134,6 +155,9 @@ const particles = [
   { p: "fp6", d: "2.4s", b: "1.1s" }, { p: "fp6", d: "2.4s", b: "2.2s" },
   { p: "fpv", d: "1.5s", b: "0s" },   { p: "fpv", d: "1.5s", b: "0.7s" },
   { p: "fpc", d: "1.3s", b: "0.3s" }, { p: "fpc", d: "1.3s", b: "0.9s" },
+  { p: "fpa", d: "1.5s", b: "0.2s" }, { p: "fpa", d: "1.5s", b: "0.9s" },
+  { p: "fpb", d: "1.3s", b: "0.5s" }, { p: "fpb", d: "1.3s", b: "1.1s" },
+  { p: "fpr", d: "4.6s", b: "0s", act: true }, { p: "fpr", d: "4.6s", b: "2.3s", act: true },
 ];
 
 const paths = [
@@ -143,8 +167,12 @@ const paths = [
   { id: "fp4", d: "M184,280 C 320,280 360,240 452,240" },
   { id: "fp5", d: "M184,360 C 300,360 330,240 452,240" },
   { id: "fp6", d: "M184,440 C 300,440 330,240 452,240" },
-  { id: "fpv", d: "M570,240 L700,240" },
-  { id: "fpc", d: "M852,240 L940,240" },
+  { id: "fpv", d: "M570,240 C 635,240 635,130 700,130" },
+  { id: "fpc", d: "M852,130 L940,130" },
+  { id: "fpa", d: "M570,240 C 635,240 635,350 700,350" },
+  { id: "fpb", d: "M852,350 L940,350" },
+  // The way back: from the approval to the ad platforms, under the diagram.
+  { id: "fpr", d: "M1092,350 C 1114,350 1116,530 1086,530 L 60,530 Q 34,530 34,506 L 34,476", act: true },
 ];
 
 const bars = [
@@ -157,6 +185,30 @@ const bars = [
 const HUB_MARK = `<path d="M-18,-14 C-18,3 0,0 0,20 M0,-20 V20 M18,-14 C18,3 0,0 0,20" fill="none" stroke="#6549dd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" /><circle cx="-18" cy="-16" r="6" fill="#67E8F9" /><circle cx="0" cy="-20" r="6" fill="#C4B5FD" /><circle cx="18" cy="-16" r="6" fill="#FDE68A" /><circle cx="0" cy="20" r="6" fill="#6549dd" />`;
 
 const FONT = "Archivo Variable, Zain, ui-sans-serif, system-ui, sans-serif";
+
+// ── Act-branch node drawings ──
+// Both are drawn for a 140 x 120 node whose top edge is `y0` and whose centre
+// is `cx`. Alignment flips in RTL; the text is never mirrored.
+const aiGlyph = (cx: number, y0: number) => {
+  const fx = (x: number, w = 0) => (rtl ? 2 * cx - x - w : x);
+  return `<rect x="${fx(cx - 56, 84)}" y="${y0 + 20}" width="84" height="22" rx="8" fill="#c4b5fd" />`
+    + `<rect x="${fx(cx - 48, 52)}" y="${y0 + 29}" width="52" height="4" rx="2" fill="#fff" opacity=".85" />`
+    + `<rect x="${fx(cx - 28, 84)}" y="${y0 + 48}" width="84" height="22" rx="8" fill="#6549dd" />`
+    + `<rect x="${fx(cx - 20, 60)}" y="${y0 + 57}" width="60" height="4" rx="2" fill="#fff" opacity=".85" />`
+    + `<path transform="translate(${fx(cx + 50)} ${y0 + 20})" d="M0,-8 L2.6,-2.6 L8,0 L2.6,2.6 L0,8 L-2.6,2.6 L-8,0 L-2.6,-2.6Z" fill="#FDE68A" />`
+    + `<rect x="${cx - 24}" y="${y0 + 82}" width="48" height="20" rx="10" fill="none" stroke="#8b6ff0" stroke-width="1.5" />`
+    + `<text class="sf-accent" x="${cx}" y="${y0 + 96}" text-anchor="middle" font-family="${FONT}" font-size="10.5" font-weight="700" letter-spacing="0.5" fill="#6549dd">${T.mcp}</text>`;
+};
+const approveGlyph = (cx: number, y0: number) => {
+  const fx = (x: number, w = 0) => (rtl ? 2 * cx - x - w : x);
+  const rows = [50, 40, 32].map((w, i) =>
+    `<circle cx="${fx(cx - 34)}" cy="${y0 + 28 + i * 11}" r="2.5" fill="#6549dd" />`
+    + `<rect x="${fx(cx - 26, w)}" y="${y0 + 25.5 + i * 11}" width="${w}" height="5" rx="2.5" fill="#e4e4e7" />`).join("");
+  return `<rect x="${cx - 44}" y="${y0 + 16}" width="88" height="52" rx="6" fill="#fff" opacity=".95" stroke="#e4e4e7" />`
+    + rows
+    + `<g class="flow-check"><rect x="${cx - 34}" y="${y0 + 76}" width="68" height="26" rx="13" fill="#22c55e" />`
+    + `<text x="${cx}" y="${y0 + 93}" text-anchor="middle" font-family="${FONT}" font-size="12" font-weight="700" fill="#fff">${T.approveBtn}</text></g>`;
+};
 
 // ── Phone diagram (dark version only) ──
 // Portrait geometry, 360 wide. The sources are scattered on an arc above the
@@ -171,13 +223,21 @@ const ARC = [
 // In Arabic the arc runs the other way, so Meta starts on the right.
 const arc = rtl ? [...ARC].reverse() : ARC;
 const mSources = sources.map((s, i) => ({ ...s, ...arc[i] }));
+// Below the hub the pipeline splits in two columns: the read branch (live
+// dashboard, delivered) and the act branch (AI assistant, approval). In RTL
+// the read branch is on the right, like the landscape diagram.
+const VX = rtl ? 265 : 95;
+const AX = rtl ? 95 : 265;
 const mPaths = [
   ...mSources.map((s, i) => {
     const mid = (s.y + HUB_M.y) / 2;
     return { id: `mp${i + 1}`, d: `M${s.x},${s.y} C ${s.x},${mid} ${HUB_M.x},${mid} ${HUB_M.x},${HUB_M.y}` };
   }),
-  { id: "mpv", d: "M180,402 L180,440" },
-  { id: "mpc", d: "M180,596 L180,634" },
+  { id: "mpv", d: `M180,402 C 180,424 ${VX},418 ${VX},440` },
+  { id: "mpc", d: `M${VX},596 L${VX},644` },
+  { id: "mpa", d: `M180,402 C 180,424 ${AX},418 ${AX},440` },
+  { id: "mpb", d: `M${AX},614 L${AX},644` },
+  { id: "mpr", d: `M${AX},812 L${AX},850`, act: true },
 ];
 const mParticles = [
   ...mSources.flatMap((_, i) => {
@@ -188,8 +248,12 @@ const mParticles = [
     ];
   }),
   { p: "mpv", d: "1.1s", b: "0s" }, { p: "mpc", d: "1.1s", b: "0.5s" },
+  { p: "mpa", d: "1.1s", b: "0.2s" }, { p: "mpb", d: "1.1s", b: "0.7s" },
+  { p: "mpr", d: "1.1s", b: "0.4s", act: true },
 ];
-const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
+const mBars = bars.map((b, i) => ({ ...b, x: VX - 55 + i * 30 }));
+// The ad platforms the changes return to, along the bottom of the phone diagram.
+const mBack = (["meta", "google_ads", "tiktok", "snapchat"] as const).map((key, i) => ({ key, x: 107 + i * 40 }));
 ---
 
 <section id={sectionId} class={sectionClass}>
@@ -230,11 +294,15 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
         : "reveal overflow-x-auto rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm sm:p-8"}>
         <!-- direction:ltr keeps text-anchor meaning left and right inside the
              SVG in both locales. Arabic labels still shape and order correctly. -->
-        <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} style="direction:ltr" viewBox="0 0 1120 500" role="img" aria-label={alt}>
+        <svg class={dark ? "flow-svg mx-auto block h-auto w-full max-w-[1100px]" : "flow-svg mx-auto block min-w-[860px] max-w-[1100px]"} style="direction:ltr" viewBox="0 0 1120 560" role="img" aria-label={alt}>
           <defs>
             <radialGradient id={ID.particle} cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#8b6ff0" />
               <stop offset="100%" stop-color="#6549dd" />
+            </radialGradient>
+            <radialGradient id={ID.p("actParticle")} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#86efac" />
+              <stop offset="100%" stop-color="#22c55e" />
             </radialGradient>
             <filter id={ID.glow} x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="2.5" result="b" />
@@ -249,11 +317,11 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
                group reflects them; circles and dashes look the same either way. -->
           <g transform={rtl ? `matrix(-1 0 0 1 ${W} 0)` : undefined}>
             <!-- animated stream lines (marching dashes) -->
-            {paths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
+            {paths.map((f) => <use href={`#${ID.p(f.id)}`} class={f.act ? "flow-stream flow-act" : "flow-stream"} />)}
 
             <!-- flowing particles -->
             {particles.map((c) => (
-              <circle r="4.5" fill={`url(#${ID.particle})`} filter={`url(#${ID.glow})`}>
+              <circle r="4.5" fill={`url(#${c.act ? ID.p("actParticle") : ID.particle})`} filter={`url(#${ID.glow})`}>
                 <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
                   <mpath href={`#${ID.p(c.p)}`} />
                 </animateMotion>
@@ -278,37 +346,56 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
           <text class="sf-t1" x={mx(510)} y="322" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">AdFunnl</text>
           <text class="sf-t2" x={mx(510)} y="340" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{T.hubSub}</text>
 
-          <!-- ── Visualize node ── -->
-          <rect class="sf-node" x={mr(700, 152)} y="176" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
-          <text class="sf-accent" x={mx(776)} y="199" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"} fill="#6549dd">{T.live}</text>
+          <!-- ── Visualize node (read branch, top) ── -->
+          <rect class="sf-node" x={mr(700, 152)} y="66" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-accent" x={mx(776)} y="89" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"} fill="#6549dd">{T.live}</text>
           {bars.map((b) => (
-            <rect class="flow-bar" x={mr(b.x, 20)} y="220" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
+            <rect class="flow-bar" x={mr(b.x, 20)} y="110" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
           ))}
-          <line class="sf-rule" x1={mx(716)} y1="286" x2={mx(836)} y2="286" stroke="#e4e4e7" stroke-width="1.5" />
-          <text class="sf-t1" x={mx(776)} y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{T.visualized}</text>
+          <line class="sf-rule" x1={mx(716)} y1="176" x2={mx(836)} y2="176" stroke="#e4e4e7" stroke-width="1.5" />
+          <text class="sf-t1" x={mx(776)} y="220" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{T.visualized}</text>
 
           <!-- ── Recipient node ── -->
-          <rect x={mr(940, 152)} y="176" width="152" height="128" rx="16" fill="#6549dd" />
-          <rect x={mr(972, 88)} y="200" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
-          <rect x={mr(982, 52)} y="211" width="52" height="6" rx="3" fill="#c4b5fd" />
-          <rect x={mr(982, 68)} y="223" width="68" height="5" rx="2.5" fill="#e4e4e7" />
-          <rect x={mr(982, 60)} y="233" width="60" height="5" rx="2.5" fill="#e4e4e7" />
-          <rect x={mr(982, 44)} y="243" width="44" height="5" rx="2.5" fill="#e4e4e7" />
-          <circle class="flow-check" cx={mx(1054)} cy="254" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
-          <path class="flow-check" d={`M${mx(1054) - 6},254 l4,4 l7,-8`} fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-          <text class="sf-t1" x={mx(1016)} y="330" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
-          <text class="sf-t2" x={mx(1016)} y="348" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
+          <rect x={mr(940, 152)} y="66" width="152" height="128" rx="16" fill="#6549dd" />
+          <rect x={mr(972, 88)} y="90" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+          <rect x={mr(982, 52)} y="101" width="52" height="6" rx="3" fill="#c4b5fd" />
+          <rect x={mr(982, 68)} y="113" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x={mr(982, 60)} y="123" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+          <rect x={mr(982, 44)} y="133" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+          <circle class="flow-check" cx={mx(1054)} cy="144" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+          <path class="flow-check" d={`M${mx(1054) - 6},144 l4,4 l7,-8`} fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <text class="sf-t1" x={mx(1016)} y="220" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{outLabel}</text>
+          <text class="sf-t2" x={mx(1016)} y="238" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{outSub}</text>
+
+          <!-- ── Act branch (bottom): AI assistant, your approval, back to the platforms ── -->
+          <rect class="sf-node" x={mr(700, 152)} y="286" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <g set:html={aiGlyph(mx(776), 290)} />
+          <text class="sf-t1" x={mx(776)} y="440" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{T.ai}</text>
+          <text class="sf-t2" x={mx(776)} y="458" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{T.aiSub}</text>
+
+          <rect class="sf-node" x={mr(940, 152)} y="286" width="152" height="128" rx="16" fill="#fff" stroke="#e4e4e7" stroke-width="1.5" />
+          <g set:html={approveGlyph(mx(1016), 290)} />
+          <text class="sf-t1" x={mx(1016)} y="440" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700" fill="#27272a">{T.approve}</text>
+          <text class="sf-t2" x={mx(1016)} y="458" text-anchor="middle" font-family={FONT} font-size="11.5" font-weight="500" fill="#a1a1aa">{T.approveSub}</text>
+
+          <!-- the way back, ending under the platform column -->
+          <polygon class="sf-act-head" points={`${mx(34)},464 ${mx(34) - 5.5},475 ${mx(34) + 5.5},475`} fill="#22c55e" />
+          <text class="sf-t2" x={mx(560)} y="518" text-anchor="middle" font-family={FONT} font-size="12" font-weight="600" fill="#a1a1aa">{T.back}</text>
         </svg>
       </div>
 
       {dark && (
         <!-- Phones and tablets: portrait diagram, same pipeline. -->
         <div class="reveal relative mx-auto max-w-md lg:hidden">
-          <svg class="flow-svg mx-auto block h-auto w-full" style="direction:ltr" viewBox="0 0 360 808" role="img" aria-label={alt}>
+          <svg class="flow-svg mx-auto block h-auto w-full" style="direction:ltr" viewBox="0 0 360 936" role="img" aria-label={alt}>
             <defs>
               <radialGradient id={ID.p("mParticle")} cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#8b6ff0" />
                 <stop offset="100%" stop-color="#6549dd" />
+              </radialGradient>
+              <radialGradient id={ID.p("mActParticle")} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#86efac" />
+                <stop offset="100%" stop-color="#22c55e" />
               </radialGradient>
               <filter id={ID.p("mGlow")} x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.5" result="b" />
@@ -317,10 +404,10 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
               {mPaths.map((f) => <path id={ID.p(f.id)} d={f.d} fill="none" />)}
             </defs>
 
-            {mPaths.map((f) => <use href={`#${ID.p(f.id)}`} class="flow-stream" />)}
+            {mPaths.map((f) => <use href={`#${ID.p(f.id)}`} class={f.act ? "flow-stream flow-act" : "flow-stream"} />)}
 
             {mParticles.map((c) => (
-              <circle r="4.5" fill={`url(#${ID.p("mParticle")})`} filter={`url(#${ID.p("mGlow")})`}>
+              <circle r="4.5" fill={`url(#${ID.p(c.act ? "mActParticle" : "mParticle")})`} filter={`url(#${ID.p("mGlow")})`}>
                 <animateMotion dur={c.d} begin={c.b} repeatCount="indefinite" rotate="auto">
                   <mpath href={`#${ID.p(c.p)}`} />
                 </animateMotion>
@@ -343,26 +430,43 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
             <text class="sf-t1" x="180" y="374" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">AdFunnl</text>
             <text class="sf-t2" x="180" y="392" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{T.hubSub}</text>
 
-            <!-- Visualized -->
-            <rect class="sf-node" x="110" y="440" width="140" height="120" rx="16" stroke-width="1.5" />
-            <text class="sf-accent" x="180" y="463" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"}>{T.live}</text>
+            <!-- Read branch: Visualized, then Delivered -->
+            <rect class="sf-node" x={VX - 70} y="440" width="140" height="120" rx="16" stroke-width="1.5" />
+            <text class="sf-accent" x={VX} y="463" text-anchor="middle" font-family={FONT} font-size="11" font-weight="700" letter-spacing={rtl ? "0" : "0.5"}>{T.live}</text>
             {mBars.map((b) => (
               <rect class="flow-bar" x={b.x} y="480" width="20" height="66" rx="4" fill={b.c} style={`--h:${b.h};--d:${b.d}`} />
             ))}
-            <line class="sf-rule" x1="120" y1="546" x2="240" y2="546" stroke-width="1.5" />
-            <text class="sf-t1" x="180" y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{T.visualized}</text>
+            <line class="sf-rule" x1={VX - 60} y1="546" x2={VX + 60} y2="546" stroke-width="1.5" />
+            <text class="sf-t1" x={VX} y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{T.visualized}</text>
 
-            <!-- Delivered -->
-            <rect x="110" y="634" width="140" height="120" rx="16" fill="#6549dd" />
-            <rect x="136" y="656" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
-            <rect x="146" y="667" width="52" height="6" rx="3" fill="#c4b5fd" />
-            <rect x="146" y="679" width="68" height="5" rx="2.5" fill="#e4e4e7" />
-            <rect x="146" y="689" width="60" height="5" rx="2.5" fill="#e4e4e7" />
-            <rect x="146" y="699" width="44" height="5" rx="2.5" fill="#e4e4e7" />
-            <circle class="flow-check" cx="218" cy="710" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
-            <path class="flow-check" d="M212,710 l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            <text class="sf-t1" x="180" y="778" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{outLabel}</text>
-            <text class="sf-t2" x="180" y="796" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{outSub}</text>
+            <rect x={VX - 70} y="644" width="140" height="120" rx="16" fill="#6549dd" />
+            <rect x={VX - 44} y="666" width="88" height="60" rx="6" fill="#fff" opacity="0.95" />
+            <rect x={VX - 34} y="677" width="52" height="6" rx="3" fill="#c4b5fd" />
+            <rect x={VX - 34} y="689" width="68" height="5" rx="2.5" fill="#e4e4e7" />
+            <rect x={VX - 34} y="699" width="60" height="5" rx="2.5" fill="#e4e4e7" />
+            <rect x={VX - 34} y="709" width="44" height="5" rx="2.5" fill="#e4e4e7" />
+            <circle class="flow-check" cx={VX + 38} cy="720" r="13" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
+            <path class="flow-check" d={`M${VX + 32},720 l4,4 l7,-8`} fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <text class="sf-t1" x={VX} y="788" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{outLabel}</text>
+            <text class="sf-t2" x={VX} y="806" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{outSub}</text>
+
+            <!-- Act branch: AI assistant, your approval, back to the platforms -->
+            <rect class="sf-node" x={AX - 70} y="440" width="140" height="120" rx="16" stroke-width="1.5" />
+            <g set:html={aiGlyph(AX, 440)} />
+            <text class="sf-t1" x={AX} y="584" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{T.ai}</text>
+            <text class="sf-t2" x={AX} y="602" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{T.aiSub}</text>
+
+            <rect class="sf-node" x={AX - 70} y="644" width="140" height="120" rx="16" stroke-width="1.5" />
+            <g set:html={approveGlyph(AX, 644)} />
+            <text class="sf-t1" x={AX} y="788" text-anchor="middle" font-family={FONT} font-size="15" font-weight="700">{T.approve}</text>
+            <text class="sf-t2" x={AX} y="806" text-anchor="middle" font-family={FONT} font-size="12" font-weight="500">{T.approveSub}</text>
+
+            <polygon class="sf-act-head" points={`${AX},849 ${AX - 5.5},838 ${AX + 5.5},838`} fill="#22c55e" />
+            <rect class="sf-node" x="20" y="850" width="320" height="76" rx="16" stroke-width="1.5" />
+            <text class="sf-t1" x="180" y="874" text-anchor="middle" font-family={FONT} font-size="12.5" font-weight="600">{T.back}</text>
+            {mBack.map((l) => (
+              <g transform={`translate(${l.x} 886)`} set:html={FLOW_LOGOS[l.key]} />
+            ))}
           </svg>
         </div>
       )}
@@ -374,6 +478,7 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
   /* ── Animated data-flow diagram ── */
   .flow-stream { fill: none; stroke: #e0d9f9; stroke-width: 2; stroke-dasharray: 5 9; stroke-linecap: round; animation: flowDash 1.1s linear infinite; }
   @keyframes flowDash { to { stroke-dashoffset: -14; } }
+  .flow-stream.flow-act { stroke: #86d9a4; }
   .flow-hub-ring { transform-box: fill-box; transform-origin: center; animation: flowHub 2.6s ease-in-out infinite; }
   @keyframes flowHub { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
   .flow-bar { transform-box: fill-box; transform-origin: bottom; animation: flowBar 2.4s cubic-bezier(.4,0,.2,1) infinite; animation-delay: var(--d, 0s); }
@@ -395,6 +500,7 @@ const mBars = bars.map((b, i) => ({ ...b, x: 125 + i * 30 }));
   .sf .sf-accent { fill: #b0a1ef; }
   .sf .sf-rule { stroke: #342e66; }
   .sf .flow-stream { stroke: #7c66e0; }
+  .sf .flow-stream.flow-act { stroke: #4ade80; }
   .sf .flow-hub-ring { stroke: #8b73e6; }
   .sf .sf-hubmark path { stroke: #a58ff5; }
   .sf .sf-hubmark circle[fill="#6549dd"] { fill: #a58ff5; }

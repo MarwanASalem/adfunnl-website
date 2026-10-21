@@ -54,7 +54,7 @@ const plans: Plan[] = [
       "3 brands · 15 ad accounts",
       "All platforms · unlimited dashboards",
       "1 year of history",
-      "Google Sheets & change annotations",
+      "Change annotations",
       "Hook & Hold + Creative Fatigue",
       "Live sharing, view-only links & PDF",
       "Add-fund & billing alerts",
@@ -159,14 +159,6 @@ const groups: { title: string; rows: Row[] }[] = [
     ],
   },
   {
-    // Google Sheets is an import, one direction, in only (docs/what-ships.md).
-    // It sits here and not under sharing: nothing is ever pushed out to it.
-    title: "Data sources",
-    rows: [
-      { label: "Google Sheets import",  free: false, solo: true, growth: true, agency: true },
-    ],
-  },
-  {
     title: "Reporting & sharing",
     rows: [
       { label: "Change annotations",              free: false, solo: true, growth: true, agency: true },
@@ -190,6 +182,14 @@ const groups: { title: string; rows: Row[] }[] = [
       { label: "AI MCP access",       free: false, solo: "Add-on", growth: true,    agency: true },
       { label: "Change ads from Claude or ChatGPT", free: false, solo: "Add-on", growth: true, agency: true },
       { label: "AI credits / month",  free: "0",   solo: "300 with add-on", growth: "1,000", agency: "3,000" },
+    ],
+  },
+  {
+    // Google Sheets is an import, one direction, in only (docs/what-ships.md).
+    // It sits here and not under sharing: nothing is ever pushed out to it.
+    title: "Data sources",
+    rows: [
+      { label: "Google Sheets import",  free: false, solo: true, growth: true, agency: true },
     ],
   },
 ];

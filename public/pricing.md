@@ -21,7 +21,7 @@ Full pricing page: https://www.adfunnl.com/pricing
 - Limits: 1 team seat, 3 brands, 15 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: every 12 hours
 - History: 1 year
-- Includes: everything in Free, plus Google Sheets import, change annotations, Hook & Hold, Creative Fatigue, live sharing with view-only links and PDF, add-fund reminders and billing alerts
+- Includes: everything in Free, plus change annotations, Hook & Hold, Creative Fatigue, live sharing with view-only links and PDF, add-fund reminders, billing alerts and Google Sheets import
 
 ## Growth
 

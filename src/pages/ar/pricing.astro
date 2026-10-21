@@ -58,7 +58,7 @@ const plans: Plan[] = [
       "3 علامات تجارية · 15 حسابًا إعلانيًا",
       "كل المنصات · لوحات بلا حدود",
       "سجل سنة",
-      "Google Sheets وملاحظات التغييرات",
+      "ملاحظات التغييرات",
       "Hook & Hold + Creative Fatigue",
       "مشاركة مباشرة وروابط للعرض فقط وPDF",
       "تنبيهات شحن الرصيد والفوترة",
@@ -162,14 +162,6 @@ const groups: { title: string; rows: Row[] }[] = [
     ],
   },
   {
-    // Google Sheets استيراد في اتجاه واحد، للداخل فقط (docs/what-ships.md)،
-    // فمكانه هنا وليس ضمن المشاركة: لا شيء يُرسَل إليه.
-    title: "مصادر البيانات",
-    rows: [
-      { label: "استيراد من Google Sheets", free: false, solo: true, growth: true, agency: true },
-    ],
-  },
-  {
     title: "التقارير والمشاركة",
     rows: [
       { label: "ملاحظات التغييرات",              free: false, solo: true, growth: true, agency: true },
@@ -193,6 +185,14 @@ const groups: { title: string; rows: Row[] }[] = [
       { label: "وصول MCP",       free: false, solo: "إضافة", growth: true,    agency: true },
       { label: "تعديل الإعلانات من Claude أو ChatGPT", free: false, solo: "إضافة", growth: true, agency: true },
       { label: "رصيد AI شهريًا",  free: "0",   solo: "300 مع الإضافة",   growth: "1,000", agency: "3,000" },
+    ],
+  },
+  {
+    // Google Sheets استيراد في اتجاه واحد، للداخل فقط (docs/what-ships.md)،
+    // فمكانه هنا وليس ضمن المشاركة: لا شيء يُرسَل إليه.
+    title: "مصادر البيانات",
+    rows: [
+      { label: "استيراد من Google Sheets", free: false, solo: true, growth: true, agency: true },
     ],
   },
 ];

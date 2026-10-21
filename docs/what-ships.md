@@ -38,12 +38,14 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Snapchat | Insights. Campaign control only from Claude or ChatGPT (ad control, under Ask) |
 | Google Ads | Insights. On and off and budgets only from Claude or ChatGPT (ad control, under Ask) |
 | Shopify | Products and daily product sales, powers product-level ROAS |
-| Salla | Orders and revenue |
-| Zid | Daily store revenue over OAuth, same shape as Salla. On the Connections page. Checked 7 October 2026 in `api/lib/connectors/zid.rb`, `api/lib/connectors/registry.rb` and `web/src/pages/ConnectionsPage.tsx`. Shown as a store in the hero film |
-| Bosta | Daily fulfilment snapshot |
-| Easy Orders | Orders |
+| Salla | Orders and revenue. **Coming soon in the app, not connectable**: the tile is greyed with a "Coming soon" pill since 25 September 2026 (`web/src/lib/beta.ts`, `COMING_SOON_SOURCES`). Checked 21 October 2026 |
+| Zid | Daily store revenue over OAuth, same shape as Salla. **Coming soon in the app, not connectable**, same as Salla. Checked 21 October 2026 in `web/src/lib/beta.ts` |
+| Bosta | Daily fulfilment snapshot. Beta pill in the app |
+| Shopify status | Beta pill in the app (`BETA_SOURCES`). Checked 21 October 2026 |
+| Easy Orders | Connector exists, but **hidden from the Connections page** since 19 June 2026 until their API has a bulk orders endpoint. Do not list it as connectable. Checked 21 October 2026 |
 | Google Sheets | Manual import as a data source, one direction, in only |
-| Sync cadence | Hourly. Full backfill of 90 days on a new account, last 3 days re-fetched every sync for late conversions |
+| LinkedIn Ads, Google Analytics, HubSpot | **Invite-only betas** behind feature flags, not open to everyone. LinkedIn: campaign results, waiting on LinkedIn's API approval. Google Analytics (GA4): sessions and on-site results, waiting on Google's verification of the analytics scope. HubSpot: newsletter subscribers and per-send performance. Write them as "coming next" only. Checked 21 October 2026 in `api/lib/connectors/` and `ConnectionsPage.tsx` |
+| Sync cadence | Set by the plan: every 12 hours on Free and Solo, 6 on Growth, hourly on Agency (`refresh_window_hours` in `api/app/models/plan_config.rb`, checked 21 October 2026). Full backfill of 90 days on a new account, last 3 days re-fetched every sync for late conversions |
 | Currency | Everything unified into one reporting currency. The rate is the current market rate, refreshed every few hours, not the rate on the day of spend. A dashboard's settings let you set your own rate per currency instead. Checked 15 October 2026 in `api/lib/currency_conversion_service.rb` and `web/src/components/builder/DashboardSettingsDrawer.tsx` (`rate_overrides`) |
 
 ## Visualize

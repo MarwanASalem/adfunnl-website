@@ -1,0 +1,99 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import IntegrationsPage from "../../components/IntegrationsPage.astro";
+import type { Copy } from "../../components/IntegrationsPage.astro";
+
+// Arabic twin of /integrations. The brief and the capability warnings live in
+// the English page's frontmatter and apply here word for word. Terms follow
+// docs/voice.md section 7: platform names, ROAS, MCP, API, Beta, Live and the
+// plan names stay in English; Salla and Bosta are written as the app writes
+// them.
+
+const copy: Copy = {
+  hero: {
+    heading: "كل مصدر تحتاجه تقاريرك، تربطه مرة واحدة",
+    body: "سجّل الدخول إلى كل منصة إعلانية وكل متجر بحسابه الخاص، مرة واحدة فقط. يسحب AdFunnl الأرقام بانتظام، ويحوّلها إلى عملة تقارير واحدة، ويضعها جنبًا إلى جنب. ستجد هنا ما يمكن ربطه اليوم، وما يجلبه كل مصدر، وما هو قادم.",
+    cta: "ابدأ مجانًا",
+    today: "متاح للربط اليوم",
+    next: "قادم",
+  },
+  groups: [
+    {
+      direction: "إلى AdFunnl",
+      heading: "المنصات الإعلانية",
+      intro: "الإنفاق والنتائج والإعلانات نفسها.",
+      rows: [
+        { icon: "meta", name: "Meta", body: "نتائج الحملات والمجموعات الإعلانية والإعلانات، وbreakdowns حسب العمر والنوع والجهاز والدولة والمنطقة ومكان الظهور، ونسب Hook & Hold للفيديو، وتنبيهات رصيد الحساب.", tag: "التحكم بالـ AI · Beta" },
+        { icon: "tiktok", name: "TikTok", body: "نتائج الحملات والمجموعات الإعلانية والإعلانات.", tag: "التحكم بالـ AI · Live" },
+        { icon: "snapchat", name: "Snapchat", body: "نتائج الحملات والمجموعات الإعلانية والإعلانات، مع breakdowns حسب العمر والنوع والدولة والمنطقة.", tag: "التحكم بالـ AI · Live" },
+        { icon: "google_ads", name: "Google Ads", body: "نتائج الحملات والإنفاق، بجانب باقي المنصات.", tag: "التحكم بالـ AI · Beta" },
+      ],
+      link: { label: "ما يمكن تغييره على كل منصة بالـ AI", href: "/ar/ai-ad-control" },
+    },
+    {
+      direction: "إلى AdFunnl",
+      heading: "المتاجر والشحن",
+      intro: "ما بيع وما شُحن فعلًا، لتقارنه بما تنسبه كل منصة لنفسها.",
+      rows: [
+        { icon: "shopify", name: "Shopify", pill: "Beta", body: "المنتجات ومبيعاتها اليومية، فيصل ROAS إلى كل منتج وكل فئة، ويظهر store ROAS بجانب blended ROAS." },
+        { icon: "bosta", name: "بوسطة", pill: "Beta", body: "لقطة يومية لحالة شحناتك." },
+      ],
+    },
+    {
+      direction: "إلى AdFunnl",
+      heading: "أرقامك الخاصة",
+      intro: "لكل ما لا تُبلغ عنه المنصات.",
+      rows: [
+        { icon: "google_sheets", name: "Google Sheets", body: "استورد جدولًا كمصدر بيانات. استيراد فقط: لا يكتب AdFunnl فيه شيئًا." },
+      ],
+    },
+    {
+      direction: "من AdFunnl",
+      heading: "إلى أين تذهب الأرقام",
+      intro: "الأرقام نفسها، حيث تعمل أنت وعملاؤك.",
+      rows: [
+        { icon: "assistant", name: "Claude وChatGPT", body: "أضف AdFunnl كخادم MCP واسأل عن بياناتك بكلمات عادية. ومع التحكم في الإعلانات بالـ AI، وافق على التغييرات من المحادثة. يعمل مع أي عميل MCP." },
+        { icon: "looker", name: "Looker Studio", body: "Community connector يقرأ بيانات مساحة العمل بمفتاح API." },
+        { icon: "share", name: "عملاؤك", body: "رابط للعرض فقط يجدونه محدَّثًا كلما فتحوه، أو ملف PDF مع لقطة ثابتة لما أرسلته." },
+      ],
+    },
+    {
+      direction: "قادم",
+      heading: "مبنية وتحت الاختبار",
+      intro: "يُفتح كل منها للجميع حين يجهز. لا مواعيد قبل ذلك.",
+      pending: true,
+      rows: [
+        { icon: "salla", name: "سلة", body: "طلبات المتجر وإيراداته.", tag: "قريبًا" },
+        { icon: "zid", name: "زد", body: "إيرادات المتجر اليومية.", tag: "قريبًا" },
+        { icon: "linkedin", name: "LinkedIn Ads", body: "نتائج الحملات والإنفاق.", tag: "بانتظار LinkedIn" },
+        { icon: "google_analytics", name: "Google Analytics", body: "الزيارات والنتائج داخل موقعك من GA4.", tag: "بانتظار Google" },
+        { icon: "hubspot", name: "HubSpot", body: "المشتركون الجدد في النشرة البريدية، وأداء كل إرسال.", tag: "بدعوة فقط" },
+      ],
+    },
+  ],
+  sync: {
+    heading: "كيف تعمل المزامنة",
+    items: [
+      { term: "كل كم", detail: "كل 12 ساعة في Free وSolo، وكل 6 ساعات في Growth، وكل ساعة في Agency." },
+      { term: "السجل", detail: "تصل آخر 90 يومًا عند ربط حساب جديد." },
+      { term: "التحويلات المتأخرة", detail: "تُجلب آخر 3 أيام من جديد في كل مزامنة، فتُحتسب التحويلات التي تصل متأخرة." },
+      { term: "العملة", detail: "يتحوّل كل حساب إلى عملة التقارير بسعر السوق الحالي، أو بسعر تحدده أنت لكل لوحة." },
+      { term: "متابعة المزامنة", detail: "تُظهر Data Logs متى تحدّث كل حساب آخر مرة، وهل نجح التحديث." },
+    ],
+  },
+  closing: {
+    heading: "ابدأ بحساب واحد",
+    body: "اربط حسابًا إعلانيًا واحدًا وشاهده بجانب متجرك، ثم أضف الباقي حين تكون جاهزًا.",
+    cta: "ابدأ مجانًا",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="التكاملات"
+  seoTitle="التكاملات: المنصات الإعلانية والمتاجر والـ AI · AdFunnl"
+  description="ما يرتبط به AdFunnl: Meta وTikTok وSnapchat وGoogle، وShopify وبوسطة وGoogle Sheets، وClaude وChatGPT وLooker Studio، وما هو قادم."
+>
+  <IntegrationsPage copy={copy} locale="ar" />
+</Layout>

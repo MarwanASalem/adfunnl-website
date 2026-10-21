@@ -20,6 +20,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [Pricing](https://www.adfunnl.com/pricing): Free, Solo, Growth and Agency plans
 - [Pricing as plain text](https://www.adfunnl.com/pricing.md): plan prices and limits in markdown
 - [Dashboards](https://www.adfunnl.com/features/dashboard): the dashboard builder
+- [Integrations](https://www.adfunnl.com/integrations): every ad platform, store and AI assistant AdFunnl connects to, what each brings in, and what is coming next
 - [AI ad control](https://www.adfunnl.com/ai-ad-control): run your ads from Claude or ChatGPT, with what it can change on each platform
 - [For Account Managers](https://www.adfunnl.com/for/account-managers): client reporting
 - [For Team Leads](https://www.adfunnl.com/for/team-leads): overseeing many accounts
@@ -36,6 +37,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 
 - [الرئيسية](https://www.adfunnl.com/ar)
 - [الأسعار](https://www.adfunnl.com/ar/pricing)
+- [التكاملات](https://www.adfunnl.com/ar/integrations)
 - [التحكم في الإعلانات بالـ AI](https://www.adfunnl.com/ar/ai-ad-control)
 - [المدونة](https://www.adfunnl.com/ar/blog)
 - [كيف تحسب blended ROAS عبر كل منصاتك الإعلانية](https://www.adfunnl.com/ar/blog/how-to-calculate-blended-roas)

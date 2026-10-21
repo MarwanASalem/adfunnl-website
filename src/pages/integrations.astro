@@ -1,0 +1,114 @@
+---
+import Layout from "../layouts/Layout.astro";
+import IntegrationsPage from "../components/IntegrationsPage.astro";
+import type { Copy } from "../components/IntegrationsPage.astro";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     A media buyer or performance marketer checking, before signing
+//           up, whether AdFunnl reads the platforms and stores they run.
+//   Promise Every source you report on, connected once and kept current,
+//           with an honest line on what each one brings in.
+//   Action  Start free.
+//
+// The nav's Integrations link points here.
+//
+// CAPABILITY WARNINGS for anyone editing this page (docs/what-ships.md,
+// connectors checked in the app on 21 October 2026):
+//   - Salla and Zid are built but marked "Coming soon" in the app (since 25
+//     September 2026). Not connectable today, so they sit under Coming next.
+//   - Easy Orders is hidden from the app's Connections page. Not listed.
+//   - LinkedIn Ads, Google Analytics and HubSpot are invite-only betas behind
+//     feature flags. Coming next, never "available".
+//   - Shopify and Bosta carry the app's own Beta pill.
+//   - Ad control labels are the owner's: TikTok and Snapchat Live, Meta and
+//     Google Beta.
+//   - Refresh depends on the plan (12h, 6h, hourly). Never "hourly" alone.
+//   - Never put a number on the platforms or the sources (R14).
+
+const copy: Copy = {
+  hero: {
+    heading: "Every source your reporting needs, connected once",
+    body: "Sign in to each ad platform and store with its own login, one time. AdFunnl pulls the numbers on a schedule, converts them into one reporting currency and puts them side by side. Below is what connects today, what each source brings in, and what is coming next.",
+    cta: "Start free",
+    today: "Connects today",
+    next: "Coming next",
+  },
+  groups: [
+    {
+      direction: "Into AdFunnl",
+      heading: "Ad platforms",
+      intro: "Spend, results and the ads themselves.",
+      rows: [
+        { icon: "meta", name: "Meta", body: "Campaign, ad set and ad results, audience breakdowns by age, gender, device, country, region and placement, video hook and hold, and account funding alerts.", tag: "AI ad control · Beta" },
+        { icon: "tiktok", name: "TikTok", body: "Campaign, ad group and ad results.", tag: "AI ad control · Live" },
+        { icon: "snapchat", name: "Snapchat", body: "Campaign, ad set and ad results, with breakdowns by age, gender, country and region.", tag: "AI ad control · Live" },
+        { icon: "google_ads", name: "Google Ads", body: "Campaign results and spend, next to every other platform.", tag: "AI ad control · Beta" },
+      ],
+      link: { label: "What AI ad control can change on each platform", href: "/ai-ad-control" },
+    },
+    {
+      direction: "Into AdFunnl",
+      heading: "Stores and delivery",
+      intro: "What actually sold and shipped, to set against what each platform claims.",
+      rows: [
+        { icon: "shopify", name: "Shopify", pill: "Beta", body: "Products and daily product sales, so ROAS goes down to each product and category, and store ROAS sits next to blended ROAS." },
+        { icon: "bosta", name: "Bosta", pill: "Beta", body: "A daily snapshot of your deliveries." },
+      ],
+    },
+    {
+      direction: "Into AdFunnl",
+      heading: "Your own numbers",
+      intro: "For anything the platforms do not report.",
+      rows: [
+        { icon: "google_sheets", name: "Google Sheets", body: "Import a sheet as a data source. Import only: AdFunnl never writes to it." },
+      ],
+    },
+    {
+      direction: "Out of AdFunnl",
+      heading: "Where the numbers go",
+      intro: "The same numbers, wherever you and your clients work.",
+      rows: [
+        { icon: "assistant", name: "Claude and ChatGPT", body: "Add AdFunnl as an MCP server and ask about your data in plain words. With AI ad control, approve changes to your ads from the chat. Works with any MCP client." },
+        { icon: "looker", name: "Looker Studio", body: "A community connector that reads your workspace with an API token." },
+        { icon: "share", name: "Your clients", body: "A view-only link that is current whenever they open it, or a PDF with a frozen snapshot of what you sent." },
+      ],
+    },
+    {
+      direction: "Coming next",
+      heading: "Built and being tested",
+      intro: "Each one opens to everyone once it is ready. No dates until then.",
+      pending: true,
+      rows: [
+        { icon: "salla", name: "Salla", body: "Store orders and revenue.", tag: "Opening soon" },
+        { icon: "zid", name: "Zid", body: "Daily store revenue.", tag: "Opening soon" },
+        { icon: "linkedin", name: "LinkedIn Ads", body: "Campaign results and spend.", tag: "Waiting on LinkedIn" },
+        { icon: "google_analytics", name: "Google Analytics", body: "Sessions and on-site results from GA4.", tag: "Waiting on Google" },
+        { icon: "hubspot", name: "HubSpot", body: "New newsletter subscribers, and how each send performed.", tag: "Invite only" },
+      ],
+    },
+  ],
+  sync: {
+    heading: "How syncing works",
+    items: [
+      { term: "How often", detail: "Every 12 hours on Free and Solo, every 6 hours on Growth, every hour on Agency." },
+      { term: "History", detail: "The last 90 days come in when you connect a new account." },
+      { term: "Late conversions", detail: "The last 3 days are fetched again on every sync, so conversions that land late still count." },
+      { term: "Currency", detail: "Every account is converted into your reporting currency at the current market rate, or at a rate you set per dashboard." },
+      { term: "Checking a sync", detail: "Data Logs show when each account last updated, and whether it worked." },
+    ],
+  },
+  closing: {
+    heading: "Start with one account",
+    body: "Connect one ad account and see it next to your store. Add the rest when you are ready.",
+    cta: "Start free",
+  },
+};
+---
+
+<Layout
+  title="Integrations"
+  seoTitle="Integrations: ad platforms, stores and AI · AdFunnl"
+  description="What AdFunnl connects to: Meta, TikTok, Snapchat and Google, Shopify, Bosta, Google Sheets, Claude, ChatGPT and Looker Studio, and what is coming next."
+>
+  <IntegrationsPage copy={copy} />
+</Layout>

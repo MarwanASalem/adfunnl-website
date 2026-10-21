@@ -368,7 +368,8 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             </div>
           </div>
 
-          <a href={L("/#integrations")} class="hover:text-zinc-900 transition">{T.integrations}</a>
+          <a href={L("/integrations")} aria-current={isCurrent("/integrations") ? "page" : undefined}
+             class:list={["hover:text-zinc-900 transition", isCurrent("/integrations") && "text-zinc-900"]}>{T.integrations}</a>
           <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
           <a href={L("/blog")} aria-current={basePath.startsWith("/blog") ? "page" : undefined}
              class:list={["hover:text-zinc-900 transition", basePath.startsWith("/blog") && "text-zinc-900"]}>{T.blog}</a>
@@ -424,7 +425,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
                 </a>
               ))}
               <div class="my-1 border-t border-zinc-100"></div>
-              <a href={L("/#integrations")} class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.integrations}</a>
+              <a href={L("/integrations")} class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.integrations}</a>
               <a href={L("/pricing")}       class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.pricing}</a>
               <a href={L("/blog")}          class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.blog}</a>
               <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-4">
@@ -481,7 +482,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
               <a href={L("/features/dashboard")} class="hover:text-zinc-900 transition">{T.dashboards}</a>
               <a href={L("/ai-ad-control")}      class="hover:text-zinc-900 transition">{T.adControl}</a>
               <a href={L("/#features")}          class="hover:text-zinc-900 transition">{T.features}</a>
-              <a href={L("/#integrations")}      class="hover:text-zinc-900 transition">{T.integrations}</a>
+              <a href={L("/integrations")}      class="hover:text-zinc-900 transition">{T.integrations}</a>
               <a href={L("/pricing")}            class="hover:text-zinc-900 transition">{T.pricing}</a>
               {personas.map((p) => (
                 <a href={L(p.href)} class="hover:text-zinc-900 transition">{T.forPersona(p.short)}</a>

@@ -49,6 +49,13 @@ Read `docs/voice.md` first. It is the voice guide, and it governs every
 user-visible string. Do not draft page copy without it, and do not write markup
 for a new page until the copy block has been reviewed.
 
+## Before designing or restyling any section
+
+Read `docs/design.md` first. It is the visual style guide: frosted lavender
+glass illustrations, card styling, a mini app animation in every card, compact
+sections and carousels on phones. The reference is the "6 ways AdFunnl helps
+you" section, `src/components/UseCases.astro`.
+
 ## Page structure convention
 
 Page data and prose live in `const` blocks in the Astro frontmatter, so a whole

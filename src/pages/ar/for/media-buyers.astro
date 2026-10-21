@@ -310,6 +310,21 @@ const control = [
   { platform: "Snapchat", status: "In progress" },
   { platform: "Google", status: "In progress" },
 ];
+
+// ── Audience breakdowns: real app screenshots, privacy toggle on ──
+// Breakdowns come from Meta and Snapchat only (docs/what-ships.md, checked
+// 10 September 2026), which is why the body names them. The headline opens
+// with the reader's problem, see R11 in docs/voice.md. An age chart goes into
+// `shots` next to gender and device once the corrected screenshot is in.
+const breakdowns = {
+  heading: "كم يأخذ منك الوصول إلى الـ Breakdowns؟",
+  body: "العمر والجنس والجهاز والموقع تُظهر لك من تصل إليه إعلاناتك ومن يشتري فعلًا. في المنصة الإعلانية تحصل عليها حملةً بعد حملة وbreakdown بعد آخر، ثم تصدّر الملفات وتجمعها بنفسك. اربط حساباتك وسيجمعها AdFunnl عبر كل حملاتك على Meta وSnapchat، مرسومة جاهزة كرسوم بيانية.",
+  shots: [
+    { src: "/screens/breakdown-location.png", w: 1481, h: 391, wide: true, alt: "خريطة جغرافية في AdFunnl تلوّن الإنفاق الإعلاني حسب المنطقة في مصر، وأغمقها حول القاهرة." },
+    { src: "/screens/breakdown-gender.png",   w: 725,  h: 387, wide: false, alt: "رسم دائري في AdFunnl لمشتريات Meta حسب الجنس: ذكر وأنثى وغير معروف." },
+    { src: "/screens/breakdown-device.png",   w: 722,  h: 386, wide: false, alt: "رسم أعمدة في AdFunnl لمشتريات Meta وتكلفة الشراء حسب الجهاز، من هواتف iPhone وAndroid إلى أجهزة الكمبيوتر والتابلت." },
+  ],
+};
 ---
 
 <Layout
@@ -575,6 +590,26 @@ const control = [
             <p class="mt-1.5 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/60">{r.scope}</p>
             <p class="mt-3 text-sm leading-relaxed text-white/50">{r.body}</p>
           </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= AUDIENCE BREAKDOWNS ========================= -->
+  <section id="breakdowns" class="bg-zinc-50 px-6 py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+          {breakdowns.heading}
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-500">{breakdowns.body}</p>
+      </div>
+
+      <div class="mt-10 grid gap-5 md:grid-cols-2 m-snap">
+        {breakdowns.shots.map((s) => (
+          <figure class={`overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10 ${s.wide ? "md:col-span-2" : ""}`}>
+            <img src={s.src} width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" class="block h-auto w-full" />
+          </figure>
         ))}
       </div>
     </div>

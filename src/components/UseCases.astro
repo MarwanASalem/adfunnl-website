@@ -1,24 +1,29 @@
 ---
-// Five jobs that eat a media buyer's week, and how AdFunnl helps.
+// Six ways AdFunnl helps a media buyer, as one compact fan of cards.
 //
-// One compact row of overlapping cards, fanned slightly. Pointing at (or
-// focusing) a card straightens it, lifts it forward, nudges its neighbours
-// aside and shows one or two small chips from the app. The lifted card also
-// tilts a little toward the pointer, and its object drifts on its own layer.
+// Each card has three parts: a frosted glass object for the job, a short line
+// on how AdFunnl does it, and a small piece of the app at the bottom that
+// shows it happening. At rest the piece of app sits in its finished state, so
+// the card still explains itself without motion. Pointing at (or focusing) a
+// card straightens it, lifts it forward, nudges its neighbours aside and plays
+// that piece of app from the start. The lifted card also leans toward the
+// pointer, and its object drifts on its own layer.
 //
-// Under lg the fan becomes a swipeable carousel of straight cards, chips
-// always showing, so the section costs one card of height on a phone.
+// Under lg the fan becomes a swipeable carousel of straight cards, and a card
+// plays its piece of app when it is swiped into view.
 //
 // The objects are hand-built SVG in one material, frosted lavender glass: a
 // white-to-lavender body, a purple depth wash toward the bottom, a thin rim
 // light and one soft specular highlight, over a faint glow. One material and
-// one hue across all five is what keeps them quiet next to each other.
+// one hue across all six is what keeps them quiet next to each other.
 //
 // Capability notes (docs/what-ships.md): blended ROAS and one reporting
-// currency (Connect, Visualize); Best Creatives weights ROAS, cost per purchase
-// and outbound CTR (Visualize); Pulse verdicts Scale, Hold, Cut (Visualize);
-// live view-only links, PDF and client logo (Share); ad changes from Claude or
-// ChatGPT are two-phase and only apply after approval (Ask).
+// currency (Connect, Visualize); ad changes from Claude or ChatGPT are
+// two-phase and only apply after approval (Ask); Best Creatives weights ROAS,
+// cost per purchase and outbound CTR (Visualize); Pulse verdicts Scale, Hold,
+// Cut (Visualize); live view-only links, PDF and client logo (Share); ad
+// fatigue tracked on Meta, TikTok, Snapchat and Google (Visualize).
+import PlatformIcon from "./PlatformIcon.astro";
 
 interface Props {
   sectionId?: string;
@@ -27,40 +32,89 @@ interface Props {
 
 const { sectionId, locale = "en" } = Astro.props;
 
+type Job = "compare" | "ai" | "winner" | "scale" | "report" | "fatigue";
+const ORDER: Job[] = ["compare", "ai", "winner", "scale", "report", "fatigue"];
+
 const COPY = {
   en: {
-    heading: "Five jobs that eat a media buyer's week, and how AdFunnl helps",
-    cards: [
-      { title: "Comparing platforms", body: "Meta, TikTok, Snapchat and Google side by side in one reporting currency, with blended ROAS on top.", chips: ["Blended ROAS 3.3×", "One reporting currency"] },
-      { title: "Finding the winning ad", body: "Best Creatives ranks ads on ROAS, cost per purchase and outbound CTR, with the creative in the row.", chips: ["Best: IG Post · Leakproof test"] },
-      { title: "Deciding what to scale", body: "Pulse checks each account against your rules and flags it Scale, Hold or Cut.", chips: [] },
-      { title: "Sending the report", body: "A live, view-only link that is current whenever your client opens it, or a PDF with their logo.", chips: ["Live link · view-only", "PDF with their logo"] },
-      { title: "Changing ads", body: "Ask Claude or ChatGPT to pause ads or move budget. You see the plan first, and nothing runs until you approve.", chips: ["Pause 2 ads"] },
-    ],
-    scale: "Scale", hold: "Hold", cut: "Cut",
+    heading: "6 ways AdFunnl helps you",
+    cards: {
+      compare: { title: "Comparing platforms", body: "Meta, TikTok, Snapchat and Google in one reporting currency, with blended ROAS on top." },
+      ai: { title: "Changing ads with AI", body: "Ask Claude or ChatGPT to pause ads or move budget. Nothing runs until you approve the plan." },
+      winner: { title: "Finding the winning ad", body: "Best Creatives ranks ads on ROAS, cost per purchase and outbound CTR." },
+      scale: { title: "Deciding what to scale", body: "Pulse checks each account against your rules and flags it Scale, Hold or Cut." },
+      report: { title: "Sending the report", body: "A live, view-only link your client opens anytime, or a PDF with their logo." },
+      fatigue: { title: "Catching tired ads", body: "Ad fatigue is tracked on every ad platform, so you see a winner slipping before the results do." },
+    },
+    blended: "Blended",
+    ask: "Pause the 2 weakest ads",
+    pause: "Pause",
+    twoAds: "2 ads",
     approve: "Approve",
     applied: "Applied",
+    best: "Best",
+    scale: "Scale", hold: "Hold", cut: "Cut",
+    link: "Live link",
+    viewOnly: "View-only",
+    fatigue: "Fatigue",
   },
   ar: {
-    heading: "خمس مهام تلتهم أسبوع الـ Media Buyer، وكيف يساعد AdFunnl",
-    cards: [
-      { title: "مقارنة المنصات", body: "Meta وTikTok وSnapchat وGoogle جنبًا إلى جنب بعملة تقارير واحدة، وفوقها blended ROAS.", chips: ["Blended ROAS ‏3.3×", "عملة تقارير واحدة"] },
-      { title: "إيجاد الإعلان الرابح", body: "يرتّب Best Creatives الإعلانات حسب ROAS وتكلفة الشراء وOutbound CTR، والـ Creative أمامك في الصف نفسه.", chips: ["الأفضل: IG Post · Leakproof test"] },
-      { title: "تحديد ما يستحق الـ Scale", body: "يفحص Pulse كل حساب وفق قواعدك ويصنّفه Scale أو Hold أو Cut.", chips: [] },
-      { title: "إرسال التقرير", body: "رابط مباشر للعرض فقط يبقى محدَّثًا كلما فتحه عميلك، أو ملف PDF بشعاره.", chips: ["رابط مباشر · للعرض فقط", "PDF بشعار العميل"] },
-      { title: "تعديل الإعلانات", body: "اطلب من Claude أو ChatGPT إيقاف الإعلانات أو نقل الميزانية. ترى الخطة أولًا، ولا يُنفَّذ شيء قبل موافقتك.", chips: ["إيقاف إعلانين"] },
-    ],
-    scale: "Scale", hold: "Hold", cut: "Cut",
+    heading: "6 طرق يساعدك بها AdFunnl",
+    cards: {
+      compare: { title: "مقارنة المنصات", body: "Meta وTikTok وSnapchat وGoogle بعملة تقارير واحدة، وفوقها blended ROAS." },
+      ai: { title: "تعديل الإعلانات بالـ AI", body: "اطلب من Claude أو ChatGPT إيقاف الإعلانات أو نقل الميزانية. لا يُنفَّذ شيء قبل موافقتك على الخطة." },
+      winner: { title: "إيجاد الإعلان الرابح", body: "يرتّب Best Creatives الإعلانات حسب ROAS وتكلفة الشراء وOutbound CTR." },
+      scale: { title: "تحديد ما يستحق الـ Scale", body: "يفحص Pulse كل حساب وفق قواعدك ويصنّفه Scale أو Hold أو Cut." },
+      report: { title: "إرسال التقرير", body: "رابط مباشر للعرض فقط يفتحه عميلك متى شاء، أو ملف PDF بشعاره." },
+      fatigue: { title: "رصد الـ Ad Fatigue", body: "يُتابَع الـ Ad Fatigue على كل المنصات الإعلانية، فترى الإعلان الرابح يتراجع قبل أن تقوله النتائج." },
+    },
+    blended: "المدمج",
+    ask: "أوقف أضعف إعلانين",
+    pause: "إيقاف",
+    twoAds: "إعلانان",
     approve: "وافق",
     applied: "تم التطبيق",
+    best: "الأفضل",
+    scale: "Scale", hold: "Hold", cut: "Cut",
+    link: "رابط مباشر",
+    viewOnly: "للعرض فقط",
+    fatigue: "Fatigue",
   },
 };
 const T = COPY[locale];
 
+// Demo data, the same numbers the Pulse table on the homepage uses.
+const platforms = [
+  { key: "meta", roas: 5.2 },
+  { key: "tiktok", roas: 2.8 },
+  { key: "snapchat", roas: 3.8 },
+  { key: "google_ads", roas: 1.4 },
+];
+const creatives = [
+  { photo: "/ad-1.jpg", score: 1 },
+  { photo: "/ad-5.jpg", score: 0.42 },
+  { photo: "/ad-4.jpg", score: 0.41 },
+];
+const verdicts = [
+  { key: "meta", roas: "5.2×", v: "scale" as const },
+  { key: "tiktok", roas: "2.8×", v: "hold" as const },
+  { key: "google_ads", roas: "1.4×", v: "cut" as const },
+];
+const VERDICT_CLASS = {
+  scale: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  hold: "border-amber-200 bg-amber-50 text-amber-700",
+  cut: "border-rose-200 bg-rose-50 text-rose-700",
+};
+// CTR over time for the fatigue chart: climbs, peaks, then slides.
+const ctr = [30, 44, 52, 50, 42, 33, 26, 20];
+const FW = 160, FH = 40;
+const fPts = ctr.map((v, i) => [Math.round((i / (ctr.length - 1)) * FW), Math.round(FH - (v / 56) * FH)]);
+const fLine = fPts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+
 // ── Frosted glass objects ──
 // Every drawing is 120 x 120 and built from the same four layers per shape:
 // the glass body, a purple depth wash, a rim light, then a soft highlight.
-// Ids carry the card index so five drawings on one page never share defs.
+// Ids carry a number per drawing so six drawings on one page never share defs.
 const defs = (i: number) => `<defs>
   <linearGradient id="gl${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".97"/><stop offset=".5" stop-color="#ece7fd" stop-opacity=".9"/><stop offset="1" stop-color="#a796ef" stop-opacity=".85"/></linearGradient>
   <linearGradient id="dp${i}" x1="0" y1="0" x2="0" y2="1"><stop offset=".3" stop-color="#6549dd" stop-opacity="0"/><stop offset="1" stop-color="#5738c9" stop-opacity=".42"/></linearGradient>
@@ -83,17 +137,17 @@ const ground = (i: number, rx = 34) =>
 const glint = (x: number, y: number, r: number) =>
   `<path d="M${x},${y - r} Q${x},${y} ${x + r},${y} Q${x},${y} ${x},${y + r} Q${x},${y} ${x - r},${y} Q${x},${y} ${x},${y - r}Z" fill="#fff" opacity=".9"/>`;
 
-const art: string[] = [
-  // Comparing platforms: three glass bars on a frosted disc.
-  defs(0) + ground(0, 40)
+const art: Record<Job, string> = {
+  // Three glass bars on a frosted disc.
+  compare: defs(0) + ground(0, 40)
     + `<g class="art-body">${glass(0, `<ellipse cx="60" cy="97" rx="42" ry="9" __/>`)}`
     + [[29, 30], [51, 48], [73, 66]].map(([x, h]) =>
         glass(0, `<rect x="${x}" y="${95 - h}" width="18" height="${h}" rx="6" __/>`)
         + `<rect x="${x + 3}" y="${99 - h}" width="3.2" height="${h - 12}" rx="1.6" fill="#fff" opacity=".7"/>`).join("")
     + `</g><g class="art-float">${glint(98, 24, 6)}</g>`,
 
-  // Finding the winning ad: three creatives fanned, the front one picked.
-  defs(1) + ground(1, 36)
+  // Three creatives fanned, the front one picked.
+  winner: defs(1) + ground(1, 36)
     + `<g class="art-body">`
     + `<g opacity=".7" transform="rotate(-16 60 92)">${glass(1, `<rect x="26" y="32" width="40" height="54" rx="7" __/>`)}</g>`
     + `<g opacity=".7" transform="rotate(16 60 92)">${glass(1, `<rect x="54" y="32" width="40" height="54" rx="7" __/>`)}</g>`
@@ -103,14 +157,14 @@ const art: string[] = [
     + spec(1, 50, 36, 8, 2.5, -20)
     + `</g><g class="art-float">${glint(90, 24, 7)}</g>`,
 
-  // Deciding what to scale: one glass arrow rising.
-  defs(2) + ground(2, 34)
+  // One glass arrow rising.
+  scale: defs(2) + ground(2, 34)
     + `<g class="art-body">${glass(2, `<path d="M18 94 C 42 92 62 80 72 58 L 62 53 L 100 20 L 98 64 L 88 58 C 76 88 50 105 18 105 Z" stroke-linejoin="round" __/>`)}`
     + spec(2, 84, 34, 9, 2.4, -42) + spec(2, 36, 96, 10, 1.8, -6)
     + `</g><g class="art-float">${glint(32, 34, 6)}</g>`,
 
-  // Sending the report: a glass paper plane.
-  defs(3) + ground(3, 30)
+  // A glass paper plane.
+  report: defs(3) + ground(3, 30)
     + `<g class="art-body" stroke-linejoin="round">`
     + glass(3, `<polygon points="106,18 12,58 52,70" __/>`)
     + `<g opacity=".85">${glass(3, `<polygon points="106,18 52,70 72,76" __/>`)}</g>`
@@ -119,13 +173,27 @@ const art: string[] = [
     + spec(3, 66, 40, 14, 2.2, -23)
     + `</g><g class="art-float"><path d="M14 102 C 26 108 34 96 46 100" fill="none" stroke="#b9a8f5" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0.5 6"/></g>`,
 
-  // Changing ads: a glass switch, turned on.
-  defs(4) + ground(4, 38)
+  // A glass switch, turned on.
+  ai: defs(4) + ground(4, 38)
     + `<g class="art-body">${glass(4, `<rect x="16" y="42" width="88" height="42" rx="21" __/>`)}`
     + spec(4, 40, 48, 14, 2.4)
     + `<g class="art-knob"><circle cx="82" cy="63" r="16" fill="url(#kb4)"/><circle cx="82" cy="63" r="16" fill="none" stroke="#fff" stroke-width="1.2"/>`
     + `<path d="M75.5 63.5 l4.5 4.5 l8 -9" fill="none" stroke="#8b73e6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>`
     + `</g><g class="art-float">${glint(26, 30, 6)}</g>`,
+
+  // A glass battery running low.
+  fatigue: defs(5) + ground(5, 38)
+    + `<g class="art-body">${glass(5, `<rect x="18" y="40" width="76" height="44" rx="12" __/>`)}`
+    + glass(5, `<rect x="94" y="53" width="9" height="18" rx="3.5" __/>`)
+    + `<rect class="art-level" x="25" y="47" width="22" height="30" rx="6" fill="#8b73e6" opacity=".55"/>`
+    + spec(5, 44, 45, 16, 2.2)
+    + `</g><g class="art-float">${glint(100, 28, 6)}</g>`,
+};
+
+// Where each card sits in the fan, centre outwards.
+const FAN = [
+  { r: -6, dy: 28 }, { r: -3.5, dy: 11 }, { r: -1.2, dy: 2 },
+  { r: 1.2, dy: 2 }, { r: 3.5, dy: 11 }, { r: 6, dy: 28 },
 ];
 ---
 
@@ -136,32 +204,97 @@ const art: string[] = [
     </div>
 
     <div class="reveal fan mt-10 lg:mt-14" data-fan>
-      {T.cards.map((c, i) => (
-        <article class="fcard" tabindex="0" data-fcard style={`--r:${[-5, -2.5, 0, 2.5, 5][i]}deg;--dy:${[22, 7, 0, 7, 22][i]}px`}>
-          <svg class="fcard-art" viewBox="0 0 120 120" aria-hidden="true" set:html={art[i]} />
-          <h3 class="fcard-title">{c.title}</h3>
-          <p class="fcard-body">{c.body}</p>
+      {ORDER.map((job, i) => (
+        <article class="fcard" tabindex="0" data-fcard style={`--r:${FAN[i].r}deg;--dy:${FAN[i].dy}px`}>
+          <svg class="fcard-art" viewBox="0 0 120 120" aria-hidden="true" set:html={art[job]} />
+          <h3 class="fcard-title">{T.cards[job].title}</h3>
+          <p class="fcard-body">{T.cards[job].body}</p>
 
-          <div class="fcard-chips" aria-hidden="true">
-            {i === 2 ? (
-              <div class="flex flex-wrap gap-1.5">
-                <span class="fchip text-emerald-700">{T.scale}</span>
-                <span class="fchip text-amber-700">{T.hold}</span>
-                <span class="fchip text-rose-700">{T.cut}</span>
+          <!-- the piece of app that shows it happening -->
+          <div class="fmini" aria-hidden="true">
+            {job === "compare" && (
+              <div class="space-y-1.5">
+                {platforms.map((p, k) => (
+                  <div class="flex items-center gap-2" style={`--k:${k}`}>
+                    <PlatformIcon platform={p.key} class="h-3 w-3 shrink-0" />
+                    <span class="relative h-1.5 flex-1 overflow-hidden rounded-full bg-white ring-1 ring-brand-100">
+                      <span class="fm-bar absolute inset-y-0 start-0 rounded-full bg-brand-400" style={`width:${(p.roas / 6) * 100}%`}></span>
+                    </span>
+                    <bdi dir="ltr" class="w-7 shrink-0 text-end text-[10px] font-semibold tabular-nums text-zinc-600">{p.roas.toFixed(1)}×</bdi>
+                  </div>
+                ))}
+                <div class="fm-pop flex items-center justify-between pt-1 text-[10px]" style="--k:4">
+                  <span class="font-semibold text-brand-800">{T.blended} ROAS</span>
+                  <bdi dir="ltr" class="rounded-full bg-brand-600 px-2 py-px font-bold tabular-nums text-white">3.3×</bdi>
+                </div>
               </div>
-            ) : (
-              c.chips.map((t) => (
-                <span class="fchip">
-                  <svg class="h-3.5 w-3.5 shrink-0 text-brand-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 Q12 12 22 12 Q12 12 12 22 Q12 12 2 12 Q12 12 12 2Z"/></svg>
-                  <bdi class="truncate">{t}</bdi>
-                </span>
-              ))
             )}
-            {i === 4 && (
-              <span class="fchip fchip-approve">
-                <span class="fa-a">{T.approve}</span>
-                <span class="fa-b">{T.applied}</span>
-              </span>
+
+            {job === "ai" && (
+              <div class="space-y-1.5">
+                <p class="fm-in ms-auto w-fit rounded-xl rounded-ee-sm bg-brand-600 px-2.5 py-1 text-[10px] font-medium text-white" style="--k:0">{T.ask}</p>
+                <div class="fm-in flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-white px-1.5 py-1.5 text-[10px] ring-1 ring-brand-100" style="--k:1">
+                  <span class="rounded bg-rose-50 px-1.5 py-px font-semibold text-rose-700">{T.pause}</span>
+                  <span class="font-medium text-zinc-600">{T.twoAds}</span>
+                  <span class="fm-approve relative ms-auto inline-flex h-5 min-w-[3.4rem] items-center justify-center rounded-md px-1.5 font-semibold text-white">
+                    <span class="fm-lab-a">{T.approve}</span>
+                    <span class="fm-lab-b absolute inset-0 flex items-center justify-center">{T.applied}</span>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {job === "winner" && (
+              <ol class="space-y-1">
+                {creatives.map((a, k) => (
+                  <li class="fm-in flex items-center gap-2 rounded-md bg-white p-1 ring-1 ring-brand-100" style={`--k:${k}`}>
+                    <img src={a.photo} alt="" loading="lazy" width="16" height="20" class="h-5 w-4 shrink-0 rounded-sm object-cover" />
+                    <span class="relative h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-100">
+                      <span class="fm-bar absolute inset-y-0 start-0 rounded-full bg-brand-400" style={`width:${a.score * 100}%;--k:${k}`}></span>
+                    </span>
+                    {k === 0 && <span class="fm-pop rounded-full bg-emerald-50 px-1.5 text-[9px] font-semibold text-emerald-700 ring-1 ring-emerald-200" style="--k:3">{T.best}</span>}
+                  </li>
+                ))}
+              </ol>
+            )}
+
+            {job === "scale" && (
+              <div class="space-y-1">
+                {verdicts.map((r, k) => (
+                  <div class="fm-in flex items-center gap-2 rounded-md bg-white px-2 py-1 ring-1 ring-brand-100" style={`--k:${k}`}>
+                    <PlatformIcon platform={r.key} class="h-3 w-3 shrink-0" />
+                    <bdi dir="ltr" class="text-[10px] font-semibold tabular-nums text-zinc-600">{r.roas}</bdi>
+                    <span class={`fm-pop ms-auto inline-flex w-11 justify-center rounded-full border text-[9px] font-semibold ${VERDICT_CLASS[r.v]}`} style={`--k:${k + 2}`}>{T[r.v]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {job === "report" && (
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-[10px] ring-1 ring-brand-100">
+                  <span class="fm-live h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  <span class="font-semibold text-zinc-700">{T.link}</span>
+                  <span class="text-zinc-400">· {T.viewOnly}</span>
+                  <span class="fm-pop ms-auto flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500" style="--k:3">
+                    <svg viewBox="0 0 24 24" class="h-2 w-2" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  </span>
+                </div>
+                <div class="flex h-10 items-end gap-1 rounded-md bg-white px-2 pb-1.5 ring-1 ring-brand-100">
+                  {[0.5, 0.8, 0.4, 0.95, 0.65, 0.75].map((h, k) => (
+                    <span class="fm-rise flex-1 rounded-sm bg-brand-300" style={`height:${h * 75}%;--k:${k}`}></span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {job === "fatigue" && (
+              <div class="relative rounded-md bg-white px-2 pb-1 pt-2 ring-1 ring-brand-100">
+                <svg class="block h-10 w-full overflow-visible" viewBox={`0 0 ${FW} ${FH}`} preserveAspectRatio="none" style="direction:ltr">
+                  <path class="fm-line" d={fLine} pathLength="1" fill="none" stroke="#8b73e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                </svg>
+                <span class="fm-pop absolute end-1.5 top-1.5 rounded-full bg-rose-50 px-1.5 text-[9px] font-semibold text-rose-700 ring-1 ring-rose-200" style="--k:5">{T.fatigue}</span>
+              </div>
             )}
           </div>
         </article>
@@ -176,8 +309,8 @@ const art: string[] = [
   .fan::-webkit-scrollbar { display: none; }
   .fcard {
     --rx: 0deg; --ry: 0deg; --tx: 0px; --ty: 0px; --shift: 0px; --sc: 1; --rot: 0deg; --lift: 0px;
-    position: relative; flex: 0 0 78%; scroll-snap-align: center; outline: none;
-    display: flex; flex-direction: column; border-radius: 1.75rem; padding: 1.25rem 1.375rem 1.375rem;
+    position: relative; flex: 0 0 74%; scroll-snap-align: center; outline: none;
+    display: flex; flex-direction: column; border-radius: 1.6rem; padding: 1.1rem 1.1rem 1.1rem;
     background: linear-gradient(165deg, #ffffff 0%, #f7f5fe 55%, #eae5fc 100%);
     border: 1px solid rgba(255, 255, 255, .9);
     box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(87, 56, 201, .06), 0 18px 34px -20px rgba(43, 29, 97, .28);
@@ -185,17 +318,11 @@ const art: string[] = [
     transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
   }
   .fcard:focus-visible { box-shadow: 0 0 0 3px #b0a1ef, 0 18px 34px -20px rgba(43, 29, 97, .28); }
-  .fcard-art { display: block; height: 7.25rem; width: 7.25rem; margin-inline-start: auto; margin-top: -.5rem; overflow: visible; pointer-events: none; }
-  .fcard-title { margin-top: .5rem; font-size: 1.3rem; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: #1e1b4b; }
-  .fcard-body { margin-top: .6rem; font-size: .875rem; line-height: 1.5; color: #71717a; }
-  .fcard-chips { margin-top: auto; padding-top: 1rem; display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
-  .fchip {
-    display: inline-flex; max-width: 100%; align-items: center; gap: .4rem; border-radius: 9999px;
-    background: rgba(255, 255, 255, .92); padding: .3rem .7rem; font-size: .75rem; font-weight: 600; color: #3f3f46;
-    box-shadow: 0 0 0 1px rgba(87, 56, 201, .1), 0 4px 10px -6px rgba(43, 29, 97, .25);
-  }
-  .fchip-approve { position: relative; color: #fff; background: #18181b; }
-  .fa-b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; }
+  .fcard-art { display: block; height: 6rem; width: 6rem; margin-inline-start: auto; margin-top: -.4rem; overflow: visible; pointer-events: none; }
+  .fcard-title { margin-top: .25rem; font-size: 1.15rem; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: #1e1b4b; }
+  .fcard-body { margin-top: .45rem; font-size: .8125rem; line-height: 1.45; color: #71717a; }
+  .fmini { margin-top: auto; padding-top: .85rem; }
+  .fmini > * { border-radius: .75rem; background: rgba(255, 255, 255, .55); padding: .5rem; box-shadow: 0 0 0 1px rgba(87, 56, 201, .08); }
 
   /* layers inside the drawing */
   .art-body, .art-float, .art-shadow { transition: translate .35s ease-out; }
@@ -203,53 +330,90 @@ const art: string[] = [
   .art-float { translate: calc(var(--tx) * 2.2) calc(var(--ty) * 2.2); }
   .art-shadow { translate: calc(var(--tx) * -.5) 0; }
   .art-knob { transition: translate .55s cubic-bezier(.34,1.56,.64,1); }
+  .art-level { transform-box: fill-box; transform-origin: left; transition: scale .9s ease; }
 
-  @keyframes faA { 0%,40% { opacity: 1; } 50%,92% { opacity: 0; } 100% { opacity: 1; } }
-  @keyframes faB { 0%,40% { opacity: 0; } 50%,92% { opacity: 1; } 100% { opacity: 0; } }
-  @keyframes faBg { 0%,40% { background: #18181b; } 50%,92% { background: #059669; } 100% { background: #18181b; } }
-  .fchip-approve { animation: faBg 5s ease-in-out 1s infinite; }
-  .fchip-approve .fa-a { animation: faA 5s ease-in-out 1s infinite; }
-  .fchip-approve .fa-b { animation: faB 5s ease-in-out 1s infinite; }
+  /* ── Pieces of app ──
+     At rest everything sits finished. A playing card runs each piece from its
+     start: the keyframes hold the start state through each element's delay. */
+  .fm-bar { transform-origin: left; }
+  [dir="rtl"] .fm-bar { transform-origin: right; }
+  .fm-rise { transform-origin: bottom; }
+  .fm-line { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .fm-approve { background: #059669; }
+  .fm-lab-a { opacity: 0; }
+  .fm-live { animation: fmLive 1.6s ease-in-out infinite; }
+
+  .fcard.is-playing .fm-bar { animation: fmBar .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--k, 0) * 110ms + 150ms); }
+  .fcard.is-playing .fm-in { animation: fmIn .45s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--k, 0) * 130ms + 100ms); }
+  .fcard.is-playing .fm-pop { animation: fmPop .4s cubic-bezier(.34,1.56,.64,1) both; animation-delay: calc(var(--k, 0) * 130ms + 350ms); }
+  .fcard.is-playing .fm-rise { animation: fmRise .6s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--k, 0) * 80ms + 150ms); }
+  .fcard.is-playing .fm-line { animation: fmLine 1.3s ease-out .15s both; }
+  .fcard.is-playing .fm-approve { animation: fmApprove 4.5s ease-in-out .6s infinite both; }
+  .fcard.is-playing .fm-lab-a { animation: fmLabA 4.5s ease-in-out .6s infinite both; }
+  .fcard.is-playing .fm-lab-b { animation: fmLabB 4.5s ease-in-out .6s infinite both; }
+  .fcard.is-playing .art-level { scale: .55 1; }
+  @keyframes fmBar { from { transform: scaleX(0); } }
+  @keyframes fmIn { from { opacity: 0; transform: translateY(6px); } }
+  @keyframes fmPop { from { opacity: 0; transform: scale(.6); } }
+  @keyframes fmRise { from { transform: scaleY(0); } }
+  @keyframes fmLine { from { stroke-dashoffset: 1; } }
+  @keyframes fmLive { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes fmApprove { 0%,40% { background: #18181b; } 50%,92% { background: #059669; } 100% { background: #18181b; } }
+  @keyframes fmLabA { 0%,40% { opacity: 1; } 50%,92% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes fmLabB { 0%,40% { opacity: 0; } 50%,92% { opacity: 1; } 100% { opacity: 0; } }
 
   /* ── Desktop: an overlapping fan ── */
   @media (min-width: 1024px) {
-    .fan { overflow: visible; justify-content: center; gap: 0; padding: 0 0 1.75rem; margin-inline: 0; }
-    .fcard { --rot: var(--r); --lift: var(--dy); flex: 0 0 15.25rem; min-height: 22rem; cursor: default; }
+    .fan { overflow: visible; justify-content: center; gap: 0; padding: 0 0 2rem; margin-inline: 0; }
+    .fcard { --rot: var(--r); --lift: var(--dy); flex: 0 0 12.5rem; cursor: default; }
     .fcard + .fcard { margin-inline-start: -1.25rem; }
     [dir="rtl"] .fcard { --rot: calc(var(--r) * -1); }
 
-    .fcard-chips { opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .35s ease; }
-    .fchip-approve, .fchip-approve .fa-a, .fchip-approve .fa-b { animation-play-state: paused; }
-
     .fcard:is(:hover, :focus-visible) {
-      --rot: 0deg; --lift: -16px; --sc: 1.06; z-index: 10;
+      --rot: 0deg; --lift: -16px; --sc: 1.07; z-index: 10;
       box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(87, 56, 201, .1), 0 40px 60px -28px rgba(43, 29, 97, .45);
     }
-    .fcard:is(:hover, :focus-visible) .fcard-chips { opacity: 1; transform: none; transition-delay: .08s; }
-    .fcard:is(:hover, :focus-visible) .art-knob { translate: 0 0; }
-    .fcard:is(:hover, :focus-visible) :is(.fchip-approve, .fa-a, .fa-b) { animation-play-state: running; }
     .fcard .art-knob { translate: -34px 0; }
+    .fcard:is(:hover, :focus-visible) .art-knob { translate: 0 0; }
 
     /* neighbours make room */
-    .fcard:is(:hover, :focus-visible) ~ .fcard { --shift: 26px; }
-    .fcard:has(~ .fcard:is(:hover, :focus-visible)) { --shift: -26px; }
-    [dir="rtl"] .fcard:is(:hover, :focus-visible) ~ .fcard { --shift: -26px; }
-    [dir="rtl"] .fcard:has(~ .fcard:is(:hover, :focus-visible)) { --shift: 26px; }
+    .fcard:is(:hover, :focus-visible) ~ .fcard { --shift: 24px; }
+    .fcard:has(~ .fcard:is(:hover, :focus-visible)) { --shift: -24px; }
+    [dir="rtl"] .fcard:is(:hover, :focus-visible) ~ .fcard { --shift: -24px; }
+    [dir="rtl"] .fcard:has(~ .fcard:is(:hover, :focus-visible)) { --shift: 24px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .fcard, .fcard-chips, .art-body, .art-float, .art-shadow, .art-knob { transition: none !important; }
-    .fchip-approve, .fa-a, .fa-b { animation: none !important; }
+    .fcard, .art-body, .art-float, .art-shadow, .art-knob, .art-level { transition: none !important; }
+    .fcard *, .fcard.is-playing * { animation: none !important; }
   }
 </style>
 
 <script>
-  // The lifted card leans toward the pointer and its drawing drifts on its own
-  // layer. Mouse only, and off when motion is reduced.
-  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    document.querySelectorAll<HTMLElement>("[data-fcard]").forEach((card) => {
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wide = () => window.innerWidth >= 1024;
+
+  document.querySelectorAll<HTMLElement>("[data-fcard]").forEach((card) => {
+    // Restarting the class restarts every animation inside the card.
+    const play = () => {
+      if (still) return;
+      card.classList.remove("is-playing");
+      void card.offsetWidth;
+      card.classList.add("is-playing");
+    };
+    const stop = () => card.classList.remove("is-playing");
+
+    // Desktop: play on point or focus, and lean toward the pointer.
+    card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && wide()) play(); });
+    card.addEventListener("focus", () => { if (wide()) play(); });
+    card.addEventListener("pointerleave", () => {
+      if (wide()) stop();
+      ["--rx", "--ry", "--tx", "--ty"].forEach((p) => card.style.removeProperty(p));
+    });
+    card.addEventListener("blur", () => { if (wide()) stop(); });
+    if (!still) {
       card.addEventListener("pointermove", (e) => {
-        if (e.pointerType !== "mouse" || window.innerWidth < 1024) return;
+        if (e.pointerType !== "mouse" || !wide()) return;
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
@@ -258,9 +422,22 @@ const art: string[] = [
         card.style.setProperty("--tx", `${(x * 5).toFixed(2)}px`);
         card.style.setProperty("--ty", `${(y * 4).toFixed(2)}px`);
       });
-      card.addEventListener("pointerleave", () => {
-        ["--rx", "--ry", "--tx", "--ty"].forEach((p) => card.style.removeProperty(p));
-      });
-    });
+    }
+  });
+
+  // Phones and tablets: a card plays when it is swiped into view.
+  if (!still && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (wide()) return;
+      for (const e of entries) {
+        const card = e.target as HTMLElement;
+        if (e.isIntersecting) {
+          if (!card.classList.contains("is-playing")) card.classList.add("is-playing");
+        } else {
+          card.classList.remove("is-playing");
+        }
+      }
+    }, { threshold: 0.7 });
+    document.querySelectorAll("[data-fcard]").forEach((c) => io.observe(c));
   }
 </script>

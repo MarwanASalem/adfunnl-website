@@ -188,6 +188,7 @@ const socials = [
 ];
 
 const isCurrent = (href: string) => basePath === href.replace(/\/+$/, "");
+const isHome = basePath === "" || basePath === "/";
 const forSectionActive = basePath === "/for" || basePath.startsWith("/for/");
 
 // ── Search and share metadata ─────────────────────────────────────────
@@ -321,6 +322,8 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
 
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
+          <a href={L("/")} aria-current={isHome ? "page" : undefined}
+             class:list={["hover:text-zinc-900 transition", isHome && "text-zinc-900"]}>{T.home}</a>
           <a href={L("/integrations")} aria-current={isCurrent("/integrations") ? "page" : undefined}
              class:list={["hover:text-zinc-900 transition", isCurrent("/integrations") && "text-zinc-900"]}>{T.integrations}</a>
           <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
@@ -403,6 +406,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
           <!-- Mobile menu -->
           <div class="hidden peer-checked:block md:!hidden absolute inset-x-0 top-full border-b border-zinc-100 bg-white shadow-lg">
             <nav class="mx-auto max-w-6xl px-6 py-3 flex flex-col gap-0.5 text-sm font-medium text-zinc-700">
+              <a href={L("/")}             class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.home}</a>
               <a href={L("/integrations")} class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.integrations}</a>
               <a href={L("/pricing")}       class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.pricing}</a>
               <!-- AdFunnl For folds into one row on phones; tap to open it. -->

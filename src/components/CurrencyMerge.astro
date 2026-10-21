@@ -53,7 +53,7 @@ const TOTAL = cards.reduce((n, c) => n + c.sar, 0);
 const fmt = (n: number) => n.toLocaleString("en-US");
 ---
 
-<div class="cm reveal mt-[72px]" data-cm data-total={TOTAL}>
+<div class="cm reveal mt-14 sm:mt-[72px]" data-cm data-total={TOTAL}>
   <div class="cm-rings" aria-hidden="true"></div>
 
   <div class="relative grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">

@@ -14,13 +14,12 @@ import type { Copy } from "../components/IntegrationsPage.astro";
 //
 // CAPABILITY WARNINGS for anyone editing this page (docs/what-ships.md,
 // connectors checked in the app on 21 October 2026):
-//   - Salla and Zid are built but marked "Coming soon" in the app (since 25
-//     September 2026). Not connectable today, so they sit under Coming next.
-//   - Easy Orders is hidden from the app's Connections page until their API
-//     has a bulk orders endpoint. The owner counts it as coming soon, not
-//     dropped (21 October 2026), so it sits under Coming next too.
-//   - LinkedIn Ads, Google Analytics and HubSpot are invite-only betas behind
-//     feature flags. Coming next, never "available".
+//   - Salla, Zid, Easy Orders, LinkedIn Ads, Google Analytics and HubSpot
+//     are not open to everyone yet (what-ships.md has why). Each sits in its
+//     own group with `soon: true`: greyed, tagged "Coming soon", nothing else.
+//   - Never say on the page what a connector is waiting on, or that it is
+//     invite only or in testing. The roadmap's blockers are not for customers
+//     or competitors. No separate "coming next" section either.
 //   - Shopify and Bosta carry the app's own Beta pill.
 //   - Ad control labels are the owner's: TikTok and Snapchat Live, Meta and
 //     Google Beta.
@@ -30,10 +29,10 @@ import type { Copy } from "../components/IntegrationsPage.astro";
 const copy: Copy = {
   hero: {
     heading: "Every source your reporting needs, connected once",
-    body: "Sign in to each ad platform and store with its own login, one time. AdFunnl pulls the numbers on a schedule, converts them into one reporting currency and puts them side by side. Below is what connects today, what each source brings in, and what is coming next.",
+    body: "Sign in to each ad platform and store with its own login, one time. AdFunnl pulls the numbers on a schedule, converts them into one reporting currency and puts them side by side. Below is what connects today, what each source brings in, and what is coming soon.",
     cta: "Start free",
     today: "Connects today",
-    next: "Coming next",
+    next: "Coming soon",
   },
   groups: [
     {
@@ -45,6 +44,7 @@ const copy: Copy = {
         { icon: "tiktok", name: "TikTok", body: "Campaign, ad group and ad results.", tag: "AI ad control · Live" },
         { icon: "snapchat", name: "Snapchat", body: "Campaign, ad set and ad results, with breakdowns by age, gender, country and region.", tag: "AI ad control · Live" },
         { icon: "google_ads", name: "Google Ads", body: "Campaign results and spend, next to every other platform.", tag: "AI ad control · Beta" },
+        { icon: "linkedin", name: "LinkedIn Ads", body: "Campaign results and spend.", soon: true },
       ],
       link: { label: "What AI ad control can change on each platform", href: "/ai-ad-control" },
     },
@@ -55,14 +55,19 @@ const copy: Copy = {
       rows: [
         { icon: "shopify", name: "Shopify", pill: "Beta", body: "Products and daily product sales, so ROAS goes down to each product and category, and store ROAS sits next to blended ROAS." },
         { icon: "bosta", name: "Bosta", pill: "Beta", body: "A daily snapshot of your deliveries." },
+        { icon: "salla", name: "Salla", body: "Store orders and revenue.", soon: true },
+        { icon: "zid", name: "Zid", body: "Daily store revenue.", soon: true },
+        { icon: "easy_orders", name: "Easy Orders", body: "Store orders.", soon: true },
       ],
     },
     {
       direction: "Into AdFunnl",
-      heading: "Your own numbers",
-      intro: "For anything the platforms do not report.",
+      heading: "Your site, email and own numbers",
+      intro: "What happens after the click, and anything the platforms do not report.",
       rows: [
         { icon: "google_sheets", name: "Google Sheets", body: "Import a sheet as a data source. Import only: AdFunnl never writes to it." },
+        { icon: "google_analytics", name: "Google Analytics", body: "Sessions and on-site results from GA4.", soon: true },
+        { icon: "hubspot", name: "HubSpot", body: "New newsletter subscribers, and how each send performed.", soon: true },
       ],
     },
     {
@@ -73,20 +78,6 @@ const copy: Copy = {
         { icon: "assistant", name: "Claude and ChatGPT", body: "Add AdFunnl as an MCP server and ask about your data in plain words. With AI ad control, approve changes to your ads from the chat. Works with any MCP client." },
         { icon: "looker", name: "Looker Studio", body: "A community connector that reads your workspace with an API token." },
         { icon: "share", name: "Your clients", body: "A view-only link that is current whenever they open it, or a PDF with a frozen snapshot of what you sent." },
-      ],
-    },
-    {
-      direction: "Coming next",
-      heading: "Built and being tested",
-      intro: "Each one opens to everyone once it is ready. No dates until then.",
-      pending: true,
-      rows: [
-        { icon: "salla", name: "Salla", body: "Store orders and revenue.", tag: "Opening soon" },
-        { icon: "zid", name: "Zid", body: "Daily store revenue.", tag: "Opening soon" },
-        { icon: "easy_orders", name: "Easy Orders", body: "Store orders.", tag: "Waiting on Easy Orders" },
-        { icon: "linkedin", name: "LinkedIn Ads", body: "Campaign results and spend.", tag: "Waiting on LinkedIn" },
-        { icon: "google_analytics", name: "Google Analytics", body: "Sessions and on-site results from GA4.", tag: "Waiting on Google" },
-        { icon: "hubspot", name: "HubSpot", body: "New newsletter subscribers, and how each send performed.", tag: "Invite only" },
       ],
     },
   ],

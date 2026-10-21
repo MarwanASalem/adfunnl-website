@@ -20,6 +20,8 @@ export interface Row {
   pill?: string;
   /** Right-hand status, e.g. "AI ad control · Live". */
   tag?: string;
+  /** Not open yet: drawn greyed and tagged with `hero.next`, nothing more. */
+  soon?: boolean;
 }
 export interface Group {
   /** Direction of the data: into AdFunnl or out of it. */
@@ -28,8 +30,6 @@ export interface Group {
   intro: string;
   rows: Row[];
   link?: { label: string; href: string };
-  /** Draw the icons greyed, for sources that are not open yet. */
-  pending?: boolean;
 }
 export interface Copy {
   hero: { heading: string; body: string; cta: string; today: string; next: string };
@@ -53,8 +53,9 @@ const GLYPHS: Record<string, string> = {
   share: `<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>`,
 };
 
-const today = copy.groups.filter((g) => !g.pending).flatMap((g) => g.rows).filter((r) => !GLYPHS[r.icon]);
-const next = copy.groups.filter((g) => g.pending).flatMap((g) => g.rows);
+const sources = copy.groups.flatMap((g) => g.rows).filter((r) => !GLYPHS[r.icon]);
+const today = sources.filter((r) => !r.soon);
+const next = sources.filter((r) => r.soon);
 const tagFont = ar ? "" : "font-mono";
 ---
 
@@ -111,25 +112,26 @@ const tagFont = ar ? "" : "font-mono";
             <li class="flex gap-4 py-5 first:pt-0 sm:items-start">
               <span class:list={[
                 "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border",
-                g.pending ? "border-dashed border-zinc-300 bg-zinc-50" : "border-zinc-200 bg-white",
+                r.soon ? "border-dashed border-zinc-300 bg-zinc-50" : "border-zinc-200 bg-white",
               ]}>
                 {GLYPHS[r.icon]
                   ? <svg viewBox="0 0 24 24" class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={GLYPHS[r.icon]} />
-                  : <PlatformIcon platform={r.icon} class={g.pending ? "h-6 w-6 opacity-50 grayscale" : "h-6 w-6"} />}
+                  : <PlatformIcon platform={r.icon} class={r.soon ? "h-6 w-6 opacity-50 grayscale" : "h-6 w-6"} />}
               </span>
               <div class="min-w-0 flex-1 sm:flex sm:gap-6">
                 <div class="min-w-0 flex-1">
-                  <p class="flex flex-wrap items-center gap-2 font-semibold text-zinc-900">
+                  <p class:list={["flex flex-wrap items-center gap-2 font-semibold", r.soon ? "text-zinc-500" : "text-zinc-900"]}>
                     {r.name}
                     {r.pill && <span class="rounded bg-brand-50 px-1.5 py-px text-[11px] font-bold text-brand-700">{r.pill}</span>}
                   </p>
-                  <p class="mt-1 text-sm leading-relaxed text-zinc-500">{r.body}</p>
+                  <p class:list={["mt-1 text-sm leading-relaxed", r.soon ? "text-zinc-400" : "text-zinc-500"]}>{r.body}</p>
                 </div>
-                {r.tag && (
+                {(r.tag || r.soon) && (
                   <p class:list={[
-                    "mt-2 shrink-0 text-xs text-zinc-500 sm:mt-1 sm:text-end",
+                    "mt-2 shrink-0 text-xs sm:mt-1 sm:text-end",
+                    r.soon ? "text-zinc-400" : "text-zinc-500",
                     tagFont,
-                  ]}>{r.tag}</p>
+                  ]}>{r.soon ? copy.hero.next : r.tag}</p>
                 )}
               </div>
             </li>

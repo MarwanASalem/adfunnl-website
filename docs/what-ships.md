@@ -12,6 +12,10 @@ itself, and nothing in the app tells this file that it changed.
 put it on the website. If you think it should be here, go and check the app, then
 add it with the date you checked.
 
+**Not live yet?** The reasons this file gives (an approval, an API gap, invite
+only) are for writers, never for the page. On the site an unreleased
+connector is only "Coming soon", greyed out in its own group.
+
 **Shipped something new?** Tell me the feature and I will verify it in the app
 and add it. Or say "refresh what-ships" and I will re-read the app repo and
 update this whole file.

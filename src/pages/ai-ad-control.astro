@@ -24,8 +24,10 @@ const APP_URL = "https://app.adfunnl.com";
 // control, checked 14 October 2026):
 //   - Labels are the owner's: TikTok and Snapchat Live, Meta and Google Beta.
 //   - Google (since 15 October 2026): everything in the table, budgets on
-//     campaigns only (Google keeps budgets there). New campaigns are Search
-//     and Performance Max; videos must already be on YouTube.
+//     campaigns only (Google keeps budgets there). New campaigns are Search,
+//     Shopping, Display, Demand Gen and Performance Max (checked 21 October
+//     2026); videos must already be on YouTube. Audiences on Google are
+//     website-visitor lists only.
 //   - On Meta, new campaigns, new ads and existing posts as ads are early
 //     access until Meta approves pages_manage_ads. Never a plain tick.
 //   - Platform order is fixed: Meta, TikTok, Snapchat and Google.
@@ -100,12 +102,13 @@ const table = {
     { label: "Duplicate, rename and delete", cells: [true, true, true, true] },
     { label: "Edit audiences", cells: [true, true, true, "Locations and languages"] },
     { label: "Edit ad text and URL tracking tags", cells: [true, true, true, true] },
-    { label: "Launch new campaigns from Google Drive", cells: ["early", true, true, "Search and Performance Max"] },
+    { label: "Launch new campaigns from Google Drive", cells: ["early", true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
     { label: "Add new ads to running campaigns", cells: ["early", true, true, true] },
     { label: "Keywords, negative keywords and search terms", cells: [false, false, false, true] },
     { label: "Turn existing posts into ads", cells: ["early", true, false, false] },
     { label: "Catalog ads and call ads", cells: [false, false, true, false] },
-    { label: "Automated rules, budget schedules and audiences", cells: [true, false, false, false] },
+    { label: "Automated rules and budget schedules", cells: [true, false, false, false] },
+    { label: "Create audiences", cells: [true, true, true, "Website visitors"] },
   ] as { label: string; cells: Cell[] }[],
   yes: "Yes",
   no: "No",
@@ -140,7 +143,7 @@ const faqs = {
   heading: "Questions",
   items: [
     { q: "Can it change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat." },
-    { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search and Performance Max campaigns; videos for Google must already be on YouTube. On Meta a few actions are early access, marked in the table above. Both are still gaining actions." },
+    { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. On Meta a few actions are early access, marked in the table above. Both are still gaining actions." },
     { q: "Which assistants does it work with?", a: "Claude, ChatGPT, and any other AI assistant that can connect to an MCP server." },
     { q: "Can I connect it read-only?", a: "Yes. Untick \"Also allow it to make changes\" on the approval screen, and it can only read your numbers." },
     { q: "Can my team see what it changed?", a: "Yes. Every change it makes is written to the brand's Change Log, with what changed and when." },

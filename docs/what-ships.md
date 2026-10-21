@@ -1,6 +1,6 @@
 # What AdFunnl actually does
 
-**Last checked against the app: 18 August 2026. Ad control checked 14 October 2026.**
+**Last checked against the app: 18 August 2026. Ad control checked 14 October 2026, Google and audiences rechecked 21 October 2026.**
 
 This is the list of what the website is allowed to claim. It exists because the
 website repo and the app repo are not connected in any way: nothing here updates
@@ -94,6 +94,8 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Ad control, new campaigns and ads | TikTok and Snapchat: new campaigns from videos and images on Google Drive, new ad groups or ad sets and new ads added to running campaigns, everything created switched off. TikTok can also run posts already on the profile as ads. Meta: the same tools exist (new campaigns, new ads in an existing ad set, existing Facebook and Instagram posts as ads) but are **early access only**, see "Do not claim". Checked 14 October 2026 in `ad_management/tiktok_creation.rb`, `ad_management/snapchat_creation.rb`, `ad_management/creation.rb` |
 | Ad control, Snapchat extras | Catalog ads (with catalog templates) and call ads. Checked 14 October 2026 in `ad_management/snapchat_catalogs.rb` and `snapchat_creation.rb` |
 | Ad control, Meta extras | Automated rules, budget schedules, custom and lookalike audiences, custom conversions. Checked 14 October 2026 in `ad_management/automation.rb`, `ad_management/audiences.rb` and `ad_management/account_tools.rb` |
+| Ad control, Google | Checked 21 October 2026 in `ad_management/google_creation.rb` and `ad_management/audiences.rb`. New campaigns (all created paused): Search, Shopping, Display, Demand Gen and Performance Max, from the user's own text and Drive images; videos must already be on YouTube. Add ad groups and ads to Search campaigns. Copy Search and Performance Max campaigns. Edit campaign locations, languages, target CPA or ROAS, ad group bids, responsive search ad headlines, descriptions and link. Keywords, negative keywords and search terms. Sitelinks and callouts. Conversion goals. Website-visitor audiences only (no customer lists or lookalikes on Google). Budgets and status stay campaign level |
+| Ad control, audiences | Create audiences from Claude or ChatGPT: Meta (custom, lookalike), TikTok (website, ad engagement, lead form, lookalike), Snapchat (website visitors by Snap Pixel, customer lists, lookalikes), Google (website visitors only). Checked 21 October 2026 in `ad_management/audiences.rb`, `tiktok_audiences.rb`, `snapchat_audiences.rb`. Automated rules and budget schedules remain Meta only |
 | Ad control, read-only option | The approval screen has a box, "Also allow it to make changes". Untick it and the assistant connects read-only. Checked 14 October 2026 in `api/app/views/doorkeeper/authorizations/new.html.erb` |
 
 ## Trust
@@ -128,7 +130,7 @@ not built. Each one has been checked.
 | **Pushing data out to warehouses or Sheets** | No push adapters exist. The tables were designed for it and the code was never written. Data out is pull-only: Looker Studio and share links. Google Sheets is import only |
 | **Campaign control on Snapchat or Google, inside the app** | Changing status and budget from inside the AdFunnl dashboard is Meta and TikTok only. From Claude or ChatGPT (ad control, above) it covers every ad platform. Keep the two apart |
 | **New Meta campaigns or ads from Claude or ChatGPT, for everyone** | Creating Meta campaigns, adding new Meta ads and turning existing posts into Meta ads are early access only, until Meta approves the `pages_manage_ads` permission. Show them with an early-access footnote, never a plain tick. Checked 14 October 2026 in `api/app/controllers/api/v1/oauth_controller.rb` |
-| **More than on and off and budgets on Google** | Google ad control is pause, turn on and budgets, at campaign level only. No duplicating, editing, audiences or new campaigns. Checked 14 October 2026 |
+| **Google status and budgets below campaign level** | On Google, pause, turn on and budgets are campaigns only. Superseded 21 October 2026: Google now also has duplicate, rename, delete, edit (locations, languages, headlines, descriptions, link, bids), new campaigns, keywords and website-visitor audiences, see "Ad control, Google" above |
 | **A time it takes to connect** | Nothing measures how long connecting Claude or ChatGPT takes. Do not write "about a minute" |
 | **Audience breakdowns on every platform** | Age, gender, device and location come from Meta and Snapchat only. TikTok and Google connectors fetch no breakdown rows. Checked 10 September 2026 |
 | **Any customer name, testimonial, or measured result** | We have published none. Not a capability question, a standing rule |

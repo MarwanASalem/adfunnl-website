@@ -135,8 +135,6 @@ const momLinePts = momBars.map((b, i) => {
 const momLine = momLinePts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
 const momBaseY = MOM_PT + momPlotH;
 
-// Shared cell classes for the two dark-section tables.
-const numCell = "px-3 py-2.5 text-end tabular-nums lining-nums text-zinc-600";
 // Assistant answers. Rendered once invisibly so each chat card reserves its
 // full height, then typed out over that space by the script below.
 // ── Ask, then let it act (ad control over MCP) ──
@@ -313,76 +311,6 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
                     <td class="py-3 ps-3 text-end">
                       <span class="verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium" data-verdict={r.verdict}></span>
                     </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ad-level table widget, with the app's conditional formatting -->
-      <div class="reveal mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40">
-        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
-          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-          <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
-          <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>عنصر جدول · مستوى الإعلان · التقرير الرئيسي
-          </div>
-          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">تنسيق شرطي</span>
-        </div>
-        <div class="p-5 sm:p-6">
-          <div class="mb-3 flex items-center justify-between gap-4">
-            <div>
-              <p class="text-sm font-semibold text-zinc-800">حتى مستوى الإعلان الواحد</p>
-              <p class="mt-0.5 text-xs text-zinc-400">مستوى الحملة والمجموعة الإعلانية والإعلان، مع الـ Creative داخل الصف</p>
-            </div>
-            <p class="shrink-0 text-xs text-zinc-400">مرتّب حسب الإنفاق</p>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full min-w-[700px] text-start text-sm">
-              <thead>
-                <tr class="border-b border-zinc-100 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
-                  <th class="py-2 pe-3 font-semibold">الإعلان</th>
-                  <th class="py-2 px-3 font-semibold">الصورة</th>
-                  <th class="py-2 px-3 font-semibold">الحالة</th>
-                  <th class="py-2 px-3 font-semibold">الحملة</th>
-                  <th class="py-2 px-3 text-end font-semibold">الإنفاق</th>
-                  <th class="py-2 px-3 text-end font-semibold">المشتريات</th>
-                  <th class="bg-emerald-50/80 py-2 px-3 text-end font-semibold text-emerald-700">تكلفة الشراء</th>
-                  <th class="py-2 ps-3 text-end font-semibold">ROAS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {adRows.map((a) => (
-                  <tr class="border-b border-zinc-50 last:border-0">
-                    <td class="py-2.5 pe-3 font-medium text-zinc-700">
-                      <span class="flex items-center gap-2">
-                        <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
-                          <PlatformIcon platform={a.key} class="h-[14px] w-[14px]" />
-                        </span>
-                        {a.ad}
-                      </span>
-                    </td>
-                    <td class="px-3 py-2.5">
-                      <span class="relative flex h-10 w-8 items-end justify-center overflow-hidden rounded bg-zinc-200 ring-1 ring-zinc-200/90">
-                        <img src={a.photo} alt="" loading="lazy" width="32" height="40" class="absolute inset-0 h-full w-full object-cover" />
-                        {a.video && (
-                          <span class="absolute end-0.5 top-0.5 flex h-[11px] w-[11px] items-center justify-center rounded-full bg-black/50">
-                            <svg class="ms-px h-1.5 w-1.5" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                          </span>
-                        )}
-                      </span>
-                    </td>
-                    <td class="px-3 py-2.5">
-                      <span class="block h-2 w-2 rounded-full bg-brand-500" title="نشط" aria-label="نشط"></span>
-                    </td>
-                    <td class="px-3 py-2.5 text-xs text-zinc-600"><bdi dir="ltr">{a.campaign}</bdi></td>
-                    <td class={numCell}><bdi dir="ltr">{a.spend}</bdi></td>
-                    <td class={numCell}><bdi dir="ltr">{a.purchases}</bdi></td>
-                    <td class="bg-emerald-50/80 px-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-emerald-700"><bdi dir="ltr">{a.cpp}</bdi></td>
-                    <td class="ps-3 py-2.5 text-end font-semibold tabular-nums lining-nums text-zinc-900"><bdi dir="ltr">{a.roas}</bdi></td>
                   </tr>
                 ))}
               </tbody>

@@ -321,6 +321,9 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
 
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
+          <a href={L("/integrations")} aria-current={isCurrent("/integrations") ? "page" : undefined}
+             class:list={["hover:text-zinc-900 transition", isCurrent("/integrations") && "text-zinc-900"]}>{T.integrations}</a>
+          <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
           <!-- AdFunnl For: persona mega-menu (data-driven, see `personas`) -->
           <div class="relative group">
             <button
@@ -368,9 +371,6 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             </div>
           </div>
 
-          <a href={L("/integrations")} aria-current={isCurrent("/integrations") ? "page" : undefined}
-             class:list={["hover:text-zinc-900 transition", isCurrent("/integrations") && "text-zinc-900"]}>{T.integrations}</a>
-          <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
           <a href={L("/blog")} aria-current={basePath.startsWith("/blog") ? "page" : undefined}
              class:list={["hover:text-zinc-900 transition", basePath.startsWith("/blog") && "text-zinc-900"]}>{T.blog}</a>
         </nav>
@@ -402,33 +402,32 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
 
           <!-- Mobile menu -->
           <div class="hidden peer-checked:block md:!hidden absolute inset-x-0 top-full border-b border-zinc-100 bg-white shadow-lg">
-            <nav class="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1 text-sm font-medium text-zinc-700">
-              <p class="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{T.forMenu}</p>
-              {personas.map((p) => (
-                <a
-                  href={L(p.href)}
-                  aria-current={isCurrent(p.href) ? "page" : undefined}
-                  class:list={["flex items-start gap-3 rounded-lg px-3 py-3 hover:bg-zinc-50", isCurrent(p.href) && "bg-brand-50/70"]}
-                >
-                  <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-white">
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
-                  </span>
-                  <span class="min-w-0">
-                    <span class="flex flex-wrap items-center gap-2">
-                      <span class={isCurrent(p.href) ? "text-brand-700" : ""}>{p.label}</span>
-                      {isCurrent(p.href) && (
-                        <span class="shrink-0 whitespace-nowrap rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">{T.youreHere}</span>
-                      )}
-                    </span>
-                    <span class="mt-0.5 block text-xs font-normal leading-relaxed text-zinc-500">{p.blurb}</span>
-                  </span>
-                </a>
-              ))}
-              <div class="my-1 border-t border-zinc-100"></div>
-              <a href={L("/integrations")} class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.integrations}</a>
-              <a href={L("/pricing")}       class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.pricing}</a>
-              <a href={L("/blog")}          class="rounded-lg px-3 py-3 hover:bg-zinc-50">{T.blog}</a>
-              <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-4">
+            <nav class="mx-auto max-w-6xl px-6 py-3 flex flex-col gap-0.5 text-sm font-medium text-zinc-700">
+              <a href={L("/integrations")} class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.integrations}</a>
+              <a href={L("/pricing")}       class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.pricing}</a>
+              <!-- AdFunnl For folds into one row on phones; tap to open it. -->
+              <details class="group/for" open={forSectionActive}>
+                <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 hover:bg-zinc-50 [&::-webkit-details-marker]:hidden">
+                  {T.forMenu}
+                  <svg class="h-4 w-4 text-zinc-400 transition-transform group-open/for:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg>
+                </summary>
+                <div class="flex flex-col gap-0.5 pb-1 ps-3">
+                  {personas.map((p) => (
+                    <a
+                      href={L(p.href)}
+                      aria-current={isCurrent(p.href) ? "page" : undefined}
+                      class:list={["flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-zinc-50", isCurrent(p.href) && "bg-brand-50/70 text-brand-700"]}
+                    >
+                      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white">
+                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
+                      </span>
+                      {p.label}
+                    </a>
+                  ))}
+                </div>
+              </details>
+              <a href={L("/blog")}          class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.blog}</a>
+              <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-3">
                 <a href={`${APP_URL}/login`}  class="rounded-lg border border-zinc-200 px-4 py-2.5 text-center hover:bg-zinc-50">{T.signIn}</a>
                 <a href={`${APP_URL}/signup`} class="rounded-lg bg-brand-600 px-4 py-2.5 text-center font-semibold text-white hover:bg-brand-700">{T.startFree}</a>
               </div>

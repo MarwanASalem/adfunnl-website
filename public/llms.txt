@@ -1,12 +1,12 @@
 # AdFunnl
 
-> AdFunnl is a marketing analytics and ad reporting platform for agencies, media buyers and performance marketers. It connects ad accounts on Meta, TikTok, Snapchat and Google with store revenue from Shopify, Salla and Zid, converts everything into one reporting currency, and shows it in one live dashboard that can be shared with clients as a view-only link or a PDF.
+> AdFunnl is a marketing analytics and ad reporting platform for agencies, media buyers and performance marketers. It connects ad accounts on Meta, TikTok, Snapchat and Google with store revenue from Shopify, converts everything into one reporting currency, and shows it in one live dashboard that can be shared with clients as a view-only link or a PDF.
 
 AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in Alexandria, Egypt. The app and this site are available in English and Arabic. There is a free plan, and paid plans are priced in USD and EGP.
 
 ## What it does
 
-- Connect: Meta, TikTok, Snapchat and Google Ads, plus Shopify, Salla, Zid, Bosta, Easy Orders and Google Sheets import. Data syncs on a schedule set by the plan, from every 12 hours down to hourly.
+- Connect: Meta, TikTok, Snapchat and Google Ads, plus Shopify, Bosta and Google Sheets import. Coming next: Salla, Zid and Easy Orders stores, LinkedIn Ads, Google Analytics and HubSpot. Data syncs on a schedule set by the plan, from every 12 hours down to hourly.
 - Visualize: a freeform drag-and-drop dashboard builder with KPI tiles, charts, tables, funnels, geo maps and creative galleries. Blended ROAS, spend, purchases and revenue across platforms, product-level ROAS from store data, and comparison against the prior period.
 - Creative analysis: ads ranked by a composite score (Best Creatives), ad fatigue tracking, and hook and hold video retention on Meta.
 - Pulse: watches accounts against rules you set and flags them Scale, Hold or Cut.

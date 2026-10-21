@@ -16,7 +16,9 @@ import type { Copy } from "../components/IntegrationsPage.astro";
 // connectors checked in the app on 21 October 2026):
 //   - Salla and Zid are built but marked "Coming soon" in the app (since 25
 //     September 2026). Not connectable today, so they sit under Coming next.
-//   - Easy Orders is hidden from the app's Connections page. Not listed.
+//   - Easy Orders is hidden from the app's Connections page until their API
+//     has a bulk orders endpoint. The owner counts it as coming soon, not
+//     dropped (21 October 2026), so it sits under Coming next too.
 //   - LinkedIn Ads, Google Analytics and HubSpot are invite-only betas behind
 //     feature flags. Coming next, never "available".
 //   - Shopify and Bosta carry the app's own Beta pill.
@@ -81,6 +83,7 @@ const copy: Copy = {
       rows: [
         { icon: "salla", name: "Salla", body: "Store orders and revenue.", tag: "Opening soon" },
         { icon: "zid", name: "Zid", body: "Daily store revenue.", tag: "Opening soon" },
+        { icon: "easy_orders", name: "Easy Orders", body: "Store orders.", tag: "Waiting on Easy Orders" },
         { icon: "linkedin", name: "LinkedIn Ads", body: "Campaign results and spend.", tag: "Waiting on LinkedIn" },
         { icon: "google_analytics", name: "Google Analytics", body: "Sessions and on-site results from GA4.", tag: "Waiting on Google" },
         { icon: "hubspot", name: "HubSpot", body: "New newsletter subscribers, and how each send performed.", tag: "Invite only" },

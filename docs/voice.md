@@ -253,8 +253,8 @@ so a later edit does not flatten them back into feature copy.
 ### R14. Never put a number on the platforms
 
 There is no count. The ad platforms are Meta, TikTok, Snapchat and Google
-today, and the connector list also carries Shopify, Salla, Bosta, Easy Orders
-and Google Sheets. More get added, and a number in the copy freezes the product
+today, and the connector list also carries Shopify, Bosta and Google Sheets,
+with Salla, Zid and Easy Orders coming. More get added, and a number in the copy freezes the product
 at the moment it was written.
 
 ```

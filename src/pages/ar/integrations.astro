@@ -6,8 +6,8 @@ import type { Copy } from "../../components/IntegrationsPage.astro";
 // Arabic twin of /integrations. The brief and the capability warnings live in
 // the English page's frontmatter and apply here word for word. Terms follow
 // docs/voice.md section 7: platform names, ROAS, MCP, API, Beta, Live and the
-// plan names stay in English; Salla and Bosta are written as the app writes
-// them.
+// plan names stay in English; Salla and Bosta are written in Arabic, Zid and
+// Easy Orders in Latin script, as the app writes them.
 
 const copy: Copy = {
   hero: {
@@ -64,7 +64,8 @@ const copy: Copy = {
       pending: true,
       rows: [
         { icon: "salla", name: "سلة", body: "طلبات المتجر وإيراداته.", tag: "قريبًا" },
-        { icon: "zid", name: "زد", body: "إيرادات المتجر اليومية.", tag: "قريبًا" },
+        { icon: "zid", name: "Zid", body: "إيرادات المتجر اليومية.", tag: "قريبًا" },
+        { icon: "easy_orders", name: "Easy Orders", body: "طلبات المتجر.", tag: "بانتظار Easy Orders" },
         { icon: "linkedin", name: "LinkedIn Ads", body: "نتائج الحملات والإنفاق.", tag: "بانتظار LinkedIn" },
         { icon: "google_analytics", name: "Google Analytics", body: "الزيارات والنتائج داخل موقعك من GA4.", tag: "بانتظار Google" },
         { icon: "hubspot", name: "HubSpot", body: "المشتركون الجدد في النشرة البريدية، وأداء كل إرسال.", tag: "بدعوة فقط" },

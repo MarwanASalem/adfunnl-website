@@ -42,7 +42,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Zid | Daily store revenue over OAuth, same shape as Salla. **Coming soon in the app, not connectable**, same as Salla. Checked 21 October 2026 in `web/src/lib/beta.ts` |
 | Bosta | Daily fulfilment snapshot. Beta pill in the app |
 | Shopify status | Beta pill in the app (`BETA_SOURCES`). Checked 21 October 2026 |
-| Easy Orders | Connector exists, but **hidden from the Connections page** since 19 June 2026 until their API has a bulk orders endpoint. Do not list it as connectable. Checked 21 October 2026 |
+| Easy Orders | Orders. **Coming soon, not connectable**: the connector exists but is hidden from the Connections page since 19 June 2026, until their API has a bulk orders endpoint. The owner counts it as coming soon, not dropped (21 October 2026). Write it with Salla and Zid under "coming next". Checked 21 October 2026 |
 | Google Sheets | Manual import as a data source, one direction, in only |
 | LinkedIn Ads, Google Analytics, HubSpot | **Invite-only betas** behind feature flags, not open to everyone. LinkedIn: campaign results, waiting on LinkedIn's API approval. Google Analytics (GA4): sessions and on-site results, waiting on Google's verification of the analytics scope. HubSpot: newsletter subscribers and per-send performance. Write them as "coming next" only. Checked 21 October 2026 in `api/lib/connectors/` and `ConnectionsPage.tsx` |
 | Sync cadence | Set by the plan: every 12 hours on Free and Solo, 6 on Growth, hourly on Agency (`refresh_window_hours` in `api/app/models/plan_config.rb`, checked 21 October 2026). Full backfill of 90 days on a new account, last 3 days re-fetched every sync for late conversions |

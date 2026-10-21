@@ -9,6 +9,7 @@ import PlatformIcon from "../../components/PlatformIcon.astro";
 import DataFlow from "../../components/DataFlow.astro";
 import AnalysisStages from "../../components/AnalysisStages.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
+import UseCases from "../../components/UseCases.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -251,6 +252,9 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
 
   <!-- ============== DATA ANALYSIS STAGES (animated time bar) ============== -->
   <AnalysisStages locale="ar" {...analysisStages} />
+
+  <!-- ============== USE CASES (accordion of mini screens) ============== -->
+  <UseCases locale="ar" sectionId="use-cases" />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">

@@ -1,0 +1,334 @@
+---
+// Five jobs AdFunnl takes off a media buyer's week, as one row of compact cards.
+//
+// On desktop the row is an accordion: one card is open and the others fold down
+// to a title, and pointing at (or focusing) a card opens it and plays a small
+// piece of the real app inside it. Under lg every card is open and stacked, so
+// touch devices lose nothing. The mini screens are drawn in HTML, with
+// anonymised demo data in the same style as the homepage's other recreations.
+//
+// Capability notes (docs/what-ships.md): blended ROAS and one reporting
+// currency (Connect, Visualize); Best Creatives weights ROAS, cost per purchase
+// and outbound CTR (Visualize); Pulse verdicts Scale, Hold, Cut (Visualize);
+// live view-only links, PDF and client logo (Share); ad changes from Claude or
+// ChatGPT are two-phase and only apply after approval (Ask).
+import PlatformIcon from "./PlatformIcon.astro";
+
+interface Props {
+  sectionId?: string;
+  locale?: "en" | "ar";
+}
+
+const { sectionId, locale = "en" } = Astro.props;
+
+const COPY = {
+  en: {
+    heading: "Five jobs that eat a media buyer's week",
+    hint: "Point at a card to see the job done.",
+    cards: [
+      { title: "Comparing platforms", body: "Meta, TikTok, Snapchat and Google side by side in one reporting currency, with blended ROAS on top." },
+      { title: "Finding the winning ad", body: "Best Creatives ranks ads on ROAS, cost per purchase and outbound CTR, with the creative in the row." },
+      { title: "Deciding what to scale", body: "Pulse checks each account against your rules and flags it Scale, Hold or Cut." },
+      { title: "Sending the report", body: "A live, view-only link that is current whenever your client opens it, or a PDF with their logo." },
+      { title: "Changing ads", body: "Ask Claude or ChatGPT to pause ads or move budget. You see the plan first, and nothing runs until you approve." },
+    ],
+    blended: "Blended ROAS",
+    best: "Best",
+    rule: "Rule: ROAS 3.0 or more to scale",
+    scale: "Scale", hold: "Hold", cut: "Cut",
+    link: "Live link · view-only",
+    pdf: "PDF",
+    logo: "Client logo",
+    ask: "Pause the two ads with the highest cost per purchase.",
+    plan: "Plan",
+    pause: "Pause",
+    approve: "Approve",
+    applied: "Applied",
+  },
+  ar: {
+    heading: "خمس مهام تلتهم أسبوع الـ Media Buyer",
+    hint: "مرّر المؤشر على بطاقة لترى المهمة تُنجَز.",
+    cards: [
+      { title: "مقارنة المنصات", body: "Meta وTikTok وSnapchat وGoogle جنبًا إلى جنب بعملة تقارير واحدة، وفوقها blended ROAS." },
+      { title: "إيجاد الإعلان الرابح", body: "يرتّب Best Creatives الإعلانات حسب ROAS وتكلفة الشراء وOutbound CTR، والـ Creative أمامك في الصف نفسه." },
+      { title: "تحديد ما يستحق الـ Scale", body: "يفحص Pulse كل حساب وفق قواعدك ويصنّفه Scale أو Hold أو Cut." },
+      { title: "إرسال التقرير", body: "رابط مباشر للعرض فقط يبقى محدَّثًا كلما فتحه عميلك، أو ملف PDF بشعاره." },
+      { title: "تعديل الإعلانات", body: "اطلب من Claude أو ChatGPT إيقاف الإعلانات أو نقل الميزانية. ترى الخطة أولًا، ولا يُنفَّذ شيء قبل موافقتك." },
+    ],
+    blended: "Blended ROAS",
+    best: "الأفضل",
+    rule: "القاعدة: ROAS ‏3.0 أو أكثر للـ Scale",
+    scale: "Scale", hold: "Hold", cut: "Cut",
+    link: "رابط مباشر · للعرض فقط",
+    pdf: "PDF",
+    logo: "شعار العميل",
+    ask: "أوقف الإعلانين الأعلى في تكلفة الشراء.",
+    plan: "الخطة",
+    pause: "إيقاف",
+    approve: "وافق",
+    applied: "تم التطبيق",
+  },
+};
+const T = COPY[locale];
+
+// Demo data, the same numbers the Pulse table on the homepage uses.
+const platforms = [
+  { key: "meta", name: "Meta", roas: 5.2 },
+  { key: "tiktok", name: "TikTok", roas: 2.8 },
+  { key: "snapchat", name: "Snapchat", roas: 3.8 },
+  { key: "google_ads", name: "Google", roas: 1.4 },
+];
+const creatives = [
+  { name: "IG Post · Leakproof test", photo: "/ad-1.jpg", score: 1 },
+  { name: "Reel · Pack it Sunday", photo: "/ad-5.jpg", score: 0.42 },
+  { name: "UGC · Mum's morning", photo: "/ad-4.jpg", score: 0.41 },
+];
+const verdicts = [
+  { name: "Retargeting · Broad", roas: "5.2×", v: "scale" },
+  { name: "Prospecting · Lookalike 3%", roas: "2.8×", v: "hold" },
+  { name: "Cold · Interest stack", roas: "1.4×", v: "cut" },
+];
+const paused = ["Reel · Keeps food warm 6h", "Reel · Bento unboxing"];
+
+const ICONS = [
+  `<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>`,
+  `<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>`,
+  `<path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/>`,
+  `<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>`,
+  `<path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>`,
+];
+---
+
+<section id={sectionId} class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{T.heading}</h2>
+      <p class="mt-3 hidden text-sm text-zinc-400 lg:block">{T.hint}</p>
+    </div>
+
+    <div class="uc-row reveal mt-12" data-usecases>
+      {T.cards.map((c, i) => (
+        <article class={`uc${i === 0 ? " is-open" : ""}`} tabindex="0" data-uc>
+          <div class="uc-head">
+            <span class="uc-icon">
+              <svg viewBox="0 0 24 24" class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]} />
+            </span>
+            <h3 class="uc-title">{c.title}</h3>
+          </div>
+
+          <div class="uc-more">
+            <p class="uc-body">{c.body}</p>
+
+            <div class="uc-mini" aria-hidden="true">
+              {i === 0 && (
+                <div class="space-y-2">
+                  {platforms.map((p, k) => (
+                    <div class="flex items-center gap-2.5 text-xs" style={`--k:${k}`}>
+                      <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white ring-1 ring-zinc-200/90"><PlatformIcon platform={p.key} class="h-3 w-3" /></span>
+                      <span class="w-16 shrink-0 font-medium text-zinc-600">{p.name}</span>
+                      <span class="relative h-2 flex-1 overflow-hidden rounded-full bg-white ring-1 ring-brand-100">
+                        <span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-400" style={`width:${(p.roas / 6) * 100}%`}></span>
+                      </span>
+                      <bdi dir="ltr" class="w-9 shrink-0 text-end font-semibold tabular-nums text-zinc-700">{p.roas.toFixed(1)}×</bdi>
+                    </div>
+                  ))}
+                  <div class="uc-pop flex items-center justify-between border-t border-brand-100 pt-2.5 text-xs" style="--k:4">
+                    <span class="font-semibold text-brand-800">{T.blended}</span>
+                    <bdi dir="ltr" class="rounded-full bg-brand-600 px-2.5 py-0.5 font-bold tabular-nums text-white">3.3×</bdi>
+                  </div>
+                </div>
+              )}
+
+              {i === 1 && (
+                <ol class="space-y-2">
+                  {creatives.map((a, k) => (
+                    <li class="uc-row-in flex items-center gap-2.5 rounded-lg bg-white p-1.5 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
+                      <span class="relative h-9 w-7 shrink-0 overflow-hidden rounded bg-zinc-200">
+                        <img src={a.photo} alt="" loading="lazy" width="28" height="36" class="absolute inset-0 h-full w-full object-cover" />
+                      </span>
+                      <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{a.name}</bdi>
+                      {k === 0
+                        ? <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-emerald-200">{T.best}</span>
+                        : <span class="relative h-1.5 w-12 overflow-hidden rounded-full bg-zinc-100"><span class="uc-bar absolute inset-y-0 start-0 rounded-full bg-brand-300" style={`width:${a.score * 100}%`}></span></span>}
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {i === 2 && (
+                <div class="space-y-2">
+                  <p class="text-[11px] font-medium text-zinc-400">{T.rule}</p>
+                  {verdicts.map((r, k) => (
+                    <div class="uc-row-in flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 text-xs ring-1 ring-brand-100" style={`--k:${k}`}>
+                      <bdi dir="ltr" class="min-w-0 flex-1 truncate font-medium text-zinc-700">{r.name}</bdi>
+                      <bdi dir="ltr" class="font-semibold tabular-nums text-zinc-500">{r.roas}</bdi>
+                      <span class={`uc-pop inline-flex w-14 justify-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${r.v === "scale" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : r.v === "hold" ? "border-amber-200 bg-amber-50 text-amber-700" : "border-rose-200 bg-rose-50 text-rose-700"}`} style={`--k:${k + 2}`}>{T[r.v as "scale" | "hold" | "cut"]}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {i === 3 && (
+                <div class="space-y-2.5">
+                  <div class="flex items-center gap-2 rounded-lg bg-white px-2.5 py-2 text-xs ring-1 ring-brand-100">
+                    <span class="uc-live h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    <span class="min-w-0 flex-1 truncate font-medium text-zinc-700">{T.link}</span>
+                    <span class="uc-pop flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500" style="--k:3">
+                      <svg viewBox="0 0 24 24" class="h-2.5 w-2.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                    </span>
+                  </div>
+                  <div class="flex items-end gap-2">
+                    <div class="flex h-14 flex-1 items-end gap-1.5 rounded-lg bg-white px-2.5 pb-2 ring-1 ring-brand-100">
+                      {[0.5, 0.8, 0.4, 0.95, 0.65].map((h, k) => (
+                        <span class="uc-rise flex-1 rounded-sm bg-brand-300" style={`height:${h * 70}%;--k:${k}`}></span>
+                      ))}
+                    </div>
+                    <div class="flex flex-col gap-1.5 text-[10px] font-semibold">
+                      <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:2">{T.pdf}</span>
+                      <span class="uc-pop rounded-md bg-white px-2 py-1 text-center text-zinc-600 ring-1 ring-brand-100" style="--k:3">{T.logo}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {i === 4 && (
+                <div class="space-y-2">
+                  <p class="uc-row-in rounded-lg rounded-es-sm bg-white px-2.5 py-1.5 text-xs text-zinc-600 ring-1 ring-brand-100" style="--k:0">{T.ask}</p>
+                  <div class="uc-row-in rounded-lg bg-white p-2.5 text-xs ring-1 ring-brand-100" style="--k:1">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-600">{T.plan}</p>
+                    <ul class="space-y-1 text-zinc-600">
+                      {paused.map((n) => (
+                        <li class="flex items-center gap-1.5"><span class="rounded bg-rose-50 px-1.5 py-px text-[10px] font-semibold text-rose-700">{T.pause}</span><bdi dir="ltr" class="truncate">{n}</bdi></li>
+                      ))}
+                    </ul>
+                    <div class="mt-2.5 flex justify-end">
+                      <span class="uc-approve relative inline-flex h-6 min-w-[4.5rem] items-center justify-center rounded-md px-3 text-[11px] font-semibold text-white">
+                        <span class="uc-lab-a">{T.approve}</span>
+                        <span class="uc-lab-b absolute inset-0 flex items-center justify-center gap-1">
+                          <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{T.applied}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <span class="uc-plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* ── Use-case cards ── */
+  .uc-row { display: flex; flex-direction: column; gap: .75rem; }
+  .uc {
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+    border: 1px solid #e4e4e7; background: #fff; padding: 1.25rem;
+    display: flex; flex-direction: column; outline: none;
+    transition: border-color .3s ease, box-shadow .4s ease;
+  }
+  .uc:focus-visible { box-shadow: 0 0 0 3px #b0a1ef; }
+  .uc-head { display: flex; flex-direction: column; gap: .85rem; }
+  .uc-icon {
+    display: flex; height: 2.25rem; width: 2.25rem; align-items: center; justify-content: center;
+    border-radius: .75rem; background: #f2f0fd; color: #5738c9;
+    transition: background-color .3s ease, color .3s ease;
+  }
+  .uc-title { font-family: inherit; font-size: 1.0625rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; color: #18181b; }
+  .uc-more { margin-top: 1.25rem; }
+  .uc-body { font-size: .875rem; line-height: 1.55; color: #71717a; }
+  .uc-mini { margin-top: 1rem; border-radius: 1rem; background: #f2f0fd; padding: .75rem; border: 1px solid #e6e1fb; }
+  .uc-plus {
+    position: absolute; bottom: 1rem; inset-inline-end: 1rem; display: none;
+    height: 1.75rem; width: 1.75rem; align-items: center; justify-content: center;
+    border-radius: 9999px; background: #f4f4f5; color: #71717a;
+    transition: opacity .25s ease, transform .35s ease;
+  }
+
+  /* Mini screens: idle state. They play when the card is open. */
+  .uc-bar { transform-origin: left; transform: scaleX(0); }
+  [dir="rtl"] .uc-bar { transform-origin: right; }
+  .uc-row-in { opacity: 0; transform: translateY(8px); }
+  .uc-pop { opacity: 0; transform: scale(.6); }
+  .uc-rise { transform-origin: bottom; transform: scaleY(0); }
+  .uc-live { animation: ucLive 1.6s ease-in-out infinite; }
+  .uc-approve { background: #18181b; }
+  .uc-lab-b { opacity: 0; }
+
+  .in .uc.is-open .uc-bar { animation: ucBar .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 110ms + 250ms); }
+  .in .uc.is-open .uc-row-in { animation: ucIn .5s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 250ms); }
+  .in .uc.is-open .uc-pop { animation: ucPop .45s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 450ms); }
+  .in .uc.is-open .uc-rise { animation: ucRise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 90ms + 250ms); }
+  .in .uc.is-open .uc-approve { animation: ucApprove 5s ease-in-out 1s infinite; }
+  .in .uc.is-open .uc-lab-a { animation: ucLabA 5s ease-in-out 1s infinite; }
+  .in .uc.is-open .uc-lab-b { animation: ucLabB 5s ease-in-out 1s infinite; }
+  @keyframes ucBar { to { transform: scaleX(1); } }
+  @keyframes ucIn { to { opacity: 1; transform: none; } }
+  @keyframes ucPop { to { opacity: 1; transform: none; } }
+  @keyframes ucRise { to { transform: scaleY(1); } }
+  @keyframes ucLive { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes ucApprove { 0%,40% { background: #18181b; } 50%,92% { background: #059669; } 100% { background: #18181b; } }
+  @keyframes ucLabA { 0%,40% { opacity: 1; } 50%,92% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes ucLabB { 0%,40% { opacity: 0; } 50%,92% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* Stacked, everything open: phones and tablets. */
+  @media (max-width: 1023.98px) {
+    .uc { transition: none; }
+    .uc-bar, .uc-row-in, .uc-pop, .uc-rise { animation-play-state: running; }
+    .in .uc .uc-bar { animation: ucBar .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 110ms + 250ms); }
+    .in .uc .uc-row-in { animation: ucIn .5s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 250ms); }
+    .in .uc .uc-pop { animation: ucPop .45s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--k, 0) * 140ms + 450ms); }
+    .in .uc .uc-rise { animation: ucRise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--k, 0) * 90ms + 250ms); }
+    .in .uc .uc-approve { animation: ucApprove 5s ease-in-out 1s infinite; }
+    .in .uc .uc-lab-a { animation: ucLabA 5s ease-in-out 1s infinite; }
+    .in .uc .uc-lab-b { animation: ucLabB 5s ease-in-out 1s infinite; }
+  }
+
+  /* Accordion: desktop. */
+  @media (min-width: 1024px) {
+    .uc-row { flex-direction: row; height: 25rem; }
+    .uc { flex: 1 1 0; min-width: 0; cursor: pointer; transition: flex-grow .6s cubic-bezier(.2,.8,.2,1), border-color .3s ease, box-shadow .4s ease; }
+    .uc.is-open { flex-grow: 2.6; border-color: #cfc6f6; box-shadow: 0 24px 48px -24px rgba(43, 29, 97, .28); cursor: default; }
+    .uc.is-open .uc-icon { background: #5738c9; color: #fff; }
+    .uc:not(.is-open) { background: linear-gradient(180deg, #fff 35%, #f6f4fe); }
+    .uc-plus { display: flex; }
+    .uc.is-open .uc-plus { opacity: 0; transform: rotate(90deg) scale(.7); }
+    .uc:not(.is-open):hover .uc-plus { background: #e6e1fb; color: #422a96; }
+    /* The body keeps its open width, so the text never re-wraps while the card
+       grows: the card just reveals it. */
+    .uc-more { position: absolute; inset-inline-start: 1.25rem; bottom: 1.25rem; width: 20rem; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s ease, transform .3s ease; margin-top: 0; }
+    .uc.is-open .uc-more { opacity: 1; transform: none; pointer-events: auto; transition: opacity .4s ease .25s, transform .5s cubic-bezier(.2,.8,.2,1) .25s; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uc, .uc-more, .uc-plus { transition: none !important; }
+    .uc *, .uc-live { animation: none !important; }
+    .uc-bar, .uc-rise { transform: none !important; }
+    .uc-row-in, .uc-pop { opacity: 1 !important; transform: none !important; }
+    .uc-lab-b { opacity: 0 !important; }
+  }
+</style>
+
+<script>
+  // One card open at a time, and one always open: the last card you pointed at
+  // or focused stays open when the pointer leaves. Under lg all cards are open
+  // by CSS, so the class does nothing there.
+  document.querySelectorAll<HTMLElement>("[data-usecases]").forEach((row) => {
+    const cards = [...row.querySelectorAll<HTMLElement>("[data-uc]")];
+    const open = (card: HTMLElement) => {
+      if (card.classList.contains("is-open")) return;
+      cards.forEach((c) => c.classList.toggle("is-open", c === card));
+    };
+    cards.forEach((card) => {
+      card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") open(card); });
+      card.addEventListener("focus", () => open(card));
+      card.addEventListener("click", () => open(card));
+    });
+  });
+</script>

@@ -5,6 +5,7 @@ import PlatformIcon from "../components/PlatformIcon.astro";
 import DataFlow from "../components/DataFlow.astro";
 import AnalysisStages from "../components/AnalysisStages.astro";
 import AiDashboard from "../components/AiDashboard.astro";
+import UseCases from "../components/UseCases.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -251,6 +252,9 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
 
   <!-- ============== DATA ANALYSIS STAGES (animated time bar) ============== -->
   <AnalysisStages {...analysisStages} />
+
+  <!-- ============== USE CASES (accordion of mini screens) ============== -->
+  <UseCases sectionId="use-cases" />
 
   <!-- ========================= SEE IT LIVE ========================= -->
   <section id="live" class="relative overflow-hidden bg-ink px-6 py-24">

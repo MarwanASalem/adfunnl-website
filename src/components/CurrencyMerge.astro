@@ -1,0 +1,229 @@
+---
+// "No more mental math": currency unification, shown happening.
+//
+// A wide panel. On the left, the heading with a drawn underline and the
+// paragraph. On the right, four floating cards, one per ad platform, each in
+// its own currency, and a purple total card under them. Once on screen the
+// cards convert one by one: the amount flips from its own currency into the
+// reporting currency (SAR here), the card flashes, and its share lands in the
+// total, which counts up. It holds, then plays again.
+//
+// Rates are fixed demo rates, so the sum is exact and repeatable. In the app
+// the rate is the current market rate, refreshed every few hours, or a rate
+// you set per currency in the dashboard settings (docs/what-ships.md).
+// Reduced motion shows the converted state and the total, still.
+import PlatformIcon from "./PlatformIcon.astro";
+
+interface Props {
+  locale?: "en" | "ar";
+}
+
+const { locale = "en" } = Astro.props;
+
+const COPY = {
+  en: {
+    before: "No more ",
+    mark: "mental math",
+    after: "",
+    body: "Selling in four markets means four currencies, and a conversion someone is doing in their head. AdFunnl converts every platform and store into your reporting currency automatically, using the right rate, so blended ROAS and revenue add up to a single number you can defend.",
+    total: "Unified revenue",
+    inYours: "In your reporting currency",
+    alt: "Revenue in US dollars, UAE dirhams, Egyptian pounds and Kuwaiti dinars converts, platform by platform, into one total in Saudi riyals.",
+  },
+  ar: {
+    before: "لا مزيد من ",
+    mark: "الحساب الذهني",
+    after: "",
+    body: "البيع في أكثر من سوق يعني أكثر من عملة، وتحويلًا يجريه أحدهم في رأسه. AdFunnl يحوّل أرقام كل منصة ومتجر إلى عملة تقاريرك تلقائيًا وبالسعر الصحيح، فيجتمع blended ROAS والإيرادات في رقم واحد تستطيع الدفاع عنه.",
+    total: "الإيرادات الموحّدة",
+    inYours: "بعملة تقاريرك",
+    alt: "تتحوّل الإيرادات بالدولار الأمريكي والدرهم الإماراتي والجنيه المصري والدينار الكويتي، منصةً بعد منصة، إلى إجمالي واحد بالريال السعودي.",
+  },
+};
+const T = COPY[locale];
+
+// Anonymised demo figures and fixed demo rates into SAR.
+const cards = [
+  { code: "USD", sym: "$", amount: 142880, rate: 3.75, p: "meta", name: "Meta" },
+  { code: "AED", sym: "د.إ", amount: 318400, rate: 1.021, p: "tiktok", name: "TikTok" },
+  { code: "EGP", sym: "£", amount: 2940000, rate: 0.0773, p: "google_ads", name: "Google Ads" },
+  { code: "KWD", sym: "د.ك", amount: 18220, rate: 12.2, p: "snapchat", name: "Snapchat" },
+].map((c) => ({ ...c, sar: Math.round(c.amount * c.rate) }));
+const TOTAL = cards.reduce((n, c) => n + c.sar, 0);
+const fmt = (n: number) => n.toLocaleString("en-US");
+---
+
+<div class="cm reveal mt-[72px]" data-cm data-total={TOTAL}>
+  <div class="cm-rings" aria-hidden="true"></div>
+
+  <div class="relative grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+    <!-- copy -->
+    <div class="text-center lg:text-start">
+      <h3 class="font-display text-3xl font-bold leading-[1.1] tracking-tight text-zinc-950 sm:text-4xl">
+        {T.before}<span class="cm-mark">{T.mark}<svg class="cm-swoosh" viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 50 3, 120 2, 197 7" pathLength="1" /></svg></span>{T.after}
+      </h3>
+      <p class="mx-auto mt-5 max-w-xl text-base leading-relaxed text-zinc-500 sm:text-lg lg:mx-0">{T.body}</p>
+    </div>
+
+    <!-- the conversion -->
+    <div class="relative" role="img" aria-label={T.alt}>
+      <div class="grid grid-cols-2 gap-3 sm:gap-4">
+        {cards.map((c, i) => (
+          <div class={`cm-card ${i % 2 ? "translate-y-5 sm:translate-y-7" : ""}`} data-cm-card data-sar={c.sar}>
+            <div class="flex items-center gap-1.5">
+              <span class="cm-code grid">
+                <span class="cm-a flex items-center gap-1"><span class="cm-sym">{c.sym}</span>{c.code}</span>
+                <span class="cm-b flex items-center gap-1"><span class="cm-sym cm-sym-sar">﷼</span>SAR</span>
+              </span>
+              <span class="ms-auto flex h-5 w-5 items-center justify-center" title={c.name}>
+                <PlatformIcon platform={c.p} class="h-4 w-4" />
+              </span>
+            </div>
+            <bdi dir="ltr" class="cm-num mt-2 grid font-display font-bold tabular-nums lining-nums">
+              <span class="cm-a">{fmt(c.amount)}</span>
+              <span class="cm-b">{fmt(c.sar)}</span>
+            </bdi>
+            <span class="cm-rate" aria-hidden="true"><bdi dir="ltr">× {c.rate}</bdi></span>
+          </div>
+        ))}
+      </div>
+
+      <div class="cm-total mt-10 sm:mt-12">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-200">{T.total}</p>
+          <p class="mt-0.5 hidden text-xs text-brand-200/80 sm:block">{T.inYours}</p>
+        </div>
+        <bdi dir="ltr" class="ms-auto font-display font-bold tabular-nums lining-nums">
+          <span class="me-1.5 text-base font-semibold text-brand-200 sm:text-lg">SAR</span><span class="cm-total-num text-3xl text-white sm:text-4xl" data-cm-total>{fmt(TOTAL)}</span>
+        </bdi>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* ── Panel ── */
+  .cm {
+    position: relative; overflow: hidden; border-radius: 1.75rem;
+    padding: 2.5rem 1.25rem 2.25rem;
+    background: linear-gradient(140deg, #f2f0fd 0%, #faf9ff 45%, #ece8fd 100%);
+    border: 1px solid #e6e1fb;
+    box-shadow: 0 1px 0 #fff inset, 0 24px 48px -30px rgba(43, 29, 97, .3);
+  }
+  @media (min-width: 640px) { .cm { padding: 3rem 2.5rem; } }
+  @media (min-width: 1024px) { .cm { padding: 3.5rem 3.5rem; } }
+  .cm-rings {
+    position: absolute; inset-inline-end: -14rem; top: 50%; width: 40rem; height: 40rem; translate: 0 -50%; pointer-events: none;
+    background:
+      radial-gradient(circle, transparent 38%, rgba(101, 73, 221, .07) 38.3%, transparent 38.8%),
+      radial-gradient(circle, transparent 54%, rgba(101, 73, 221, .06) 54.3%, transparent 54.8%),
+      radial-gradient(circle, transparent 70%, rgba(101, 73, 221, .05) 70.3%, transparent 70.8%);
+  }
+
+  /* drawn underline under the key words */
+  .cm-mark { position: relative; white-space: nowrap; }
+  .cm-swoosh { position: absolute; inset-inline: -2%; bottom: -.4em; width: 104%; height: .42em; overflow: visible; }
+  .cm-swoosh path { fill: none; stroke: #6549dd; stroke-width: 3.2; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .reveal.in .cm-swoosh path { transition: stroke-dashoffset 1s cubic-bezier(.6,.1,.2,1) .35s; stroke-dashoffset: 0; }
+
+  /* ── Currency cards ── */
+  .cm-card {
+    position: relative; border-radius: 1.1rem; background: #fff; padding: .9rem 1rem 1rem;
+    box-shadow: 0 0 0 1px rgba(87, 56, 201, .07), 0 16px 30px -18px rgba(43, 29, 97, .3);
+    transition: box-shadow .4s ease;
+  }
+  .cm-code { font-size: .7rem; font-weight: 700; letter-spacing: .04em; color: #71717a; }
+  .cm-sym { display: inline-flex; height: 1.15rem; min-width: 1.15rem; padding-inline: .2rem; align-items: center; justify-content: center; border-radius: .35rem; background: #f4f4f5; font-size: .6rem; color: #52525b; }
+  .cm-sym-sar { background: #ece8fd; color: #5738c9; }
+  .cm-num { font-size: 1.25rem; line-height: 1.1; color: #18181b; }
+  @media (min-width: 640px) { .cm-num { font-size: 1.6rem; } }
+  .cm-num .cm-b { color: #5738c9; }
+  .cm-code > *, .cm-num > * { grid-area: 1 / 1; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+  .cm-b { opacity: 0; transform: translateY(6px); }
+  .cm-rate {
+    position: absolute; top: .7rem; inset-inline-end: 2.4rem; border-radius: 9999px; background: #ece8fd; padding: .05rem .45rem;
+    font-size: .62rem; font-weight: 700; color: #5738c9; opacity: 0; transform: scale(.7); transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .cm-card.is-converted .cm-a { opacity: 0; transform: translateY(-6px); }
+  .cm-card.is-converted .cm-b { opacity: 1; transform: none; }
+  .cm-card.is-flash { box-shadow: 0 0 0 2px #8b73e6, 0 18px 34px -16px rgba(87, 56, 201, .45); }
+  .cm-card.is-flash .cm-rate { opacity: 1; transform: none; }
+
+  /* ── Total ── */
+  .cm-total {
+    display: flex; align-items: center; gap: 1rem; border-radius: 1.25rem; padding: 1.1rem 1.25rem;
+    background: linear-gradient(120deg, #5738c9, #6549dd 60%, #7b62e6);
+    box-shadow: 0 22px 40px -20px rgba(87, 56, 201, .65), inset 0 1px 0 rgba(255, 255, 255, .2);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .cm-total.is-bump { transform: scale(1.025); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cm *, .cm { transition: none !important; }
+    .cm-swoosh path { stroke-dashoffset: 0; }
+  }
+</style>
+
+<script>
+  // Plays the conversion once the panel is on screen, then loops.
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
+
+  document.querySelectorAll<HTMLElement>("[data-cm]").forEach((root) => {
+    const cards = [...root.querySelectorAll<HTMLElement>("[data-cm-card]")];
+    const totalEl = root.querySelector<HTMLElement>("[data-cm-total]")!;
+    const totalBox = totalEl.closest<HTMLElement>(".cm-total")!;
+    const TOTAL = Number(root.dataset.total);
+
+    if (still) {
+      cards.forEach((c) => c.classList.add("is-converted"));
+      return;
+    }
+
+    let shown = 0;
+    let raf = 0;
+    const countTo = (to: number, ms: number) => {
+      cancelAnimationFrame(raf);
+      const from = shown, t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / ms);
+        shown = from + (to - from) * (1 - Math.pow(1 - k, 3));
+        totalEl.textContent = fmt(shown);
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    const timers: number[] = [];
+    const later = (fn: () => void, ms: number) => timers.push(window.setTimeout(fn, ms));
+
+    const cycle = () => {
+      cards.forEach((c) => c.classList.remove("is-converted", "is-flash"));
+      shown = 0;
+      totalEl.textContent = "0";
+      let sum = 0;
+      cards.forEach((c, i) => {
+        const at = 900 + i * 850;
+        later(() => {
+          c.classList.add("is-converted", "is-flash");
+          sum += Number(c.dataset.sar);
+          countTo(sum, 650);
+          totalBox.classList.add("is-bump");
+          later(() => totalBox.classList.remove("is-bump"), 260);
+          later(() => c.classList.remove("is-flash"), 900);
+        }, at);
+      });
+      later(() => countTo(TOTAL, 200), 900 + cards.length * 850);
+      later(cycle, 900 + cards.length * 850 + 3600);
+    };
+
+    let started = false;
+    new IntersectionObserver((entries, io) => {
+      if (started || !entries.some((e) => e.isIntersecting)) return;
+      started = true;
+      io.disconnect();
+      cycle();
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

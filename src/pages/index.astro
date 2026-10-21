@@ -7,6 +7,7 @@ import AnalysisStages from "../components/AnalysisStages.astro";
 import AiDashboard from "../components/AiDashboard.astro";
 import UseCases from "../components/UseCases.astro";
 import Ribbons from "../components/Ribbons.astro";
+import CurrencyMerge from "../components/CurrencyMerge.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -318,49 +319,8 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       </div>
 
       <!-- Currency unification. Sits under the side-by-side tables because it
-           is why those numbers can be compared at all. Its own heading, like
-           the other parts of this section, with the picture under it. -->
-      <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
-        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">No more mental math</h3>
-        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
-          Selling in four markets means four currencies, and a conversion someone is doing in their head. AdFunnl converts every platform and store into your reporting currency automatically, using the right rate, so blended ROAS and revenue add up to a single number you can defend.
-        </p>
-      </div>
-      <div class="reveal mx-auto mt-8 max-w-xl rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xl shadow-brand-900/10 sm:p-6">
-        <div class="cur-viz rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
-          <div class="grid grid-cols-2 gap-2.5">
-            {[
-              { c: "USD", flag: "$", amt: "142,880", p: "meta", name: "Meta" },
-              { c: "AED", flag: "د.إ", amt: "318,400", p: "tiktok", name: "TikTok" },
-              { c: "EGP", flag: "£", amt: "2,940,000", p: "google_ads", name: "Google Ads" },
-              { c: "KWD", flag: "د.ك", amt: "18,220", p: "snapchat", name: "Snapchat" },
-            ].map((x, i) => (
-              <div class="cur-chip rounded-lg border border-zinc-200 bg-white px-3 py-2.5" style={`transition-delay:${i * 110}ms`}>
-                <div class="flex items-center gap-1.5">
-                  <span class="flex h-5 w-5 items-center justify-center rounded bg-zinc-100 text-[10px] font-bold text-zinc-500">{x.flag}</span>
-                  <span class="text-[11px] font-semibold text-zinc-500">{x.c}</span>
-                  <span class="ms-auto flex h-5 w-5 items-center justify-center" title={x.name}>
-                    <PlatformIcon platform={x.p} class="h-4 w-4" />
-                    <span class="sr-only">{x.name}</span>
-                  </span>
-                </div>
-                <p class="mt-1 font-display text-sm font-bold text-zinc-800">{x.amt}</p>
-              </div>
-            ))}
-          </div>
-          <div class="my-3 flex items-center justify-center gap-2 text-zinc-300">
-            <span class="h-px w-16 bg-gradient-to-r from-transparent to-zinc-300"></span>
-            <svg class="cur-arrow h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-            <span class="h-px w-16 bg-gradient-to-l from-transparent to-zinc-300"></span>
-          </div>
-          <div class="rounded-xl border border-brand-200 bg-brand-50/70 px-4 py-3">
-            <p class="text-[11px] font-semibold uppercase tracking-wide text-brand-500">Unified revenue</p>
-            <p class="mt-0.5 font-display text-2xl font-bold text-brand-900">
-              <span class="text-sm font-semibold text-brand-400">SAR </span><span class="cur-total">1,932,540</span>
-            </p>
-          </div>
-        </div>
-      </div>
+           is why those numbers can be compared at all. -->
+      <CurrencyMerge />
 
       <!-- ── Creative reports ── -->
       <div class="reveal mx-auto mt-[72px] max-w-2xl text-center">
@@ -990,22 +950,15 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     .mom-dot { opacity: 0; }
     .reveal.in .mom-dot { transition: opacity .3s ease; opacity: 1; }
 
-    /* ── Currency unification (reveal-triggered) ── */
-    .cur-chip { opacity: 0; transform: translateX(-10px); }
-    .reveal.in .cur-chip { transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1); opacity: 1; transform: none; }
-    .reveal.in .cur-arrow { animation: curArrow 1.6s ease-in-out .6s infinite; }
-    @keyframes curArrow { 0%,100% { transform: translateY(-2px); opacity: .6; } 50% { transform: translateY(2px); opacity: 1; } }
-
     /* ── Team invite avatars (reveal-triggered) ── */
     .team-avatar { opacity: 0; transform: scale(.6); }
     .reveal.in .team-avatar { transition: opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1); opacity: 1; transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .verdict,
-      .cur-arrow { animation: none !important; transition: none !important; }
+      .reveal, .hero-app, .chip-in, .bar, .live-dot, .stream-caret, .verdict { animation: none !important; transition: none !important; }
       .mom-bar { transform: scaleY(1) !important; }
       .mom-line { stroke-dashoffset: 0 !important; }
-      .mom-dot, .cur-chip, .team-avatar { opacity: 1 !important; transform: none !important; }
+      .mom-dot, .team-avatar { opacity: 1 !important; transform: none !important; }
       .js .reveal { opacity: 1 !important; transform: none !important; }
       .chip-in { opacity: 1; }
     }
@@ -1022,31 +975,6 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       }
     }, { threshold: 0.2 });
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
-
-    // ── Currency total count-up (comma-formatted), fires on scroll ──
-    const curTotal = document.querySelector(".cur-total");
-    if (curTotal) {
-      const target = parseInt(curTotal.textContent.replace(/,/g, ""), 10);
-      const fmt = (n) => Math.round(n).toLocaleString("en-US");
-      if (rm || !Number.isFinite(target)) {
-        /* leave static */
-      } else {
-        const cio = new IntersectionObserver((entries, obs) => {
-          for (const e of entries) {
-            if (!e.isIntersecting) continue;
-            obs.disconnect();
-            const dur = 1400, start = performance.now();
-            const step = (now) => {
-              const p = Math.min(1, (now - start) / dur);
-              curTotal.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
-              if (p < 1) requestAnimationFrame(step);
-            };
-            requestAnimationFrame(step);
-          }
-        }, { threshold: 0.5 });
-        cio.observe(curTotal);
-      }
-    }
 
     // ── Hero film: sound toggle ─────────────────────────────────────
     const film = document.getElementById("hero-film");

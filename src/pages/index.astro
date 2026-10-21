@@ -73,7 +73,7 @@ const breakdowns = {
 // of those two stages. owner: "you" | "auto" | "ai".
 const analysisStages = {
   heading: "How much time are you spending gathering data instead of analyzing it?",
-  body: "Data analysis passes through 5 stages. Preparing and processing is the slow part 🫠 this is where you open many tabs, take many screenshots, do mental math trying to normalize all currencies, export data and import it into sheets to analyze and filter. Instead, your time should focus on actually analyzing and acting.",
+  body: "Data analysis passes through 5 stages. Preparing and processing is the slow part 🫠 Instead, your time should focus on actually analyzing and acting.",
   slowLabel: "The slow part 🫠",
   stages: [
     { key: "prepare", name: "Preparing data",  owner: "auto", line: "Every ad platform and store connects once, then syncs every hour." },
@@ -491,15 +491,15 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         </a>
       </div>
 
-      <div class="mt-8 grid items-stretch gap-6 lg:grid-cols-2">
+      <div class="assistant-row mt-8 grid items-stretch gap-6 lg:grid-cols-2">
         <!-- Left: drag-to-compare assistant slider. Two full copies of the same
              conversation stacked in one grid cell; the Claude layer is clipped. -->
         <div id="assistant-split"
              class="assistant-split reveal relative select-none overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10"
              style="--split:50%">
-          <div class="grid h-full">
+          <div class="assistant-layers grid h-full">
             <!-- ChatGPT layer (bottom) -->
-            <div class="col-start-1 row-start-1 flex flex-col bg-white">
+            <div class="assistant-layer col-start-1 row-start-1 flex flex-col bg-white">
               <div class="flex items-center gap-2.5 border-b border-[#e5e5e5] bg-[#f7f7f8] px-4 py-2.5">
                 <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
                   <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.6 9.8a5.4 5.4 0 0 0-.5-4.5 5.5 5.5 0 0 0-5.9-2.6A5.4 5.4 0 0 0 11.1 1 5.5 5.5 0 0 0 5.9 4.8a5.4 5.4 0 0 0-3.6 2.6 5.5 5.5 0 0 0 .7 6.4 5.4 5.4 0 0 0 .5 4.5 5.5 5.5 0 0 0 5.9 2.6A5.4 5.4 0 0 0 12.9 23a5.5 5.5 0 0 0 5.2-3.8 5.4 5.4 0 0 0 3.6-2.6 5.5 5.5 0 0 0-.1-6.8zM12.9 21.4a4.1 4.1 0 0 1-2.6-.9l.13-.07 4.34-2.5a.7.7 0 0 0 .36-.62v-6.1l1.83 1.06a.07.07 0 0 1 .04.05v5.06a4.1 4.1 0 0 1-4.1 4.02zM4.1 17.6a4.1 4.1 0 0 1-.49-2.75l.13.08 4.34 2.5a.7.7 0 0 0 .71 0l5.3-3.06v2.11a.07.07 0 0 1-.03.06l-4.39 2.53a4.1 4.1 0 0 1-5.57-1.47zM2.96 8.2a4.1 4.1 0 0 1 2.14-1.8v5.15a.7.7 0 0 0 .35.61l5.28 3.05-1.83 1.06a.07.07 0 0 1-.06 0L4.46 13.7a4.1 4.1 0 0 1-1.5-5.5zm15.07 3.5-5.3-3.07 1.83-1.05a.07.07 0 0 1 .06 0l4.39 2.53a4.1 4.1 0 0 1-.63 7.39v-5.15a.7.7 0 0 0-.35-.65zm1.82-2.74-.13-.08-4.33-2.52a.7.7 0 0 0-.71 0L9.37 9.42V7.31a.07.07 0 0 1 .03-.06l4.39-2.53a4.1 4.1 0 0 1 6.06 4.24zM8.38 12.73 6.55 11.68a.07.07 0 0 1-.04-.06V6.57a4.1 4.1 0 0 1 6.7-3.15l-.13.07-4.34 2.5a.7.7 0 0 0-.36.62zm1-2.14 2.36-1.36 2.36 1.36v2.72l-2.36 1.36-2.36-1.36z"/></svg>
@@ -552,7 +552,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
             </div>
 
             <!-- Claude layer (top, clipped to the split) -->
-            <div class="assistant-clip col-start-1 row-start-1 flex flex-col bg-[#faf9f6]">
+            <div class="assistant-clip assistant-layer col-start-1 row-start-1 flex flex-col bg-[#faf9f6]">
               <div class="flex items-center gap-2.5 border-b border-[#e2dbcd] bg-[#f3efe7] px-4 py-2.5">
                 <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center">
                   <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true"><path fill="#D97757" d="M12 2.2 13.6 8l4.4-3.2-3.2 4.4 5.8 1.6-5.8 1.6 3.2 4.4-4.4-3.2L12 21.8 10.4 16l-4.4 3.2 3.2-4.4L3.4 13.2 9.2 11.6 6 7.2l4.4 3.2z"/></svg>
@@ -606,15 +606,15 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
           </div>
 
           <!-- drag overlay -->
-          <div class="assistant-divider pointer-events-none absolute inset-y-0 w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]"></div>
-          <div class="assistant-handle pointer-events-none absolute top-1/2 flex h-[34px] w-[34px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
+          <div class="assistant-divider assistant-drag pointer-events-none absolute inset-y-0 w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]"></div>
+          <div class="assistant-handle assistant-drag pointer-events-none absolute top-1/2 flex h-[34px] w-[34px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg>
           </div>
-          <div class="pointer-events-none absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">Drag to switch assistant</div>
+          <div class="assistant-drag pointer-events-none absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-white">Drag to switch assistant</div>
         </div>
 
         <!-- Right: the in-app assistant -->
-        <div class="reveal flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
+        <div class="assistant-inapp reveal flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-brand-900/10">
           <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
             <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
@@ -953,6 +953,21 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     @keyframes adaBob { 0%,100% { transform: translateY(25%); } 50% { transform: translateY(18%); } }
     @media (prefers-reduced-motion: reduce) { .ada-mini { animation: none; } }
     .assistant-clip { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+
+    /* Phones and tablets: no slider. ChatGPT, Claude and the in-app assistant
+       become three cards in one swipeable row. The slider's wrappers step out
+       of the way (display: contents) so its two layers are the row's cards. */
+    @media (max-width: 1023.98px) {
+      .assistant-row { display: flex; gap: .875rem; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -1.5rem; padding: .25rem 1.5rem 1.25rem; scrollbar-width: none; }
+      .assistant-row::-webkit-scrollbar { display: none; }
+      .assistant-split, .assistant-layers { display: contents; }
+      .assistant-layer, .assistant-inapp {
+        flex: 0 0 86%; min-width: 0; scroll-snap-align: center; overflow: hidden;
+        border-radius: 1rem; border: 1px solid #e4e4e7; box-shadow: 0 20px 25px -5px rgba(43, 29, 97, .1);
+      }
+      .assistant-clip { clip-path: none; }
+      .assistant-drag { display: none; }
+    }
     .assistant-divider { left: var(--split); }
     .assistant-handle { left: var(--split); }
 
@@ -1104,6 +1119,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
       // moved sideways; an up or down swipe is left to the browser, so the
       // page still scrolls through the slider on a phone (touch-action: pan-y).
       split.addEventListener("pointerdown", (e) => {
+        if (window.innerWidth < 1024) return; // a carousel there, not a slider
         const touch = e.pointerType !== "mouse";
         const x0 = e.clientX, y0 = e.clientY;
         if (!touch) {

@@ -103,9 +103,8 @@ const plans: Plan[] = [
 ];
 
 // Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo.
-// Ad control is sold only on top of the AI add-on. Growth and Agency include
-// both. Meta campaign creation is left out on purpose: it waits on Meta's
-// review of pages_manage_ads (docs/what-ships.md).
+// Ad control stands on its own (it brings the Claude/ChatGPT connection, not
+// the AI assistant). Growth and Agency include both.
 const addons = [
   {
     name: "AI add-on",
@@ -121,8 +120,7 @@ const addons = [
     usd: 10,
     unit: "/ month",
     onPlans: "For Solo. Growth and Agency include it.",
-    needs: "Needs the AI add-on.",
-    body: "Claude or ChatGPT can change your ads for you: turn them on and off and change budgets on Meta, TikTok, Snapchat and Google, duplicate and edit on Meta, TikTok and Snapchat, and create new campaigns on TikTok and Snapchat. Nothing changes until you approve it.",
+    body: "Claude or ChatGPT can change your ads for you: turn them on and off and change budgets on Meta, TikTok, Snapchat and Google, duplicate and edit on Meta, TikTok and Snapchat, and create new campaigns on Meta, TikTok and Snapchat. Nothing changes until you approve it.",
   },
   {
     name: "Extra seat",
@@ -229,7 +227,7 @@ const faqs = [
   },
   {
     q: "Can Claude or ChatGPT change my ads?",
-    a: "Yes, with ad control. It is included on paid Growth and Agency plans, and Solo can add it for EGP 500 a month on top of the AI add-on. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
+    a: "Yes, with ad control. It is included on paid Growth and Agency plans, and Solo can add it for EGP 500 a month on its own, with no AI add-on needed. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
   },
 ];
 

@@ -75,18 +75,16 @@ const table = {
     { label: "النسخ وإعادة التسمية والحذف", cells: [true, true, true, true] },
     { label: "تعديل الجمهور المستهدف", cells: [true, true, true, "المواقع واللغات"] },
     { label: "تعديل نصوص الإعلانات ووسوم تتبع الروابط", cells: [true, true, true, true] },
-    { label: "إطلاق حملات جديدة من Google Drive", cells: ["early", true, true, "البحث وShopping وDisplay وDemand Gen وPerformance Max"] },
-    { label: "إضافة إعلانات جديدة إلى حملات جارية", cells: ["early", true, true, true] },
+    { label: "إطلاق حملات جديدة من Google Drive", cells: [true, true, true, "البحث وShopping وDisplay وDemand Gen وPerformance Max"] },
+    { label: "إضافة إعلانات جديدة إلى حملات جارية", cells: [true, true, true, true] },
     { label: "الكلمات المفتاحية والكلمات السلبية وعبارات البحث", cells: [false, false, false, true] },
-    { label: "تحويل المنشورات الحالية إلى إعلانات", cells: ["early", true, false, false] },
+    { label: "تحويل المنشورات الحالية إلى إعلانات", cells: [true, true, false, false] },
     { label: "إعلانات الكتالوج وإعلانات الاتصال", cells: [false, false, true, false] },
     { label: "القواعد التلقائية وجدولة الميزانيات", cells: [true, false, false, false] },
     { label: "إنشاء الجماهير", cells: [true, true, true, "زوار الموقع"] },
   ] as { label: string; cells: Cell[] }[],
   yes: "نعم",
   no: "لا",
-  early: "وصول مبكر",
-  footnote: "وصول مبكر على Meta: متاح لبعض الحسابات بينما تراجع Meta صلاحية تحتاجها هذه الإجراءات.",
 };
 
 // ── Things you can ask ────────────────────────────────────────────────
@@ -119,13 +117,13 @@ const faqs = {
     { q: "ما المساعدات التي يعمل معها؟", a: "Claude وChatGPT، وأي مساعد ذكاء اصطناعي آخر يمكنه الاتصال بخادم MCP." },
     { q: "هل يمكنني ربطه للقراءة فقط؟", a: "نعم. ألغِ تحديد خانة \"Also allow it to make changes\" في شاشة الموافقة، وسيكتفي بقراءة أرقامك." },
     { q: "هل يرى فريقي ما الذي غيّره؟", a: "نعم. يُسجَّل كل تغيير يجريه في سجل التغييرات الخاص بالعلامة التجارية، مع ما تغيّر ومتى." },
-    { q: "ما الباقات التي تشمله؟", a: "تشمله باقتا Growth وAgency. وفي باقة Solo هو إضافة بسعر 500 جنيه أو 10 دولارات شهريًا، فوق إضافة AI بسعر 390 جنيهًا أو 8 دولارات. وهو غير متاح خلال الفترة التجريبية المجانية." },
+    { q: "ما الباقات التي تشمله؟", a: "تشمله باقتا Growth وAgency. وفي باقة Solo هو إضافة بسعر 500 جنيه أو 10 دولارات شهريًا، بمفردها دون الحاجة إلى إضافة AI (إضافة AI بسعر 390 جنيهًا أو 8 دولارات لمساعد AI فقط). وهو غير متاح خلال الفترة التجريبية المجانية." },
   ],
 };
 
 const closing = {
   heading: "ابدأ بحساب واحد",
-  body: "التحكم في الإعلانات متاح في Growth وAgency. وفي Solo يمكنك إضافته مقابل 500 جنيه أو 10 دولارات شهريًا فوق إضافة AI.",
+  body: "التحكم في الإعلانات متاح في Growth وAgency. وفي Solo يمكنك إضافته مقابل 500 جنيه أو 10 دولارات شهريًا بمفردها.",
   pricing: "اطّلع على الأسعار",
 };
 ---
@@ -237,8 +235,7 @@ const closing = {
                   <td class="px-3 py-3 text-center">
                     {c === true && <span class="text-base font-bold text-emerald-600" aria-label={table.yes}>✓</span>}
                     {c === false && <span class="text-zinc-300" aria-label={table.no}>·</span>}
-                    {c === "early" && <span class="text-base font-bold text-amber-600" aria-label={table.early}>✓<sup>*</sup></span>}
-                    {typeof c === "string" && c !== "early" && <span class="text-xs font-semibold text-emerald-700">{c}</span>}
+                    {typeof c === "string" && <span class="text-xs font-semibold text-emerald-700">{c}</span>}
                   </td>
                 ))}
               </tr>
@@ -246,7 +243,6 @@ const closing = {
           </tbody>
         </table>
       </div>
-      <p class="mt-4 text-sm text-zinc-500"><sup>*</sup> {table.footnote}</p>
     </div>
   </section>
 

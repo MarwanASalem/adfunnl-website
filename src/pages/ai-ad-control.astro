@@ -28,8 +28,8 @@ const APP_URL = "https://app.adfunnl.com";
 //     Shopping, Display, Demand Gen and Performance Max (checked 21 October
 //     2026); videos must already be on YouTube. Audiences on Google are
 //     website-visitor lists only.
-//   - On Meta, new campaigns, new ads and existing posts as ads are early
-//     access until Meta approves pages_manage_ads. Never a plain tick.
+//   - On Meta, new campaigns, new ads and existing posts as ads are plain ticks
+//     since 25 October 2026 (Meta approved pages_manage_ads).
 //   - Platform order is fixed: Meta, TikTok, Snapchat and Google.
 //   - Nobody has measured how long connecting takes. No "about a minute".
 
@@ -84,7 +84,7 @@ const compare = {
 
 // ── What it can change, per platform ──────────────────────────────────
 // Columns in the fixed order. Cell values: true = yes, false = no,
-// "early" = early access (footnote), any other string = a qualified yes.
+// Any string = a qualified yes.
 type Cell = boolean | string;
 const platforms = [
   { name: "Meta", key: "meta", status: "Beta" },
@@ -102,18 +102,16 @@ const table = {
     { label: "Duplicate, rename and delete", cells: [true, true, true, true] },
     { label: "Edit audiences", cells: [true, true, true, "Locations and languages"] },
     { label: "Edit ad text and URL tracking tags", cells: [true, true, true, true] },
-    { label: "Launch new campaigns from Google Drive", cells: ["early", true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
-    { label: "Add new ads to running campaigns", cells: ["early", true, true, true] },
+    { label: "Launch new campaigns from Google Drive", cells: [true, true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
+    { label: "Add new ads to running campaigns", cells: [true, true, true, true] },
     { label: "Keywords, negative keywords and search terms", cells: [false, false, false, true] },
-    { label: "Turn existing posts into ads", cells: ["early", true, false, false] },
+    { label: "Turn existing posts into ads", cells: [true, true, false, false] },
     { label: "Catalog ads and call ads", cells: [false, false, true, false] },
     { label: "Automated rules and budget schedules", cells: [true, false, false, false] },
     { label: "Create audiences", cells: [true, true, true, "Website visitors"] },
   ] as { label: string; cells: Cell[] }[],
   yes: "Yes",
   no: "No",
-  early: "Early access",
-  footnote: "Early access on Meta: open to some accounts while Meta reviews a permission these actions need.",
 };
 
 // ── Things you can ask ────────────────────────────────────────────────
@@ -143,17 +141,17 @@ const faqs = {
   heading: "Questions",
   items: [
     { q: "Can it change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat." },
-    { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. On Meta a few actions are early access, marked in the table above. Both are still gaining actions." },
+    { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. Both are still gaining actions." },
     { q: "Which assistants does it work with?", a: "Claude, ChatGPT, and any other AI assistant that can connect to an MCP server." },
     { q: "Can I connect it read-only?", a: "Yes. Untick \"Also allow it to make changes\" on the approval screen, and it can only read your numbers." },
     { q: "Can my team see what it changed?", a: "Yes. Every change it makes is written to the brand's Change Log, with what changed and when." },
-    { q: "Which plans include it?", a: "Growth and Agency include it. On Solo it is an add-on at EGP 500 or $10 a month, on top of the AI add-on at EGP 390 or $8. It is not part of the free trial." },
+    { q: "Which plans include it?", a: "Growth and Agency include it. On Solo it is an add-on at EGP 500 or $10 a month, on its own, with no AI add-on needed (the AI add-on at EGP 390 or $8 is only for the AI assistant). It is not part of the free trial." },
   ],
 };
 
 const closing = {
   heading: "Start with one account",
-  body: "Ad control comes with Growth and Agency. On Solo, add it for EGP 500 / $10 a month on top of the AI add-on.",
+  body: "Ad control comes with Growth and Agency. On Solo, add it for EGP 500 / $10 a month, on its own.",
   pricing: "See pricing",
 };
 ---
@@ -264,8 +262,7 @@ const closing = {
                   <td class="px-3 py-3 text-center">
                     {c === true && <span class="text-base font-bold text-emerald-600" aria-label={table.yes}>✓</span>}
                     {c === false && <span class="text-zinc-300" aria-label={table.no}>·</span>}
-                    {c === "early" && <span class="text-base font-bold text-amber-600" aria-label={table.early}>✓<sup>*</sup></span>}
-                    {typeof c === "string" && c !== "early" && <span class="text-xs font-semibold text-emerald-700">{c}</span>}
+                    {typeof c === "string" && <span class="text-xs font-semibold text-emerald-700">{c}</span>}
                   </td>
                 ))}
               </tr>
@@ -273,7 +270,6 @@ const closing = {
           </tbody>
         </table>
       </div>
-      <p class="mt-4 text-sm text-zinc-500"><sup>*</sup> {table.footnote}</p>
     </div>
   </section>
 

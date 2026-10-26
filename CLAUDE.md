@@ -37,7 +37,7 @@ These are not preferences. A copy change that breaks one of these is wrong.
    disclaimer instead of fixing the scenario.
 6. **One heading per idea.** No eyebrow plus headline saying the same thing, and
    no three-beat staccato ("One currency. Every account. No more guesswork.").
-   The three-beat belongs to the slogan, `Connect. Visualize. Share.`, and
+   The staccato rhythm belongs to the slogan, `Connect. Visualize. Share. Act.`, and
    nowhere else.
 
 A hook checks rules 1 and 2 on every write to `src/`. If it blocks you, fix the

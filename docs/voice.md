@@ -45,8 +45,8 @@ sentence that collapses without it was never saying anything.
 
 ### The slogan
 
-**Connect. Visualize. Share.** That is the brand slogan. It is the one place
-the three-beat rhythm belongs, which is exactly why body copy must not imitate
+**Connect. Visualize. Share. Act.** That is the brand slogan (the fourth beat,
+Act, was added on 2026-10-26). It is the one place the staccato rhythm belongs, which is exactly why body copy must not imitate
 it (see R2).
 
 It lives in the footer, above the descriptive line, in `Layout.astro`. Use it
@@ -296,7 +296,7 @@ body copy.
 
 - **Spelling: British or American?** Currently mixed. "optimise" and
   "fortnight" sit alongside "normalized" and "anonymized". Needs a call.
-- **Where the slogan goes.** "Connect. Visualize. Share." appears nowhere on
+- **Where the slogan goes.** "Connect. Visualize. Share. Act." appears nowhere on
   the site yet. Hero, footer, or both is a design decision, not a copy one.
 - **Screenshots** (R3): needs a source workspace with anonymised data.
 
@@ -355,7 +355,8 @@ Notes that come up every time:
 - Platforms in a list: "Meta وTikTok وSnapchat وGoogle", same order, the و
   joined to the next name. Still no count (R14).
 - CTA: `ابدأ مجانًا` (Start free). Nothing else.
-- Slogan: `اربط. اعرض. شارك.`
+- Slogan: `اربط. اعرض. شارك. تحرّك.` (تحرّك is my pick for Act; change it here
+  and in `Layout.astro` if Hussein prefers another word)
 - The Arabic article before an English term is fine where Arabic grammar wants
   it (الـ Creatives), but do not put it on every occurrence.
 - On the Arabic pages the two words of each persona name are joined with a

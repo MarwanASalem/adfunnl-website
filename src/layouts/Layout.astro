@@ -452,7 +452,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             <!-- The slogan. This is its home: brand line first, then the plain
                  description of what the product is. Do not repeat it elsewhere
                  on the page. -->
-            <p class="font-display text-base font-bold tracking-tight text-brand-700">{T.slogan}</p>
+            <p class="font-display text-2xl font-bold tracking-tight text-brand-700 sm:text-3xl">{T.slogan}</p>
             <p class="mt-2 max-w-xs text-sm leading-relaxed text-zinc-500">{T.footerLine}</p>
             <div class="mt-5 flex items-center gap-2">
               {socials.map((s) => (
@@ -504,6 +504,13 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             </nav>
           </div>
         </div>
+        <!-- The name returns at full width, drawn from the logo's own shape in a
+             light lavender. Decorative: the real logo and links are above. -->
+        <div
+          class="mt-14 aspect-[1643/295] w-full bg-brand-100"
+          style="-webkit-mask: url(/logo.png) center / contain no-repeat; mask: url(/logo.png) center / contain no-repeat;"
+          aria-hidden="true"
+        ></div>
         <div class="mt-10 flex flex-col gap-1.5 border-t border-zinc-200 pt-6 text-xs text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} {T.rights}</span>
           <span>{T.powered}</span>

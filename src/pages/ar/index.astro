@@ -239,17 +239,19 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
   <section id="live" class="relative overflow-hidden bg-zinc-50/70 px-6 py-16 sm:py-24">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(87,56,201,0.10),transparent)]"></div>
     <div class="mx-auto max-w-6xl">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+      <!-- Heading beside the Pulse table from lg up (same as the English page). -->
+      <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
+      <div class="reveal mx-auto max-w-2xl text-center lg:mx-0 lg:text-start">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl lg:text-5xl lg:leading-[1.15]">
           تابع أداء الحملات مباشرةً وجنبًا إلى جنب.
         </h2>
-        <p class="mt-4 text-lg text-zinc-500">
-          بدل تبويبات كثيرة لرؤية إعلاناتك، افتح AdFunnl فقط.. تخيّل الوقت الذي توفّره لتستثمره فيما يهم فعلًا.
+        <p class="mt-4 text-lg text-zinc-600">
+          بدل تبويبات كثيرة لرؤية إعلاناتك، افتح AdFunnl فقط. تخيّل الوقت الذي توفّره لتستثمره فيما يهم فعلًا.
         </p>
       </div>
 
       <!-- Pulse: featured, wide -->
-      <div class="reveal mt-14 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl shadow-brand-900/10">
+      <div class="reveal overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl shadow-brand-900/10">
         <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
@@ -302,22 +304,29 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         </div>
       </div>
 
+      </div>
+
       <!-- Currency unification. Sits under the side-by-side tables because it
            is why those numbers can be compared at all. -->
       <CurrencyMerge locale="ar" />
 
-      <!-- ── Creative reports ── -->
-      <div class="reveal mx-auto mt-14 sm:mt-[72px] max-w-2xl text-center">
-        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+    </div>
+  </section>
+
+  <!-- ========================= CREATIVE REPORTS ========================= -->
+  <!-- Its own dark section, as on the English page. -->
+  <section id="creatives" class="bg-ink px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="reveal max-w-2xl text-center lg:text-start">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
           تعمّق أكثر مع تقارير Creatives جاهزة
-        </h3>
-        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
-          تقيّم Best Creatives Calculator كل إعلان حسب النتائج التي تهمك وترتّبها، فتظهر أفضل إعلاناتك بنقرة.<br />
-          وبالمناسبة.. لدينا قوالب جاهزة أخرى أيضًا 👀
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-300">
+          تقيّم Best Creatives Calculator كل إعلان حسب النتائج التي تهمك وترتّبها، فتظهر أفضل إعلاناتك بنقرة. ولدينا قوالب جاهزة أخرى أيضًا.
         </p>
       </div>
 
-      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl shadow-brand-900/10">
+      <div class="reveal mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white shadow-[0_30px_70px_-28px_rgba(0,0,0,0.6)]">
         <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
@@ -587,10 +596,10 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
     <div class="mx-auto max-w-6xl">
       <!-- ── Store revenue ── -->
       <div class="reveal mx-auto max-w-2xl text-center">
-        <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
           اربط متجرك ليصبح العائد حقيقيًا
-        </h3>
-        <p class="mt-3.5 text-base leading-relaxed text-zinc-500">
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-600">
           اربط متجرك على Shopify، وسيضع AdFunnl الإنفاق الإعلاني أمام الإيرادات التي سجّلها متجرك فعلًا. كل منصة تنسب التحويلات لنفسها، ومتجرك هو الحَكَم.
         </p>
       </div>
@@ -651,13 +660,13 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
               <p class="mt-1 text-xs text-zinc-500">4,182 طلبًا · 1,193 عميلًا جديدًا</p>
             </div>
             <div class="mt-2.5 grid grid-cols-2 gap-2.5">
-              <div class="rounded-[10px] border border-zinc-100 bg-white px-3 py-2.5">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">ما تنسبه المنصات لنفسها</p>
-                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-zinc-400"><bdi dir="ltr">6.42×</bdi></p>
+              <div class="rounded-[10px] border border-zinc-100 bg-white px-4 py-4">
+                <p class="text-xs font-semibold text-zinc-500">ما تنسبه المنصات لنفسها</p>
+                <p class="mt-1 font-display text-4xl font-bold tabular-nums lining-nums text-zinc-400 sm:text-5xl"><bdi dir="ltr">6.42×</bdi></p>
               </div>
-              <div class="rounded-[10px] border border-brand-200 bg-brand-50 px-3 py-2.5">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-brand-500">ROAS موثّق من المتجر</p>
-                <p class="mt-0.5 font-display text-lg font-bold tabular-nums lining-nums text-brand-900"><bdi dir="ltr">4.80×</bdi></p>
+              <div class="rounded-[10px] border border-brand-200 bg-brand-50 px-4 py-4">
+                <p class="text-xs font-semibold text-brand-700">ROAS موثّق من المتجر</p>
+                <p class="mt-1 font-display text-4xl font-bold tabular-nums lining-nums text-brand-900 sm:text-5xl"><bdi dir="ltr">4.80×</bdi></p>
               </div>
             </div>
           </div>
@@ -677,18 +686,14 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
     <div class="mx-auto max-w-6xl">
       <div class="reveal mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
-          ثم شارك كل هذا في لوحة واحدة قابلة للتخصيص بالسحب والإفلات 🤯
+          ثم شارك كل هذا في لوحة واحدة قابلة للتخصيص بالسحب والإفلات
         </h2>
       </div>
 
       <!-- Build (Dashboards): flagship, links to feature page -->
       <div id="build" class="mt-10 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
         <div>
-          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-            منشئ بالسحب والإفلات
-          </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">تقارير تشبه طريقة تفكيرك</h3>
+          <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950">تقارير تشبه طريقة تفكيرك</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
             مساحة حرة بدل قالب جامد. اسحب مربعات KPI والرسوم البيانية ومسارات التحويل والخرائط والجداول ومعارض الـ Creatives إلى حيث تريد. أضف المقارنة بالفترة السابقة، ومقاييس مخصّصة، وملاحظات توثّق ما غيّرته ومتى. واحفظ أي تصميم كقالب تعيد استخدامه.
           </p>
@@ -726,14 +731,13 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
         body={aiDashboard.body}
       />
 
+      <!-- Trends and team: a swipeable row on phones (m-snap), stacked from md up -->
+      <div class="m-snap">
+
       <!-- Month over month: spend + ROAS -->
       <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
         <div>
-          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>
-            الاتجاهات
-          </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">ثم أضف الاتجاه الذي يروي القصة</h3>
+          <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950">ثم أضف الاتجاه الذي يروي القصة</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
             ضع الإنفاق وblended ROAS على اللوحة نفسها شهرًا بعد شهر، لترى أنت وعميلك هل زيادة الميزانية تشتري عائدًا أكبر أم تستنزفه بصمت. الإنفاق يظهر كأعمدة، والـ ROAS كخط فوقها.
           </p>
@@ -765,11 +769,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
       <!-- Invite your team -->
       <div class="reveal mt-6 grid items-center gap-10 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm lg:grid-cols-2 lg:p-10">
         <div>
-          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
-            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-            التعاون
-          </span>
-          <h3 class="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-950">ثم أدخِل فريقك وعملاءك</h3>
+          <h3 class="font-display text-2xl font-bold tracking-tight text-zinc-950">ثم أدخِل فريقك وعملاءك</h3>
           <p class="mt-3 leading-relaxed text-zinc-500">
             أضف المحللين والـ Account Managers بدعوة واحدة، مسؤولًا أو عضوًا، وأرسل لعملائك رابطًا مباشرًا. يقرأ الجميع الأرقام نفسها، دون ملفات متناقلة أو نسخ يختلف عليها الجميع.
           </p>
@@ -810,6 +810,8 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
             ))}
           </div>
         </div>
+      </div>
+
       </div>
     </div>
   </section>

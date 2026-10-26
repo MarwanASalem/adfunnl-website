@@ -94,6 +94,7 @@
   .m-snap {
     display: flex !important;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     gap: .875rem;
     padding-bottom: 1rem;

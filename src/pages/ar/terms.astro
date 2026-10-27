@@ -15,9 +15,9 @@ const SUPPORT_EMAIL = "support@adfunnl.com";
 //
 // Deliberately low-visibility: linked from the footer only, and kept out of
 // the nav and the sitemap-facing pages. See privacy.astro for the sibling page.
-const LAST_UPDATED = "آخر تحديث: يونيو 2025";
+const LAST_UPDATED = "آخر تحديث: أكتوبر 2026";
 
-type Section = { title: string; body: string[] };
+type Section = { title: string; body: string[]; link?: { before: string; href: string; label: string } };
 
 const SECTIONS: Section[] = [
   {
@@ -71,6 +71,18 @@ const SECTIONS: Section[] = [
       "يمكنك إنهاء حسابك في أي وقت، ونحتفظ بحق تعليق الحسابات التي تخالف هذه الشروط أو إنهائها.",
     ],
   },
+  {
+    title: "المدفوعات والإلغاء والاسترداد",
+    body: [
+      "تُدفع الباقات المدفوعة مقدمًا، شهريًا أو سنويًا، عبر مزوّد الدفع Paymob. تظهر الأسعار في صفحة الباقات قبل الدفع. إذا فعّلت التجديد التلقائي، تُخصم قيمة كل فترة جديدة من بطاقتك المحفوظة عند بدايتها؛ ويمكنك إيقاف التجديد التلقائي أو إزالة بطاقتك في أي وقت من صفحة الباقات، وتستمر باقتك حتى نهاية الفترة التي دفعت ثمنها.",
+      "الاسترداد:",
+      "• يمكن استرداد أول دفعة لمساحة العمل كاملةً خلال 7 أيام من الدفع، مباشرةً من صفحة الباقات. تعود مساحة العمل إلى الباقة المجانية فور تأكيد الاسترداد.",
+      "• لا يمكن استرداد التجديدات والترقيات والدفعات اللاحقة من التطبيق. إذا كنت تعتقد أن إحداها خُصمت بالخطأ، تواصل معنا على support@adfunnl.com وسنراجعها.",
+      "• يُعاد المبلغ إلى البطاقة أو المحفظة التي دفعت بها. تعتمد مدة ظهوره على البنك أو مزوّد المحفظة، وعادةً تستغرق بضعة أيام عمل.",
+      "• لا يمكن استرداد مدفوعات الكشك (النقدية) عبر Paymob؛ تواصل معنا وسنرتّب ذلك.",
+    ],
+    link: { before: "السياسة كاملة في صفحة", href: "/ar/refund-policy", label: "سياسة الاسترداد" },
+  },
 ];
 ---
 
@@ -92,6 +104,12 @@ const SECTIONS: Section[] = [
             {section.body.map((paragraph) => (
               <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
             ))}
+            {section.link && (
+              <p class="text-[15px] leading-relaxed text-zinc-600">
+                {section.link.before}{" "}
+                <a href={section.link.href} class="text-brand-700 underline">{section.link.label}</a>.
+              </p>
+            )}
           </div>
         </section>
       ))}

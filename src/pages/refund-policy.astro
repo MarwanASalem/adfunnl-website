@@ -1,0 +1,88 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const SUPPORT_EMAIL = "support@adfunnl.com";
+
+// ── Refund Policy ────────────────────────────────────────────────────────
+// The refund rules from the "Payments, Cancellation and Refunds" section of
+// the app's Terms (app.adfunnl.com/terms), on a page of their own so the
+// payment provider and customers have one public URL for them. The app is the
+// source: the 7-day window and first-payment-only rule are enforced there
+// (Payment::SELF_REFUND_WINDOW). If the policy changes in the app, change it
+// here, in terms.astro, and in both Arabic twins, and move "Last updated".
+//
+// Low-visibility like the other legal pages: linked from the footer only.
+const LAST_UPDATED = "Last updated: October 2026";
+
+// City and country only, on purpose: the full street address isn't published.
+const ADDRESS = "Funnl Suite LLC, Alexandria, Egypt";
+
+type Section = { title: string; body: string[] };
+
+const SECTIONS: Section[] = [
+  {
+    title: "How you pay",
+    body: [
+      "Paid plans are billed in advance, monthly or yearly. Card and wallet payments go through our payment provider, Paymob. Prices are shown on the Plans page before you pay.",
+    ],
+  },
+  {
+    title: "Refunds on your first payment",
+    body: [
+      "Your first payment for a workspace can be refunded in full within 7 days of paying. Open the Plans page in AdFunnl and choose Refund my payment, or email us at support@adfunnl.com.",
+      "Your workspace moves back to the Free plan as soon as the refund is confirmed, and auto-renew is turned off. Your data and dashboards stay.",
+    ],
+  },
+  {
+    title: "Renewals, upgrades and later payments",
+    body: [
+      "Renewals, upgrades and any payment after the first are not refundable from the app. If you think one was charged in error, email us at support@adfunnl.com and we'll review it.",
+    ],
+  },
+  {
+    title: "Cancelling",
+    body: [
+      "You can turn auto-renew off or remove your saved card at any time from the Plans page. Your plan then runs until the end of the period you paid for, and you are not charged again.",
+    ],
+  },
+  {
+    title: "When the money arrives",
+    body: [
+      "Refunds go back to the card or wallet you paid with. How long the money takes to appear depends on your bank or wallet provider, usually a few business days.",
+      "Kiosk (cash) payments can't be refunded through Paymob. Email us and we'll arrange it.",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Refund Policy"
+  description="When AdFunnl payments can be refunded, how to ask for a refund, and how long it takes to reach you."
+  noindex
+>
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-20">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-zinc-900">Refund Policy</h1>
+    <p class="mt-2 text-sm text-zinc-500">{LAST_UPDATED}</p>
+
+    <div class="mt-12 space-y-10">
+      {SECTIONS.map((section) => (
+        <section>
+          <h2 class="text-lg font-semibold text-zinc-900">{section.title}</h2>
+          <div class="mt-2 space-y-2">
+            {section.body.map((paragraph) => (
+              <p class="text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <div class="mt-12 space-y-1 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      <p>
+        Questions about a payment? Contact us at{" "}
+        <a href={`mailto:${SUPPORT_EMAIL}`} class="text-brand-700 underline">{SUPPORT_EMAIL}</a>.
+      </p>
+      <p>{ADDRESS}</p>
+    </div>
+  </main>
+</Layout>

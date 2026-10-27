@@ -83,11 +83,14 @@ const COPY = {
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
+    refunds: "Refund policy",
     security: "Security",
     forPersona: (s: string) => `For ${s}`,
     onSocial: (s: string) => `AdFunnl on ${s}`,
     rights: "AdFunnl. All rights reserved.",
     powered: "Powered by Funnl Suite",
+    // City and country only, on purpose: the full street address isn't published.
+    address: "Alexandria, Egypt",
     blurbs: {
       am: "Answer client questions with a link, not an evening's work.",
       tl: "Know an account is slipping before the client tells you.",
@@ -117,11 +120,13 @@ const COPY = {
     about: "من نحن",
     privacy: "الخصوصية",
     terms: "الشروط",
+    refunds: "سياسة الاسترداد",
     security: "الأمان",
     forPersona: (s: string) => `لـ ${s}`,
     onSocial: (s: string) => `AdFunnl على ${s}`,
     rights: "AdFunnl. جميع الحقوق محفوظة.",
     powered: "من تطوير Funnl Suite",
+    address: "الإسكندرية، مصر",
     blurbs: {
       am: "أجب عن أسئلة العميل برابط واحد، بدل أمسية كاملة من العمل.",
       tl: "اعرف أن حسابًا يتراجع قبل أن يخبرك العميل.",
@@ -501,12 +506,13 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
               <a href={L("/security")} class="hover:text-zinc-900 transition">{T.security}</a>
               <a href={L("/privacy")}  class="hover:text-zinc-900 transition">{T.privacy}</a>
               <a href={L("/terms")}    class="hover:text-zinc-900 transition">{T.terms}</a>
+              <a href={L("/refund-policy")} class="hover:text-zinc-900 transition">{T.refunds}</a>
             </nav>
           </div>
         </div>
         <div class="mt-10 flex flex-col gap-1.5 border-t border-zinc-200 pt-6 text-xs text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} {T.rights}</span>
-          <span>{T.powered}</span>
+          <span>{T.powered} · {T.address}</span>
         </div>
       </div>
     </footer>

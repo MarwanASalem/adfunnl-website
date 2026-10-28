@@ -91,6 +91,8 @@ const COPY = {
     powered: "Powered by Funnl Suite",
     // City and country only, on purpose: the full street address isn't published.
     address: "Alexandria, Egypt",
+    priceNotice: "Prices go up on 1 November. Subscribe or renew before then to keep today's price.",
+    priceNoticeLink: "See pricing",
     blurbs: {
       am: "Answer client questions with a link, not an evening's work.",
       tl: "Know an account is slipping before the client tells you.",
@@ -127,6 +129,8 @@ const COPY = {
     rights: "AdFunnl. جميع الحقوق محفوظة.",
     powered: "من تطوير Funnl Suite",
     address: "الإسكندرية، مصر",
+    priceNotice: "ترتفع الأسعار بدءًا من 1 نوفمبر. اشترك أو جدّد قبلها لتحتفظ بالسعر الحالي.",
+    priceNoticeLink: "اطّلع على الأسعار",
     blurbs: {
       am: "أجب عن أسئلة العميل برابط واحد، بدل أمسية كاملة من العمل.",
       tl: "اعرف أن حسابًا يتراجع قبل أن يخبرك العميل.",
@@ -317,6 +321,20 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WL3FT97F"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Price change notice. Hides itself from 1 November 2026, Cairo time,
+         so a build that outlives the date never shows it. Remove it with the
+         new prices. -->
+    <div id="price-notice" data-until="2026-10-31T22:00:00Z" class="bg-brand-600 px-6 py-2 text-center text-sm font-medium text-white">
+      {T.priceNotice}
+      <a href={L("/pricing")} class="ms-1 underline underline-offset-2 hover:text-brand-100">{T.priceNoticeLink}</a>
+    </div>
+    <script is:inline>
+      (function () {
+        var el = document.getElementById("price-notice");
+        if (el && Date.now() >= Date.parse(el.dataset.until)) el.remove();
+      })();
+    </script>
 
     <!-- Nav -->
     <header class="sticky top-0 z-50 border-b border-zinc-100 bg-white/85 backdrop-blur-md">

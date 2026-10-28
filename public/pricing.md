@@ -2,6 +2,8 @@
 
 AdFunnl is a marketing analytics and ad reporting platform for agencies, media buyers and performance marketers. Prices are per month, in USD or EGP. Annual billing costs ten months for twelve, so two months are free. Every paid plan starts with a full-access free trial that falls back to the Free plan when it ends.
 
+Price change: the prices below apply until 31 October 2026. They go up on 1 November 2026. A subscription or renewal bought before then keeps the current price for the period bought.
+
 Sign up: https://app.adfunnl.com/signup
 Full pricing page: https://www.adfunnl.com/pricing
 

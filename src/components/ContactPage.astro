@@ -1,0 +1,112 @@
+---
+// Markup for /contact and /ar/contact. All copy lives in each page's
+// frontmatter and arrives here as `copy`.
+//
+// The channels are the app's own Help button's (docs/what-ships.md, support
+// channels): support@adfunnl.com, and WhatsApp, read and answered by a person.
+
+const APP_URL = "https://app.adfunnl.com";
+const SUPPORT_EMAIL = "support@adfunnl.com";
+const WHATSAPP_NUMBER = "201157086780";
+/** As written for people, kept left to right in both locales. */
+const WHATSAPP_DISPLAY = "+20 115 708 6780";
+
+export interface Copy {
+  hero: { heading: string; body: string };
+  whatsapp: { label: string; body: string; action: string; prefill: string };
+  email: { label: string; body: string; action: string };
+  customer: { heading: string; body: string };
+  faq: { heading: string; items: { q: string; a: string }[] };
+  company: { heading: string; body: string };
+  closing: { heading: string; body: string; cta: string };
+}
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(copy.whatsapp.prefill)}`;
+const card = "flex flex-col rounded-[1.6rem] border border-white bg-[linear-gradient(165deg,#ffffff,#f7f5fe_55%,#eae5fc)] p-7 shadow-[0_18px_34px_-20px_rgba(43,29,97,.28)] ring-1 ring-[rgba(87,56,201,.06)]";
+---
+
+<!-- ================================ HERO ================================ -->
+<section class="relative overflow-hidden bg-white px-6 pt-16 pb-16 sm:pt-20">
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_50%_-15%,#e6e1fb,transparent)]"></div>
+  <div class="mx-auto max-w-5xl">
+    <h1 class="max-w-3xl font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">{copy.hero.heading}</h1>
+    <p class="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">{copy.hero.body}</p>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
+      <div class={card}>
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#25D366] text-white" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm0-21.6A11.8 11.8 0 0 0 1.9 17.9L.2 24l6.3-1.7A11.8 11.8 0 1 0 12 .2z"/></svg>
+        </span>
+        <h2 class="mt-5 text-[1.15rem] font-bold tracking-tight text-[#1e1b4b]">{copy.whatsapp.label}</h2>
+        <p class="mt-1 font-mono text-sm text-zinc-700" dir="ltr">{WHATSAPP_DISPLAY}</p>
+        <p class="mt-3 flex-1 text-sm leading-relaxed text-zinc-500">{copy.whatsapp.body}</p>
+        <a href={waHref} target="_blank" rel="noopener noreferrer" data-track-location="contact-whatsapp"
+           class="mt-6 inline-block rounded-xl border border-zinc-200 bg-white px-5 py-3 text-center text-sm font-semibold text-zinc-900 transition hover:border-brand-300 hover:text-brand-700">
+          {copy.whatsapp.action}
+        </a>
+      </div>
+      <div class={card}>
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-white" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        </span>
+        <h2 class="mt-5 text-[1.15rem] font-bold tracking-tight text-[#1e1b4b]">{copy.email.label}</h2>
+        <p class="mt-1 font-mono text-sm text-zinc-700" dir="ltr">{SUPPORT_EMAIL}</p>
+        <p class="mt-3 flex-1 text-sm leading-relaxed text-zinc-500">{copy.email.body}</p>
+        <a href={`mailto:${SUPPORT_EMAIL}`} data-track-location="contact-email"
+           class="mt-6 inline-block rounded-xl border border-zinc-200 bg-white px-5 py-3 text-center text-sm font-semibold text-zinc-900 transition hover:border-brand-300 hover:text-brand-700">
+          {copy.email.action}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ALREADY A CUSTOMER ======================== -->
+<section class="bg-zinc-50/70 px-6 py-16">
+  <div class="mx-auto grid max-w-5xl gap-10 md:grid-cols-2">
+    <div>
+      <h2 class="font-display text-2xl font-bold tracking-tight text-zinc-950">{copy.customer.heading}</h2>
+      <p class="mt-3 text-base leading-relaxed text-zinc-600">{copy.customer.body}</p>
+    </div>
+    <div>
+      <h2 class="font-display text-2xl font-bold tracking-tight text-zinc-950">{copy.company.heading}</h2>
+      <p class="mt-3 text-base leading-relaxed text-zinc-600">{copy.company.body}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ FAQ ================================ -->
+<section class="bg-white px-6 py-16 sm:py-20">
+  <div class="mx-auto max-w-3xl">
+    <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950">{copy.faq.heading}</h2>
+    <div class="mt-8 divide-y divide-zinc-100 border-y border-zinc-100">
+      {copy.faq.items.map((f) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-zinc-900 [&::-webkit-details-marker]:hidden">
+            {f.q}
+            <svg class="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg>
+          </summary>
+          <p class="mt-3 text-sm leading-relaxed text-zinc-600">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ================================ CTA ================================ -->
+<section class="px-6 pb-24">
+  <div class="mx-auto max-w-5xl rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{copy.closing.heading}</h2>
+      <p class="mt-4 text-lg text-zinc-400">{copy.closing.body}</p>
+      <a href={`${APP_URL}/signup`}
+         class="mt-9 inline-block w-full rounded-xl bg-brand-600 px-8 py-3.5 text-center text-base font-semibold text-white transition hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto">
+        {copy.closing.cta}
+      </a>
+    </div>
+  </div>
+</section>

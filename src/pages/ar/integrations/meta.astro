@@ -1,0 +1,109 @@
+---
+// Arabic twin of src/pages/integrations/meta.astro. Keep the two in step: a
+// change to one page's copy or markup belongs in the other. Media-buying and
+// technical terms stay in English, see the Arabic section of docs/voice.md.
+// The brief and the capability warnings live in the English page.
+import Layout from "../../../layouts/Layout.astro";
+import IntegrationDetail from "../../../components/IntegrationDetail.astro";
+import type { Copy } from "../../../components/IntegrationDetail.astro";
+import { faqPage } from "../../../data/plans";
+
+const copy: Copy = {
+  platform: "meta",
+  hero: {
+    heading: "تقارير إعلانات Meta، بجانب كل منصاتك الأخرى",
+    body: "يقرأ AdFunnl حساباتك الإعلانية على Meta حتى مستوى الإعلان، ويضعها في الجداول والرسوم نفسها مع TikTok وSnapchat وGoogle وإيرادات متجرك، محوّلة إلى عملة تقارير واحدة.",
+    cta: "ابدأ مجانًا",
+    shot: { src: "/screens/meta-dashboard.png", alt: "لوحة في AdFunnl مفلترة على Meta، بالإنفاق والمشتريات وROAS لعلامة تجارية تجريبية" },
+  },
+  pain: {
+    heading: "Meta Ads Manager لا يعرف إلا ما فعلته Meta",
+    body: "يعرض تحويلات Meta وحدها، بعملة الحساب الإعلاني، وبنافذة الإسناد الخاصة بـ Meta. وبمجرد أن تعلن أيضًا على TikTok أو Snapchat أو Google، يصبح السؤال المهم: كيف كان أداء Meta بجانبها، وبجانب ما باعه المتجر فعلًا؟ لا يجيب Ads Manager عن هذا، فتُجمَع الإجابة يدويًا، تبويبًا بعد تبويب، مع تحويل العملة في رأسك.",
+  },
+  comesIn: {
+    heading: "ما يصل من Meta",
+    items: [
+      "نتائج الحملات والمجموعات الإعلانية والإعلانات، من كل الحسابات الإعلانية التي تسمح بها باقتك",
+      "breakdowns حسب العمر والنوع والجهاز والدولة والمنطقة ومكان الظهور ويوم الأسبوع",
+      "الـ Creative لكل إعلان، بجانب أرقامه",
+      "Hook & Hold للفيديو: أين يتوقف المشاهدون",
+      "رصيد الحساب وحالته، لتذكير الرصيد",
+      "آخر 90 يومًا من بياناتك في يوم الربط نفسه",
+    ],
+  },
+  sections: [
+    {
+      heading: "من يشتري، حسب العمر والنوع والجهاز ومكان الظهور",
+      body: "تعرض عناصر الـ breakdowns أي تقسيم كرسم دائري أو أعمدة أو جدول أو خريطة، مجموعًا عبر كل حسابات Meta وحملاتها المعروضة. ويجمعها تقرير Audience insights في صفحة واحدة: الإنفاق حسب المنطقة على خريطة، ثم من أين تأتي مشترياتك.",
+      shot: { src: "/screens/breakdown-gender.png", alt: "المشتريات من Meta حسب النوع، في رسم دائري بحصص الذكور والإناث وغير المعروف" },
+    },
+    {
+      heading: "أي إعلان على Meta هو الرابح فعلًا",
+      body: "يرتّب Best Creatives إعلاناتك بدرجة واحدة بدل مقياس واحد: ROAS بنسبة 40% وتكلفة الشراء 40% وOutbound CTR بنسبة 20%، عبر عدة حسابات إعلانية معًا، مع ظهور كل Creative في الصفحة. وحملات الرسائل تُرتَّب بتكلفة الرسالة.",
+      points: [
+        "Hook & Hold يبيّن أين يتوقف المشاهدون في كل فيديو",
+        "Ad Fatigue ينبّهك إلى الإعلانات التي بدأ أداؤها يتعب",
+        "حد أدنى للإنفاق يُخرج الإعلانات قليلة الإنفاق من الترتيب",
+      ],
+      shot: { src: "/screens/best-creatives.png", alt: "صفحة Best Creatives في AdFunnl، ترتّب إعلانات تجريبية بالدرجة" },
+    },
+    {
+      heading: "عدّل إعلانات Meta دون فتح Ads Manager",
+      body: "شغّل حملات Meta وأوقفها وعدّل ميزانياتها مباشرة من تقرير Ads manager أو من جدول في لوحتك. أو اطلب ذلك من Claude أو ChatGPT: كل تعديل يعود إليك كخطة، ولا يُنفَّذ إلا بعد موافقتك في المحادثة.",
+      tag: "Claude وChatGPT · Beta",
+      points: [
+        "الإيقاف والتشغيل وتغيير الميزانيات",
+        "النسخ وإعادة التسمية والحذف، وتعديل الجمهور ونص الإعلان ووسوم الروابط",
+        "قواعد تلقائية وجداول للميزانية وتحويلات مخصصة، وجماهير مخصصة وlookalike",
+        "كل تعديل يُنفَّذ يُكتب في سجل تغييرات العلامة التجارية",
+      ],
+      shot: { src: "/screens/ads-manager.png", alt: "تقرير Ads manager في AdFunnl، بمفاتيح التشغيل والإيقاف والميزانية لكل حملة" },
+      link: { label: "ما يستطيع التحكم بالـ AI تعديله على كل منصة", href: "/ai-ad-control" },
+    },
+  ],
+  compare: {
+    heading: "Meta Ads Manager بجانب AdFunnl",
+    cols: ["المهمة", "في Meta Ads Manager", "في AdFunnl"],
+    rows: [
+      ["رؤية Meta بجانب TikTok وSnapchat وGoogle", "تفتح كل منصة في تبويب خاص بها", "جدول واحد وعملة واحدة"],
+      ["مقارنة Meta بإيراد المتجر", "تطابقها مع متجرك يدويًا", "store ROAS بجانب blended ROAS"],
+      ["ترتيب الـ Creatives عبر الحسابات", "حسابًا بعد حساب", "قائمة واحدة مرتبة عبر عدة حسابات"],
+      ["إرسال الأرقام للعميل", "تصدّر ثم تبني التقرير", "رابط مباشر أو PDF بشعاره"],
+    ],
+  },
+  faq: {
+    heading: "أسئلة عن Meta",
+    items: [
+      { q: "هل يحل AdFunnl محل Meta Ads Manager؟", a: "لا. ستظل تبني حملاتك وتعدّلها في Ads Manager. أما AdFunnl فهو المكان الذي تقرأ فيه Meta بجانب كل منصاتك الأخرى ومتجرك، وتشاركه." },
+      { q: "هل ستطابق الأرقام Ads Manager؟", a: "الإنفاق والنتائج هي أرقام Meta نفسها، مسحوبة من حساباتك الإعلانية. ولكل لوحة صفحة منهجية تشرح كيف يُحسب كل مقياس، وسجل تحديثات يبيّن متى حُدِّث كل حساب آخر مرة." },
+      { q: "كل كم تُحدَّث بيانات Meta؟", a: "كل 12 ساعة على Free وSolo، وكل 6 ساعات على Growth، وكل ساعة على Agency. وتُجلب آخر 3 أيام من جديد في كل تحديث، فتصل التحويلات المتأخرة." },
+      { q: "هل أستطيع ربط أكثر من حساب إعلاني على Meta؟", a: "نعم. باقتك تحدد العدد، من 3 حسابات إعلانية على Free فما فوق، ويمكن تجميعها حسب العلامة التجارية أو العميل." },
+      { q: "هل من الآمن أن أترك Claude أو ChatGPT يعدّل إعلاناتي على Meta؟", a: "لا يتغير شيء قبل موافقتك في المحادثة، ويمكنك الربط للقراءة فقط بدلًا من ذلك. وكل تعديل يُنفَّذ يُكتب في سجل تغييرات العلامة التجارية. التحكم في إعلانات Meta في مرحلة Beta." },
+    ],
+  },
+  others: {
+    heading: "منصات إعلانية أخرى",
+    links: [
+      { label: "Snapchat", href: "/integrations/snapchat", icon: "snapchat" },
+      { label: "TikTok", href: "/integrations/tiktok", icon: "tiktok" },
+      { label: "كل التكاملات", href: "/integrations" },
+    ],
+  },
+  closing: {
+    heading: "ابدأ بحساب Meta واحد",
+    body: "اربطه على باقة Free وشاهده بجانب البقية. ثم أضف منصاتك الأخرى حين يستحق ذلك.",
+    cta: "ابدأ مجانًا",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="Meta"
+  seoTitle="تقارير ولوحة إعلانات Meta مع كل منصاتك الأخرى · AdFunnl"
+  description="تقارير إعلانات Meta حتى مستوى الإعلان، بجانب TikTok وSnapchat وGoogle ومتجرك بعملة واحدة، مع الـ breakdowns وترتيب الـ Creatives والتحكم في الإعلانات."
+  schema={[faqPage(copy.faq.items)]}
+  crumbTrail={[{ name: "التكاملات", path: "/integrations" }, { name: "Meta", path: "/integrations/meta" }]}
+>
+  <IntegrationDetail copy={copy} locale="ar" />
+</Layout>

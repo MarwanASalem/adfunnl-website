@@ -1,0 +1,118 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import IntegrationDetail from "../../components/IntegrationDetail.astro";
+import type { Copy } from "../../components/IntegrationDetail.astro";
+import { faqPage } from "../../data/plans";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     A media buyer or performance marketer with real budget on
+//           Snapchat, often in the Gulf, who searched for Snapchat ads
+//           reporting or a Snapchat ads dashboard.
+//   Promise Snapchat read down to the ad, next to every other platform and
+//           the store, with its creatives ranked and its campaigns run from
+//           Claude or ChatGPT.
+//   Action  Start free.
+//
+// CAPABILITY WARNINGS (docs/what-ships.md, checked 29 October 2026):
+//   - Snapchat ad control from Claude or ChatGPT is Live.
+//   - Switching Snapchat campaigns on and off INSIDE AdFunnl is not
+//     available (Meta and TikTok only). The FAQ says so plainly.
+//   - Snapchat breakdowns are gender, age, country and region. No device.
+
+const copy: Copy = {
+  platform: "snapchat",
+  hero: {
+    heading: "Snapchat ads reporting, next to Meta, TikTok and Google",
+    body: "AdFunnl reads your Snapchat ad accounts down to the ad, ranks your Snapchat creatives with the rest, and puts the results in the same view as every other ad platform and your store, in one reporting currency.",
+    cta: "Start free",
+    shot: { src: "/screens/snapchat-dashboard.png", alt: "An AdFunnl dashboard filtered to Snapchat, with spend, purchases and ROAS for a demo brand" },
+  },
+  pain: {
+    heading: "Snapchat Ads Manager only knows what Snapchat did",
+    body: "Snapchat reports in its own dashboard, with its own column names and its own attribution window. Putting it next to Meta, TikTok and Google, or next to what the store actually sold, means another login, another export and more converting by hand before anyone can tell whether Snapchat earned its budget.",
+  },
+  comesIn: {
+    heading: "What comes in from Snapchat",
+    items: [
+      "Campaign, ad set and ad results, from as many ad accounts as your plan holds",
+      "Breakdowns by gender, age, country and region",
+      "Each ad's creative, shown next to its numbers",
+      "Ad fatigue across your Snapchat ads",
+      "Your last 90 days on the day you connect",
+    ],
+  },
+  sections: [
+    {
+      heading: "Who your Snapchat ads reach",
+      body: "Breakdown widgets show gender, age, country and region as a donut, bar, table or map, summed across every Snapchat account and campaign in view. The Audience insights report puts Snapchat and Meta on one page, so you can see who buys from each.",
+      shot: { src: "/screens/audience-insights.png", alt: "The Audience insights report in AdFunnl, with spend by region on a map and splits by gender and age" },
+    },
+    {
+      heading: "Your Snapchat creatives, ranked with the rest",
+      body: "Best Creatives ranks Snapchat ads by one score, ROAS 40%, cost per purchase 40% and outbound CTR 20%, next to your Meta and TikTok ads, across several ad accounts at once and with each creative on the page.",
+      points: [
+        "A minimum spend filter keeps low-spend noise out of the ranking",
+        "Ad Fatigue flags Snapchat ads that are wearing out",
+        "Send the ranking to a client as a PDF or a live link",
+      ],
+      shot: { src: "/screens/best-creatives.png", alt: "The Best Creatives page in AdFunnl, ranking demo ads by score" },
+    },
+    {
+      heading: "Run Snapchat from Claude or ChatGPT",
+      body: "Connect AdFunnl to Claude or ChatGPT and ask it to make the change. Every change comes back as a plan first and only happens once you approve it in the chat.",
+      tag: "Live",
+      points: [
+        "Pause, turn on and change budgets",
+        "Duplicate, rename and delete, and edit the audience, ad text and URL tags",
+        "New campaigns from your images and videos on Google Drive, and new ad sets and ads in running campaigns, all created switched off",
+        "Catalog ads with catalog templates, and call ads",
+        "Audiences from Snap Pixel website visitors, customer lists and lookalikes",
+      ],
+      link: { label: "What AI ad control can change on each platform", href: "/ai-ad-control" },
+    },
+  ],
+  compare: {
+    heading: "Snapchat Ads Manager next to AdFunnl",
+    cols: ["The job", "In Snapchat Ads Manager", "In AdFunnl"],
+    rows: [
+      ["Seeing Snapchat next to Meta, TikTok and Google", "Open each platform in its own tab", "One table, one currency"],
+      ["Checking Snapchat against store revenue", "Line it up with your store by hand", "Store ROAS next to blended ROAS"],
+      ["Finding the winning creative", "Snapchat ads only, account by account", "Ranked with every platform's ads"],
+      ["Sending the client their numbers", "Export, then build the report", "A live link or a PDF with their logo"],
+    ],
+  },
+  faq: {
+    heading: "Questions about Snapchat",
+    items: [
+      { q: "Does AdFunnl show Snapchat age and gender?", a: "Yes. Snapchat brings in gender, age, country and region breakdowns. It does not report device." },
+      { q: "Can I switch Snapchat campaigns on and off inside AdFunnl?", a: "Not inside the dashboard: those switches are for Meta and TikTok. From Claude or ChatGPT you can pause, turn on and change budgets on Snapchat, after approving each change." },
+      { q: "My Snapchat account spends in SAR and the others in USD. Is that a problem?", a: "No. Every account is converted into one reporting currency at the current market rate, or at your own rate per currency if you set one." },
+      { q: "How often does Snapchat data refresh?", a: "Every 12 hours on Free and Solo, every 6 hours on Growth and every hour on Agency. The last 3 days are fetched again on every sync, so conversions that report late still land." },
+      { q: "Can I connect several Snapchat ad accounts?", a: "Yes. Your plan sets how many, from 3 ad accounts on Free upwards, and they can be grouped by brand or client." },
+    ],
+  },
+  others: {
+    heading: "Other ad platforms",
+    links: [
+      { label: "Meta", href: "/integrations/meta", icon: "meta" },
+      { label: "TikTok", href: "/integrations/tiktok", icon: "tiktok" },
+      { label: "Every integration", href: "/integrations" },
+    ],
+  },
+  closing: {
+    heading: "Start with one Snapchat account",
+    body: "Connect it on the Free plan and see it next to the rest. Add your other platforms when it earns its place.",
+    cta: "Start free",
+  },
+};
+---
+
+<Layout
+  title="Snapchat"
+  seoTitle="Snapchat ads reporting and dashboard, with every other platform · AdFunnl"
+  description="Snapchat ads reporting down to the ad, next to Meta, TikTok, Google and your store in one currency, with audience breakdowns and creatives ranked."
+  schema={[faqPage(copy.faq.items)]}
+  crumbTrail={[{ name: "Integrations", path: "/integrations" }, { name: "Snapchat", path: "/integrations/snapchat" }]}
+>
+  <IntegrationDetail copy={copy} />
+</Layout>

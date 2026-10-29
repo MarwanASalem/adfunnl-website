@@ -5,6 +5,8 @@
 //
 import Layout from "../../../layouts/Layout.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
+import FaqSection from "../../../components/FaqSection.astro";
+import { faqPage } from "../../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -52,13 +54,27 @@ const capabilities = [
   },
   {
     title: "بيانات مدمجة وموحّدة العملة في الأساس",
-    body: "كل مربع يستمد بياناته من مخطط واحد موحّد يشمل Meta وTikTok وSnapchat وGoogle ومتجرك، بعملة واحدة ومزامنة كل ساعة، فتتفق الأرقام.",
+    body: "كل مربع يستمد بياناته من مخطط واحد موحّد يشمل Meta وTikTok وSnapchat وGoogle ومتجرك، بعملة واحدة ومزامنة حسب جدول باقتك، فتتفق الأرقام.",
     icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
   },
 ];
+
+// ── FAQ ─────────────────────────────────────────────────────────────
+// Shown on the page and sent as FAQPage schema, from the same array.
+const faqs = {
+  heading: "أسئلة عن لوحات المعلومات",
+  items: [
+    { q: "هل عليّ أن أبني اللوحة من الصفر؟", a: "لا. ابدأ من قالب محفوظ، أو اطلب لوحة من المساعد في الباقات التي تشمل AI. يعرض عليك أولًا خطة بالأقسام والعناصر، ولا يبنيها إلا بعد موافقتك." },
+    { q: "ما العناصر المتاحة؟", a: "بطاقات KPI، ورسوم بيانية، وجداول، وقمع تحويل، وخرائط، وخطوط زمنية، ومعارض للـ Creatives، وROAS لكل منتج، إضافة إلى عناصر الـ breakdowns لجماهير Meta وSnapchat." },
+    { q: "هل أستطيع المقارنة بالفترة السابقة؟", a: "نعم، على أي بطاقة، مع التغيّر ظاهرًا بجانب الرقم." },
+    { q: "هل أستطيع إضافة مقاييسي الخاصة؟", a: "نعم. اكتب مقاييس مخصصة من المقاييس المتاحة، وضع قواعد تلوّن خلايا الجداول." },
+    { q: "ما مدى حداثة البيانات؟", a: "كل 12 ساعة على Free وSolo، وكل 6 ساعات على Growth، وكل ساعة على Agency. وتُجلب آخر 3 أيام من جديد في كل تحديث، فتصل التحويلات المتأخرة." },
+  ],
+};
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   locale="ar"
   title="لوحات المعلومات"
   seoTitle="منشئ لوحات تقارير الإعلانات بالسحب والإفلات · AdFunnl"
@@ -187,6 +203,8 @@ const capabilities = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
   />
+
+  <FaqSection heading={faqs.heading} items={faqs.items} />
 
   <!-- CTA -->
   <section class="px-6 py-16 sm:py-24">

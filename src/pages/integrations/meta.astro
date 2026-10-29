@@ -1,0 +1,119 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import IntegrationDetail from "../../components/IntegrationDetail.astro";
+import type { Copy } from "../../components/IntegrationDetail.astro";
+import { faqPage } from "../../data/plans";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     A media buyer or performance marketer who runs Meta next to at
+//           least one other ad platform or a store, and searched for Meta
+//           ads reporting or a Meta ads dashboard.
+//   Promise Meta read down to the ad, in the same view as every other
+//           platform and the store, in one currency.
+//   Action  Start free.
+//
+// CAPABILITY WARNINGS (docs/what-ships.md, checked 29 October 2026):
+//   - Meta ad control from Claude or ChatGPT is Beta. New Meta campaigns and
+//     new Meta ads from Claude or ChatGPT are early access only, so they are
+//     not on this page.
+//   - Fund reminders are Meta only. Hook & Hold is Meta only.
+//   - Refresh depends on the plan. Never "hourly" alone.
+
+const copy: Copy = {
+  platform: "meta",
+  hero: {
+    heading: "Meta ads reporting, next to every other platform",
+    body: "AdFunnl reads your Meta ad accounts down to the ad and puts them in the same tables and charts as TikTok, Snapchat and Google and your store revenue, converted into one reporting currency.",
+    cta: "Start free",
+    shot: { src: "/screens/meta-dashboard.png", alt: "An AdFunnl dashboard filtered to Meta, with spend, purchases and ROAS for a demo brand" },
+  },
+  pain: {
+    heading: "Meta Ads Manager only knows what Meta did",
+    body: "It reports Meta's own conversions, in the ad account's own currency, with Meta's own attribution window. Once you also run TikTok, Snapchat or Google, the question that matters is how Meta did next to them and next to what the store actually sold. Ads Manager cannot answer that, so the answer gets put together by hand, a tab at a time, with the currency converted in your head.",
+  },
+  comesIn: {
+    heading: "What comes in from Meta",
+    items: [
+      "Campaign, ad set and ad results, from as many ad accounts as your plan holds",
+      "Breakdowns by age, gender, device, country, region, placement and day of week",
+      "Each ad's creative, shown next to its numbers",
+      "Video hook and hold: where viewers stop watching",
+      "Account balance and status, for fund reminders",
+      "Your last 90 days on the day you connect",
+    ],
+  },
+  sections: [
+    {
+      heading: "Who is buying, by age, gender, device and placement",
+      body: "Breakdown widgets show a donut, bar, table or map for any split, summed across every Meta account and campaign in view. The Audience insights report puts them on one page: spend by region on a map, then who your purchases come from.",
+      shot: { src: "/screens/breakdown-gender.png", alt: "Purchases by gender from Meta, as a donut chart with male, female and unknown shares" },
+    },
+    {
+      heading: "Which Meta ad is actually winning",
+      body: "Best Creatives ranks your ads by one score instead of one metric, ROAS 40%, cost per purchase 40% and outbound CTR 20%, across several ad accounts at once, with each creative on the page. Message campaigns switch to cost per message.",
+      points: [
+        "Hook & Hold shows where viewers drop off each video",
+        "Ad Fatigue flags ads that are wearing out",
+        "A minimum spend filter keeps low-spend noise out of the ranking",
+      ],
+      shot: { src: "/screens/best-creatives.png", alt: "The Best Creatives page in AdFunnl, ranking demo ads by score" },
+    },
+    {
+      heading: "Change Meta ads without opening Ads Manager",
+      body: "Switch Meta campaigns on and off and edit their budgets straight from the Ads manager report or a dashboard table. Or ask Claude or ChatGPT to do it: every change comes back as a plan, and only happens once you approve it in the chat.",
+      tag: "Claude and ChatGPT · Beta",
+      points: [
+        "Pause, turn on and change budgets",
+        "Duplicate, rename and delete, and edit the audience, ad text and URL tags",
+        "Automated rules, budget schedules, custom conversions, and custom and lookalike audiences",
+        "Every applied change written to the brand's Change Log",
+      ],
+      shot: { src: "/screens/ads-manager.png", alt: "The Ads manager report in AdFunnl, with on and off switches and budgets per campaign" },
+      link: { label: "What AI ad control can change on each platform", href: "/ai-ad-control" },
+    },
+  ],
+  compare: {
+    heading: "Meta Ads Manager next to AdFunnl",
+    cols: ["The job", "In Meta Ads Manager", "In AdFunnl"],
+    rows: [
+      ["Seeing Meta next to TikTok, Snapchat and Google", "Open each platform in its own tab", "One table, one currency"],
+      ["Checking Meta against store revenue", "Line it up with your store by hand", "Store ROAS next to blended ROAS"],
+      ["Ranking creatives across ad accounts", "Account by account", "One ranked list across several accounts"],
+      ["Sending the client their numbers", "Export, then build the report", "A live link or a PDF with their logo"],
+    ],
+  },
+  faq: {
+    heading: "Questions about Meta",
+    items: [
+      { q: "Does AdFunnl replace Meta Ads Manager?", a: "No. You still build and adjust campaigns in Ads Manager. AdFunnl is where you read Meta next to every other platform and your store, and share it." },
+      { q: "Will the numbers match Ads Manager?", a: "Spend and results are Meta's own figures, pulled from your ad accounts. Every dashboard has a methodology page showing how each metric is calculated, and data logs show when each account last synced." },
+      { q: "How often does Meta data refresh?", a: "Every 12 hours on Free and Solo, every 6 hours on Growth and every hour on Agency. The last 3 days are fetched again on every sync, so conversions that report late still land." },
+      { q: "Can I connect several Meta ad accounts?", a: "Yes. Your plan sets how many, from 3 ad accounts on Free upwards, and they can be grouped by brand or client." },
+      { q: "Is it safe to let Claude or ChatGPT change my Meta ads?", a: "Nothing changes until you approve it in the chat, and you can connect read-only instead. Every applied change is written to the brand's Change Log. Meta ad control is in Beta." },
+    ],
+  },
+  others: {
+    heading: "Other ad platforms",
+    links: [
+      { label: "Snapchat", href: "/integrations/snapchat", icon: "snapchat" },
+      { label: "TikTok", href: "/integrations/tiktok", icon: "tiktok" },
+      { label: "Every integration", href: "/integrations" },
+    ],
+  },
+  closing: {
+    heading: "Start with one Meta account",
+    body: "Connect it on the Free plan and see it next to the rest. Add your other platforms when it earns its place.",
+    cta: "Start free",
+  },
+};
+---
+
+<Layout
+  title="Meta"
+  seoTitle="Meta ads reporting and dashboard, with every other platform · AdFunnl"
+  description="Meta ads reporting down to the ad, next to TikTok, Snapchat, Google and your store in one currency, with breakdowns, ranked creatives and ad control."
+  schema={[faqPage(copy.faq.items)]}
+  crumbTrail={[{ name: "Integrations", path: "/integrations" }, { name: "Meta", path: "/integrations/meta" }]}
+>
+  <IntegrationDetail copy={copy} />
+</Layout>

@@ -1,0 +1,59 @@
+---
+// Arabic twin of src/pages/contact.astro. Keep the two in step: a change to
+// one page's copy or markup belongs in the other. The brief and the rules for
+// this page live in the English page.
+import Layout from "../../layouts/Layout.astro";
+import ContactPage from "../../components/ContactPage.astro";
+import type { Copy } from "../../components/ContactPage.astro";
+import { faqPage } from "../../data/plans";
+
+const copy: Copy = {
+  hero: {
+    heading: "تحدّث إلى شخص من فريق AdFunnl",
+    body: "على WhatsApp أو بالبريد، بالعربية أو الإنجليزية. يقرأ رسالتك شخص حقيقي ويرد عليها.",
+  },
+  whatsapp: {
+    label: "WhatsApp",
+    body: "اسأل سؤالًا سريعًا عن الباقات، أو ربط حساب، أو معنى رقم معيّن.",
+    action: "راسلنا على WhatsApp",
+    prefill: "مرحبًا AdFunnl، عندي سؤال: ",
+  },
+  email: {
+    label: "البريد الإلكتروني",
+    body: "لأي رسالة أطول، أو فيها مرفقات، أو تفضّل أن تكون مكتوبة.",
+    action: "أرسل رسالة",
+  },
+  customer: {
+    heading: "تستخدم AdFunnl بالفعل؟",
+    body: "استخدم زر المساعدة داخل التطبيق. يرسل مع رسالتك باقتك وحالة حساباتك المربوطة وأي أخطاء تحديث حديثة، فلا تحتاج إلى شرحها.",
+  },
+  company: {
+    heading: "بيانات الشركة",
+    body: "تدير AdFunnl شركة Funnl Suite LLC، في الإسكندرية، مصر.",
+  },
+  faq: {
+    heading: "أسئلة يسألها الناس أولًا",
+    items: [
+      { q: "هل أستطيع حجز عرض توضيحي؟", a: "ليس حاليًا. أسرع طريقة لترى AdFunnl هي على أرقامك أنت: ابدأ مجانًا، واربط حسابًا إعلانيًا واحدًا، وراسلنا إذا لم يتضح لك شيء." },
+      { q: "هل توجد فترة تجربة مجانية للباقات المدفوعة؟", a: "نعم. كل باقة مدفوعة تبدأ بفترة تجربة مجانية بكل المزايا. وعند انتهائها تعود مساحة العمل إلى باقة Free، ولا يُخصم شيء إلا إذا أكّدت الدفع." },
+      { q: "كيف أدفع؟", a: "تطلب الباقة من داخل التطبيق، ونفعّلها لك بعد تأكيد الدفع. وتجد كل الباقات والإضافات في صفحة الأسعار." },
+      { q: "هل تعملون مع الوكالات؟", a: "نعم. مساحة عمل الوكالة تجمع الحسابات الإعلانية حسب العميل، ويمكن أن تحمل لوحة كل عميل شعاره، والرابط المباشر لا يعرض لأي عميل إلا أرقامه هو." },
+    ],
+  },
+  closing: {
+    heading: "ابدأ بحساب واحد",
+    body: "اربط حسابًا إعلانيًا واحدًا على باقة Free وشاهد أرقامك في مكان واحد. وراسلنا متى احتجت.",
+    cta: "ابدأ مجانًا",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="تواصل معنا"
+  seoTitle="تواصل مع AdFunnl: WhatsApp والبريد الإلكتروني"
+  description="تواصل مع AdFunnl على WhatsApp أو بالبريد، بالعربية أو الإنجليزية. يقرأ رسالتك شخص حقيقي ويرد عليها."
+  schema={[faqPage(copy.faq.items)]}
+>
+  <ContactPage copy={copy} />
+</Layout>

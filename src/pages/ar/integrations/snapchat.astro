@@ -1,0 +1,108 @@
+---
+// Arabic twin of src/pages/integrations/snapchat.astro. Keep the two in step:
+// a change to one page's copy or markup belongs in the other. Media-buying and
+// technical terms stay in English, see the Arabic section of docs/voice.md.
+// The brief and the capability warnings live in the English page.
+import Layout from "../../../layouts/Layout.astro";
+import IntegrationDetail from "../../../components/IntegrationDetail.astro";
+import type { Copy } from "../../../components/IntegrationDetail.astro";
+import { faqPage } from "../../../data/plans";
+
+const copy: Copy = {
+  platform: "snapchat",
+  hero: {
+    heading: "تقارير إعلانات Snapchat، بجانب Meta وTikTok وGoogle",
+    body: "يقرأ AdFunnl حساباتك الإعلانية على Snapchat حتى مستوى الإعلان، ويرتّب الـ Creatives الخاصة بك مع إعلانات المنصات الأخرى، ويضع النتائج في العرض نفسه مع كل منصاتك ومتجرك، بعملة تقارير واحدة.",
+    cta: "ابدأ مجانًا",
+    shot: { src: "/screens/snapchat-dashboard.png", alt: "لوحة في AdFunnl مفلترة على Snapchat، بالإنفاق والمشتريات وROAS لعلامة تجارية تجريبية" },
+  },
+  pain: {
+    heading: "Snapchat Ads Manager لا يعرف إلا ما فعله Snapchat",
+    body: "يعرض Snapchat أرقامه في لوحته الخاصة، بأسماء أعمدته ونافذة الإسناد الخاصة به. ووضعه بجانب Meta وTikTok وGoogle، أو بجانب ما باعه المتجر فعلًا، يعني تسجيل دخول آخر وتصديرًا آخر وتحويلًا يدويًا أكثر، قبل أن يعرف أحد هل استحق Snapchat ميزانيته.",
+  },
+  comesIn: {
+    heading: "ما يصل من Snapchat",
+    items: [
+      "نتائج الحملات والمجموعات الإعلانية والإعلانات، من كل الحسابات الإعلانية التي تسمح بها باقتك",
+      "breakdowns حسب النوع والعمر والدولة والمنطقة",
+      "الـ Creative لكل إعلان، بجانب أرقامه",
+      "Ad Fatigue عبر إعلاناتك على Snapchat",
+      "آخر 90 يومًا من بياناتك في يوم الربط نفسه",
+    ],
+  },
+  sections: [
+    {
+      heading: "من تصل إليه إعلاناتك على Snapchat",
+      body: "تعرض عناصر الـ breakdowns النوع والعمر والدولة والمنطقة كرسم دائري أو أعمدة أو جدول أو خريطة، مجموعًا عبر كل حسابات Snapchat وحملاتها المعروضة. ويضع تقرير Audience insights منصتي Snapchat وMeta في صفحة واحدة، فترى من يشتري من كل منهما.",
+      shot: { src: "/screens/audience-insights.png", alt: "تقرير Audience insights في AdFunnl، بالإنفاق حسب المنطقة على خريطة والتوزيع حسب النوع والعمر" },
+    },
+    {
+      heading: "الـ Creatives على Snapchat، مرتبة مع البقية",
+      body: "يرتّب Best Creatives إعلانات Snapchat بدرجة واحدة: ROAS بنسبة 40% وتكلفة الشراء 40% وOutbound CTR بنسبة 20%، بجانب إعلاناتك على Meta وTikTok، عبر عدة حسابات إعلانية معًا، مع ظهور كل Creative في الصفحة.",
+      points: [
+        "حد أدنى للإنفاق يُخرج الإعلانات قليلة الإنفاق من الترتيب",
+        "Ad Fatigue ينبّهك إلى إعلانات Snapchat التي بدأ أداؤها يتعب",
+        "أرسل الترتيب إلى العميل كملف PDF أو رابط مباشر",
+      ],
+      shot: { src: "/screens/best-creatives.png", alt: "صفحة Best Creatives في AdFunnl، ترتّب إعلانات تجريبية بالدرجة" },
+    },
+    {
+      heading: "أدِر Snapchat من Claude أو ChatGPT",
+      body: "اربط AdFunnl بـ Claude أو ChatGPT واطلب منه التعديل. كل تعديل يعود إليك كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة.",
+      tag: "Live",
+      points: [
+        "الإيقاف والتشغيل وتغيير الميزانيات",
+        "النسخ وإعادة التسمية والحذف، وتعديل الجمهور ونص الإعلان ووسوم الروابط",
+        "حملات جديدة من صورك وفيديوهاتك على Google Drive، ومجموعات إعلانية وإعلانات جديدة داخل الحملات الجارية، وكلها تُنشأ متوقفة",
+        "إعلانات الكتالوج مع قوالبها، وإعلانات الاتصال",
+        "جماهير من زوار الموقع عبر Snap Pixel، وقوائم العملاء، وlookalike",
+      ],
+      link: { label: "ما يستطيع التحكم بالـ AI تعديله على كل منصة", href: "/ai-ad-control" },
+    },
+  ],
+  compare: {
+    heading: "Snapchat Ads Manager بجانب AdFunnl",
+    cols: ["المهمة", "في Snapchat Ads Manager", "في AdFunnl"],
+    rows: [
+      ["رؤية Snapchat بجانب Meta وTikTok وGoogle", "تفتح كل منصة في تبويب خاص بها", "جدول واحد وعملة واحدة"],
+      ["مقارنة Snapchat بإيراد المتجر", "تطابقه مع متجرك يدويًا", "store ROAS بجانب blended ROAS"],
+      ["إيجاد الـ Creative الرابح", "إعلانات Snapchat فقط، حسابًا بعد حساب", "مرتبة مع إعلانات كل المنصات"],
+      ["إرسال الأرقام للعميل", "تصدّر ثم تبني التقرير", "رابط مباشر أو PDF بشعاره"],
+    ],
+  },
+  faq: {
+    heading: "أسئلة عن Snapchat",
+    items: [
+      { q: "هل يعرض AdFunnl العمر والنوع على Snapchat؟", a: "نعم. يجلب Snapchat الـ breakdowns حسب النوع والعمر والدولة والمنطقة، ولا يعرض الجهاز." },
+      { q: "هل أستطيع تشغيل حملات Snapchat وإيقافها داخل AdFunnl؟", a: "ليس من داخل اللوحة: هذه المفاتيح لـ Meta وTikTok. أما من Claude أو ChatGPT فتستطيع الإيقاف والتشغيل وتغيير الميزانيات على Snapchat، بعد موافقتك على كل تعديل." },
+      { q: "حسابي على Snapchat ينفق بالريال والحسابات الأخرى بالدولار. هل هذه مشكلة؟", a: "لا. كل حساب يُحوَّل إلى عملة تقارير واحدة بسعر السوق الحالي، أو بسعرك الخاص لكل عملة إن حددته." },
+      { q: "كل كم تُحدَّث بيانات Snapchat؟", a: "كل 12 ساعة على Free وSolo، وكل 6 ساعات على Growth، وكل ساعة على Agency. وتُجلب آخر 3 أيام من جديد في كل تحديث، فتصل التحويلات المتأخرة." },
+      { q: "هل أستطيع ربط أكثر من حساب إعلاني على Snapchat؟", a: "نعم. باقتك تحدد العدد، من 3 حسابات إعلانية على Free فما فوق، ويمكن تجميعها حسب العلامة التجارية أو العميل." },
+    ],
+  },
+  others: {
+    heading: "منصات إعلانية أخرى",
+    links: [
+      { label: "Meta", href: "/integrations/meta", icon: "meta" },
+      { label: "TikTok", href: "/integrations/tiktok", icon: "tiktok" },
+      { label: "كل التكاملات", href: "/integrations" },
+    ],
+  },
+  closing: {
+    heading: "ابدأ بحساب Snapchat واحد",
+    body: "اربطه على باقة Free وشاهده بجانب البقية. ثم أضف منصاتك الأخرى حين يستحق ذلك.",
+    cta: "ابدأ مجانًا",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="Snapchat"
+  seoTitle="تقارير ولوحة إعلانات Snapchat مع كل منصاتك الأخرى · AdFunnl"
+  description="تقارير إعلانات Snapchat حتى مستوى الإعلان، بجانب Meta وTikTok وGoogle ومتجرك بعملة واحدة، مع breakdowns الجمهور وترتيب الـ Creatives."
+  schema={[faqPage(copy.faq.items)]}
+  crumbTrail={[{ name: "التكاملات", path: "/integrations" }, { name: "Snapchat", path: "/integrations/snapchat" }]}
+>
+  <IntegrationDetail copy={copy} locale="ar" />
+</Layout>

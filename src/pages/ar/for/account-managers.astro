@@ -7,6 +7,8 @@ import Layout from "../../../layouts/Layout.astro";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
 import HeroFilm from "../../../components/HeroFilm.astro";
+import FaqSection from "../../../components/FaqSection.astro";
+import { faqPage } from "../../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -147,9 +149,22 @@ const control = [
   { platform: "Snapchat", status: "In progress" },
   { platform: "Google",   status: "In progress" },
 ];
+
+// ── FAQ ─────────────────────────────────────────────────────────────
+// Shown on the page and sent as FAQPage schema, from the same array.
+const faqs = {
+  heading: "أسئلة يسألها الـ Account Managers",
+  items: [
+    { q: "هل يستطيع عميل أن يرى بيانات عميل آخر؟", a: "لا. الرابط المباشر للعرض فقط ويفتح لوحة واحدة، وبيانات العملاء منفصلة على الخادم، حسب مساحة العمل ثم حسب العميل." },
+    { q: "هل يمكن أن يحمل التقرير شعار عميلي؟", a: "نعم. يظهر شعار العميل نفسه على لوحته وعلى تقريره." },
+    { q: "ماذا لو تغيّرت الأرقام بعد أن أرسلت التقرير؟", a: "أرسل لقطة ثابتة. تجمّد التقرير تمامًا كما كان لحظة إرساله، فلا تتغير أرقام الشهر الماضي بعدها. أما الرابط المباشر فيبقى محدَّثًا." },
+    { q: "هل أستطيع إرسال PDF بدل الرابط؟", a: "نعم. أي لوحة تُصدَّر كملف PDF نظيف ومقسّم إلى صفحات، وكذلك تحليل الـ Creatives." },
+  ],
+};
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   locale="ar"
   title="لـ Account Managers"
   seoTitle="لوحات تقارير العملاء للـ Account Managers · AdFunnl"
@@ -418,6 +433,8 @@ const control = [
       </div>
     </div>
   </section>
+
+  <FaqSection heading={faqs.heading} items={faqs.items} />
 
   <!-- ============================ CLOSING CTA ============================ -->
   <section class="px-6 pb-16 sm:pb-24">

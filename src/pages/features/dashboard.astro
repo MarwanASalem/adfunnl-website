@@ -1,6 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
+import FaqSection from "../../components/FaqSection.astro";
+import { faqPage } from "../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -49,13 +51,27 @@ const capabilities = [
   },
   {
     title: "Blended, currency-unified data underneath",
-    body: "Every tile draws from one normalized schema across Meta, TikTok, Snapchat, Google and your store, currency-unified and synced hourly, so the numbers agree.",
+    body: "Every tile draws from one normalized schema across Meta, TikTok, Snapchat, Google and your store, currency-unified and synced on your plan's schedule, so the numbers agree.",
     icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
   },
 ];
+
+// ── FAQ ─────────────────────────────────────────────────────────────
+// Shown on the page and sent as FAQPage schema, from the same array.
+const faqs = {
+  heading: "Questions about dashboards",
+  items: [
+    { q: "Do I have to build a dashboard from scratch?", a: "No. Start from a saved template, or, on plans with AI, ask the assistant for one. It shows you a plan of the sections and widgets first, and builds only once you approve it." },
+    { q: "Which widgets are there?", a: "KPI tiles, charts, tables, funnels, geo maps, timelines, creative galleries and product ROAS, plus breakdown widgets for Meta and Snapchat audiences." },
+    { q: "Can I compare against the previous period?", a: "Yes, on any tile, with the change shown inline." },
+    { q: "Can I add my own metrics?", a: "Yes. Write custom metrics from the ones you have, and set rules that colour table cells." },
+    { q: "How fresh is the data?", a: "Every 12 hours on Free and Solo, every 6 hours on Growth and every hour on Agency. The last 3 days are fetched again on every sync, so conversions that report late still land." },
+  ],
+};
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   title="Dashboards"
   seoTitle="Drag-and-drop ad reporting dashboard builder · AdFunnl"
   description="AdFunnl Dashboards: a freeform canvas that matches how you think. Drag KPIs, charts, funnels, geo maps and tables anywhere, compare any period, and save reusable templates."
@@ -185,6 +201,8 @@ const capabilities = [
     heading={aiDashboard.heading}
     body={aiDashboard.body}
   />
+
+  <FaqSection heading={faqs.heading} items={faqs.items} />
 
   <!-- CTA -->
   <section class="px-6 py-16 sm:py-24">

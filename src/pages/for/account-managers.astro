@@ -3,6 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import DataFlow from "../../components/DataFlow.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
 import HeroFilm from "../../components/HeroFilm.astro";
+import FaqSection from "../../components/FaqSection.astro";
+import { faqPage } from "../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -144,9 +146,23 @@ const control = [
   { platform: "Snapchat", status: "In progress" },
   { platform: "Google",   status: "In progress" },
 ];
+
+// ── FAQ ─────────────────────────────────────────────────────────────
+// Shown on the page and sent as FAQPage schema, from the same array.
+// Only the client's logo is supported, never the agency's (what-ships.md).
+const faqs = {
+  heading: "Questions Account Managers ask",
+  items: [
+    { q: "Can a client see another client's data?", a: "No. A live link is view-only and opens one dashboard, and client data is kept apart on the server, by workspace and then by client." },
+    { q: "Can the report carry my client's logo?", a: "Yes. The client's own logo shows on their dashboard and on their report." },
+    { q: "What if the numbers change after I've sent the report?", a: "Send a snapshot. It freezes the report exactly as it was when you sent it, so last month's figures cannot move afterwards. The live link keeps updating." },
+    { q: "Can I send a PDF instead of a link?", a: "Yes. Any dashboard exports as a clean, paginated PDF, and so does the creative analysis." },
+  ],
+};
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   title="For Account Managers"
   seoTitle="Client reporting dashboards for Account Managers · AdFunnl"
   description="You're the one in the middle. AdFunnl gives account managers live client dashboards, self-building reports and one version of the truth across Meta, TikTok, Snapchat and Google."
@@ -423,6 +439,8 @@ const control = [
       </div>
     </div>
   </section>
+
+  <FaqSection heading={faqs.heading} items={faqs.items} />
 
   <!-- ============================ CLOSING CTA ============================ -->
   <section class="px-6 pb-16 sm:pb-24">

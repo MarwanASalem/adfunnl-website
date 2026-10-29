@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ContactPage from "../components/ContactPage.astro";
+import type { Copy } from "../components/ContactPage.astro";
+import { faqPage } from "../data/plans";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     Someone deciding whether to sign up who has a question first,
+//           or a customer looking for a way to reach us.
+//   Promise A person reads every message and replies, on WhatsApp or by
+//           email, in English or Arabic.
+//   Action  Message us; Start free stays the page's one call to action.
+//
+// Rules for anyone editing this page:
+//   - No demo booking. Demos are not offered right now (CLAUDE.md rule 4).
+//   - No reply-time promise. Nothing measures how fast we answer.
+//   - No prices here: they change, and the pricing page owns them.
+
+const copy: Copy = {
+  hero: {
+    heading: "Talk to a person at AdFunnl",
+    body: "WhatsApp or email, in English or Arabic. A person reads every message and replies.",
+  },
+  whatsapp: {
+    label: "WhatsApp",
+    body: "Ask a quick question about plans, connecting an account or what a number means.",
+    action: "Message us on WhatsApp",
+    prefill: "Hi AdFunnl, I have a question: ",
+  },
+  email: {
+    label: "Email",
+    body: "For anything longer, anything with attachments, or anything you would rather have in writing.",
+    action: "Send an email",
+  },
+  customer: {
+    heading: "Already using AdFunnl?",
+    body: "Use the Help button inside the app. It sends your plan, your connections and any recent sync errors along with your message, so you do not have to describe them.",
+  },
+  company: {
+    heading: "Company details",
+    body: "AdFunnl is operated by Funnl Suite LLC, Alexandria, Egypt.",
+  },
+  faq: {
+    heading: "Questions people ask first",
+    items: [
+      { q: "Can I book a demo?", a: "Not right now. The quickest way to see AdFunnl is on your own numbers: start free, connect one ad account, and message us if anything is unclear." },
+      { q: "Is there a free trial on paid plans?", a: "Yes. Every paid plan starts with a full-access free trial. When it ends, the workspace falls back to the Free plan, and nothing is charged unless you confirm payment." },
+      { q: "How do I pay?", a: "You request a plan in the app, and we turn it on once payment is confirmed. The pricing page has every plan and add-on." },
+      { q: "Do you work with agencies?", a: "Yes. An agency workspace groups ad accounts by client, each client's dashboard can carry their own logo, and a live link only ever shows one client their own numbers." },
+    ],
+  },
+  closing: {
+    heading: "Start with one account",
+    body: "Connect one ad account on the Free plan and see your numbers in one place. Message us whenever you get stuck.",
+    cta: "Start free",
+  },
+};
+---
+
+<Layout
+  title="Contact"
+  seoTitle="Contact AdFunnl: WhatsApp and email"
+  description="Reach AdFunnl on WhatsApp or by email, in English or Arabic. A person reads every message and replies."
+  schema={[faqPage(copy.faq.items)]}
+>
+  <ContactPage copy={copy} />
+</Layout>

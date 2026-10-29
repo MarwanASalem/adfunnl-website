@@ -1,0 +1,107 @@
+---
+// Arabic twin of src/pages/integrations/tiktok.astro. Keep the two in step: a
+// change to one page's copy or markup belongs in the other. Media-buying and
+// technical terms stay in English, see the Arabic section of docs/voice.md.
+// The brief and the capability warnings live in the English page.
+import Layout from "../../../layouts/Layout.astro";
+import IntegrationDetail from "../../../components/IntegrationDetail.astro";
+import type { Copy } from "../../../components/IntegrationDetail.astro";
+import { faqPage } from "../../../data/plans";
+
+const copy: Copy = {
+  platform: "tiktok",
+  hero: {
+    heading: "تقارير إعلانات TikTok، بجانب كل منصاتك الأخرى",
+    body: "يقرأ AdFunnl حساباتك الإعلانية على TikTok حتى مستوى الإعلان، ويرتّب الـ Creatives الخاصة بك مع إعلانات المنصات الأخرى، ويتيح لك تشغيل الحملات وإيقافها وتغيير ميزانياتها دون فتح TikTok Ads Manager.",
+    cta: "ابدأ مجانًا",
+    shot: { src: "/screens/tiktok-dashboard.png", alt: "لوحة في AdFunnl مفلترة على TikTok، بالإنفاق والمشتريات وROAS لعلامة تجارية تجريبية" },
+  },
+  pain: {
+    heading: "TikTok Ads Manager لا يعرف إلا ما فعله TikTok",
+    body: "يعرض TikTok تحويلاته وحدها، بأسماء أعمدته ونافذة الإسناد الخاصة به. وهل يغطي TikTok تكلفته فعلًا؟ هذا يتوقف على ما فعلته Meta وSnapchat وGoogle في الأسبوع نفسه، وعلى ما باعه المتجر، ومعرفة ذلك تعني تبويبًا آخر وحسابات يدوية أكثر.",
+  },
+  comesIn: {
+    heading: "ما يصل من TikTok",
+    items: [
+      "نتائج الحملات والمجموعات الإعلانية والإعلانات، من كل الحسابات الإعلانية التي تسمح بها باقتك",
+      "الـ Creative لكل إعلان، بجانب أرقامه",
+      "Ad Fatigue عبر إعلاناتك على TikTok",
+      "آخر 90 يومًا من بياناتك في يوم الربط نفسه",
+    ],
+  },
+  sections: [
+    {
+      heading: "الـ Creatives على TikTok، مرتبة مع البقية",
+      body: "يرتّب Best Creatives إعلانات TikTok بدرجة واحدة: ROAS بنسبة 40% وتكلفة الشراء 40% وOutbound CTR بنسبة 20%، بجانب إعلاناتك على Meta وSnapchat، عبر عدة حسابات إعلانية معًا، مع ظهور كل Creative في الصفحة.",
+      points: [
+        "حد أدنى للإنفاق يُخرج الإعلانات قليلة الإنفاق من الترتيب",
+        "Ad Fatigue ينبّهك إلى إعلانات TikTok التي بدأ أداؤها يتعب",
+        "Spend timeline يبيّن الميزانية وهي تنتقل من إعلان إلى آخر",
+      ],
+      shot: { src: "/screens/best-creatives.png", alt: "صفحة Best Creatives في AdFunnl، ترتّب إعلانات تجريبية بالدرجة" },
+    },
+    {
+      heading: "شغّل الحملات وأوقفها وغيّر ميزانياتها من AdFunnl",
+      body: "يعرض تقرير Ads manager كل حملة على TikTok بجانب البقية، وتنفتح إلى المجموعات الإعلانية والإعلانات. شغّل الحملة أو أوقفها وعدّل ميزانيتها في المكان نفسه، دون أن تترك الأرقام التي دفعتك إلى ذلك.",
+      shot: { src: "/screens/ads-manager.png", alt: "تقرير Ads manager في AdFunnl، بمفاتيح التشغيل والإيقاف والميزانية لكل حملة" },
+    },
+    {
+      heading: "أدِر TikTok من Claude أو ChatGPT",
+      body: "اربط AdFunnl بـ Claude أو ChatGPT واطلب منه التعديل. كل تعديل يعود إليك كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة.",
+      tag: "Live",
+      points: [
+        "الإيقاف والتشغيل وتغيير الميزانيات",
+        "النسخ وإعادة التسمية والحذف، وتعديل الجمهور ونص الإعلان ووسوم الروابط",
+        "حملات جديدة من صورك وفيديوهاتك على Google Drive، ومجموعات إعلانية وإعلانات جديدة داخل الحملات الجارية، وكلها تُنشأ متوقفة",
+        "تحويل منشورات حسابك على TikTok إلى إعلانات",
+        "جماهير الموقع والتفاعل مع الإعلانات ونماذج العملاء المحتملين وlookalike",
+      ],
+      link: { label: "ما يستطيع التحكم بالـ AI تعديله على كل منصة", href: "/ai-ad-control" },
+    },
+  ],
+  compare: {
+    heading: "TikTok Ads Manager بجانب AdFunnl",
+    cols: ["المهمة", "في TikTok Ads Manager", "في AdFunnl"],
+    rows: [
+      ["رؤية TikTok بجانب Meta وSnapchat وGoogle", "تفتح كل منصة في تبويب خاص بها", "جدول واحد وعملة واحدة"],
+      ["مقارنة TikTok بإيراد المتجر", "تطابقه مع متجرك يدويًا", "store ROAS بجانب blended ROAS"],
+      ["إيجاد الـ Creative الرابح", "إعلانات TikTok فقط، حسابًا بعد حساب", "مرتبة مع إعلانات كل المنصات"],
+      ["إيقاف حملة تخسر", "تدخل إلى TikTok وتبحث عنها", "توقفها من Ads manager"],
+    ],
+  },
+  faq: {
+    heading: "أسئلة عن TikTok",
+    items: [
+      { q: "هل يعرض AdFunnl العمر والنوع على TikTok؟", a: "لا. الـ breakdowns تأتي من Meta وSnapchat. أما TikTok فيجلب نتائج الحملات والمجموعات الإعلانية والإعلانات والـ Creatives." },
+      { q: "هل أستطيع إيقاف حملات TikTok من داخل AdFunnl؟", a: "نعم. شغّل الحملات وأوقفها وعدّل ميزانياتها من تقرير Ads manager أو من جدول في لوحتك. ومن Claude أو ChatGPT تستطيع أكثر من ذلك، بعد موافقتك على كل تعديل." },
+      { q: "كل كم تُحدَّث بيانات TikTok؟", a: "كل 12 ساعة على Free وSolo، وكل 6 ساعات على Growth، وكل ساعة على Agency. وتُجلب آخر 3 أيام من جديد في كل تحديث، فتصل التحويلات المتأخرة." },
+      { q: "هل أستطيع ربط أكثر من حساب إعلاني على TikTok؟", a: "نعم. باقتك تحدد العدد، من 3 حسابات إعلانية على Free فما فوق، ويمكن تجميعها حسب العلامة التجارية أو العميل." },
+      { q: "هل تبدأ حملة TikTok الجديدة فورًا؟", a: "لا. كل ما يُنشأ من Claude أو ChatGPT يبدأ متوقفًا، فتراجعه في TikTok قبل أن ينفق." },
+    ],
+  },
+  others: {
+    heading: "منصات إعلانية أخرى",
+    links: [
+      { label: "Meta", href: "/integrations/meta", icon: "meta" },
+      { label: "Snapchat", href: "/integrations/snapchat", icon: "snapchat" },
+      { label: "كل التكاملات", href: "/integrations" },
+    ],
+  },
+  closing: {
+    heading: "ابدأ بحساب TikTok واحد",
+    body: "اربطه على باقة Free وشاهده بجانب البقية. ثم أضف منصاتك الأخرى حين يستحق ذلك.",
+    cta: "ابدأ مجانًا",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="TikTok"
+  seoTitle="تقارير ولوحة إعلانات TikTok مع كل منصاتك الأخرى · AdFunnl"
+  description="تقارير إعلانات TikTok حتى مستوى الإعلان، بجانب Meta وSnapchat وGoogle ومتجرك بعملة واحدة، مع ترتيب الـ Creatives والتحكم في الحملات من مكانها."
+  schema={[faqPage(copy.faq.items)]}
+  crumbTrail={[{ name: "التكاملات", path: "/integrations" }, { name: "TikTok", path: "/integrations/tiktok" }]}
+>
+  <IntegrationDetail copy={copy} locale="ar" />
+</Layout>

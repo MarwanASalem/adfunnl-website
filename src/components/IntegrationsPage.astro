@@ -22,6 +22,8 @@ export interface Row {
   tag?: string;
   /** Not open yet: drawn greyed and tagged with `hero.next`, nothing more. */
   soon?: boolean;
+  /** The source's own page on this site, English path. */
+  href?: string;
 }
 export interface Group {
   /** Direction of the data: into AdFunnl or out of it. */
@@ -121,7 +123,9 @@ const tagFont = ar ? "" : "font-mono";
               <div class="min-w-0 flex-1 sm:flex sm:gap-6">
                 <div class="min-w-0 flex-1">
                   <p class:list={["flex flex-wrap items-center gap-2 font-semibold", r.soon ? "text-zinc-500" : "text-zinc-900"]}>
-                    {r.name}
+                    {r.href
+                      ? <a href={ar ? `/ar${r.href}` : r.href} class="underline decoration-zinc-300 underline-offset-4 hover:text-brand-700 hover:decoration-brand-300">{r.name}</a>
+                      : r.name}
                     {r.pill && <span class="rounded bg-brand-50 px-1.5 py-px text-[11px] font-bold text-brand-700">{r.pill}</span>}
                   </p>
                   <p class:list={["mt-1 text-sm leading-relaxed", r.soon ? "text-zinc-400" : "text-zinc-500"]}>{r.body}</p>

@@ -1,0 +1,27 @@
+---
+// A plain question and answer list. The page passes the same items to
+// faqPage() in src/data/plans.ts, so the FAQPage schema matches what shows.
+
+interface Props {
+  heading: string;
+  items: { q: string; a: string }[];
+}
+const { heading, items } = Astro.props;
+---
+
+<section class="bg-white px-6 py-16 sm:py-20">
+  <div class="mx-auto max-w-3xl">
+    <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950">{heading}</h2>
+    <div class="mt-8 divide-y divide-zinc-100 border-y border-zinc-100">
+      {items.map((f) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-zinc-900 [&::-webkit-details-marker]:hidden">
+            {f.q}
+            <svg class="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg>
+          </summary>
+          <p class="mt-3 text-sm leading-relaxed text-zinc-600">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

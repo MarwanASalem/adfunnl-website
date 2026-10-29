@@ -1,0 +1,189 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import FeatureList from "../../components/FeatureList.astro";
+import type { Copy } from "../../components/FeatureList.astro";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     A media buyer or performance marketer comparing tools, who wants
+//           the facts in one place before signing up, not a tour.
+//   Promise Every capability the app ships today, one plain line each, with
+//           its platform and plan limits said out loud.
+//   Action  Start free.
+//
+// Hussein's brief for this page: a plain list, no premium design, and the
+// subheading says so. Keep it that way: no cards, no illustrations.
+//
+// CAPABILITY WARNINGS for anyone editing this page:
+//   - Every line comes from docs/what-ships.md (checked 29 October 2026).
+//     A line that is not there does not go here.
+//   - Competitor Radar is not done. It is not on this page, not even as
+//     coming soon.
+//   - New Meta campaigns and ads from Claude or ChatGPT are early access
+//     only, so they are left out of the ad control lines.
+//   - Changing campaigns inside the app is Meta and TikTok only.
+//   - Plan chips avoid prices, and say "Plans with AI" rather than naming
+//     plans, because which plans include AI changes on 1 November 2026.
+//   - Never put a number on the platforms (R14).
+
+const copy: Copy = {
+  hero: {
+    heading: "Everything AdFunnl does",
+    body: "We left the extra design and the fluff off this page on purpose, so it can tell you exactly what the app does, one line at a time. Where a feature only works on some platforms or plans, its line says which.",
+    cta: "Start free",
+    jump: "Jump to",
+  },
+  soon: "Coming soon",
+  more: "More",
+  groups: [
+    {
+      id: "connect",
+      heading: "Connect your data",
+      intro: "Each source signs in once with its own login, then syncs on its own.",
+      rows: [
+        { name: "Meta, TikTok, Snapchat and Google Ads", body: "Spend and results from every ad platform, down to the ad on Meta, TikTok and Snapchat and to the campaign on Google.", href: "/integrations" },
+        { name: "Shopify", body: "Products and daily product sales, so ROAS reaches each product and category.", chips: ["Beta"] },
+        { name: "Bosta", body: "A daily snapshot of your deliveries.", chips: ["Beta"] },
+        { name: "Google Sheets import", body: "Bring in figures the ad platforms do not have. It is an import only: nothing is written back to the sheet.", chips: ["Solo and up"] },
+        { name: "Scheduled sync", body: "Every 12 hours on Free and Solo, every 6 hours on Growth and every hour on Agency. The last 3 days are fetched again on every sync, so conversions that report late still land on the right day." },
+        { name: "90 days of history on day one", body: "A newly connected account brings in its last 90 days straight away." },
+        { name: "History kept", body: "3 months on Free, 1 year on Solo, 3 years on Growth and 5 years on Agency." },
+      ],
+    },
+    {
+      id: "dashboards",
+      heading: "Dashboards",
+      rows: [
+        { name: "Drag-and-drop builder", body: "A freeform canvas. Put any widget anywhere and size it the way you read it.", href: "/features/dashboard" },
+        { name: "Widgets", body: "KPI tiles, charts, tables, funnels, geo maps, timelines, creative galleries and product ROAS." },
+        { name: "Blended ROAS and store ROAS", body: "Blended ROAS is platform-reported revenue over ad spend across every platform. Store ROAS is store revenue over ad spend. Both can sit side by side." },
+        { name: "Product-level ROAS", body: "Store revenue attributed down to each product and category.", chips: ["Shopify"] },
+        { name: "Compare with the previous period", body: "On any tile, with the change shown inline." },
+        { name: "Custom metrics and table rules", body: "Write your own metric from the ones you have, and colour table cells by rules you set." },
+        { name: "Change annotations", body: "Mark the day something changed, so a jump in a chart has its reason next to it.", chips: ["Solo and up"] },
+        { name: "Templates", body: "Save a layout once and start every other brand's dashboard from it." },
+        { name: "Dashboards built by AI", body: "Ask for a dashboard. It shows you a plan first, with the sections, the widgets and any panels that would come back empty, and builds only after you approve it.", chips: ["Plans with AI"] },
+        { name: "Edit on your phone", body: "Dashboards open and edit on a phone, scaled to fit the screen." },
+      ],
+    },
+    {
+      id: "reports",
+      heading: "Ready-made reports",
+      intro: "Reports that are already built, for the questions you ask every day.",
+      rows: [
+        { name: "Ads manager", body: "Every campaign from every ad platform in one table, opening into ad sets and ads, with ad thumbnails, the columns you pick in the order you want, and conditional formatting." },
+        { name: "Ads timeline", body: "The brand's main figures day by day, for all platforms together and for each one, so a dip can be traced to the platform that caused it. The change log is marked on every chart." },
+        { name: "Audience insights", body: "Spend by region on a map, then splits by gender, age, device, platform and placement.", chips: ["Meta · Snapchat"] },
+        { name: "Saved views", body: "Keep a report's dates, filters, accounts and formatting, and open it the same way next time." },
+      ],
+    },
+    {
+      id: "creatives",
+      heading: "Creative analysis",
+      rows: [
+        { name: "Best Creatives", body: "Ads ranked by one score instead of one metric: ROAS 40%, cost per purchase 40% and outbound CTR 20%, across several ad accounts at once, with each creative shown on the page.", chips: ["Meta · TikTok · Snapchat"] },
+        { name: "Messaging mode", body: "For message campaigns, the ranking switches to cost per message 80% and CTR 20%.", chips: ["Meta"] },
+        { name: "Minimum spend filter", body: "Ads below a spend threshold drop out of the ranking. It starts at the average spend of the ads in view." },
+        { name: "Hook & Hold", body: "Where viewers stop watching each video.", chips: ["Meta", "Solo and up"] },
+        { name: "Ad Fatigue", body: "Spots ads that are wearing out, on every ad platform.", chips: ["Solo and up"] },
+        { name: "Spend timeline", body: "Daily spend per ad and each ad's share of the budget, so you can see spend moving from one ad to another.", chips: ["Solo and up"] },
+        { name: "Creative PDF and share link", body: "Send the creative analysis on its own, as a PDF or a live link." },
+      ],
+    },
+    {
+      id: "alerts",
+      heading: "Alerts and monitoring",
+      rows: [
+        { name: "Pulse", body: "Watches your accounts against rules you set and marks each one Scale, Hold or Cut." },
+        { name: "Fund reminders", body: "Every ad account's balance on one page, stopped and at-risk accounts first, with an email when an account is about to run out.", chips: ["Meta", "Solo and up"] },
+        { name: "Sync jobs and data logs", body: "When each account last updated, and whether it worked." },
+      ],
+    },
+    {
+      id: "sharing",
+      heading: "Sharing with clients",
+      rows: [
+        { name: "Live links", body: "A view-only link to one dashboard, current whenever the client opens it.", chips: ["Solo and up"] },
+        { name: "Snapshots", body: "A frozen copy of exactly what you sent, so last month's figures cannot move afterwards." },
+        { name: "PDF export", body: "Clean, paginated PDFs of dashboards and of the creative analysis." },
+        { name: "The client's logo", body: "Each client's own logo on their dashboard and their report." },
+        { name: "Ads that play", body: "Video ads play inside a live shared report." },
+        { name: "Looker Studio", body: "A Looker Studio connector reads the same data, for clients who report there." },
+        { name: "Digest", body: "Every dashboard in the workspace at a glance, on one page." },
+      ],
+    },
+    {
+      id: "ai",
+      heading: "AI assistant and MCP",
+      rows: [
+        { name: "Ada, the in-app assistant", body: "On every page. Ask in plain English or Arabic and the answer streams in, showing the data it used. It remembers your workspace between chats.", chips: ["Plans with AI"] },
+        { name: "Account review", body: "Ada goes through every ad set and ad of a brand, compares this month with the last 4 days, with last month and with its peers, and gives each one a verdict.", chips: ["Plans with AI"] },
+        { name: "MCP server", body: "Claude, ChatGPT or any other MCP client can read the same numbers AdFunnl shows you.", chips: ["Plans with AI"] },
+        { name: "AI credits", body: "Assistant use runs on a monthly credit allowance per workspace, with top-ups when you need more." },
+      ],
+    },
+    {
+      id: "ad-control",
+      heading: "Changing ads from Claude or ChatGPT",
+      intro: "Every change comes back as a plan first, and only happens after you approve it in the chat.",
+      rows: [
+        { name: "Pause, turn on and change budgets", body: "On Meta, TikTok, Snapchat and Google. Google is campaigns only. A budget rise over 50% is held back unless you ask for it.", href: "/ai-ad-control", chips: ["TikTok · Snapchat Live", "Meta · Google Beta"] },
+        { name: "Duplicate, rename, delete and edit", body: "Edit the audience, the ad text and the URL tracking tags. A copy is always created paused.", chips: ["Meta · TikTok · Snapchat"] },
+        { name: "New campaigns and ads", body: "From your images and videos on Google Drive, all created switched off. TikTok can also run posts already on your profile as ads.", chips: ["TikTok · Snapchat"] },
+        { name: "Google campaigns", body: "New Search, Shopping, Display, Demand Gen and Performance Max campaigns, created paused. Keywords, negative keywords, search terms, sitelinks, callouts and conversion goals.", chips: ["Google"] },
+        { name: "Audiences", body: "Custom and lookalike audiences on Meta; website, engagement, lead form and lookalike audiences on TikTok; pixel, customer list and lookalike audiences on Snapchat; website visitors on Google." },
+        { name: "Rules and budget schedules", body: "Automated rules, budget schedules and custom conversions.", chips: ["Meta"] },
+        { name: "Catalog and call ads", body: "Catalog ads with catalog templates, and call ads.", chips: ["Snapchat"] },
+        { name: "Read-only if you want it", body: "Untick \"Also allow it to make changes\" when you connect, and the assistant can only read." },
+        { name: "Change Log", body: "Every applied change is written to the brand's Change Log, with what changed and when." },
+        { name: "Switches inside AdFunnl", body: "Turn campaigns on and off and edit budgets straight from the Ads manager report and dashboard tables.", chips: ["Meta · TikTok"] },
+      ],
+    },
+    {
+      id: "team",
+      heading: "Teams and brands",
+      rows: [
+        { name: "Workspaces and brands", body: "A workspace holds your brands, and each brand groups its own ad accounts. You can belong to several workspaces." },
+        { name: "Invites and roles", body: "Invite teammates by email as owner, admin or member." },
+        { name: "Seats", body: "1 seat on Free and Solo, 3 on Growth and 10 on Agency, with extra seats on Solo and Growth." },
+        { name: "Client data kept apart", body: "Enforced on the server, by workspace and then by client." },
+        { name: "Refer a friend", body: "You and a friend each get a free month when they connect their ads." },
+      ],
+    },
+    {
+      id: "trust",
+      heading: "Numbers you can check",
+      rows: [
+        { name: "Methodology page", body: "Every dashboard has a page showing how each of its metrics is calculated." },
+        { name: "One reporting currency", body: "Every account converted into one currency at the current market rate, refreshed every few hours, or at your own rate per currency." },
+        { name: "English and Arabic", body: "The whole app in both languages, right to left in Arabic, charts included." },
+      ],
+    },
+    {
+      id: "soon",
+      heading: "Coming soon",
+      soon: true,
+      rows: [
+        { name: "Salla", body: "Store orders and revenue." },
+        { name: "Zid", body: "Daily store revenue." },
+        { name: "Easy Orders", body: "Store orders." },
+        { name: "LinkedIn Ads", body: "Campaign results and spend." },
+        { name: "Google Analytics", body: "Sessions and on-site results." },
+        { name: "HubSpot", body: "Newsletter subscribers and how each send performed." },
+      ],
+    },
+  ],
+  closing: {
+    heading: "Start with one account",
+    body: "Connect one ad account on the Free plan and check the list against your own numbers. Add the rest when it earns its place.",
+    cta: "Start free",
+  },
+};
+---
+
+<Layout
+  title="Features"
+  seoTitle="AdFunnl features: the full list, plainly"
+  description="Every feature AdFunnl ships today, one line each: dashboards, reports, creative analysis, client sharing, the AI assistant and ad control, with platform and plan limits."
+>
+  <FeatureList copy={copy} />
+</Layout>

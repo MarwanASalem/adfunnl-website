@@ -79,6 +79,7 @@ const COPY = {
     adControl: "AI ad control",
     home: "Home",
     features: "Features",
+    contact: "Contact",
     company: "Company",
     about: "About",
     privacy: "Privacy",
@@ -118,6 +119,7 @@ const COPY = {
     adControl: "التحكم في الإعلانات بالـ AI",
     home: "الرئيسية",
     features: "المزايا",
+    contact: "تواصل معنا",
     company: "الشركة",
     about: "من نحن",
     privacy: "الخصوصية",
@@ -216,6 +218,9 @@ const crumbLabels: Record<string, string> = {
   "/ai-ad-control": T.adControl,
   "/about": T.about,
   "/security": T.security,
+  "/features": T.features,
+  "/integrations": T.integrations,
+  "/contact": T.contact,
   ...Object.fromEntries(personas.map((p) => [p.href, T.forPersona(p.label)])),
 };
 const crumb = crumbLabels[basePath];
@@ -231,6 +236,14 @@ const graph = [
     url: `${SITE}/`,
     logo: `${SITE}/logo-1024.png`,
     email: "support@adfunnl.com",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "support@adfunnl.com",
+      telephone: "+201157086780",
+      availableLanguage: ["English", "Arabic"],
+      url: `${SITE}/contact`,
+    },
     sameAs: socials.map((s) => s.href),
     parentOrganization: {
       "@type": "Organization",
@@ -347,6 +360,8 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
         <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
           <a href={L("/")} aria-current={isHome ? "page" : undefined}
              class:list={["hover:text-zinc-900 transition", isHome && "text-zinc-900"]}>{T.home}</a>
+          <a href={L("/features")} aria-current={isCurrent("/features") ? "page" : undefined}
+             class:list={["hover:text-zinc-900 transition", isCurrent("/features") && "text-zinc-900"]}>{T.features}</a>
           <a href={L("/integrations")} aria-current={isCurrent("/integrations") ? "page" : undefined}
              class:list={["hover:text-zinc-900 transition", isCurrent("/integrations") && "text-zinc-900"]}>{T.integrations}</a>
           <a href={L("/pricing")} class="hover:text-zinc-900 transition">{T.pricing}</a>
@@ -430,6 +445,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
           <div class="hidden peer-checked:block md:!hidden absolute inset-x-0 top-full border-b border-zinc-100 bg-white shadow-lg">
             <nav class="mx-auto max-w-6xl px-6 py-3 flex flex-col gap-0.5 text-sm font-medium text-zinc-700">
               <a href={L("/")}             class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.home}</a>
+              <a href={L("/features")}     class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.features}</a>
               <a href={L("/integrations")} class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.integrations}</a>
               <a href={L("/pricing")}       class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.pricing}</a>
               <!-- AdFunnl For folds into one row on phones; tap to open it. -->
@@ -507,7 +523,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
               <a href={L("/features/dashboard")} class="hover:text-zinc-900 transition">{T.dashboards}</a>
               <a href={L("/ai-ad-control")}      class="hover:text-zinc-900 transition">{T.adControl}</a>
-              <a href={L("/#features")}          class="hover:text-zinc-900 transition">{T.features}</a>
+              <a href={L("/features")}           class="hover:text-zinc-900 transition">{T.features}</a>
               <a href={L("/integrations")}      class="hover:text-zinc-900 transition">{T.integrations}</a>
               <a href={L("/pricing")}            class="hover:text-zinc-900 transition">{T.pricing}</a>
               {personas.map((p) => (
@@ -520,6 +536,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
             <nav class="flex flex-col gap-2.5 text-sm text-zinc-500">
               <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">{T.startFree}</a>
               <a href={L("/about")}    class="hover:text-zinc-900 transition">{T.about}</a>
+              <a href={L("/contact")}  class="hover:text-zinc-900 transition">{T.contact}</a>
               <a href={L("/blog")}     class="hover:text-zinc-900 transition">{T.blog}</a>
               <a href={L("/security")} class="hover:text-zinc-900 transition">{T.security}</a>
               <a href={L("/privacy")}  class="hover:text-zinc-900 transition">{T.privacy}</a>

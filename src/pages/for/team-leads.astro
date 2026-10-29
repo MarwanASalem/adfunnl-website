@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { faqPage } from "../../data/plans";
 import DataFlow from "../../components/DataFlow.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
 import HeroFilm from "../../components/HeroFilm.astro";
@@ -203,6 +204,7 @@ const control = [
 ---
 
 <Layout
+  schema={[faqPage(objections)]}
   title="Managing a team of media buyers is hard"
   seoTitle="Agency ad reporting for Team Leads · AdFunnl"
   description="Several media buyers, several accounts each, several platforms under every account, and you answer for all of it. AdFunnl puts the whole picture on one live screen."

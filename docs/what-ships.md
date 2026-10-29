@@ -1,6 +1,6 @@
 # What AdFunnl actually does
 
-**Last checked against the app: 18 August 2026. Ad control checked 14 October 2026, Google and audiences rechecked 21 October 2026.**
+**Last checked against the app: 18 August 2026. Ad control checked 14 October 2026, Google and audiences rechecked 21 October 2026. Reports, creative pages, referrals and support channels checked 29 October 2026.**
 
 This is the list of what the website is allowed to claim. It exists because the
 website repo and the app repo are not connected in any way: nothing here updates
@@ -64,7 +64,11 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Templates | Save a layout personally or app-wide, then clone it across accounts |
 | Blended totals | Cross-platform blended ROAS, spend, purchases and revenue. The blended ROAS preset is platform-reported revenue over ad spend (`ads.revenue / ads.spend`). A second preset, store ROAS, is store revenue over ad spend (`stores.revenue / ads.spend`), so both can sit side by side. Checked 15 October 2026 in `web/src/lib/custom-metric-presets.ts` |
 | Product-level ROAS | Store revenue attributed down to product and category |
-| Creative analysis | Best Creatives, with the creative itself in the page. Ranked by a composite score, not one metric: ecommerce mode weights ROAS 40%, cost per purchase 40% and outbound CTR 20%, each standardised across the ads currently in view. Messaging mode is Meta only and weights cost per message 80%, CTR 20%. Ad level is **Meta and Snapchat**, several accounts at once. Checked 19 August 2026 in `web/src/lib/creative-score.ts` and `web/src/pages/BestCreativesPage.tsx` |
+| Creative analysis | Best Creatives, with the creative itself in the page. Ranked by a composite score, not one metric: ecommerce mode weights ROAS 40%, cost per purchase 40% and outbound CTR 20%, each standardised across the ads currently in view. Messaging mode is Meta only and weights cost per message 80%, CTR 20%. Ad level is **Meta, TikTok and Snapchat**, several accounts at once (TikTok added since: `supports_ad_level?` is true in `api/lib/connectors/tiktok.rb`, checked 29 October 2026). Google has no ad-level creative data. Checked 19 August 2026 in `web/src/lib/creative-score.ts` and `web/src/pages/BestCreativesPage.tsx` |
+| Creatives overview and Spend timeline | Under Creatives next to Best Creatives, Hook & Hold and Ad Fatigue. Spend timeline shows daily spend per ad and each ad's share of the budget, so you see spend moving between ads, with budget shifts listed. Solo and up. One-click PDF. Checked 29 October 2026 in `web/src/pages/SpendTimelinePage.tsx` |
+| Reports (ready-made) | A Reports section, open to every workspace since 27 October 2026 (`saved_reports` flag enabled globally). **Ads manager**: every campaign across the brand's ad platforms in one table, drilling campaign, ad set, ad, with the on and off switch and budget editor where campaign control exists, ad thumbnails, column picker and reorder, conditional formatting. **Ads timeline**: the brand's main figures day by day, blended and per platform, with the change log marked on every chart. **Audience insights**: spend by region on a map, then pies by gender, age, device OS, platform and placement (so Meta and Snapchat only, as with breakdowns). Saved views keep dates, filters, accounts and formatting. Checked 29 October 2026 in `web/src/pages/AdsManagerReportPage.tsx`, `AdsTimelineReportPage.tsx`, `AudienceInsightsReportPage.tsx` |
+| Fund reminders | The Billing insights page (nav label "Fund Reminders"): every ad account's balance, stopped and at-risk accounts first. Checked 29 October 2026 |
+| Account review (Ada and MCP) | Reviews every ad set and ad of a brand, this month against the last 4 days, peers and last month, and gives each a verdict. Shipped 28 October 2026 (app commits `feat(ada,mcp): account review`), not re-read in code |
 | Creative filters | Minimum spend threshold, defaulting to the average spend across the ads in view, so low-spend noise drops out of the ranking. Plus filters on platform, campaign and objective, a date range, list or grid view, and a one-click PDF of the page. Checked 19 August 2026 |
 | Audience breakdowns | Breakdown widgets (donut, bar, table, geo map) by age, gender, device, country, region, placement and day of week, summed across every account and campaign in view. **Meta and Snapchat only.** Meta has all of them; Snapchat has gender, age, country and region, no device. TikTok and Google bring in no breakdowns. Checked 10 September 2026 in `web/src/lib/builder-types.ts` (`BREAKDOWN_DIMENSIONS`), `api/lib/connectors/meta.rb` and `api/lib/connectors/snapchat.rb` |
 | Ad fatigue | Tracked across every ad platform. Confirmed 19 August 2026: Meta, TikTok, Snapchat and Google |
@@ -84,6 +88,9 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Client logo | The client's own logo renders on their dashboard and report |
 | Looker Studio | Community connector, reads workspace data with an API token |
 | Digest view | An in-app read-only page mirroring a dashboard one to one |
+| Ads play in live shares | Video ads play inside a live shared report. App commit 26 October 2026 (`feat(shares): play ads inside live shared reports`) |
+| Referrals | "Give a month, get a month": you and a friend each get a free month when the friend connects their ads, up to 2 free months earned (`Referral::MAX_REWARDS`). Checked 29 October 2026 in `web/src/pages/ReferralsPage.tsx` and `api/app/models/referral.rb` |
+| Support channels | The app's Help button: a support form answered by email, support@adfunnl.com, and WhatsApp at +20 115 708 6780 (`web/src/lib/whatsapp.ts`), read and answered by a person. Checked 29 October 2026 |
 
 ## Ask
 
@@ -139,4 +146,5 @@ not built. Each one has been checked.
 | **Google status and budgets below campaign level** | On Google, pause, turn on and budgets are campaigns only. Superseded 21 October 2026: Google now also has duplicate, rename, delete, edit (locations, languages, headlines, descriptions, link, bids), new campaigns, keywords and website-visitor audiences, see "Ad control, Google" above |
 | **A time it takes to connect** | Nothing measures how long connecting Claude or ChatGPT takes. Do not write "about a minute" |
 | **Audience breakdowns on every platform** | Age, gender, device and location come from Meta and Snapchat only. TikTok and Google connectors fetch no breakdown rows. Checked 10 September 2026 |
+| **Competitor Radar** | A staff preview behind the `competitor_radar` flag (`web/src/lib/flags.ts`), not open to customers. The owner says it is not done (29 October 2026). Leave it off the site entirely, not even as coming soon |
 | **Any customer name, testimonial, or measured result** | We have published none. Not a capability question, a standing rule |

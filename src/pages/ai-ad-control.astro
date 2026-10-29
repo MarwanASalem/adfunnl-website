@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { faqPage } from "../data/plans";
 import PlatformIcon from "../components/PlatformIcon.astro";
 import AdControlSafety from "../components/AdControlSafety.astro";
 
@@ -157,6 +158,7 @@ const closing = {
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   title="AI ad control"
   seoTitle="Run your ads from Claude or ChatGPT · AdFunnl"
   description="Connect AdFunnl to Claude or ChatGPT and ask it to pause ads, move budget or launch campaigns. Every change waits for your approval."

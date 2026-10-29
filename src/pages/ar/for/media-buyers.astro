@@ -4,6 +4,7 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../../layouts/Layout.astro";
+import { faqPage } from "../../../data/plans";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
 import HeroFilm from "../../../components/HeroFilm.astro";
@@ -328,6 +329,7 @@ const breakdowns = {
 ---
 
 <Layout
+  schema={[faqPage(objections)]}
   locale="ar"
   title="لـ Media Buyers"
   seoTitle="تقارير إعلانية لكل المنصات للـ Media Buyers · AdFunnl"

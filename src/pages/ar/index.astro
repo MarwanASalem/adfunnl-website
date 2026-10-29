@@ -4,6 +4,7 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../layouts/Layout.astro";
+import { softwareApplication } from "../../data/plans";
 import AdaPerch from "../../components/AdaPerch.astro";
 import PlatformIcon from "../../components/PlatformIcon.astro";
 import DataFlow from "../../components/DataFlow.astro";
@@ -158,6 +159,7 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
 ---
 
 <Layout
+  schema={[softwareApplication("ar")]}
   locale="ar"
   title="وقت أقل في جمع الأرقام، ووقت أكثر في استخدامها"
   seoTitle="AdFunnl: لوحة تقارير إعلانية للوكالات والـ Media Buyers"

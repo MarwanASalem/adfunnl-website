@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { softwareApplication } from "../data/plans";
 import AdaPerch from "../components/AdaPerch.astro";
 import PlatformIcon from "../components/PlatformIcon.astro";
 import DataFlow from "../components/DataFlow.astro";
@@ -156,6 +157,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
 ---
 
 <Layout
+  schema={[softwareApplication("en")]}
   title="Less time collecting numbers, more time using them"
   seoTitle="AdFunnl: ad reporting dashboard for agencies and media buyers"
   description="AdFunnl gathers every ad platform and your store revenue into one live dashboard, so your week starts with decisions instead of a report to put together."

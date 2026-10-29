@@ -1,11 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PLAN_PRICES, ADDON_PRICES, ANNUAL_MONTHS, softwareApplication, faqPage } from "../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 const SUPPORT_EMAIL = "support@adfunnl.com";
-
-// Annual = monthly × 10 (two months free). Compute, never hardcode both.
-const ANNUAL_MONTHS = 10;
 
 type Plan = {
   key: string;
@@ -26,8 +24,8 @@ const plans: Plan[] = [
     key: "free",
     name: "Free",
     tagline: "Try it: one brand, the basics.",
-    egp: 0,
-    usd: 0,
+    egp: PLAN_PRICES.free.egp,
+    usd: PLAN_PRICES.free.usd,
     requestable: false,
     cta: "Start free",
     ctaHref: `${APP_URL}/signup`,
@@ -44,8 +42,8 @@ const plans: Plan[] = [
     key: "solo",
     name: "Solo",
     tagline: "Freelancers and single operators.",
-    egp: 990,
-    usd: 19,
+    egp: PLAN_PRICES.solo.egp,
+    usd: PLAN_PRICES.solo.usd,
     requestable: true,
     cta: "Start free",
     ctaHref: `${APP_URL}/signup?plan=solo`,
@@ -65,8 +63,8 @@ const plans: Plan[] = [
     key: "growth",
     name: "Growth",
     tagline: "Small teams, with the AI assistant.",
-    egp: 2490,
-    usd: 49,
+    egp: PLAN_PRICES.growth.egp,
+    usd: PLAN_PRICES.growth.usd,
     requestable: true,
     popular: true,
     cta: "Start free",
@@ -86,8 +84,8 @@ const plans: Plan[] = [
     key: "agency",
     name: "Agency",
     tagline: "Agencies: most scale, hourly refresh.",
-    egp: 4990,
-    usd: 95,
+    egp: PLAN_PRICES.agency.egp,
+    usd: PLAN_PRICES.agency.usd,
     requestable: true,
     cta: "Start free",
     ctaHref: `${APP_URL}/signup?plan=agency`,
@@ -108,24 +106,24 @@ const plans: Plan[] = [
 const addons = [
   {
     name: "AI add-on",
-    egp: 390,
-    usd: 8,
+    egp: ADDON_PRICES.ai.egp,
+    usd: ADDON_PRICES.ai.usd,
     unit: "/ month",
     onPlans: "For Solo. Growth and Agency include it.",
     body: "The AI assistant, with 300 credits a month. It also connects Claude or ChatGPT to your AdFunnl data so you can ask about your ads there.",
   },
   {
     name: "Ad control",
-    egp: 500,
-    usd: 10,
+    egp: ADDON_PRICES.adControl.egp,
+    usd: ADDON_PRICES.adControl.usd,
     unit: "/ month",
     onPlans: "For Solo. Growth and Agency include it.",
     body: "Claude or ChatGPT can change your ads for you: turn them on and off and change budgets on Meta, TikTok, Snapchat and Google, duplicate and edit on Meta, TikTok and Snapchat, and create new campaigns on Meta, TikTok and Snapchat. Nothing changes until you approve it.",
   },
   {
     name: "Extra seat",
-    egp: 400,
-    usd: 8,
+    egp: ADDON_PRICES.seat.egp,
+    usd: ADDON_PRICES.seat.usd,
     unit: "/ seat / month",
     onPlans: "For Solo and Growth. Agency includes 10 seats.",
     body: "Adds one more teammate who can sign in and work on your brands. Solo includes 1 seat and Growth includes 3. Need more than 10? Talk to us about Enterprise.",
@@ -234,41 +232,10 @@ const faqs = [
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 // ── Structured data, read by search engines and AI assistants ──
-// Built from `plans` and `faqs` above, so it cannot drift from the page.
-// public/pricing.md is a hand-written copy of the same prices: update it
-// whenever a plan changes.
-const schema = [
-  {
-    "@type": "SoftwareApplication",
-    "@id": "https://www.adfunnl.com/#software",
-    name: "AdFunnl",
-    url: "https://www.adfunnl.com/",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    description: "Ad reporting and marketing analytics for agencies, media buyers and performance marketers. AdFunnl brings Meta, TikTok, Snapchat and Google together with store revenue in one live dashboard.",
-    offers: plans.flatMap((p) =>
-      (["USD", "EGP"] as const).map((currency) => {
-        const price = currency === "USD" ? p.usd : p.egp;
-        return {
-          "@type": "Offer",
-          name: p.name,
-          price,
-          priceCurrency: currency,
-          url: "https://www.adfunnl.com/pricing",
-          priceSpecification: { "@type": "UnitPriceSpecification", price, priceCurrency: currency, unitCode: "MON" },
-        };
-      }),
-    ),
-  },
-  {
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  },
-];
+// Prices come from src/data/plans.ts and the FAQ from `faqs` above, so it
+// cannot drift from the page. public/pricing.md is a hand-written copy of the
+// same prices: update it whenever a plan changes.
+const schema = [softwareApplication("en"), faqPage(faqs)];
 ---
 
 <Layout
@@ -576,8 +543,7 @@ const schema = [
 
   <script is:inline>
     (function () {
-      const ANNUAL_MONTHS = 10;
-      let billing = "monthly"; // monthly | annual
+            let billing = "monthly"; // monthly | annual
       let currency = "egp";    // egp | usd
 
       const nf = (n) => n.toLocaleString("en-US");

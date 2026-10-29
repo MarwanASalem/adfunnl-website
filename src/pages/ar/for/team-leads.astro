@@ -4,6 +4,7 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../../layouts/Layout.astro";
+import { faqPage } from "../../../data/plans";
 import DataFlow from "../../../components/DataFlow.astro";
 import AiDashboard from "../../../components/AiDashboard.astro";
 import HeroFilm from "../../../components/HeroFilm.astro";
@@ -205,6 +206,7 @@ const control = [
 ---
 
 <Layout
+  schema={[faqPage(objections)]}
   locale="ar"
   title="إدارة فريق من الـ Media Buyers أمر صعب"
   seoTitle="تقارير إعلانات الوكالات للـ Team Leads · AdFunnl"

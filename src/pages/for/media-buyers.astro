@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { faqPage } from "../../data/plans";
 import DataFlow from "../../components/DataFlow.astro";
 import AiDashboard from "../../components/AiDashboard.astro";
 import HeroFilm from "../../components/HeroFilm.astro";
@@ -325,6 +326,7 @@ const breakdowns = {
 ---
 
 <Layout
+  schema={[faqPage(objections)]}
   title="For Media Buyers"
   seoTitle="Cross-platform ad reporting for media buyers · AdFunnl"
   description="Every ad platform and every store on one screen, with your creatives scored and ranked, so a media buyer's day goes into analysis instead of collecting numbers."

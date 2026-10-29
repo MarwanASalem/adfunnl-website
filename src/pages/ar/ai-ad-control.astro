@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { faqPage } from "../../data/plans";
 import PlatformIcon from "../../components/PlatformIcon.astro";
 import AdControlSafety from "../../components/AdControlSafety.astro";
 
@@ -129,6 +130,7 @@ const closing = {
 ---
 
 <Layout
+  schema={[faqPage(faqs.items)]}
   locale="ar"
   title="التحكم في الإعلانات بالـ AI"
   seoTitle="أدِر إعلاناتك من Claude أو ChatGPT · AdFunnl"

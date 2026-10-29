@@ -4,12 +4,10 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../layouts/Layout.astro";
+import { PLAN_PRICES, ADDON_PRICES, ANNUAL_MONTHS, softwareApplication, faqPage } from "../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 const SUPPORT_EMAIL = "support@adfunnl.com";
-
-// Annual = monthly × 10 (two months free). Compute, never hardcode both.
-const ANNUAL_MONTHS = 10;
 
 type Plan = {
   key: string;
@@ -30,8 +28,8 @@ const plans: Plan[] = [
     key: "free",
     name: "Free",
     tagline: "للتجربة: علامة تجارية واحدة والأساسيات.",
-    egp: 0,
-    usd: 0,
+    egp: PLAN_PRICES.free.egp,
+    usd: PLAN_PRICES.free.usd,
     requestable: false,
     cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup`,
@@ -48,8 +46,8 @@ const plans: Plan[] = [
     key: "solo",
     name: "Solo",
     tagline: "للمستقلين ومن يعملون بمفردهم.",
-    egp: 990,
-    usd: 19,
+    egp: PLAN_PRICES.solo.egp,
+    usd: PLAN_PRICES.solo.usd,
     requestable: true,
     cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup?plan=solo`,
@@ -69,8 +67,8 @@ const plans: Plan[] = [
     key: "growth",
     name: "Growth",
     tagline: "للفرق الصغيرة، مع مساعد AI.",
-    egp: 2490,
-    usd: 49,
+    egp: PLAN_PRICES.growth.egp,
+    usd: PLAN_PRICES.growth.usd,
     requestable: true,
     popular: true,
     cta: "ابدأ مجانًا",
@@ -90,8 +88,8 @@ const plans: Plan[] = [
     key: "agency",
     name: "Agency",
     tagline: "للوكالات: أعلى سعة وتحديث كل ساعة.",
-    egp: 4990,
-    usd: 95,
+    egp: PLAN_PRICES.agency.egp,
+    usd: PLAN_PRICES.agency.usd,
     requestable: true,
     cta: "ابدأ مجانًا",
     ctaHref: `${APP_URL}/signup?plan=agency`,
@@ -112,24 +110,24 @@ const plans: Plan[] = [
 const addons = [
   {
     name: "إضافة AI",
-    egp: 390,
-    usd: 8,
+    egp: ADDON_PRICES.ai.egp,
+    usd: ADDON_PRICES.ai.usd,
     unit: "شهريًا",
     onPlans: "لباقة Solo. باقتا Growth وAgency تشملانها.",
     body: "مساعد AI مع 300 رصيد شهريًا. ويربط أيضًا Claude أو ChatGPT ببياناتك على AdFunnl لتسأل عن إعلاناتك من هناك.",
   },
   {
     name: "التحكم في الإعلانات",
-    egp: 500,
-    usd: 10,
+    egp: ADDON_PRICES.adControl.egp,
+    usd: ADDON_PRICES.adControl.usd,
     unit: "شهريًا",
     onPlans: "لباقة Solo. باقتا Growth وAgency تشملانه.",
     body: "يعدّل Claude أو ChatGPT إعلاناتك بدلًا منك: التشغيل والإيقاف وتغيير الميزانيات على Meta وTikTok وSnapchat وGoogle، والنسخ والتعديل على Meta وTikTok وSnapchat، وإنشاء حملات جديدة على Meta وTikTok وSnapchat. لا يتغير شيء قبل موافقتك.",
   },
   {
     name: "مقعد إضافي",
-    egp: 400,
-    usd: 8,
+    egp: ADDON_PRICES.seat.egp,
+    usd: ADDON_PRICES.seat.usd,
     unit: "للمقعد شهريًا",
     onPlans: "لباقتي Solo وGrowth. باقة Agency تشمل 10 مقاعد.",
     body: "يضيف زميلًا آخر يمكنه تسجيل الدخول والعمل على علاماتك التجارية. تشمل Solo مقعدًا واحدًا وتشمل Growth ثلاثة مقاعد. تحتاج أكثر من 10؟ تواصل معنا بخصوص Enterprise.",
@@ -238,41 +236,10 @@ const faqs = [
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 // ── Structured data, read by search engines and AI assistants ──
-// Built from `plans` and `faqs` above, so it cannot drift from the page.
-// public/pricing.md is a hand-written copy of the same prices: update it
-// whenever a plan changes.
-const schema = [
-  {
-    "@type": "SoftwareApplication",
-    "@id": "https://www.adfunnl.com/#software",
-    name: "AdFunnl",
-    url: "https://www.adfunnl.com/ar",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    description: "AdFunnl منصة لتقارير الإعلانات وتحليلات التسويق للوكالات والـ Media Buyers، تجمع Meta وTikTok وSnapchat وGoogle مع إيرادات المتجر في لوحة مباشرة واحدة.",
-    offers: plans.flatMap((p) =>
-      (["USD", "EGP"] as const).map((currency) => {
-        const price = currency === "USD" ? p.usd : p.egp;
-        return {
-          "@type": "Offer",
-          name: p.name,
-          price,
-          priceCurrency: currency,
-          url: "https://www.adfunnl.com/ar/pricing",
-          priceSpecification: { "@type": "UnitPriceSpecification", price, priceCurrency: currency, unitCode: "MON" },
-        };
-      }),
-    ),
-  },
-  {
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  },
-];
+// Prices come from src/data/plans.ts and the FAQ from `faqs` above, so it
+// cannot drift from the page. public/pricing.md is a hand-written copy of the
+// same prices: update it whenever a plan changes.
+const schema = [softwareApplication("ar"), faqPage(faqs)];
 ---
 
 <Layout
@@ -578,8 +545,7 @@ const schema = [
 
   <script is:inline>
     (function () {
-      const ANNUAL_MONTHS = 10;
-      let billing = "monthly"; // monthly | annual
+            let billing = "monthly"; // monthly | annual
       let currency = "egp";    // egp | usd
 
       const nf = (n) => n.toLocaleString("en-US");

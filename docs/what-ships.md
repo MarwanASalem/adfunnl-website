@@ -75,7 +75,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | Audience breakdowns | Breakdown widgets (donut, bar, table, geo map) by age, gender, device, country, region, placement and day of week, summed across every account and campaign in view. **Meta and Snapchat only.** Meta has all of them; Snapchat has gender, age, country and region, no device. TikTok and Google bring in no breakdowns. Checked 10 September 2026 in `web/src/lib/builder-types.ts` (`BREAKDOWN_DIMENSIONS`), `api/lib/connectors/meta.rb` and `api/lib/connectors/snapchat.rb` |
 | Ad fatigue | Tracked across every ad platform. Confirmed 19 August 2026: Meta, TikTok, Snapchat and Google |
 | Hook and hold | Video retention, where viewers drop off. **Meta only.** Checked 19 August 2026 in `web/src/pages/HookHoldRatesPage.tsx` |
-| Pulse | Watches accounts against your rules and flags them Scale, Hold or Cut |
+| ~~Pulse~~ | **Deprecated 29 October 2026.** See Do not claim |
 | Funding and status alerts | Balance and threshold monitoring, emailed when an account is at risk |
 | Arabic | Full bilingual English and Arabic with RTL, charts included |
 
@@ -88,7 +88,7 @@ including mine and the marketing copy in `adfunnl-landing-copy.md`.
 | PDF export | Clean paginated PDFs, for dashboards and for creative analysis |
 | Creative share links | Share the creative analysis view on its own |
 | Client logo | The client's own logo renders on their dashboard and report |
-| Looker Studio | Community connector, reads workspace data with an API token |
+| ~~Looker Studio~~ | **Deprecated 29 October 2026.** See Do not claim |
 | Digest view | An in-app read-only page mirroring a dashboard one to one |
 | Ads play in live shares | Video ads play inside a live shared report. App commit 26 October 2026 (`feat(shares): play ads inside live shared reports`) |
 | Referrals | "Give a month, get a month": you and a friend each get a free month when the friend connects their ads, up to 2 free months earned (`Referral::MAX_REWARDS`). Checked 29 October 2026 in `web/src/pages/ReferralsPage.tsx` and `api/app/models/referral.rb` |
@@ -142,11 +142,14 @@ not built. Each one has been checked.
 | **Performance per media buyer** | There is no media buyer dimension anywhere in the product. Grouping is Workspace, then Client, then Ad Account. Every member sees every client, and per-member client permissions are explicitly listed as not existing yet. Write the hierarchy as the reader's *pain*, never as a view they will get |
 | **Your agency's branding on reports** | Only the **client's** logo is supported. Agency white-labelling is a candidate in `BACKLOG.md`, not shipped |
 | **Scheduled email report digests** | The app sends no report emails at all. Its only emails are account and billing ones: welcome, password reset, verification, invitation, plan approved, credits added, trial ending, billing alerts. The Digest page is an in-app view, not a mailout. This was on the Team Leads page and has been removed |
-| **Pushing data out to warehouses or Sheets** | No push adapters exist. The tables were designed for it and the code was never written. Data out is pull-only: Looker Studio and share links. Google Sheets is import only |
+| **Pushing data out to warehouses or Sheets** | No push adapters exist. The tables were designed for it and the code was never written. Data out is pull-only: share links and PDF. Google Sheets is import only |
 | **Campaign control on Snapchat or Google, inside the app** | Changing status and budget from inside the AdFunnl dashboard is Meta and TikTok only. From Claude or ChatGPT (ad control, above) it covers every ad platform. Keep the two apart |
 | **New Meta campaigns or ads from Claude or ChatGPT, for everyone** | Creating Meta campaigns, adding new Meta ads and turning existing posts into Meta ads are early access only, until Meta approves the `pages_manage_ads` permission. Show them with an early-access footnote, never a plain tick. Checked 14 October 2026 in `api/app/controllers/api/v1/oauth_controller.rb` |
 | **Google status and budgets below campaign level** | On Google, pause, turn on and budgets are campaigns only. Superseded 21 October 2026: Google now also has duplicate, rename, delete, edit (locations, languages, headlines, descriptions, link, bids), new campaigns, keywords and website-visitor audiences, see "Ad control, Google" above |
 | **A time it takes to connect** | Nothing measures how long connecting Claude or ChatGPT takes. Do not write "about a minute" |
 | **Audience breakdowns on every platform** | Age, gender, device and location come from Meta and Snapchat only. TikTok and Google connectors fetch no breakdown rows. Checked 10 September 2026 |
+| **Pulse** | Deprecated (owner, 29 October 2026). No Scale, Hold or Cut verdicts anywhere on the site, and no rules-based account watching |
+| **Looker Studio** | The Looker Studio connector is deprecated (owner, 29 October 2026). Data out is share links and PDF only |
+| **Internals a competitor could copy** | Owner's rule, 29 October 2026: say what a feature does for the reader, never how it works inside. No Best Creatives score weights, no thresholds (the 50% budget hold, the minimum spend default), no account review comparison windows. The facts stay in this file for writers; they do not go on pages |
 | **Competitor Radar** | A staff preview behind the `competitor_radar` flag (`web/src/lib/flags.ts`), not open to customers. The owner says it is not done (29 October 2026). Leave it off the site entirely, not even as coming soon |
 | **Any customer name, testimonial, or measured result** | We have published none. Not a capability question, a standing rule |

@@ -20,8 +20,8 @@
 // Capability notes (docs/what-ships.md): blended ROAS and one reporting
 // currency (Connect, Visualize); ad changes from Claude or ChatGPT are
 // two-phase and only apply after approval (Ask); Best Creatives weights ROAS,
-// cost per purchase and outbound CTR (Visualize); Pulse verdicts Scale, Hold,
-// Cut (Visualize); live view-only links, PDF and client logo (Share); ad
+// cost per purchase and outbound CTR (Visualize); comparison with the previous
+// period on any tile (Visualize); live view-only links, PDF and client logo (Share); ad
 // fatigue tracked on Meta, TikTok, Snapchat and Google (Visualize).
 import PlatformIcon from "./PlatformIcon.astro";
 
@@ -42,7 +42,7 @@ const COPY = {
       compare: { title: "Comparing platforms", body: "Meta, TikTok, Snapchat and Google in one reporting currency, with blended ROAS on top." },
       ai: { title: "Changing ads with AI", body: "Ask Claude or ChatGPT to pause ads or move budget. Nothing runs until you approve the plan." },
       winner: { title: "Finding the winning ad", body: "Best Creatives ranks ads on ROAS, cost per purchase and outbound CTR." },
-      scale: { title: "Deciding what to scale", body: "Pulse checks each account against your rules and flags it Scale, Hold or Cut." },
+      scale: { title: "Spotting what changed", body: "Every tile compares itself with the previous period, so a drop shows up before the client asks about it." },
       report: { title: "Sending the report", body: "A live, view-only link your client opens anytime, or a PDF with their logo." },
       fatigue: { title: "Catching tired ads", body: "Ad fatigue is tracked on every ad platform, so you see a winner slipping before the results do." },
     },
@@ -53,7 +53,6 @@ const COPY = {
     approve: "Approve",
     applied: "Applied",
     best: "Best",
-    scale: "Scale", hold: "Hold", cut: "Cut",
     link: "Live link",
     viewOnly: "View-only",
     fatigue: "Fatigue",
@@ -64,7 +63,7 @@ const COPY = {
       compare: { title: "مقارنة المنصات", body: "Meta وTikTok وSnapchat وGoogle بعملة تقارير واحدة، وفوقها blended ROAS." },
       ai: { title: "تعديل الإعلانات بالـ AI", body: "اطلب من Claude أو ChatGPT إيقاف الإعلانات أو نقل الميزانية. لا يُنفَّذ شيء قبل موافقتك على الخطة." },
       winner: { title: "إيجاد الإعلان الرابح", body: "يرتّب Best Creatives الإعلانات حسب ROAS وتكلفة الشراء وOutbound CTR." },
-      scale: { title: "تحديد ما يستحق الـ Scale", body: "يفحص Pulse كل حساب وفق قواعدك ويصنّفه Scale أو Hold أو Cut." },
+      scale: { title: "رصد ما تغيّر", body: "كل بطاقة تقارن نفسها بالفترة السابقة، فيظهر التراجع قبل أن يسأل عنه العميل." },
       report: { title: "إرسال التقرير", body: "رابط مباشر للعرض فقط يفتحه عميلك متى شاء، أو ملف PDF بشعاره." },
       fatigue: { title: "رصد الـ Ad Fatigue", body: "يُتابَع الـ Ad Fatigue على كل المنصات الإعلانية، فترى الإعلان الرابح يتراجع قبل أن تقوله النتائج." },
     },
@@ -75,7 +74,6 @@ const COPY = {
     approve: "وافق",
     applied: "تم التطبيق",
     best: "الأفضل",
-    scale: "Scale", hold: "Hold", cut: "Cut",
     link: "رابط مباشر",
     viewOnly: "للعرض فقط",
     fatigue: "Fatigue",
@@ -83,7 +81,7 @@ const COPY = {
 };
 const T = COPY[locale];
 
-// Demo data, the same numbers the Pulse table on the homepage uses.
+// Demo data, the same numbers the campaign table on the homepage uses.
 const platforms = [
   { key: "meta", roas: 5.2 },
   { key: "tiktok", roas: 2.8 },
@@ -95,16 +93,12 @@ const creatives = [
   { photo: "/ad-5.jpg", score: 0.42 },
   { photo: "/ad-4.jpg", score: 0.41 },
 ];
-const verdicts = [
-  { key: "meta", roas: "5.2×", v: "scale" as const },
-  { key: "tiktok", roas: "2.8×", v: "hold" as const },
-  { key: "google_ads", roas: "1.4×", v: "cut" as const },
+// ROAS against the previous period, as the tile's inline comparison shows it.
+const deltas = [
+  { key: "meta", roas: "5.2×", d: "+18%", up: true },
+  { key: "tiktok", roas: "2.8×", d: "-6%", up: false },
+  { key: "google_ads", roas: "1.4×", d: "-21%", up: false },
 ];
-const VERDICT_CLASS = {
-  scale: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  hold: "border-amber-200 bg-amber-50 text-amber-700",
-  cut: "border-rose-200 bg-rose-50 text-rose-700",
-};
 // CTR over time for the fatigue chart: climbs, peaks, then slides.
 const ctr = [30, 44, 52, 50, 42, 33, 26, 20];
 const FW = 160, FH = 40;
@@ -260,11 +254,11 @@ const FAN = [
 
             {job === "scale" && (
               <div class="space-y-1">
-                {verdicts.map((r, k) => (
+                {deltas.map((r, k) => (
                   <div class="fm-in flex items-center gap-2 rounded-md bg-white px-2 py-1 ring-1 ring-brand-100" style={`--k:${k}`}>
                     <PlatformIcon platform={r.key} class="h-3 w-3 shrink-0" />
                     <bdi dir="ltr" class="text-[10px] font-semibold tabular-nums text-zinc-600">{r.roas}</bdi>
-                    <span class={`fm-pop ms-auto inline-flex w-11 justify-center rounded-full border text-[9px] font-semibold ${VERDICT_CLASS[r.v]}`} style={`--k:${k + 2}`}>{T[r.v]}</span>
+                    <bdi dir="ltr" class={`fm-pop ms-auto inline-flex w-11 justify-center rounded-full border text-[9px] font-semibold tabular-nums ${r.up ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-rose-200 bg-rose-50 text-rose-700"}`} style={`--k:${k + 2}`}>{r.d}</bdi>
                   </div>
                 ))}
               </div>

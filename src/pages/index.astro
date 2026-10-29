@@ -13,12 +13,14 @@ import CurrencyMerge from "../components/CurrencyMerge.astro";
 const APP_URL = "https://app.adfunnl.com";
 
 // ── Live snapshots section (faithful recreations of real app screens) ──
-// Pulse: real verdicts are Scale (emerald) / Hold (amber) / Cut (rose).
-const pulseRows = [
-  { name: "Retargeting · Broad",        key: "meta",       spend: "$3,240", revenue: "$16,900", roas: "5.2×", ctr: "2.4%", verdict: "scale" },
-  { name: "Prospecting · Lookalike 3%", key: "tiktok",     spend: "$5,110", revenue: "$14,300", roas: "2.8×", ctr: "1.9%", verdict: "hold"  },
-  { name: "Cold · Interest stack",      key: "google_ads", spend: "$2,780", revenue: "$3,900",  roas: "1.4×", ctr: "1.1%", verdict: "cut"   },
-  { name: "Story ads · Gen Z",          key: "snapchat",   spend: "$1,960", revenue: "$7,450",  roas: "3.8×", ctr: "2.1%", verdict: "scale" },
+// Every platform's campaigns in one table, as the Ads manager report shows
+// them. `delta` is ROAS against the previous period. (Pulse was deprecated in
+// October 2026, so the table carries no verdicts.)
+const campaignRows = [
+  { name: "Retargeting · Broad",        key: "meta",       spend: "$3,240", revenue: "$16,900", roas: "5.2×", ctr: "2.4%", delta: "+18%" },
+  { name: "Prospecting · Lookalike 3%", key: "tiktok",     spend: "$5,110", revenue: "$14,300", roas: "2.8×", ctr: "1.9%", delta: "-6%"  },
+  { name: "Cold · Interest stack",      key: "google_ads", spend: "$2,780", revenue: "$3,900",  roas: "1.4×", ctr: "1.1%", delta: "-21%" },
+  { name: "Story ads · Gen Z",          key: "snapchat",   spend: "$1,960", revenue: "$7,450",  roas: "3.8×", ctr: "2.1%", delta: "+9%"  },
 ];
 
 // Ad-level table widget. The Cost / purchase column carries the green wash that
@@ -67,7 +69,7 @@ const analysisStages = {
     { key: "process", name: "Processing data", owner: "auto", line: "Every platform's numbers are normalized and converted into your reporting currency, so blended ROAS adds up." },
     { key: "analyze", name: "Analyzing data",  owner: "ai",   line: "Dashboards build from live data, and the AI assistant answers questions about it in plain language." },
     { key: "share",   name: "Share",   owner: "auto", line: "A live view-only link or a PDF, current whenever someone opens it." },
-    { key: "act",     name: "Act",     owner: "ai",   line: "Pulse flags accounts Scale, Hold or Cut against your rules. Then Claude or ChatGPT can make the change, from pausing and scaling on Meta, TikTok, Snapchat and Google to launching new campaigns on TikTok and Snapchat. Nothing changes until you approve it." },
+    { key: "act",     name: "Act",     owner: "ai",   line: "Ask Claude or ChatGPT to make the change, from pausing and scaling on Meta, TikTok, Snapchat and Google to launching new campaigns on TikTok and Snapchat. Nothing changes until you approve it." },
   ],
 };
 
@@ -241,7 +243,7 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
   <section id="live" class="relative overflow-hidden bg-zinc-50/70 px-6 py-16 sm:py-24">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(87,56,201,0.10),transparent)]"></div>
     <div class="mx-auto max-w-6xl">
-      <!-- Heading beside the Pulse table from lg up, so this section does not
+      <!-- Heading beside the campaign table from lg up, so this section does not
            open with the same centred-heading-over-a-box shape as its neighbours. -->
       <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
       <div class="reveal mx-auto max-w-2xl text-center lg:mx-0 lg:text-start">
@@ -254,21 +256,21 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         </p>
       </div>
 
-      <!-- Pulse: featured, wide -->
+      <!-- Campaign table: featured, wide -->
       <div class="reveal overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl shadow-brand-900/10">
         <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5">
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-zinc-300"></span>
           <div class="ms-2 flex items-center gap-1.5 text-[11px] font-medium text-zinc-400">
-            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Pulse · All platforms · Acme Cosmetics
+            <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>Ads manager · All platforms · Acme Cosmetics
           </div>
-          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Scaling verdicts</span>
+          <span class="ms-auto rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">Live</span>
         </div>
         <div class="p-5 sm:p-6">
           <div class="mb-3 flex items-center justify-between">
             <p class="text-sm font-semibold text-zinc-800">Active campaigns</p>
-            <p class="text-xs text-zinc-400">Rule: ROAS ≥ 3.0 to scale</p>
+            <p class="text-xs text-zinc-400">This month</p>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full min-w-[560px] text-left text-sm">
@@ -279,12 +281,12 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                   <th class="py-2 px-3 text-right font-semibold">Revenue</th>
                   <th class="py-2 px-3 text-right font-semibold">ROAS</th>
                   <th class="py-2 px-3 text-right font-semibold">CTR</th>
-                  <th class="py-2 ps-3 text-right font-semibold">Verdict</th>
+                  <th class="py-2 ps-3 text-right font-semibold">vs last month</th>
                 </tr>
               </thead>
               <tbody>
-                {pulseRows.map((r, i) => (
-                  <tr class="border-b border-zinc-50 last:border-0" data-pulse-row={i === 0 ? "cycle" : undefined}>
+                {campaignRows.map((r) => (
+                  <tr class="border-b border-zinc-50 last:border-0">
                     <td class="py-3 pe-3 font-medium text-zinc-700">
                       <span class="flex items-center gap-2">
                         <span class="flex h-[22px] w-[22px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-zinc-200/90">
@@ -295,10 +297,13 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
                     </td>
                     <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.spend}</td>
                     <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.revenue}</td>
-                    <td class="py-3 px-3 text-right font-semibold tabular-nums lining-nums text-zinc-900" data-roas>{r.roas}</td>
+                    <td class="py-3 px-3 text-right font-semibold tabular-nums lining-nums text-zinc-900">{r.roas}</td>
                     <td class="py-3 px-3 text-right tabular-nums lining-nums text-zinc-600">{r.ctr}</td>
                     <td class="py-3 ps-3 text-right">
-                      <span class="verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium" data-verdict={r.verdict}></span>
+                      <span class:list={[
+                        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium tabular-nums",
+                        r.delta.startsWith("+") ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-rose-200 bg-rose-50 text-rose-700",
+                      ]}>{r.delta}</span>
                     </td>
                   </tr>
                 ))}
@@ -876,10 +881,6 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
     @keyframes caretBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
     .stream-caret { animation: caretBlink 1s step-end infinite; }
 
-    /* Verdict flip on the featured Pulse row */
-    .verdict { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
-    [data-pulse-row="cycle"] [data-roas] { transition: color .35s ease; }
-
     /* ── Drag-to-compare assistant slider ──
        Both skins occupy the same grid cell; --split drives the clip and the
        overlay, so one custom property moves everything at once. */
@@ -1000,35 +1001,6 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
         filmBtn.querySelector('[data-icon="muted"]').classList.toggle("hidden", turnOn);
         filmBtn.querySelector('[data-icon="sound"]').classList.toggle("hidden", !turnOn);
       });
-    }
-
-    // ── Pulse verdict badges + featured-row flip ───────────────────
-    const VERDICT = {
-      scale: { label: "Scale", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-      hold:  { label: "Hold",  cls: "bg-amber-50 text-amber-700 border-amber-200" },
-      cut:   { label: "Cut",   cls: "bg-rose-50 text-rose-700 border-rose-200" },
-    };
-    const BASE = "verdict inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium";
-    function paint(el, v) { const s = VERDICT[v]; el.className = BASE + " " + s.cls; el.textContent = s.label; }
-    document.querySelectorAll(".verdict").forEach((el) => paint(el, el.dataset.verdict));
-
-    const cycleRow = document.querySelector('[data-pulse-row="cycle"]');
-    if (cycleRow && !rm) {
-      const seq = [
-        { roas: "5.2×", v: "scale" },
-        { roas: "3.6×", v: "scale" },
-        { roas: "2.7×", v: "hold" },
-        { roas: "4.1×", v: "scale" },
-      ];
-      const badge = cycleRow.querySelector(".verdict");
-      const roasCell = cycleRow.querySelector("[data-roas]");
-      let i = 0;
-      setInterval(() => {
-        i = (i + 1) % seq.length;
-        roasCell.textContent = seq[i].roas;
-        roasCell.style.color = seq[i].v === "hold" ? "#b45309" : "#0f766e";
-        paint(badge, seq[i].v);
-      }, 2200);
     }
 
     // ── Creatives carousel (phones) ────────────────────────────────

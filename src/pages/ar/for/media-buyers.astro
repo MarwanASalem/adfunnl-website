@@ -200,9 +200,9 @@ const videoSpendShare = Math.round(
 // How the score is built. Weights verified 19 August 2026 against
 // web/src/lib/creative-score.ts.
 const scoreWeights = [
-  { metric: "ROAS", weight: "40%", note: "ما جلبه الإعلان" },
-  { metric: "تكلفة الشراء", weight: "40%", note: "كم كلّفك كل شراء" },
-  { metric: "Outbound CTR", weight: "20%", note: "هل نجح الـ Creative" },
+  { metric: "ROAS", note: "ما جلبه الإعلان" },
+  { metric: "تكلفة الشراء", note: "كم كلّفك كل شراء" },
+  { metric: "Outbound CTR", note: "هل نجح الـ Creative" },
 ];
 
 // The rest of Creatives Analysis. Platform coverage is checked and is not the
@@ -477,14 +477,13 @@ const breakdowns = {
           <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
             <div class="flex items-baseline justify-between">
               <p class="text-sm font-semibold text-white">{w.metric}</p>
-              <p class="font-display text-2xl font-bold text-brand-300">{w.weight}</p>
             </div>
             <p class="mt-1.5 text-xs leading-relaxed text-white/45">{w.note}</p>
           </div>
         ))}
       </div>
       <p class="mx-auto mt-5 max-w-3xl text-center text-sm leading-relaxed text-white/45">
-        كل مقياس يُعاير مقارنةً بالإعلانات الأخرى المعروضة قبل ترجيحه، فيُقاس الإعلان على ما تشغّله فعلًا لا على رقم اختاره أحدهم. وللحسابات التي تبيع عبر الرسائل يوجد وضع للرسائل، يعطي تكلفة الرسالة وزن 80% والـ CTR وزن 20%.
+        يُقاس كل إعلان مقارنةً بالإعلانات الأخرى المعروضة، فيُحكم عليه بما تشغّله فعلًا لا برقم اختاره أحدهم. وللحسابات التي تبيع عبر الرسائل يوجد وضع للرسائل، مبني على تكلفة كل محادثة.
       </p>
 
       <!-- Recreation of the Creatives Analysis report -->

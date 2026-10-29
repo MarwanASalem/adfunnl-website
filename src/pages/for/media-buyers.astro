@@ -196,9 +196,9 @@ const videoSpendShare = Math.round(
 // How the score is built. Weights verified 19 August 2026 against
 // web/src/lib/creative-score.ts.
 const scoreWeights = [
-  { metric: "Return on ad spend", weight: "40%", note: "What it brought back" },
-  { metric: "Cost per purchase", weight: "40%", note: "What each one cost you" },
-  { metric: "Outbound click-through", weight: "20%", note: "Whether the creative worked" },
+  { metric: "Return on ad spend", note: "What it brought back" },
+  { metric: "Cost per purchase", note: "What each one cost you" },
+  { metric: "Outbound click-through", note: "Whether the creative worked" },
 ];
 
 // The rest of Creatives Analysis. Platform coverage is checked and is not the
@@ -480,18 +480,16 @@ const breakdowns = {
           <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
             <div class="flex items-baseline justify-between">
               <p class="text-sm font-semibold text-white">{w.metric}</p>
-              <p class="font-display text-2xl font-bold text-brand-300">{w.weight}</p>
             </div>
             <p class="mt-1.5 text-xs leading-relaxed text-white/45">{w.note}</p>
           </div>
         ))}
       </div>
       <p class="mx-auto mt-5 max-w-3xl text-center text-sm leading-relaxed text-white/45">
-        Each metric is standardized against the other ads in view before it is
-        weighted, so an ad is measured against what you are actually running
-        rather than against a number somebody picked. For accounts that sell in
-        the inbox there is a messaging mode, weighting cost per message at 80%
-        and click-through at 20%.
+        Each ad is measured against the other ads in view, so it is judged on
+        what you are actually running rather than against a number somebody
+        picked. For accounts that sell in the inbox there is a messaging mode,
+        built around what each conversation costs.
       </p>
 
       <!-- Recreation of the Creatives Analysis report -->

@@ -332,10 +332,9 @@ overdone: a page that reads as half English is wrong.
 | Stays in English | Examples in context |
 |---|---|
 | Metrics and acronyms | ROAS, blended ROAS, CTR, Outbound CTR, CPA, CAC, KPI |
-| Platform and tool names | Meta, TikTok, Snapchat, Google Ads, Shopify, Ads Manager, Looker Studio |
+| Platform and tool names | Meta, TikTok, Snapchat, Google Ads, Shopify, Ads Manager |
 | Media-buying jargon | Creative / Creatives, breakdowns, attribution window, retargeting, prospecting, UGC, Scale |
-| Product and feature names | Pulse, Best Creatives Calculator, Hook & Hold, Ad Fatigue, MCP, AI |
-| Pulse verdicts | Scale, Hold, Cut |
+| Product and feature names | Best Creatives Calculator, Hook & Hold, Ad Fatigue, MCP, AI |
 | Personas (fixed terms) | Account Managers, Team Leads, Media Buyers |
 | Plan names | Free, Solo, Growth, Agency |
 

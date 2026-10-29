@@ -80,9 +80,9 @@ const copy: Copy = {
       id: "creatives",
       heading: "Creative analysis",
       rows: [
-        { name: "Best Creatives", body: "Ads ranked by one score instead of one metric: ROAS 40%, cost per purchase 40% and outbound CTR 20%, across several ad accounts at once, with each creative shown on the page.", chips: ["Meta · TikTok · Snapchat"] },
-        { name: "Messaging mode", body: "For message campaigns, the ranking switches to cost per message 80% and CTR 20%.", chips: ["Meta"] },
-        { name: "Minimum spend filter", body: "Ads below a spend threshold drop out of the ranking. It starts at the average spend of the ads in view." },
+        { name: "Best Creatives", body: "Ads ranked by one score that weighs return, cost and click-through together, across several ad accounts at once, with each creative shown on the page.", chips: ["Meta · TikTok · Snapchat"] },
+        { name: "Messaging mode", body: "Message campaigns are ranked on what each conversation costs.", chips: ["Meta"] },
+        { name: "Minimum spend filter", body: "Low-spend ads drop out of the ranking, so a lucky ad with little spend cannot top it." },
         { name: "Hook & Hold", body: "Where viewers stop watching each video.", chips: ["Meta", "Solo and up"] },
         { name: "Ad Fatigue", body: "Spots ads that are wearing out, on every ad platform.", chips: ["Solo and up"] },
         { name: "Spend timeline", body: "Daily spend per ad and each ad's share of the budget, so you can see spend moving from one ad to another.", chips: ["Solo and up"] },
@@ -93,7 +93,6 @@ const copy: Copy = {
       id: "alerts",
       heading: "Alerts and monitoring",
       rows: [
-        { name: "Pulse", body: "Watches your accounts against rules you set and marks each one Scale, Hold or Cut." },
         { name: "Fund reminders", body: "Every ad account's balance on one page, stopped and at-risk accounts first, with an email when an account is about to run out.", chips: ["Meta", "Solo and up"] },
         { name: "Sync jobs and data logs", body: "When each account last updated, and whether it worked." },
       ],
@@ -107,7 +106,6 @@ const copy: Copy = {
         { name: "PDF export", body: "Clean, paginated PDFs of dashboards and of the creative analysis." },
         { name: "The client's logo", body: "Each client's own logo on their dashboard and their report." },
         { name: "Ads that play", body: "Video ads play inside a live shared report." },
-        { name: "Looker Studio", body: "A Looker Studio connector reads the same data, for clients who report there." },
         { name: "Digest", body: "Every dashboard in the workspace at a glance, on one page." },
       ],
     },
@@ -116,7 +114,7 @@ const copy: Copy = {
       heading: "AI assistant and MCP",
       rows: [
         { name: "Ada, the in-app assistant", body: "On every page. Ask in plain English or Arabic and the answer streams in, showing the data it used. It remembers your workspace between chats.", chips: ["Plans with AI"] },
-        { name: "Account review", body: "Ada goes through every ad set and ad of a brand, compares this month with the last 4 days, with last month and with its peers, and gives each one a verdict.", chips: ["Plans with AI"] },
+        { name: "Account review", body: "Ada goes through every ad set and ad of a brand and tells you which ones need attention.", chips: ["Plans with AI"] },
         { name: "MCP server", body: "Claude, ChatGPT or any other MCP client can read the same numbers AdFunnl shows you.", chips: ["Plans with AI"] },
         { name: "AI credits", body: "Assistant use runs on a monthly credit allowance per workspace, with top-ups when you need more." },
       ],
@@ -126,7 +124,7 @@ const copy: Copy = {
       heading: "Changing ads from Claude or ChatGPT",
       intro: "Every change comes back as a plan first, and only happens after you approve it in the chat.",
       rows: [
-        { name: "Pause, turn on and change budgets", body: "On Meta, TikTok, Snapchat and Google. Google is campaigns only. A budget rise over 50% is held back unless you ask for it.", href: "/ai-ad-control", chips: ["TikTok · Snapchat Live", "Meta · Google Beta"] },
+        { name: "Pause, turn on and change budgets", body: "On Meta, TikTok, Snapchat and Google. Google is campaigns only. Large budget rises are held back unless you ask for them.", href: "/ai-ad-control", chips: ["TikTok · Snapchat Live", "Meta · Google Beta"] },
         { name: "Duplicate, rename, delete and edit", body: "Edit the audience, the ad text and the URL tracking tags. A copy is always created paused.", chips: ["Meta · TikTok · Snapchat"] },
         { name: "New campaigns and ads", body: "From your images and videos on Google Drive, all created switched off. TikTok can also run posts already on your profile as ads.", chips: ["TikTok · Snapchat"] },
         { name: "Google campaigns", body: "New Search, Shopping, Display, Demand Gen and Performance Max campaigns, created paused. Keywords, negative keywords, search terms, sitelinks, callouts and conversion goals.", chips: ["Google"] },

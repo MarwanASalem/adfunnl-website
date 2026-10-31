@@ -11,16 +11,24 @@ export type PlanKey = "free" | "solo" | "growth" | "agency";
 
 export const PLAN_PRICES: Record<PlanKey, { name: string; usd: number; egp: number }> = {
   free:   { name: "Free",   usd: 0,  egp: 0 },
-  solo:   { name: "Solo",   usd: 19, egp: 990 },
-  growth: { name: "Growth", usd: 49, egp: 2490 },
-  agency: { name: "Agency", usd: 95, egp: 4990 },
+  solo:   { name: "Solo",   usd: 25, egp: 1490 },
+  growth: { name: "Growth", usd: 49, egp: 2990 },
+  agency: { name: "Agency", usd: 99, egp: 5990 },
 };
 
+// From 1 November 2026 Solo includes the AI assistant, so there is no AI
+// add-on. Extra AI is sold only as credit packs (CREDIT_PACKS).
 export const ADDON_PRICES = {
-  ai:        { usd: 8,  egp: 390 },
-  adControl: { usd: 10, egp: 500 },
-  seat:      { usd: 8,  egp: 400 },
+  adControl: { usd: 10, egp: 590 },
+  seat:      { usd: 8,  egp: 490 },
 };
+
+// One-off AI credit top-ups. Mirrors PlanConfig::CREDIT_PACKS in the app repo.
+export const CREDIT_PACKS = [
+  { credits: "500",   egp: 690,  usd: 12 },
+  { credits: "1,500", egp: 2390, usd: 39,  popular: true },
+  { credits: "5,000", egp: 7790, usd: 129 },
+];
 
 const SITE = "https://www.adfunnl.com";
 

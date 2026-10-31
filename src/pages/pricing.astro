@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { PLAN_PRICES, ADDON_PRICES, ANNUAL_MONTHS, softwareApplication, faqPage } from "../data/plans";
+import { PLAN_PRICES, ADDON_PRICES, CREDIT_PACKS, ANNUAL_MONTHS, softwareApplication, faqPage } from "../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 const SUPPORT_EMAIL = "support@adfunnl.com";
@@ -56,13 +56,15 @@ const plans: Plan[] = [
       "Hook & Hold + Creative Fatigue",
       "Live sharing, view-only links & PDF",
       "Add-fund & billing alerts",
-      "Optional add-ons: AI and ad control",
+      "AI assistant (chat) + MCP access",
+      "300 AI credits / month",
+      "Optional add-on: ad control",
     ],
   },
   {
     key: "growth",
     name: "Growth",
-    tagline: "Small teams, with the AI assistant.",
+    tagline: "Small teams, with ad control included.",
     egp: PLAN_PRICES.growth.egp,
     usd: PLAN_PRICES.growth.usd,
     requestable: true,
@@ -71,7 +73,6 @@ const plans: Plan[] = [
     ctaHref: `${APP_URL}/signup?plan=growth`,
     highlightsLead: "Everything in Solo, plus",
     highlights: [
-      "AI assistant (chat) + MCP access",
       "Manage your ads from Claude or ChatGPT",
       "1,000 AI credits / month",
       "3 team seats",
@@ -92,7 +93,7 @@ const plans: Plan[] = [
     highlightsLead: "Everything in Growth, plus",
     highlights: [
       "Hourly data refresh",
-      "3,000 AI credits / month",
+      "2,000 AI credits / month",
       "10 team seats",
       "30 brands · 150 ad accounts",
       "5 years of history",
@@ -101,17 +102,9 @@ const plans: Plan[] = [
 ];
 
 // Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo.
-// Ad control stands on its own (it brings the Claude/ChatGPT connection, not
-// the AI assistant). Growth and Agency include both.
+// Solo already includes the AI assistant, so ad control is the one add-on
+// that changes what it can do. Growth and Agency include ad control.
 const addons = [
-  {
-    name: "AI add-on",
-    egp: ADDON_PRICES.ai.egp,
-    usd: ADDON_PRICES.ai.usd,
-    unit: "/ month",
-    onPlans: "For Solo. Growth and Agency include it.",
-    body: "The AI assistant, with 300 credits a month. It also connects Claude or ChatGPT to your AdFunnl data so you can ask about your ads there.",
-  },
   {
     name: "Ad control",
     egp: ADDON_PRICES.adControl.egp,
@@ -132,12 +125,8 @@ const addons = [
 
 const addonSubject = (name: string) => `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`AdFunnl add-on request: ${name}`)}`;
 
-// AI credit top-up packs (Growth / Agency only).
-const creditPacks = [
-  { credits: "500",   egp: 490,  usd: 9 },
-  { credits: "1,500", egp: 1290, usd: 25,  popular: true },
-  { credits: "5,000", egp: 3490, usd: 65 },
-];
+// AI credit top-up packs, for every paid plan.
+const creditPacks = CREDIT_PACKS;
 
 // Comparison matrix. Boolean → check/dash; string → literal.
 type Row = { label: string; free: string | boolean; solo: string | boolean; growth: string | boolean; agency: string | boolean };
@@ -173,11 +162,11 @@ const groups: { title: string; rows: Row[] }[] = [
   {
     title: "AI",
     rows: [
-      { label: "AI assistant (chat)", free: false, solo: "Add-on", growth: true,    agency: true },
-      { label: "AI builds your dashboard", free: false, solo: "Add-on", growth: true, agency: true },
-      { label: "AI MCP access",       free: false, solo: "Add-on", growth: true,    agency: true },
+      { label: "AI assistant (chat)", free: false, solo: true, growth: true,    agency: true },
+      { label: "AI builds your dashboard", free: false, solo: true, growth: true, agency: true },
+      { label: "AI MCP access",       free: false, solo: true, growth: true,    agency: true },
       { label: "Change ads from Claude or ChatGPT", free: false, solo: "Add-on", growth: true, agency: true },
-      { label: "AI credits / month",  free: "0",   solo: "300 with add-on", growth: "1,000", agency: "3,000" },
+      { label: "AI credits / month",  free: "0",   solo: "300", growth: "1,000", agency: "2,000" },
     ],
   },
   {
@@ -209,11 +198,11 @@ const faqs = [
   },
   {
     q: "What are AI credits and when do I need top-ups?",
-    a: "Growth and Agency include a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out, so you never lose what you paid for.",
+    a: "Every paid plan includes a monthly AI-credit allowance for the assistant. Credits carry over, and top-up packs are only spent after your monthly allowance runs out, so you never lose what you paid for.",
   },
   {
     q: "How do I add a teammate?",
-    a: "Each plan includes seats: 1 on Free and Solo, 3 on Growth and 10 on Agency. On Solo and Growth you can add more with the Extra seat add-on at EGP 400 a month per seat. Beyond 10 seats, talk to us about Enterprise.",
+    a: "Each plan includes seats: 1 on Free and Solo, 3 on Growth and 10 on Agency. On Solo and Growth you can add more with the Extra seat add-on at EGP 490 a month per seat. Beyond 10 seats, talk to us about Enterprise.",
   },
   {
     q: "How do I get an add-on?",
@@ -221,11 +210,11 @@ const faqs = [
   },
   {
     q: "Which plan includes the AI assistant?",
-    a: "The AI assistant and MCP access are included from Growth. On Solo you can add them with the AI add-on for EGP 390 a month, which includes 300 AI credits. Agency adds hourly data refresh, the largest seat and brand caps, five years of history and 3,000 monthly AI credits.",
+    a: "Every paid plan includes the AI assistant and MCP access: 300 AI credits a month on Solo, 1,000 on Growth and 2,000 on Agency. Agency also adds hourly data refresh, the largest seat and brand caps and five years of history.",
   },
   {
     q: "Can Claude or ChatGPT change my ads?",
-    a: "Yes, with ad control. It is included on paid Growth and Agency plans, and Solo can add it for EGP 500 a month on its own, with no AI add-on needed. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
+    a: "Yes, with ad control. It is included on paid Growth and Agency plans, and Solo can add it for EGP 590 a month. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
   },
 ];
 
@@ -262,9 +251,6 @@ const schema = [softwareApplication("en"), faqPage(faqs)];
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
         Multi-platform ad analytics and shareable dashboards for agencies and media buyers.
         Start free, upgrade when your team does. Two months free on annual.
-      </p>
-      <p class="mx-auto mt-4 max-w-2xl rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-800">
-        Prices go up on 1 November. Subscribe or renew before then and you pay today's price for the whole period you choose, so an annual plan keeps it for a year.
       </p>
 
       <!-- Toggles -->
@@ -427,11 +413,11 @@ const schema = [softwareApplication("en"), faqPage(faqs)];
         </span>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Add to your plan</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Add AI, ad control or more seats without moving up a plan. Billed monthly. We confirm each request with you before anything is charged.
+          Add ad control or more seats without moving up a plan. Billed monthly. We confirm each request with you before anything is charged.
         </p>
       </div>
 
-      <div class="mt-12 grid gap-5 md:grid-cols-3 m-snap">
+      <div class="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2 m-snap">
         {addons.map((addon) => (
           <div class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7">
             <div class="flex flex-col gap-1">

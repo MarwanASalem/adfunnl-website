@@ -4,7 +4,7 @@
 // terms stay in English, see the Arabic section of docs/voice.md.
 //
 import Layout from "../../layouts/Layout.astro";
-import { PLAN_PRICES, ADDON_PRICES, ANNUAL_MONTHS, softwareApplication, faqPage } from "../../data/plans";
+import { PLAN_PRICES, ADDON_PRICES, CREDIT_PACKS, ANNUAL_MONTHS, softwareApplication, faqPage } from "../../data/plans";
 
 const APP_URL = "https://app.adfunnl.com";
 const SUPPORT_EMAIL = "support@adfunnl.com";
@@ -60,13 +60,15 @@ const plans: Plan[] = [
       "Hook & Hold + Creative Fatigue",
       "مشاركة مباشرة وروابط للعرض فقط وPDF",
       "تنبيهات شحن الرصيد والفوترة",
-      "إضافات اختيارية: AI والتحكم في الإعلانات",
+      "مساعد AI (محادثة) + وصول MCP",
+      "300 رصيد AI شهريًا",
+      "إضافة اختيارية: التحكم في الإعلانات",
     ],
   },
   {
     key: "growth",
     name: "Growth",
-    tagline: "للفرق الصغيرة، مع مساعد AI.",
+    tagline: "للفرق الصغيرة، مع التحكم في الإعلانات.",
     egp: PLAN_PRICES.growth.egp,
     usd: PLAN_PRICES.growth.usd,
     requestable: true,
@@ -75,7 +77,6 @@ const plans: Plan[] = [
     ctaHref: `${APP_URL}/signup?plan=growth`,
     highlightsLead: "كل ما في Solo، بالإضافة إلى",
     highlights: [
-      "مساعد AI (محادثة) + وصول MCP",
       "إدارة إعلاناتك من Claude أو ChatGPT",
       "1,000 رصيد AI شهريًا",
       "3 مقاعد للفريق",
@@ -96,7 +97,7 @@ const plans: Plan[] = [
     highlightsLead: "كل ما في Growth، بالإضافة إلى",
     highlights: [
       "تحديث البيانات كل ساعة",
-      "3,000 رصيد AI شهريًا",
+      "2,000 رصيد AI شهريًا",
       "10 مقاعد للفريق",
       "30 علامة تجارية · 150 حسابًا إعلانيًا",
       "سجل 5 سنوات",
@@ -105,17 +106,8 @@ const plans: Plan[] = [
 ];
 
 // Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo,
-// and soloAddons on the English page. Meta campaign creation is left out on
-// purpose: it waits on Meta's review of pages_manage_ads.
+// and the addons on the English page. Solo already includes the AI assistant.
 const addons = [
-  {
-    name: "إضافة AI",
-    egp: ADDON_PRICES.ai.egp,
-    usd: ADDON_PRICES.ai.usd,
-    unit: "شهريًا",
-    onPlans: "لباقة Solo. باقتا Growth وAgency تشملانها.",
-    body: "مساعد AI مع 300 رصيد شهريًا. ويربط أيضًا Claude أو ChatGPT ببياناتك على AdFunnl لتسأل عن إعلاناتك من هناك.",
-  },
   {
     name: "التحكم في الإعلانات",
     egp: ADDON_PRICES.adControl.egp,
@@ -136,12 +128,8 @@ const addons = [
 
 const addonSubject = (name: string) => `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`AdFunnl add-on request: ${name}`)}`;
 
-// AI credit top-up packs (Growth / Agency only).
-const creditPacks = [
-  { credits: "500",   egp: 490,  usd: 9 },
-  { credits: "1,500", egp: 1290, usd: 25,  popular: true },
-  { credits: "5,000", egp: 3490, usd: 65 },
-];
+// AI credit top-up packs, for every paid plan.
+const creditPacks = CREDIT_PACKS;
 
 // Comparison matrix. Boolean → check/dash; string → literal.
 type Row = { label: string; free: string | boolean; solo: string | boolean; growth: string | boolean; agency: string | boolean };
@@ -177,11 +165,11 @@ const groups: { title: string; rows: Row[] }[] = [
   {
     title: "AI",
     rows: [
-      { label: "مساعد AI (محادثة)", free: false, solo: "إضافة", growth: true,    agency: true },
-      { label: "AI يبني لوحتك", free: false, solo: "إضافة", growth: true, agency: true },
-      { label: "وصول MCP",       free: false, solo: "إضافة", growth: true,    agency: true },
+      { label: "مساعد AI (محادثة)", free: false, solo: true, growth: true,    agency: true },
+      { label: "AI يبني لوحتك", free: false, solo: true, growth: true, agency: true },
+      { label: "وصول MCP",       free: false, solo: true, growth: true,    agency: true },
       { label: "تعديل الإعلانات من Claude أو ChatGPT", free: false, solo: "إضافة", growth: true, agency: true },
-      { label: "رصيد AI شهريًا",  free: "0",   solo: "300 مع الإضافة",   growth: "1,000", agency: "3,000" },
+      { label: "رصيد AI شهريًا",  free: "0",   solo: "300",   growth: "1,000", agency: "2,000" },
     ],
   },
   {
@@ -213,11 +201,11 @@ const faqs = [
   },
   {
     q: "ما رصيد AI، ومتى أحتاج إلى شحنه؟",
-    a: "باقتا Growth وAgency تتضمنان رصيد AI شهريًا للمساعد. الرصيد ينتقل إلى الشهر التالي، وباقات الشحن لا تُستهلك إلا بعد نفاد رصيدك الشهري، فلا تخسر ما دفعت مقابله.",
+    a: "كل باقة مدفوعة تتضمن رصيد AI شهريًا للمساعد. الرصيد ينتقل إلى الشهر التالي، وباقات الشحن لا تُستهلك إلا بعد نفاد رصيدك الشهري، فلا تخسر ما دفعت مقابله.",
   },
   {
     q: "كيف أضيف زميلًا إلى الفريق؟",
-    a: "كل باقة تشمل عددًا من المقاعد: مقعد واحد في Free وSolo، و3 في Growth، و10 في Agency. في Solo وGrowth يمكنك إضافة المزيد بإضافة المقعد الإضافي بسعر 400 جنيه شهريًا للمقعد. وفوق 10 مقاعد تواصل معنا بخصوص Enterprise.",
+    a: "كل باقة تشمل عددًا من المقاعد: مقعد واحد في Free وSolo، و3 في Growth، و10 في Agency. في Solo وGrowth يمكنك إضافة المزيد بإضافة المقعد الإضافي بسعر 490 جنيهًا شهريًا للمقعد. وفوق 10 مقاعد تواصل معنا بخصوص Enterprise.",
   },
   {
     q: "كيف أحصل على إضافة؟",
@@ -225,11 +213,11 @@ const faqs = [
   },
   {
     q: "أي باقة تتضمن مساعد AI؟",
-    a: "مساعد AI ووصول MCP مشمولان من باقة Growth. وفي باقة Solo يمكنك إضافتهما بإضافة AI مقابل 390 جنيهًا شهريًا، وتشمل 300 رصيد AI. وتضيف Agency تحديث البيانات كل ساعة، وأكبر عدد من المقاعد والعلامات التجارية، وسجل خمس سنوات، و3,000 رصيد AI شهريًا.",
+    a: "كل باقة مدفوعة تشمل مساعد AI ووصول MCP: 300 رصيد AI شهريًا في Solo، و1,000 في Growth، و2,000 في Agency. وتضيف Agency أيضًا تحديث البيانات كل ساعة، وأكبر عدد من المقاعد والعلامات التجارية، وسجل خمس سنوات.",
   },
   {
     q: "هل يمكن لـ Claude أو ChatGPT تعديل إعلاناتي؟",
-    a: "نعم، مع التحكم في الإعلانات. وهو مشمول في باقتي Growth وAgency المدفوعتين، ويمكن إضافته إلى Solo مقابل 500 جنيه شهريًا بمفردها دون الحاجة إلى إضافة AI. كل تعديل يُعرض عليك أولًا ولا يُنفَّذ إلا بعد موافقتك. ولا يدخل ضمن التجربة المجانية.",
+    a: "نعم، مع التحكم في الإعلانات. وهو مشمول في باقتي Growth وAgency المدفوعتين، ويمكن إضافته إلى Solo مقابل 590 جنيهًا شهريًا. كل تعديل يُعرض عليك أولًا ولا يُنفَّذ إلا بعد موافقتك. ولا يدخل ضمن التجربة المجانية.",
   },
 ];
 
@@ -266,9 +254,6 @@ const schema = [softwareApplication("ar"), faqPage(faqs)];
       </h1>
       <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-zinc-500">
         تحليلات إعلانية لكل المنصات ولوحات قابلة للمشاركة للوكالات والـ Media Buyers. ابدأ مجانًا، ورقِّ باقتك حين يكبر فريقك. شهران مجانًا مع الاشتراك السنوي.
-      </p>
-      <p class="mx-auto mt-4 max-w-2xl rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-800">
-        ترتفع الأسعار بدءًا من 1 نوفمبر. اشترك أو جدّد قبلها وستدفع السعر الحالي عن المدة التي تختارها كاملة، فالاشتراك السنوي يحفظ لك السعر لمدة عام.
       </p>
 
       <!-- Toggles -->
@@ -431,11 +416,11 @@ const schema = [softwareApplication("ar"), faqPage(faqs)];
         </span>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">أضف إلى باقتك</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          أضف AI أو التحكم في الإعلانات أو مقاعد إضافية دون الانتقال إلى باقة أعلى. الفوترة شهرية، ونؤكد كل طلب معك قبل أي خصم.
+          أضف التحكم في الإعلانات أو مقاعد إضافية دون الانتقال إلى باقة أعلى. الفوترة شهرية، ونؤكد كل طلب معك قبل أي خصم.
         </p>
       </div>
 
-      <div class="mt-12 grid gap-5 md:grid-cols-3 m-snap">
+      <div class="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2 m-snap">
         {addons.map((addon) => (
           <div class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7">
             <div class="flex flex-col gap-1">

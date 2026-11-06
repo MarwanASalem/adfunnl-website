@@ -21,16 +21,16 @@ Full pricing page: https://www.adfunnl.com/pricing
 - Limits: 1 team seat, 3 brands, 15 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: every 12 hours
 - History: 1 year
-- Includes: everything in Free, plus change annotations, Hook & Hold, Creative Fatigue, live sharing with view-only links and PDF, add-fund reminders, billing alerts, Google Sheets import, the AI assistant, AI-built dashboards, MCP access and 300 AI credits per month
+- Includes: everything in Free, plus change annotations, Hook & Hold, Creative Fatigue, live sharing with view-only links and PDF, add-fund reminders, billing alerts, Google Sheets import, the AI assistant, AI-built dashboards, MCP access, ad control (changing your ads from Claude or ChatGPT) and 300 AI credits per month
 
 ## Growth
 
 - Price: $49 / EGP 2,990 per month ($490 / EGP 29,900 per year)
-- For: small teams that want ad control included
+- For: small teams
 - Limits: 3 team seats, 10 brands, 50 ad accounts, all ad platforms, unlimited dashboards
 - Data refresh: every 6 hours
 - History: 3 years
-- Includes: everything in Solo, plus ad control (changing your ads from Claude or ChatGPT) and 1,000 AI credits per month
+- Includes: everything in Solo, plus 1,000 AI credits per month
 
 ## Agency
 
@@ -43,11 +43,9 @@ Full pricing page: https://www.adfunnl.com/pricing
 
 ## Add-ons (billed monthly)
 
-- Ad control: $10 / EGP 590 per month, on Solo. Claude or ChatGPT can change your ads after you approve each change. Details: https://www.adfunnl.com/ai-ad-control
-
 - Extra seat: $8 / EGP 490 per seat per month, on Solo and Growth. Adds one more teammate who can sign in and work on your brands. Solo includes 1 seat and Growth includes 3. Agency includes 10 seats; beyond that is Enterprise.
 
-Every paid plan includes the AI assistant. Growth and Agency include ad control. Add-ons are requested and approved by the AdFunnl team. Ad control is not part of the free trial.
+Every paid plan includes the AI assistant and ad control: Claude or ChatGPT can change your ads after you approve each change (details: https://www.adfunnl.com/ai-ad-control). Add-ons are requested and approved by the AdFunnl team. Ad control is not part of the free trial.
 
 ## AI credit top-ups (every paid plan)
 

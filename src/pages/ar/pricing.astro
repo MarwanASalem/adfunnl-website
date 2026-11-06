@@ -61,14 +61,14 @@ const plans: Plan[] = [
       "مشاركة مباشرة وروابط للعرض فقط وPDF",
       "تنبيهات شحن الرصيد والفوترة",
       "مساعد AI (محادثة) + وصول MCP",
+      "إدارة إعلاناتك من Claude أو ChatGPT",
       "300 رصيد AI شهريًا",
-      "إضافة اختيارية: التحكم في الإعلانات",
     ],
   },
   {
     key: "growth",
     name: "Growth",
-    tagline: "للفرق الصغيرة، مع التحكم في الإعلانات.",
+    tagline: "للفرق الصغيرة، مع 3 مقاعد.",
     egp: PLAN_PRICES.growth.egp,
     usd: PLAN_PRICES.growth.usd,
     requestable: true,
@@ -77,7 +77,6 @@ const plans: Plan[] = [
     ctaHref: `${APP_URL}/signup?plan=growth`,
     highlightsLead: "كل ما في Solo، بالإضافة إلى",
     highlights: [
-      "إدارة إعلاناتك من Claude أو ChatGPT",
       "1,000 رصيد AI شهريًا",
       "3 مقاعد للفريق",
       "10 علامات تجارية · 50 حسابًا إعلانيًا",
@@ -105,17 +104,10 @@ const plans: Plan[] = [
   },
 ];
 
-// Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo,
-// and the addons on the English page. Solo already includes the AI assistant.
+// Add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo,
+// and the addons on the English page. Every paid plan includes the AI
+// assistant and ad control, so extra seats are the one add-on.
 const addons = [
-  {
-    name: "التحكم في الإعلانات",
-    egp: ADDON_PRICES.adControl.egp,
-    usd: ADDON_PRICES.adControl.usd,
-    unit: "شهريًا",
-    onPlans: "لباقة Solo. باقتا Growth وAgency تشملانه.",
-    body: "يعدّل Claude أو ChatGPT إعلاناتك بدلًا منك: التشغيل والإيقاف وتغيير الميزانيات على Meta وTikTok وSnapchat وGoogle، والنسخ والتعديل على Meta وTikTok وSnapchat، وإنشاء حملات جديدة على Meta وTikTok وSnapchat. لا يتغير شيء قبل موافقتك.",
-  },
   {
     name: "مقعد إضافي",
     egp: ADDON_PRICES.seat.egp,
@@ -168,7 +160,7 @@ const groups: { title: string; rows: Row[] }[] = [
       { label: "مساعد AI (محادثة)", free: false, solo: true, growth: true,    agency: true },
       { label: "AI يبني لوحتك", free: false, solo: true, growth: true, agency: true },
       { label: "وصول MCP",       free: false, solo: true, growth: true,    agency: true },
-      { label: "تعديل الإعلانات من Claude أو ChatGPT", free: false, solo: "إضافة", growth: true, agency: true },
+      { label: "تعديل الإعلانات من Claude أو ChatGPT", free: false, solo: true, growth: true, agency: true },
       { label: "رصيد AI شهريًا",  free: "0",   solo: "300",   growth: "1,000", agency: "2,000" },
     ],
   },
@@ -217,7 +209,7 @@ const faqs = [
   },
   {
     q: "هل يمكن لـ Claude أو ChatGPT تعديل إعلاناتي؟",
-    a: "نعم، مع التحكم في الإعلانات. وهو مشمول في باقتي Growth وAgency المدفوعتين، ويمكن إضافته إلى Solo مقابل 590 جنيهًا شهريًا. كل تعديل يُعرض عليك أولًا ولا يُنفَّذ إلا بعد موافقتك. ولا يدخل ضمن التجربة المجانية.",
+    a: "نعم، مع التحكم في الإعلانات. وهو مشمول في كل باقة مدفوعة: Solo وGrowth وAgency. كل تعديل يُعرض عليك أولًا ولا يُنفَّذ إلا بعد موافقتك. ولا يدخل ضمن التجربة المجانية.",
   },
 ];
 
@@ -407,7 +399,7 @@ const schema = [softwareApplication("ar"), faqPage(faqs)];
     </div>
   </section>
 
-  <!-- Solo add-ons -->
+  <!-- Add-ons: extra seats, Solo and Growth -->
   <section class="border-t border-zinc-100 bg-white px-6 py-14 sm:py-20">
     <div class="mx-auto max-w-5xl">
       <div class="mx-auto max-w-2xl text-center">
@@ -416,11 +408,11 @@ const schema = [softwareApplication("ar"), faqPage(faqs)];
         </span>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">أضف إلى باقتك</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          أضف التحكم في الإعلانات أو مقاعد إضافية دون الانتقال إلى باقة أعلى. الفوترة شهرية، ونؤكد كل طلب معك قبل أي خصم.
+          أضف مقاعد إضافية دون الانتقال إلى باقة أعلى. الفوترة شهرية، ونؤكد كل طلب معك قبل أي خصم.
         </p>
       </div>
 
-      <div class="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2 m-snap">
+      <div class="mx-auto mt-12 grid max-w-md gap-5">
         {addons.map((addon) => (
           <div class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7">
             <div class="flex flex-col gap-1">

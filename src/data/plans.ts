@@ -16,11 +16,11 @@ export const PLAN_PRICES: Record<PlanKey, { name: string; usd: number; egp: numb
   agency: { name: "Agency", usd: 99, egp: 5990 },
 };
 
-// From 1 November 2026 Solo includes the AI assistant, so there is no AI
-// add-on. Extra AI is sold only as credit packs (CREDIT_PACKS).
+// Every paid plan includes the AI assistant (from 1 November 2026) and ad
+// control (from 6 November 2026), so neither is an add-on. The one add-on is
+// extra seats. Extra AI is sold only as credit packs (CREDIT_PACKS).
 export const ADDON_PRICES = {
-  adControl: { usd: 10, egp: 590 },
-  seat:      { usd: 8,  egp: 490 },
+  seat: { usd: 8, egp: 490 },
 };
 
 // One-off AI credit top-ups. Mirrors PlanConfig::CREDIT_PACKS in the app repo.

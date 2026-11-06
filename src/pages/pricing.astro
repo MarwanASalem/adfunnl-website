@@ -57,14 +57,14 @@ const plans: Plan[] = [
       "Live sharing, view-only links & PDF",
       "Add-fund & billing alerts",
       "AI assistant (chat) + MCP access",
+      "Manage your ads from Claude or ChatGPT",
       "300 AI credits / month",
-      "Optional add-on: ad control",
     ],
   },
   {
     key: "growth",
     name: "Growth",
-    tagline: "Small teams, with ad control included.",
+    tagline: "Small teams, 3 seats included.",
     egp: PLAN_PRICES.growth.egp,
     usd: PLAN_PRICES.growth.usd,
     requestable: true,
@@ -73,7 +73,6 @@ const plans: Plan[] = [
     ctaHref: `${APP_URL}/signup?plan=growth`,
     highlightsLead: "Everything in Solo, plus",
     highlights: [
-      "Manage your ads from Claude or ChatGPT",
       "1,000 AI credits / month",
       "3 team seats",
       "10 brands · 50 ad accounts",
@@ -101,18 +100,10 @@ const plans: Plan[] = [
   },
 ];
 
-// Solo add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo.
-// Solo already includes the AI assistant, so ad control is the one add-on
-// that changes what it can do. Growth and Agency include ad control.
+// Add-ons, monthly. Mirrors PlanConfig::ADDON_PRICING in the app repo.
+// Every paid plan includes the AI assistant and ad control, so extra seats
+// are the one add-on.
 const addons = [
-  {
-    name: "Ad control",
-    egp: ADDON_PRICES.adControl.egp,
-    usd: ADDON_PRICES.adControl.usd,
-    unit: "/ month",
-    onPlans: "For Solo. Growth and Agency include it.",
-    body: "Claude or ChatGPT can change your ads for you: turn them on and off and change budgets on Meta, TikTok, Snapchat and Google, duplicate and edit on Meta, TikTok and Snapchat, and create new campaigns on Meta, TikTok and Snapchat. Nothing changes until you approve it.",
-  },
   {
     name: "Extra seat",
     egp: ADDON_PRICES.seat.egp,
@@ -165,7 +156,7 @@ const groups: { title: string; rows: Row[] }[] = [
       { label: "AI assistant (chat)", free: false, solo: true, growth: true,    agency: true },
       { label: "AI builds your dashboard", free: false, solo: true, growth: true, agency: true },
       { label: "AI MCP access",       free: false, solo: true, growth: true,    agency: true },
-      { label: "Change ads from Claude or ChatGPT", free: false, solo: "Add-on", growth: true, agency: true },
+      { label: "Change ads from Claude or ChatGPT", free: false, solo: true, growth: true, agency: true },
       { label: "AI credits / month",  free: "0",   solo: "300", growth: "1,000", agency: "2,000" },
     ],
   },
@@ -214,7 +205,7 @@ const faqs = [
   },
   {
     q: "Can Claude or ChatGPT change my ads?",
-    a: "Yes, with ad control. It is included on paid Growth and Agency plans, and Solo can add it for EGP 590 a month. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
+    a: "Yes, with ad control. It is included on every paid plan: Solo, Growth and Agency. Every change is shown to you first and only goes ahead once you approve it. It is not part of the free trial.",
   },
 ];
 
@@ -404,7 +395,7 @@ const schema = [softwareApplication("en"), faqPage(faqs)];
     </div>
   </section>
 
-  <!-- Solo add-ons -->
+  <!-- Add-ons: extra seats, Solo and Growth -->
   <section class="border-t border-zinc-100 bg-white px-6 py-14 sm:py-20">
     <div class="mx-auto max-w-5xl">
       <div class="mx-auto max-w-2xl text-center">
@@ -413,11 +404,11 @@ const schema = [softwareApplication("en"), faqPage(faqs)];
         </span>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">Add to your plan</h2>
         <p class="mt-4 text-lg text-zinc-500">
-          Add ad control or more seats without moving up a plan. Billed monthly. We confirm each request with you before anything is charged.
+          Add more seats without moving up a plan. Billed monthly. We confirm each request with you before anything is charged.
         </p>
       </div>
 
-      <div class="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2 m-snap">
+      <div class="mx-auto mt-12 grid max-w-md gap-5">
         {addons.map((addon) => (
           <div class="flex flex-col rounded-2xl border border-zinc-200 bg-white p-7">
             <div class="flex flex-col gap-1">

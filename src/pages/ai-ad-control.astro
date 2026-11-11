@@ -22,7 +22,10 @@ const APP_URL = "https://app.adfunnl.com";
 //   - "Is it on my plan?" The FAQ and the closing line.
 //
 // CAPABILITY WARNINGS for anyone editing this page (docs/what-ships.md, ad
-// control, checked 14 October 2026):
+// control, checked 14 October 2026, rechecked 11 November 2026):
+//   - Everything in the table also works from AdFunnl's own assistant, inside
+//     the app, with no setup (app commits efbf8dff, 6c6f5d7c, aa398b94).
+//   - Free trials include ad control since 8 November 2026. Free does not.
 //   - Labels are the owner's: TikTok and Snapchat Live, Meta and Google Beta.
 //   - Google (since 15 October 2026): everything in the table, budgets on
 //     campaigns only (Google keeps budgets there). New campaigns are Search,
@@ -95,7 +98,7 @@ const platforms = [
 ];
 const table = {
   heading: "What it can change on each platform",
-  body: "Live means it is finished. Beta means it works today and is still gaining actions.",
+  body: "From Claude or ChatGPT, or from the assistant inside AdFunnl. Live means it is finished. Beta means it works today and is still gaining actions.",
   live: "Live",
   rows: [
     { label: "Pause and turn on campaigns, ad sets and ads", cells: [true, true, true, true] },
@@ -104,10 +107,14 @@ const table = {
     { label: "Edit audiences", cells: [true, true, true, "Locations and languages"] },
     { label: "Edit ad text and URL tracking tags", cells: [true, true, true, true] },
     { label: "Launch new campaigns from Google Drive", cells: [true, true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
-    { label: "Add new ads to running campaigns", cells: [true, true, true, true] },
+    { label: "Add new ad sets and ads to running campaigns", cells: [true, true, true, "Search campaigns"] },
     { label: "Keywords, negative keywords and search terms", cells: [false, false, false, true] },
     { label: "Turn existing posts into ads", cells: [true, true, false, false] },
-    { label: "Catalog ads and call ads", cells: [false, false, true, false] },
+    { label: "Catalog ads", cells: [true, true, true, false] },
+    { label: "Call ads", cells: [false, false, true, false] },
+    { label: "Create lead forms", cells: [true, false, true, false] },
+    { label: "Read, reply to and hide comments on ads", cells: [true, true, false, false] },
+    { label: "A/B tests", cells: [true, false, false, false] },
     { label: "Automated rules and budget schedules", cells: [true, false, false, false] },
     { label: "Create audiences", cells: [true, true, true, "Website visitors"] },
   ] as { label: string; cells: Cell[] }[],
@@ -143,16 +150,16 @@ const faqs = {
   items: [
     { q: "Can it change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat." },
     { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. Both are still gaining actions." },
-    { q: "Which assistants does it work with?", a: "Claude, ChatGPT, and any other AI assistant that can connect to an MCP server." },
+    { q: "Which assistants does it work with?", a: "Claude, ChatGPT, and any other AI assistant that can connect to an MCP server. The assistant inside AdFunnl makes the same changes with no setup at all, and shows each one as a plan before it goes ahead." },
     { q: "Can I connect it read-only?", a: "Yes. Untick \"Also allow it to make changes\" on the approval screen, and it can only read your numbers." },
     { q: "Can my team see what it changed?", a: "Yes. Every change it makes is written to the brand's Change Log, with what changed and when." },
-    { q: "Which plans include it?", a: "Every paid plan includes it: Solo, Growth and Agency. It is not part of the free trial." },
+    { q: "Which plans include it?", a: "Every paid plan includes it: Solo, Growth and Agency. The free trial of each plan includes it too." },
   ],
 };
 
 const closing = {
   heading: "Start with one account",
-  body: "Ad control comes with every paid plan. It is not part of the free trial.",
+  body: "Ad control comes with every paid plan, and with the free trial.",
   pricing: "See pricing",
 };
 ---

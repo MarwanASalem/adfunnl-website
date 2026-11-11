@@ -83,13 +83,23 @@ const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z
 </section>
 
 <style is:global>
-  .rbn { --cut: 50%; position: relative; z-index: 5; height: 7.5rem; margin-bottom: -5rem; overflow: hidden; }
+  /* isolation and the will-change lines below give the white layer, each band
+     and each moving track a layer of their own, in a fixed order. Without them
+     Chrome sometimes merged the lavender band into a shared layer on first
+     load, painted it before its background, and the dark section showed
+     through it, or the white layer cut across its text. */
+  .rbn { --cut: 50%; position: relative; z-index: 5; height: 7.5rem; margin-bottom: -5rem; overflow: hidden; isolation: isolate; }
   /* the white above the seam, its bottom edge on the front ribbon's centre */
   .rbn::before {
     content: ""; position: absolute; inset-inline: -10%; top: -6rem; bottom: calc(100% - var(--cut));
     background: #fff; transform: rotate(-2.2deg); transform-origin: 50% 100%;
+    z-index: 0; will-change: transform;
   }
-  .rbn-band { position: absolute; inset-inline: -4%; top: 50%; display: flex; }
+  /* wide enough that a tilted end never shows a corner, even on a wide screen */
+  .rbn-band {
+    position: absolute; inset-inline: -8%; top: 50%; display: flex; overflow: hidden;
+    will-change: transform; backface-visibility: hidden;
+  }
   .rbn-front {
     transform: translateY(-50%) rotate(-2.2deg);
     background: linear-gradient(90deg, #5738c9, #6549dd 50%, #5738c9);
@@ -98,9 +108,9 @@ const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z
   }
   .rbn-back {
     transform: translateY(-50%) rotate(2.4deg);
-    background: #e6e1fb; color: #422a96; z-index: 1;
+    background-color: #e6e1fb; color: #422a96; z-index: 1;
   }
-  .rbn-track { display: flex; width: max-content; animation: rbnSlide 46s linear infinite; }
+  .rbn-track { display: flex; width: max-content; animation: rbnSlide 46s linear infinite; will-change: transform; }
   .rbn-back .rbn-track { animation-duration: 58s; animation-direction: reverse; }
   .rbn-set { display: flex; flex-shrink: 0; }
   .rbn-item {
@@ -130,6 +140,12 @@ const GLINT = `<path d="M12 1 Q12 12 23 12 Q12 12 12 23 Q12 12 1 12 Q12 12 12 1Z
     .rbn { height: 10rem; margin-bottom: -7rem; }
     .rbn-item { font-size: 1.35rem; gap: 2rem; padding-inline-start: 2rem; }
     .rbn-back .rbn-item { font-size: 1.05rem; }
+  }
+
+  /* The tilt grows with the screen: on a wide one the band ends rise and fall
+     further, so give the strip more height or its corners are cut off. */
+  @media (min-width: 1700px) {
+    .rbn { height: 12rem; margin-bottom: -9rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {

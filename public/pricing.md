@@ -45,7 +45,7 @@ Full pricing page: https://www.adfunnl.com/pricing
 
 - Extra seat: $8 / EGP 490 per seat per month, on Solo and Growth. Adds one more teammate who can sign in and work on your brands. Solo includes 1 seat and Growth includes 3. Agency includes 10 seats; beyond that is Enterprise.
 
-Every paid plan includes the AI assistant and ad control: Claude or ChatGPT can change your ads after you approve each change (details: https://www.adfunnl.com/ai-ad-control). Add-ons are requested and approved by the AdFunnl team. Ad control is not part of the free trial.
+Every paid plan includes the AI assistant and ad control: Claude or ChatGPT can change your ads after you approve each change (details: https://www.adfunnl.com/ai-ad-control). Add-ons are requested and approved by the AdFunnl team. The free trial includes ad control too.
 
 ## AI credit top-ups (every paid plan)
 

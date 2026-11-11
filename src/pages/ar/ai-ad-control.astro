@@ -12,9 +12,11 @@ const APP_URL = "https://app.adfunnl.com";
 // screen in the app is English only, so its checkbox is quoted in English.
 // Percentages are written out in words, so no symbol jumps sides in RTL.
 
+// Amounts with an arrow sit in their own field so the markup can wrap them in
+// <bdi dir="ltr"> and the arrow does not flip.
 const hero = {
-  heading: "أدِر إعلاناتك من الذكاء الاصطناعي الذي تستخدمه بالفعل",
-  body: "اطلب من Claude أو ChatGPT إيقاف الإعلانات التي تهدر المال، أو نقل الميزانية إلى الإعلانات الناجحة. يجهّز AdFunnl التغيير كخطة، ولا يحدث شيء قبل أن توافق عليه في المحادثة.",
+  heading: "ذكاء اصطناعي يغيّر إعلاناتك ويتذكر السبب",
+  body: "اطلب من Claude أو ChatGPT، أو من المساعد داخل AdFunnl، إيقاف الإعلانات التي تهدر المال أو نقل الميزانية إلى الإعلانات الناجحة. يُسجَّل كل تغيير في سجل التغييرات الخاص بالعلامة التجارية، ويقرأ الذكاء الاصطناعي هذا السجل كلما راجع الحساب، فيفهم أي قفزة في الإنفاق ومعها الميزانية التي رفعتها.",
   chat: {
     ask: "زِد ميزانية حملة TikTok الأعلى في ROAS بنسبة 20 في المئة.",
     tool: "set_ad_budget",
@@ -23,9 +25,26 @@ const hero = {
     from: "EGP 1,500",
     to: "EGP 1,800",
     perDay: "يوميًا",
-    approve: "موافقة",
+    approved: "تمت الموافقة",
     connected: "AdFunnl متصل",
+    logLabel: "أُضيف إلى سجل التغييرات",
+    logLine: "TikTok · رفع الميزانية اليومية · Website sales",
+    logAmount: "EGP 1,500 → 1,800",
   },
+};
+
+// ── The Change Log, read by the AI (see the English page) ────────────
+const memory = {
+  heading: "الذكاء الاصطناعي الذي لا يرى إلا الأرقام يخمّن السبب",
+  body: "يُسجَّل كل تغيير يُجرى في AdFunnl، من مساعده أو من Claude أو ChatGPT، في سجل التغييرات الخاص بالعلامة التجارية، مع من أجراه ومتى. وتُنسخ إليه أيضًا التعديلات التي تُجرى مباشرة في Meta Ads Manager، ويمكن لفريقك إضافة ملاحظاته. وعندما يراجع الذكاء الاصطناعي حسابًا أو يقارن بين فترتين أو يعرض الحملات، تظهر هذه السطور بجانب الأرقام، فتصبح الميزانية التي رفعتها يوم الثلاثاء جزءًا من إجابته.",
+  logTitle: "سجل التغييرات · Tiffin Co.",
+  lines: [
+    { day: "الثلاثاء", where: "TikTok", text: "رفع الميزانية اليومية · Website sales", amount: "EGP 1,500 → 1,800", by: "من Claude" },
+    { day: "الاثنين", where: "Meta", text: "إيقاف إعلانين · Lunch sets", amount: "", by: "من Ads Manager" },
+    { day: "الأحد", where: "ملاحظة", text: "الأسعار الجديدة للقائمة منشورة على الموقع", amount: "", by: "كتبها الفريق" },
+  ],
+  ask: "لماذا ارتفعت تكلفة الشراء على TikTok هذا الأسبوع؟",
+  answer: "ارتفع الإنفاق على Website sales يوم الثلاثاء، وهو اليوم الذي رُفعت فيه ميزانيته اليومية من EGP 1,500 إلى EGP 1,800 (سجل التغييرات). الأرجح أن الحملة ما زالت تستقر بعد هذه الزيادة، لذلك أنصح بالانتظار بضعة أيام قبل تغيير الإعلانات.",
 };
 
 // ── Us versus them (R12) ──────────────────────────────────────────────
@@ -138,7 +157,7 @@ const closing = {
   locale="ar"
   title="التحكم في الإعلانات بالـ AI"
   seoTitle="أدِر إعلاناتك من Claude أو ChatGPT · AdFunnl"
-  description="اربط AdFunnl بـ Claude أو ChatGPT واطلب منه إيقاف الإعلانات أو نقل الميزانية أو إطلاق حملات. كل تغيير ينتظر موافقتك."
+  description="اطلب من Claude أو ChatGPT أو مساعد AdFunnl إيقاف الإعلانات أو نقل الميزانية أو إطلاق حملات. كل تغيير يُسجَّل، والذكاء الاصطناعي يقرأ السجل."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -181,9 +200,49 @@ const closing = {
               <span class="tabular-nums lining-nums text-zinc-500" dir="ltr">{hero.chat.from} → <strong class="font-semibold text-zinc-900">{hero.chat.to}</strong></span>
               <span class="text-zinc-500">{hero.chat.perDay}</span>
             </div>
-            <span class="mt-4 inline-block rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white">{hero.chat.approve}</span>
+            <span class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>{hero.chat.approved}
+            </span>
+          </div>
+          <!-- the change, as it lands in the brand's Change Log -->
+          <div class="flex items-start gap-3 rounded-xl border border-brand-100 bg-brand-50/70 p-3.5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-brand-700 shadow-sm">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-brand-800">{hero.chat.logLabel}</p>
+              <p class="mt-0.5 text-xs leading-relaxed text-brand-900/70">{hero.chat.logLine} · <bdi dir="ltr" class="whitespace-nowrap tabular-nums lining-nums">{hero.chat.logAmount}</bdi></p>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CHANGE LOG, READ BY AI ========================= -->
+  <section class="px-6 py-16 sm:py-20">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 rounded-3xl bg-ink px-6 py-12 sm:px-12 sm:py-16 lg:grid-cols-[1fr_1.05fr]">
+      <div>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{memory.heading}</h2>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-400">{memory.body}</p>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-2xl border border-white/10 bg-white/[.04] p-4">
+          <p class="px-1 text-[11px] font-semibold text-brand-300">{memory.logTitle}</p>
+          <ul class="mt-3 space-y-2">
+            {memory.lines.map((l) => (
+              <li class="flex items-start gap-3 rounded-xl bg-white/[.05] px-3 py-2.5">
+                <span class="w-14 shrink-0 pt-px text-xs font-semibold text-zinc-500">{l.day}</span>
+                <div class="min-w-0">
+                  <p class="text-sm text-zinc-100"><span class="font-semibold text-white">{l.where}</span> · {l.text}{l.amount && <> · <bdi dir="ltr" class="whitespace-nowrap tabular-nums lining-nums">{l.amount}</bdi></>}</p>
+                  <p class="mt-0.5 text-[11px] text-zinc-500">{l.by}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p class="ms-auto w-fit max-w-[85%] rounded-2xl bg-brand-600 px-3.5 py-2.5 text-sm leading-relaxed text-white">{memory.ask}</p>
+        <p class="max-w-[92%] rounded-2xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm leading-relaxed text-zinc-200">{memory.answer}</p>
       </div>
     </div>
   </section>

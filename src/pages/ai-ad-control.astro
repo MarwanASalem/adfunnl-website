@@ -37,9 +37,13 @@ const APP_URL = "https://app.adfunnl.com";
 //   - Platform order is fixed: Meta, TikTok, Snapchat and Google.
 //   - Nobody has measured how long connecting takes. No "about a minute".
 
+// The Change Log is the point of difference (owner, 11 November 2026): every
+// change is written to the brand's Change Log, and the AI reads that log
+// beside the numbers when it reviews an account, compares periods or lists
+// campaigns (what-ships.md, Change Log). Never state the lookback window.
 const hero = {
-  heading: "Run your ads from the AI you already use",
-  body: "Ask Claude or ChatGPT to pause the ads that waste money or move budget to the ones that work. AdFunnl prepares the change as a plan, and nothing happens until you approve it in the chat.",
+  heading: "An AI that changes your ads and remembers why",
+  body: "Ask Claude or ChatGPT, or the assistant inside AdFunnl, to pause the ads that waste money or move budget to the ones that work. Every change goes into the brand's Change Log, and the AI reads that log whenever it reviews the account, so a jump in spend is read with the budget you raised behind it.",
   chat: {
     ask: "Raise the budget of my best-ROAS TikTok campaign by 20%.",
     tool: "set_ad_budget",
@@ -48,9 +52,28 @@ const hero = {
     from: "EGP 1,500",
     to: "EGP 1,800",
     perDay: "a day",
-    approve: "Approve",
+    approved: "Approved",
     connected: "AdFunnl connected",
+    logLabel: "Added to the Change Log",
+    logLine: "TikTok · Daily budget raised · Website sales · EGP 1,500 → 1,800",
   },
+};
+
+// ── The Change Log, read by the AI ────────────────────────────────────
+// Pain first (R11): an AI that reads only the numbers sees spend move with no
+// cause. Meta Ads Manager edits are the only platform edits copied in.
+// Demo lines reuse the hero's anonymised brand and numbers.
+const memory = {
+  heading: "An AI that only sees the numbers guesses at the cause",
+  body: "Every change made in AdFunnl, by its assistant or from Claude or ChatGPT, is written to the brand's Change Log with who made it and when. Edits made directly in Meta Ads Manager are copied in too, and your team can add notes of their own. When the AI reviews an account, compares two periods or lists campaigns, those lines sit beside the numbers, so a budget you raised on Tuesday is part of its answer.",
+  logTitle: "Change Log · Tiffin Co.",
+  lines: [
+    { day: "Tue", where: "TikTok", text: "Daily budget raised · Website sales · EGP 1,500 → 1,800", by: "From Claude" },
+    { day: "Mon", where: "Meta", text: "Paused 2 ads · Lunch sets", by: "From Ads Manager" },
+    { day: "Sun", where: "Note", text: "New menu prices live on the website", by: "Typed by the team" },
+  ],
+  ask: "Why did cost per purchase rise on TikTok this week?",
+  answer: "Spend on Website sales rose on Tuesday, the day its daily budget went from EGP 1,500 to 1,800 (Change Log). The campaign is likely settling after that raise, so I would give it a few more days before changing the ads.",
 };
 
 // ── Us versus them (R12) ──────────────────────────────────────────────
@@ -168,7 +191,7 @@ const closing = {
   schema={[faqPage(faqs.items)]}
   title="AI ad control"
   seoTitle="Run your ads from Claude or ChatGPT · AdFunnl"
-  description="Connect AdFunnl to Claude or ChatGPT and ask it to pause ads, move budget or launch campaigns. Every change waits for your approval."
+  description="Ask Claude, ChatGPT or AdFunnl's assistant to pause ads, move budget or launch campaigns. Every change is logged, and the AI reads that log."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -211,9 +234,49 @@ const closing = {
               <span class="tabular-nums lining-nums text-zinc-500" dir="ltr">{hero.chat.from} → <strong class="font-semibold text-zinc-900">{hero.chat.to}</strong></span>
               <span class="text-zinc-500">{hero.chat.perDay}</span>
             </div>
-            <span class="mt-4 inline-block rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white">{hero.chat.approve}</span>
+            <span class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>{hero.chat.approved}
+            </span>
+          </div>
+          <!-- the change, as it lands in the brand's Change Log -->
+          <div class="flex items-start gap-3 rounded-xl border border-brand-100 bg-brand-50/70 p-3.5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-brand-700 shadow-sm">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-brand-800">{hero.chat.logLabel}</p>
+              <p class="mt-0.5 text-xs leading-relaxed text-brand-900/70 tabular-nums lining-nums" dir="ltr">{hero.chat.logLine}</p>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CHANGE LOG, READ BY AI ========================= -->
+  <section class="px-6 py-16 sm:py-20">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 rounded-3xl bg-ink px-6 py-12 sm:px-12 sm:py-16 lg:grid-cols-[1fr_1.05fr]">
+      <div>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{memory.heading}</h2>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-400">{memory.body}</p>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-2xl border border-white/10 bg-white/[.04] p-4">
+          <p class="px-1 text-[11px] font-semibold uppercase tracking-wider text-brand-300">{memory.logTitle}</p>
+          <ul class="mt-3 space-y-2">
+            {memory.lines.map((l) => (
+              <li class="flex items-start gap-3 rounded-xl bg-white/[.05] px-3 py-2.5">
+                <span class="w-9 shrink-0 pt-px text-xs font-semibold text-zinc-500">{l.day}</span>
+                <div class="min-w-0">
+                  <p class="text-sm text-zinc-100"><span class="font-semibold text-white">{l.where}</span> · <span class="tabular-nums lining-nums">{l.text}</span></p>
+                  <p class="mt-0.5 text-[11px] text-zinc-500">{l.by}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p class="ms-auto w-fit max-w-[85%] rounded-2xl bg-brand-600 px-3.5 py-2.5 text-sm leading-relaxed text-white">{memory.ask}</p>
+        <p class="max-w-[92%] rounded-2xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm leading-relaxed text-zinc-200 tabular-nums lining-nums">{memory.answer}</p>
       </div>
     </div>
   </section>

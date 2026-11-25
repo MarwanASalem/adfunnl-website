@@ -11,5 +11,11 @@ export default defineConfig({
   redirects: {
     "/mcp": "/ai-ad-control",
     "/ar/mcp": "/ar/ai-ad-control",
+    // Paths Google tried and got a 404 for (Search Console, November 2026).
+    // There is no persona index, so /for goes home.
+    "/for": "/",
+    "/ar/for": "/ar",
+    "/login": "https://app.adfunnl.com/login",
+    "/signup": "https://app.adfunnl.com/signup",
   },
 });

@@ -229,6 +229,9 @@ const graph = [
     "@type": "Organization",
     "@id": ORG_ID,
     name: "AdFunnl",
+    // People type the name with an e: Search Console shows "adfunnel" below
+    // position 1, so the misspelling is declared as the same brand.
+    alternateName: ["AdFunnel", "Ad Funnl"],
     url: `${SITE}/`,
     logo: `${SITE}/logo-1024.png`,
     email: "support@adfunnl.com",

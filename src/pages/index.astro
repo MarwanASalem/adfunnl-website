@@ -123,8 +123,8 @@ const momBaseY = MOM_PT + momPlotH;
 // Assistant answers. Rendered once invisibly so each chat card reserves its
 // full height, then typed out over that space by the script below.
 // ── Ask, then let it act (ad control over MCP) ──
-// docs/what-ships.md, ad control, checked 14 October 2026. Platform labels are
-// the owner's: TikTok and Snapchat Live, Meta and Google Beta. The chat is a
+// docs/what-ships.md, ad control, checked 14 October 2026. Platforms are
+// shown with no Live or Beta marks (owner, 25 November 2026). The chat is a
 // short story driven by the typewriter script below: the answer types out,
 // the preview card appears, then the approval and the result. The two ads are
 // the two highest cost per purchase in Website sales in adRows above, so the
@@ -134,12 +134,11 @@ const adControl = {
   heading: "Ask your AI, then let it make the change",
   body: "Connect AdFunnl to Claude or ChatGPT and it does more than answer. Ask which ads are wasting budget, then ask it to pause them. Ask for a new TikTok campaign from the videos in your Google Drive, and it builds it switched off, ready for you to check. Or stay inside AdFunnl and ask the in-app assistant about the same numbers.",
   platforms: [
-    { name: "Meta", key: "meta", beta: true },
-    { name: "TikTok", key: "tiktok", beta: false },
-    { name: "Snapchat", key: "snapchat", beta: false },
-    { name: "Google", key: "google_ads", beta: true },
+    { name: "Meta", key: "meta" },
+    { name: "TikTok", key: "tiktok" },
+    { name: "Snapchat", key: "snapchat" },
+    { name: "Google", key: "google_ads" },
   ],
-  beta: "Beta",
   link: "What it can change on each platform",
 };
 const acChat = {
@@ -422,7 +421,6 @@ const inAppAnswer = "IG Post · Leakproof test is your clearest case: EGP 5,002 
           {adControl.platforms.map((p) => (
             <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
               <PlatformIcon platform={p.key} class="h-3.5 w-3.5" />{p.name}
-              {p.beta && <span class="rounded bg-brand-50 px-1.5 py-px text-[10px] font-bold text-brand-700">{adControl.beta}</span>}
             </li>
           ))}
         </ul>

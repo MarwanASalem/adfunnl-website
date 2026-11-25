@@ -129,19 +129,18 @@ const momBaseY = MOM_PT + momPlotH;
 // full height, then typed out over that space by the script below.
 // ── Ask, then let it act (ad control over MCP) ──
 // Twin of the English section. docs/what-ships.md, ad control, checked 14
-// October 2026. Labels: TikTok and Snapchat Live, Meta and Google Beta. The ad
+// October 2026. No Live or Beta marks (owner, 25 November 2026). The ad
 // names stay as they are in adRows, in Latin script, like the rest of the
 // mockups on this page.
 const adControl = {
   heading: "اسأل الذكاء الاصطناعي، ثم دعه ينفّذ التغيير",
   body: "اربط AdFunnl بـ Claude أو ChatGPT ولن يكتفي بالإجابة. اسأله أي الإعلانات تهدر الميزانية، ثم اطلب منه إيقافها. اطلب حملة TikTok جديدة من الفيديوهات الموجودة في Google Drive، فيبنيها لك متوقفة وجاهزة لمراجعتك. أو ابقَ داخل AdFunnl واسأل المساعد عن الأرقام نفسها.",
   platforms: [
-    { name: "Meta", key: "meta", beta: true },
-    { name: "TikTok", key: "tiktok", beta: false },
-    { name: "Snapchat", key: "snapchat", beta: false },
-    { name: "Google", key: "google_ads", beta: true },
+    { name: "Meta", key: "meta" },
+    { name: "TikTok", key: "tiktok" },
+    { name: "Snapchat", key: "snapchat" },
+    { name: "Google", key: "google_ads" },
   ],
-  beta: "تجريبي",
   link: "ما الذي يمكنه تغييره على كل منصة",
 };
 const acChat = {
@@ -417,7 +416,6 @@ const inAppAnswer = "الإعلان IG Post · Leakproof test هو الأوضح:
           {adControl.platforms.map((p) => (
             <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
               <PlatformIcon platform={p.key} class="h-3.5 w-3.5" />{p.name}
-              {p.beta && <span class="rounded bg-brand-50 px-1.5 py-px text-[10px] font-bold text-brand-700">{adControl.beta}</span>}
             </li>
           ))}
         </ul>

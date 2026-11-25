@@ -396,9 +396,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
               </div>
             </div>
           </div>
-
-          <a href={L("/blog")} aria-current={basePath.startsWith("/blog") ? "page" : undefined}
-             class:list={["hover:text-zinc-900 transition", basePath.startsWith("/blog") && "text-zinc-900"]}>{T.blog}</a>
+          <!-- Blog is reached from the footer, not the top nav (owner, 25 November 2026). -->
         </nav>
 
         <div class="flex items-center gap-3">
@@ -454,7 +452,6 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
                   ))}
                 </div>
               </details>
-              <a href={L("/blog")}          class="rounded-lg px-3 py-2.5 hover:bg-zinc-50">{T.blog}</a>
               <div class="mt-2 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-3">
                 <a href={`${APP_URL}/login`}  class="rounded-lg border border-zinc-200 px-4 py-2.5 text-center hover:bg-zinc-50">{T.signIn}</a>
                 <a href={`${APP_URL}/signup`} class="rounded-lg bg-brand-600 px-4 py-2.5 text-center font-semibold text-white hover:bg-brand-700">{T.startFree}</a>

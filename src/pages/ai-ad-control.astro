@@ -28,7 +28,10 @@ const APP_URL = "https://app.adfunnl.com";
 //   - Everything in the table also works from AdFunnl's own assistant, inside
 //     the app, with no setup (app commits efbf8dff, 6c6f5d7c, aa398b94).
 //   - Free trials include ad control since 8 November 2026. Free does not.
-//   - Labels are the owner's: TikTok and Snapchat Live, Meta and Google Beta.
+//   - No Live or Beta labels anywhere (owner, 25 November 2026). Google cells
+//     are plain ticks by the owner's call; the qualifiers (budgets on campaigns,
+//     Search only for new ad sets, website-visitor audiences) live in
+//     what-ships.md and the integrations copy, not in this table.
 //   - Google (since 15 October 2026): everything in the table, budgets on
 //     campaigns only (Google keeps budgets there). New campaigns are Search,
 //     Shopping, Display, Demand Gen and Performance Max (checked 21 October
@@ -126,23 +129,22 @@ const compare = {
 // Any string = a qualified yes.
 type Cell = boolean | string;
 const platforms = [
-  { name: "Meta", key: "meta", status: "Beta" },
-  { name: "TikTok", key: "tiktok", status: "Live" },
-  { name: "Snapchat", key: "snapchat", status: "Live" },
-  { name: "Google", key: "google_ads", status: "Beta" },
+  { name: "Meta", key: "meta" },
+  { name: "TikTok", key: "tiktok" },
+  { name: "Snapchat", key: "snapchat" },
+  { name: "Google", key: "google_ads" },
 ];
 const table = {
   heading: "What it can change on each platform",
-  body: "From Claude or ChatGPT, or from the assistant inside AdFunnl. Live means it is finished. Beta means it works today and is still gaining actions.",
-  live: "Live",
+  body: "From Claude or ChatGPT, or from the assistant inside AdFunnl.",
   rows: [
     { label: "Pause and turn on campaigns, ad sets and ads", cells: [true, true, true, true] },
-    { label: "Change budgets", cells: [true, true, true, "Campaigns only"] },
+    { label: "Change budgets", cells: [true, true, true, true] },
     { label: "Duplicate, rename and delete", cells: [true, true, true, true] },
-    { label: "Edit audiences", cells: [true, true, true, "Locations and languages"] },
+    { label: "Edit audiences", cells: [true, true, true, true] },
     { label: "Edit ad text and URL tracking tags", cells: [true, true, true, true] },
-    { label: "Launch new campaigns from Google Drive", cells: [true, true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
-    { label: "Add new ad sets and ads to running campaigns", cells: [true, true, true, "Search campaigns"] },
+    { label: "Launch new campaigns from Google Drive", cells: [true, true, true, true] },
+    { label: "Add new ad sets and ads to running campaigns", cells: [true, true, true, true] },
     { label: "Copy a campaign made in AdFunnl to the brand's other platforms", cells: [true, true, true, false] },
     { label: "Keywords, negative keywords and search terms", cells: [false, false, false, true] },
     { label: "Turn existing posts into ads", cells: [true, true, false, false] },
@@ -152,7 +154,7 @@ const table = {
     { label: "Read, reply to and hide comments on ads", cells: [true, true, false, false] },
     { label: "A/B tests", cells: [true, false, false, false] },
     { label: "Automated rules and budget schedules", cells: [true, false, false, false] },
-    { label: "Create audiences", cells: [true, true, true, "Website visitors"] },
+    { label: "Create audiences", cells: [true, true, true, true] },
   ] as { label: string; cells: Cell[] }[],
   yes: "Yes",
   no: "No",
@@ -185,7 +187,6 @@ const faqs = {
   heading: "Questions",
   items: [
     { q: "Can it change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat." },
-    { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. Both are still gaining actions." },
     { q: "Why use AdFunnl's MCP instead of each ad platform's own?", a: "One connection covers Meta, TikTok, Snapchat and Google, and it already knows which ad accounts belong to which brand, with each brand's notes, goal and targets. Every change lands in the brand's Change Log, which the AI reads before it answers. It also gets fixes and new actions every week, and a person answers on WhatsApp or by email when you need help." },
     { q: "Which assistants does it work with?", a: "Claude, ChatGPT, Claude Code, and any other AI assistant that can connect to an MCP server. The assistant inside AdFunnl makes the same changes with no setup at all, and shows each one as a plan before it goes ahead." },
     { q: "How do I connect Claude?", a: "In Claude, open Settings, then Connectors, and choose Add custom connector. Paste the server address from Connect AI tools in AdFunnl and select Connect. Sign in with AdFunnl and approve, then turn AdFunnl on from the tools menu in any chat." },
@@ -222,7 +223,6 @@ const closing = {
           {platforms.map((p) => (
             <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
               <PlatformIcon platform={p.key} class="h-3.5 w-3.5" />{p.name}
-              {p.status !== table.live && <span class="rounded bg-brand-50 px-1.5 py-px text-[10px] font-bold text-brand-700">{p.status}</span>}
             </li>
           ))}
         </ul>
@@ -340,10 +340,6 @@ const closing = {
               {platforms.map((p) => (
                 <th class="px-3 py-3 text-center font-semibold text-zinc-900">
                   <span class="inline-flex items-center gap-1.5"><PlatformIcon platform={p.key} class="h-4 w-4" />{p.name}</span>
-                  <span class:list={[
-                    "mt-1 block text-[11px] font-bold",
-                    p.status === table.live ? "text-emerald-600" : "text-brand-700",
-                  ]}>{p.status}</span>
                 </th>
               ))}
             </tr>

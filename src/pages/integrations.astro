@@ -21,8 +21,8 @@ import type { Copy } from "../components/IntegrationsPage.astro";
 //     invite only or in testing. The roadmap's blockers are not for customers
 //     or competitors. No separate "coming next" section either.
 //   - Shopify and Bosta carry the app's own Beta pill.
-//   - Ad control labels are the owner's: TikTok and Snapchat Live, Meta and
-//     Google Beta.
+//   - Ad control carries no Live or Beta mark on any platform (owner, 25
+//     November 2026).
 //   - Refresh depends on the plan (12h, 6h, hourly). Never "hourly" alone.
 //   - Never put a number on the platforms or the sources (R14).
 
@@ -40,10 +40,10 @@ const copy: Copy = {
       heading: "Ad platforms",
       intro: "Spend, results and the ads themselves.",
       rows: [
-        { icon: "meta", href: "/integrations/meta", name: "Meta", body: "Campaign, ad set and ad results, audience breakdowns by age, gender, device, country, region and placement, video hook and hold, and account funding alerts.", tag: "AI ad control · Beta" },
-        { icon: "tiktok", href: "/integrations/tiktok", name: "TikTok", body: "Campaign, ad group and ad results.", tag: "AI ad control · Live" },
-        { icon: "snapchat", href: "/integrations/snapchat", name: "Snapchat", body: "Campaign, ad set and ad results, with breakdowns by age, gender, country and region.", tag: "AI ad control · Live" },
-        { icon: "google_ads", name: "Google Ads", body: "Campaign results and spend, next to every other platform.", tag: "AI ad control · Beta" },
+        { icon: "meta", href: "/integrations/meta", name: "Meta", body: "Campaign, ad set and ad results, audience breakdowns by age, gender, device, country, region and placement, video hook and hold, and account funding alerts.", tag: "AI ad control" },
+        { icon: "tiktok", href: "/integrations/tiktok", name: "TikTok", body: "Campaign, ad group and ad results.", tag: "AI ad control" },
+        { icon: "snapchat", href: "/integrations/snapchat", name: "Snapchat", body: "Campaign, ad set and ad results, with breakdowns by age, gender, country and region.", tag: "AI ad control" },
+        { icon: "google_ads", name: "Google Ads", body: "Campaign results and spend, next to every other platform.", tag: "AI ad control" },
         { icon: "linkedin", name: "LinkedIn Ads", body: "Campaign results and spend.", soon: true },
       ],
       link: { label: "What AI ad control can change on each platform", href: "/ai-ad-control" },

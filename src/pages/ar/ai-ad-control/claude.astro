@@ -15,7 +15,7 @@ const MCP_URL = "https://api.adfunnl.com/mcp";
 const hero = {
   heading: "كيف تربط Claude بحساباتك الإعلانية",
   body: "أضِف AdFunnl كموصل (Connector) في Claude، ثم اسأل عن إعلاناتك على Meta وTikTok وSnapchat وGoogle أو عدّلها بكلماتك. لا يتغير شيء قبل موافقتك في المحادثة.",
-  url: { label: "عنوان الخادم", copy: "نسخ", copied: "تم النسخ" },
+  url: { label: "عنوان الخادم", copy: "نسخ", copied: "تم النسخ", note: "ليس لديك حساب في AdFunnl بعد؟ اختر إنشاء حساب في صفحة تسجيل الدخول التي يفتحها Claude." },
   mock: {
     path: ["Settings", "Connectors"],
     name: "AdFunnl",
@@ -31,7 +31,7 @@ const steps = {
   heading: "اربطه في ثلاث خطوات",
   items: [
     { title: "أضِف AdFunnl كموصل", body: "في Claude، افتح الإعدادات ثم الموصلات (Connectors)، واختر Add custom connector. الصق https://api.adfunnl.com/mcp واختر Connect." },
-    { title: "سجّل الدخول ووافق", body: "سجّل الدخول بحسابك في AdFunnl عندما يطلب Claude ذلك. أبقِ خانة \"Also allow it to make changes\" محددة لإدارة الإعلانات، أو ألغِ تحديدها للربط للقراءة فقط." },
+    { title: "سجّل الدخول أو أنشئ حسابًا", body: "يفتح Claude صفحة تسجيل الدخول في AdFunnl. سجّل الدخول، أو اختر إنشاء حساب وستعود مباشرة لإكمال الربط بعد التسجيل. أبقِ خانة \"Also allow it to make changes\" محددة لإدارة الإعلانات، أو ألغِ تحديدها للربط للقراءة فقط." },
     { title: "فعّله في المحادثة", body: "افتح قائمة الأدوات في أي محادثة وفعّل AdFunnl، ثم اطرح سؤالك الأول." },
   ],
 };
@@ -65,6 +65,7 @@ const faqs = {
   items: [
     { q: "هل يمكن أن يغيّر Claude إعلاناتي دون أن يسألني؟", a: "لا. يعود إليك كل تغيير كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة. وكل ما هو جديد يبدأ متوقفًا." },
     { q: "ما عنوان خادم MCP الخاص بـ AdFunnl؟", a: "https://api.adfunnl.com/mcp. الصقه في Claude كموصل مخصص (custom connector)، أو في أي مساعد يتصل بخوادم MCP عن بُعد، وسجّل الدخول عبر AdFunnl عندما يطلب ذلك." },
+    { q: "هل أحتاج إلى حساب في AdFunnl أولًا؟", a: "لا. اختر إنشاء حساب في صفحة تسجيل الدخول التي يفتحها Claude، وبعد التسجيل تعود مباشرة لإكمال الربط. ثم اربط حساباتك الإعلانية على Meta أو TikTok أو Snapchat أو Google في AdFunnl، ليجد Claude أرقامًا يقرؤها." },
     { q: "هل يمكنني ربط Claude للقراءة فقط؟", a: "نعم. ألغِ تحديد خانة \"Also allow it to make changes\" في شاشة الموافقة، وسيكتفي Claude بقراءة أرقامك." },
     { q: "هل يعرف Claude أي حساب إعلاني يتبع أي علامة تجارية؟", a: "نعم. العلامات التجارية وحساباتها الإعلانية مُعَدّة في AdFunnl، فيعمل Claude علامةً بعلامة، ومعه ملاحظات كل علامة وهدفها ومستهدفاتها." },
     { q: "كيف أفصل Claude؟", a: "تعرض نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl كل مساعد متصل. افصل Claude من هناك فيفقد الوصول فورًا." },
@@ -113,6 +114,7 @@ const howTo = {
             <button type="button" data-copy={MCP_URL} data-done={hero.url.copied}
                     class="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-zinc-700">{hero.url.copy}</button>
           </div>
+          <p class="mt-2 px-1 text-xs leading-relaxed text-zinc-500">{hero.url.note}</p>
         </div>
       </div>
 

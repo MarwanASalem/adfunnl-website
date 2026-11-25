@@ -29,7 +29,7 @@ const MCP_URL = "https://api.adfunnl.com/mcp";
 const hero = {
   heading: "How to connect Claude to your ad accounts",
   body: "Add AdFunnl as a connector in Claude, then ask about your Meta, TikTok, Snapchat and Google ads or change them in plain words. Nothing changes until you approve it in the chat.",
-  url: { label: "Server address", copy: "Copy", copied: "Copied" },
+  url: { label: "Server address", copy: "Copy", copied: "Copied", note: "No AdFunnl account yet? Choose Create an account on the sign-in page Claude opens." },
   mock: {
     path: ["Settings", "Connectors"],
     name: "AdFunnl",
@@ -45,7 +45,7 @@ const steps = {
   heading: "Connect it in three steps",
   items: [
     { title: "Add AdFunnl as a connector", body: "In Claude, open Settings, then Connectors, and choose Add custom connector. Paste https://api.adfunnl.com/mcp and select Connect." },
-    { title: "Sign in and approve", body: "Sign in with your AdFunnl account when Claude asks. Keep \"Also allow it to make changes\" ticked to manage ads, or untick it to connect read-only." },
+    { title: "Sign in or create an account", body: "Claude opens AdFunnl's sign-in page. Sign in, or choose Create an account and you come straight back to finish connecting after signup. Keep \"Also allow it to make changes\" ticked to manage ads, or untick it to connect read-only." },
     { title: "Turn it on in a chat", body: "Open the tools menu in any chat and switch AdFunnl on. Then ask your first question." },
   ],
 };
@@ -82,6 +82,7 @@ const faqs = {
   items: [
     { q: "Can Claude change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat. Anything new starts paused." },
     { q: "What is AdFunnl's MCP server address?", a: "https://api.adfunnl.com/mcp. Paste it into Claude as a custom connector, or into any assistant that connects to remote MCP servers, and sign in with AdFunnl when it asks." },
+    { q: "Do I need an AdFunnl account first?", a: "No. Choose Create an account on the sign-in page Claude opens, and after signup you come straight back to finish connecting. Then connect your Meta, TikTok, Snapchat or Google ad accounts in AdFunnl, so Claude has numbers to read." },
     { q: "Can I connect Claude read-only?", a: "Yes. Untick \"Also allow it to make changes\" on the approval screen, and Claude can only read your numbers." },
     { q: "Does Claude know which ad accounts belong to which brand?", a: "Yes. Brands and their ad accounts are set up in AdFunnl, so Claude works brand by brand, with each brand's notes, goal and targets." },
     { q: "How do I disconnect Claude?", a: "Connect AI tools in AdFunnl lists every connected assistant. Disconnect Claude there and it loses access straight away." },
@@ -128,6 +129,7 @@ const howTo = {
             <button type="button" data-copy={MCP_URL} data-done={hero.url.copied}
                     class="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-zinc-700">{hero.url.copy}</button>
           </div>
+          <p class="mt-2 px-1 text-xs leading-relaxed text-zinc-500">{hero.url.note}</p>
         </div>
       </div>
 

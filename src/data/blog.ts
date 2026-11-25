@@ -14,6 +14,20 @@ export interface BlogEntry {
 
 export const POSTS: BlogEntry[] = [
   {
+    slug: "launch-one-campaign-on-meta-tiktok-and-snapchat",
+    published: "2026-11-25",
+    en: {
+      title: "How to launch one campaign on Meta, TikTok and Snapchat with one approval",
+      description:
+        "Build a campaign once, then copy it to Meta, TikTok and Snapchat from Claude or ChatGPT. What changes per platform, step by step, and what it leaves out.",
+    },
+    ar: {
+      title: "كيف تطلق حملة واحدة على Meta وTikTok وSnapchat بموافقة واحدة",
+      description:
+        "ابنِ الحملة مرة واحدة، ثم انسخها إلى Meta وTikTok وSnapchat من Claude أو ChatGPT. ما الذي يتغير على كل منصة، والخطوات، وما لا يُنسخ.",
+    },
+  },
+  {
     slug: "how-to-calculate-blended-roas",
     published: "2026-10-15",
     en: {

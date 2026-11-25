@@ -1,0 +1,221 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { faqPage } from "../../../data/plans";
+import PlatformIcon from "../../../components/PlatformIcon.astro";
+import AssistantMark from "../../../components/AssistantMark.astro";
+import WhyAdFunnlMcp from "../../../components/WhyAdFunnlMcp.astro";
+
+const APP_URL = "https://app.adfunnl.com";
+
+// Arabic twin of /ai-ad-control/claude. The brief and the capability notes
+// live in the English page's frontmatter and apply here unchanged. Claude's
+// menu names and the approval checkbox are English in the products, so they
+// are quoted in English (as the app's own Arabic setup steps do).
+const hero = {
+  heading: "كيف تربط Claude بحساباتك الإعلانية",
+  body: "أضِف AdFunnl كموصل (Connector) في Claude، ثم اسأل عن إعلاناتك على Meta وTikTok وSnapchat وGoogle أو عدّلها بكلماتك. لا يتغير شيء قبل موافقتك في المحادثة.",
+  mock: {
+    path: ["Settings", "Connectors"],
+    name: "AdFunnl",
+    note: "Custom connector",
+    on: "متصل",
+    ask: "أوقف كل إعلان صرف أكثر من 1,000 هذا الأسبوع دون أي عملية شراء.",
+    plan: "إيقاف 3 إعلانات",
+    approve: "وافق",
+  },
+};
+
+const steps = {
+  heading: "اربطه في ثلاث خطوات",
+  items: [
+    { title: "أضِف AdFunnl كموصل", body: "في Claude، افتح الإعدادات ثم الموصلات (Connectors)، واختر Add custom connector. الصق عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl واختر Connect." },
+    { title: "سجّل الدخول ووافق", body: "سجّل الدخول بحسابك في AdFunnl. أبقِ خانة \"Also allow it to make changes\" محددة لإدارة الإعلانات، أو ألغِ تحديدها للربط للقراءة فقط." },
+    { title: "فعّله في المحادثة", body: "افتح قائمة الأدوات في أي محادثة وفعّل AdFunnl، ثم اطرح سؤالك الأول." },
+  ],
+};
+
+const code = {
+  heading: "إن كنت تستخدم Claude Code",
+  body: "شغّل هذا الأمر في الطرفية مع عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي. ثم افتح Claude Code وشغّل /mcp واختر AdFunnl ثم Authenticate، وسجّل الدخول عبر AdFunnl في نافذة المتصفح.",
+  command: "claude mcp add --transport http adfunnl <server address>",
+};
+
+const prompts = {
+  heading: "ماذا تسأل Claude أولًا",
+  items: [
+    "راجع حساب هذه العلامة التجارية وأخبرني أي مجموعات إعلانية أوقفها.",
+    "قارن هذا الشهر بالأيام نفسها من الشهر الماضي على Meta وTikTok.",
+    "لماذا ارتفعت تكلفة الشراء هذا الأسبوع؟ راجع سجل التغييرات.",
+    "أوقف كل إعلان صرف أكثر من 1,000 هذا الأسبوع دون أي عملية شراء.",
+    "انسخ حملتي الجديدة على Meta إلى TikTok وSnapchat، واتركها متوقفة.",
+    "ابنِ لوحة لهذه العلامة التجارية فيها الإنفاق وROAS والمشتريات.",
+  ],
+};
+
+const changes = {
+  heading: "ما الذي يمكن أن يغيّره Claude على كل منصة",
+  body: "إيقاف الإعلانات، وتعديل الميزانيات، وإطلاق حملات من Google Drive، وتعديل الجمهور ونصوص الإعلانات، وإنشاء الجماهير، على Meta وTikTok وSnapchat وGoogle. صفحة التحكم في الإعلانات بالـ AI تعرض كل إجراء، منصة بمنصة.",
+  link: "اطّلع على كل ما يمكنه تغييره",
+};
+
+const faqs = {
+  heading: "أسئلة شائعة",
+  items: [
+    { q: "هل يمكن أن يغيّر Claude إعلاناتي دون أن يسألني؟", a: "لا. يعود إليك كل تغيير كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة. وكل ما هو جديد يبدأ متوقفًا." },
+    { q: "أين أجد عنوان الخادم؟", a: "في AdFunnl، افتح نافذة ربط أدوات الذكاء الاصطناعي. يظهر العنوان هناك مع زر للنسخ، بجانب خطوات Claude وClaude Code وChatGPT." },
+    { q: "هل يمكنني ربط Claude للقراءة فقط؟", a: "نعم. ألغِ تحديد خانة \"Also allow it to make changes\" في شاشة الموافقة، وسيكتفي Claude بقراءة أرقامك." },
+    { q: "هل يعرف Claude أي حساب إعلاني يتبع أي علامة تجارية؟", a: "نعم. العلامات التجارية وحساباتها الإعلانية مُعَدّة في AdFunnl، فيعمل Claude علامةً بعلامة، ومعه ملاحظات كل علامة وهدفها ومستهدفاتها." },
+    { q: "كيف أفصل Claude؟", a: "تعرض نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl كل مساعد متصل. افصل Claude من هناك فيفقد الوصول فورًا." },
+    { q: "ما باقات AdFunnl التي تشمله؟", a: "تشمله كل باقة مدفوعة: Solo وGrowth وAgency، وتشمله أيضًا الفترة التجريبية المجانية لكل باقة." },
+  ],
+};
+
+const closing = {
+  heading: "ابدأ بحساب واحد",
+  body: "اربط Claude بعلامة تجارية واحدة اليوم، ثم أضِف الباقي.",
+};
+
+const howTo = {
+  "@type": "HowTo",
+  name: hero.heading,
+  inLanguage: "ar",
+  step: steps.items.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.title, text: s.body })),
+};
+---
+
+<Layout
+  schema={[faqPage(faqs.items), howTo]}
+  locale="ar"
+  title="ربط Claude"
+  seoTitle="كيف تربط Claude بإعلاناتك على Meta وTikTok وSnapchat وGoogle · AdFunnl"
+  description="اربط Claude بإعلاناتك على Meta وTikTok وSnapchat وGoogle عبر موصل MCP من AdFunnl في ثلاث خطوات، مع إعداد Claude Code وأول ما تسأله."
+  crumbTrail={[{ name: "التحكم في الإعلانات بالـ AI", path: "/ai-ad-control" }, { name: "ربط Claude", path: "/ai-ad-control/claude" }]}
+>
+
+  <!-- ============================== HERO ============================== -->
+  <section class="relative overflow-hidden bg-white px-6 pt-14 pb-16 sm:pt-16">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,#e6e1fb,transparent)]"></div>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
+      <div>
+        <h1 class="font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl">{hero.heading}</h1>
+        <p class="mt-5 text-lg leading-relaxed text-zinc-500">{hero.body}</p>
+        <a href={`${APP_URL}/signup`}
+           class="mt-8 inline-block w-full rounded-xl bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
+          ابدأ مجانًا
+        </a>
+      </div>
+
+      <!-- Claude's connector list with AdFunnl on, then a request and its plan -->
+      <div class="cl-mock rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-brand-900/10" aria-hidden="true">
+        <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5 text-[11px] font-medium text-zinc-500">
+          <AssistantMark assistant="claude" class="h-3.5 w-3.5" />
+          {hero.mock.path.map((p, i) => <>{i > 0 && <span class="text-zinc-300">›</span>}<span>{p}</span></>)}
+        </div>
+        <div class="space-y-4 p-5">
+          <div class="cl-in flex items-center gap-3 rounded-xl border border-zinc-200 p-3" style="--k:0">
+            <img src="/favicon.svg" alt="" width="32" height="32" class="h-8 w-8 rounded-lg ring-1 ring-zinc-200" />
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-semibold text-zinc-900">{hero.mock.name}</p>
+              <p class="text-xs text-zinc-500">{hero.mock.note}</p>
+            </div>
+            <span class="cl-pop inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700" style="--k:2">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{hero.mock.on}
+            </span>
+          </div>
+          <p class="cl-in ms-auto w-fit max-w-[88%] rounded-2xl bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-800" style="--k:3">{hero.mock.ask}</p>
+          <div class="cl-in flex items-center gap-2 rounded-xl border border-zinc-200 p-3 text-sm" style="--k:5">
+            <PlatformIcon platform="meta" class="h-4 w-4" /><PlatformIcon platform="tiktok" class="h-4 w-4" />
+            <span class="font-semibold text-zinc-900">{hero.mock.plan}</span>
+            <span class="ms-auto rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white">{hero.mock.approve}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STEPS ============================== -->
+  <section class="bg-zinc-50 px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="text-center font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{steps.heading}</h2>
+      <ol class="mt-12 grid gap-5 md:grid-cols-3 m-snap">
+        {steps.items.map((s, i) => (
+          <li class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 font-display text-sm font-bold text-brand-700">{i + 1}</span>
+            <h3 class="mt-4 font-display text-lg font-bold text-zinc-950">{s.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-500">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mx-auto mt-10 max-w-3xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <h3 class="font-display text-lg font-bold text-zinc-950">{code.heading}</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">{code.body}</p>
+        <pre dir="ltr" class="mt-4 overflow-x-auto rounded-xl bg-ink px-4 py-3 text-[13px] text-zinc-100"><code>{code.command}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PROMPTS ============================= -->
+  <section class="bg-white px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="text-center font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{prompts.heading}</h2>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 m-snap">
+        {prompts.items.map((e) => (
+          <li class="rounded-2xl rounded-ee-sm bg-brand-600 px-5 py-4 text-sm leading-relaxed text-white shadow-sm">{e}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ WHY ADFUNNL ============================ -->
+  <section class="border-y border-zinc-100 bg-zinc-50/60 px-6 py-16 sm:py-24">
+    <WhyAdFunnlMcp locale="ar" class="mx-auto max-w-5xl" />
+  </section>
+
+  <!-- ============================ WHAT IT CHANGES ============================ -->
+  <section class="bg-white px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{changes.heading}</h2>
+      <p class="mt-4 text-lg leading-relaxed text-zinc-500">{changes.body}</p>
+      <a href="/ar/ai-ad-control" class="mt-6 inline-block text-sm font-semibold text-brand-700 hover:underline">{changes.link}</a>
+    </div>
+  </section>
+
+  <!-- ================================ FAQ ================================ -->
+  <section class="bg-zinc-50 px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-center font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{faqs.heading}</h2>
+      <div class="mt-12 space-y-4">
+        {faqs.items.map((f) => (
+          <div class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <h3 class="font-display text-lg font-bold text-zinc-950">{f.q}</h3>
+            <p class="mt-3 leading-relaxed text-zinc-600">{f.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ CTA ================================ -->
+  <section class="px-6 py-16 sm:py-24">
+    <div class="mx-auto max-w-5xl rounded-3xl bg-ink px-6 py-16 text-center sm:py-20">
+      <div class="mx-auto max-w-2xl">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">{closing.heading}</h2>
+        <p class="mt-4 text-lg leading-relaxed text-zinc-400">{closing.body}</p>
+        <a href={`${APP_URL}/signup`}
+           class="mt-9 inline-block w-full rounded-xl bg-brand-600 px-8 py-3.5 text-center text-base font-semibold text-white transition hover:bg-brand-500 sm:w-auto">
+          ابدأ مجانًا
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* The mock plays once on load and rests in its finished state. */
+  .cl-in { animation: clIn .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--k, 0) * 180ms + 200ms); }
+  .cl-pop { animation: clPop .45s cubic-bezier(.34,1.56,.64,1) both; animation-delay: calc(var(--k, 0) * 180ms + 350ms); }
+  @keyframes clIn { from { opacity: 0; transform: translateY(8px); } }
+  @keyframes clPop { from { opacity: 0; transform: scale(.6); } }
+  @media (prefers-reduced-motion: reduce) { .cl-in, .cl-pop { animation: none; } }
+</style>

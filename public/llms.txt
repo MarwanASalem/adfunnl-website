@@ -30,6 +30,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [TikTok ads reporting](https://www.adfunnl.com/integrations/tiktok): what comes in from TikTok, creative ranking and switching TikTok campaigns
 - [Contact](https://www.adfunnl.com/contact): WhatsApp and email
 - [AI ad control](https://www.adfunnl.com/ai-ad-control): make Claude or ChatGPT your assistant media buyer over AdFunnl's MCP server, why one MCP for every ad platform, how to connect each assistant, and what it can change on each platform
+- [Connect Claude](https://www.adfunnl.com/ai-ad-control/claude): how to connect Claude and Claude Code to Meta, TikTok, Snapchat and Google ads through AdFunnl, in three steps, and what to ask first
 - [For Account Managers](https://www.adfunnl.com/for/account-managers): client reporting
 - [For Team Leads](https://www.adfunnl.com/for/team-leads): overseeing many accounts
 - [For Media Buyers](https://www.adfunnl.com/for/media-buyers): daily analysis and creative ranking
@@ -39,6 +40,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 
 ## Guides
 
+- [How to launch one campaign on Meta, TikTok and Snapchat with one approval](https://www.adfunnl.com/blog/launch-one-campaign-on-meta-tiktok-and-snapchat): build a campaign once and copy it to the other platforms from Claude or ChatGPT, what changes per platform (age bands, budgets, ad formats, objectives), and what it does not copy
 - [How to calculate blended ROAS across every ad platform](https://www.adfunnl.com/blog/how-to-calculate-blended-roas): the formula, why averaging platform ROAS or adding up platform revenue gives the wrong number, platform revenue against store revenue, a worked example in EGP, SAR and USD, and which exchange rate to use
 
 ## Arabic
@@ -52,8 +54,10 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [تقارير إعلانات TikTok](https://www.adfunnl.com/ar/integrations/tiktok)
 - [تواصل معنا](https://www.adfunnl.com/ar/contact)
 - [التحكم في الإعلانات بالـ AI](https://www.adfunnl.com/ar/ai-ad-control)
+- [ربط Claude](https://www.adfunnl.com/ar/ai-ad-control/claude)
 - [المدونة](https://www.adfunnl.com/ar/blog)
 - [كيف تحسب blended ROAS عبر كل منصاتك الإعلانية](https://www.adfunnl.com/ar/blog/how-to-calculate-blended-roas)
+- [كيف تطلق حملة واحدة على Meta وTikTok وSnapchat بموافقة واحدة](https://www.adfunnl.com/ar/blog/launch-one-campaign-on-meta-tiktok-and-snapchat)
 
 ## Contact
 

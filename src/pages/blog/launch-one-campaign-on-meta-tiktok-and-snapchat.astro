@@ -1,0 +1,109 @@
+---
+import BlogArticle from "../../components/BlogArticle.astro";
+import type { Post } from "../../data/blog";
+
+// ── Campaign copy guide ───────────────────────────────────────────────────
+// Brief (approved 25 November 2026):
+//   Who: media buyers and performance marketers running the same offer on
+//   Meta, TikTok and Snapchat, building each campaign by hand per platform.
+//   Promise: build a campaign once and get it on the other platforms from one
+//   plan and one approval.
+//   Action: Start free.
+//
+// Product facts, docs/what-ships.md "Ad control, copy a campaign to other
+// platforms" (clone_campaign, app commits c73c9f60 and 8911c2af, 23 November
+// 2026). The fitting rules are read from the app's
+// ad_management/campaign_clone.rb, checked 25 November 2026: TikTok age bands
+// and oldest starting ages, Snapchat budgets on ad sets, no single-image ads
+// on TikTok, messages objectives between Meta and TikTok only, page, profile
+// and pixel never copied. No internals beyond what a reader needs to trust
+// the copy. Title, description and date are repeated in src/data/blog.ts.
+const POST: Post = {
+  slug: "launch-one-campaign-on-meta-tiktok-and-snapchat",
+  published: "2026-11-25",
+  title: "How to launch one campaign on Meta, TikTok and Snapchat with one approval",
+  seoTitle: "Launch one campaign on Meta, TikTok and Snapchat with one approval",
+  description:
+    "Build a campaign once, then copy it to Meta, TikTok and Snapchat from Claude or ChatGPT. What changes per platform, step by step, and what it leaves out.",
+  lead:
+    "Build the campaign once on one platform, then ask Claude or ChatGPT to copy it to the others. AdFunnl fits it to each platform, shows you one plan, and creates every copy paused after a single yes.",
+
+  sections: [
+    {
+      id: "rebuild",
+      heading: "Why rebuilding a campaign on each platform costs you a morning",
+      blocks: [
+        { type: "p", text: "Running the same offer on Meta, TikTok and Snapchat means building it three times. Each platform names its objectives differently, targets age in its own way and keeps budgets at a different level, so every rebuild is a new set of menus and a new chance to get a setting wrong." },
+        { type: "p", text: "Deciding what the campaign should be happened once. The hours go into translating that decision into each platform's settings by hand." },
+      ],
+    },
+    {
+      id: "changes",
+      heading: "What changes when a campaign moves between platforms",
+      blocks: [
+        { type: "p", text: "The copy keeps the objective, the audience, the budget, the ad text, the files and the link, then fits each one to the platform it is going to. These are the cases that need fitting:" },
+        {
+          type: "list",
+          items: [
+            { lead: "Age.", text: "TikTok targets fixed age bands, so an age range is fitted to the nearest bands. Each platform also has its own oldest starting age, and a range that begins above it is moved down to fit." },
+            { lead: "Budget.", text: "Snapchat keeps budgets on ad sets, not on the campaign, so a campaign budget is split across the ad sets." },
+            { lead: "Ad formats.", text: "TikTok has no single-image ads, so an image ad does not carry to TikTok. Videos and photo carousels do." },
+            { lead: "Objectives.", text: "Sales, traffic and leads to a website carry between all three. Messages on WhatsApp or Messenger carry between Meta and TikTok only." },
+            { lead: "Page, profile and pixel.", text: "These are never copied. Each copy uses the brand's own accounts on that platform." },
+          ],
+        },
+        { type: "p", text: "Before anything is created, the plan lists what carried as it was, what changed to fit and why, and anything left out." },
+      ],
+    },
+    {
+      id: "steps",
+      heading: "Step by step, from Claude or ChatGPT",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            { lead: "Create the first campaign through AdFunnl.", text: "Ask your assistant to build it on Meta, TikTok or Snapchat from your Google Drive files. It is created paused." },
+            { lead: "Ask for the copies.", text: "For example: **Copy this campaign to TikTok and Snapchat.** AdFunnl already knows which ad accounts belong to the brand on each platform." },
+            { lead: "Read the one plan.", text: "Every platform's version comes back in one message: the account, the budget, each ad set with its audience, each ad with its files and text, and the combined daily budget." },
+            { lead: "Approve once.", text: "One yes creates every copy, each switched off and ready for you to check and turn on. Every copy is written to the brand's Change Log." },
+          ],
+        },
+        { type: "p", text: "The assistant inside AdFunnl does the same, with no Claude or ChatGPT setup." },
+      ],
+    },
+    {
+      id: "limits",
+      heading: "What it does not copy yet",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            { lead: "Google.", text: "Copies go between Meta, TikTok and Snapchat. Google campaigns are built on their own." },
+            { lead: "Campaigns made outside AdFunnl.", text: "The copy starts from what you approved when the campaign was created through AdFunnl, so a campaign built directly in a platform's own ads manager can't be copied this way, and neither can one created through AdFunnl before 23 November 2026." },
+            { lead: "Posts and creatives that live on one platform.", text: "An ad built from an existing post or another ad's creative stays where it is, and the plan says so." },
+          ],
+        },
+      ],
+    },
+  ],
+
+  faq: {
+    id: "faq",
+    heading: "Questions about copying campaigns between platforms",
+    items: [
+      { q: "Does the copy go live straight away?", a: "No. Nothing is created until you approve the plan, and every copy is created paused." },
+      { q: "Can I change a copy before approving it?", a: "Yes. Ask for the change, such as a different budget on Snapchat or leaving a platform out, and a new plan comes back." },
+      { q: "What if my ad accounts use different currencies?", a: "The plan asks for each budget in that account's own currency, so nothing is converted behind your back." },
+      { q: "Which plans include it?", a: "Every paid plan, Solo, Growth and Agency, and the free trial of each, as part of AI ad control." },
+    ],
+  },
+
+  close: {
+    id: "close",
+    heading: "Launch on every platform from one chat",
+    body: "Connect AdFunnl to Claude or ChatGPT, or use the assistant inside AdFunnl, and build the campaign once. Start with one account, then add the rest.",
+  },
+};
+---
+
+<BlogArticle post={POST} />

@@ -176,8 +176,8 @@ const faqs = [
     a: "Yes. Every paid plan comes with a full-access free trial with all features unlocked. When the trial ends it simply reverts to the Free plan, no charge unless you confirm payment.",
   },
   {
-    q: "How does billing work, and is it instant checkout?",
-    a: "You request a plan and we enable it once payment is confirmed. It's a request → manual-approval flow rather than instant self-checkout, so you always talk to a real person before anything is charged.",
+    q: "How do I pay?",
+    a: "Pick a plan in AdFunnl and pay by card through Paymob, our payment provider. The plan turns on as soon as the payment goes through. Tick Save card at checkout and the plan renews automatically, and you can turn that off any time from the Plans page.",
   },
   {
     q: "How much do I save with annual billing?",
@@ -317,7 +317,7 @@ const schema = [softwareApplication("en"), faqPage(faqs)];
             {p.cta}
           </a>
           {p.requestable && (
-            <p class="mt-2 text-center text-[11px] text-zinc-400">Request a plan, enabled once payment is confirmed</p>
+            <p class="mt-2 text-center text-[11px] text-zinc-400">Pay by card, and the plan starts right away</p>
           )}
 
           <!-- Highlights -->

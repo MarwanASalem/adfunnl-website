@@ -57,6 +57,6 @@ Monthly credits carry over, and top-up credits are only spent after the monthly 
 
 ## Billing
 
-Paid plans are enabled after payment is confirmed. You request a plan and a person approves it, so there is no instant self-checkout. Payment is accepted in EGP and USD.
+Plans are paid by card through Paymob, AdFunnl's payment provider, and turn on as soon as the payment goes through. A card saved at checkout renews the plan automatically, and auto-renew can be turned off any time. Extra seats and AI credit top-ups are still requested in the app and added by the AdFunnl team. Prices are shown in EGP and USD.
 
 Questions: support@adfunnl.com

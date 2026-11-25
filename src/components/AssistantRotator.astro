@@ -96,7 +96,16 @@ const data = encodeURIComponent(JSON.stringify(names.map((n) => ({
       prev.classList.add("is-out");
       next.classList.remove("is-out");
       next.classList.add("is-on");
-      fit(next);
+      // Widen at once so a longer name is never clipped while it fades in;
+      // narrow with the transition once the shorter one is in place.
+      if (next.getBoundingClientRect().width > prev.getBoundingClientRect().width) {
+        rot.style.transition = "none";
+        fit(next);
+        void rot.offsetWidth;
+        rot.style.transition = "";
+      } else {
+        fit(next);
+      }
       sync(next.dataset.key!);
       setTimeout(() => prev.classList.remove("is-out"), 650);
     }, 2600);

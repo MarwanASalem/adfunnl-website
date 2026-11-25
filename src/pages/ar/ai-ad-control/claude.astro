@@ -6,6 +6,7 @@ import AssistantMark from "../../../components/AssistantMark.astro";
 import WhyAdFunnlMcp from "../../../components/WhyAdFunnlMcp.astro";
 
 const APP_URL = "https://app.adfunnl.com";
+const MCP_URL = "https://api.adfunnl.com/mcp";
 
 // Arabic twin of /ai-ad-control/claude. The brief and the capability notes
 // live in the English page's frontmatter and apply here unchanged. Claude's
@@ -14,6 +15,7 @@ const APP_URL = "https://app.adfunnl.com";
 const hero = {
   heading: "كيف تربط Claude بحساباتك الإعلانية",
   body: "أضِف AdFunnl كموصل (Connector) في Claude، ثم اسأل عن إعلاناتك على Meta وTikTok وSnapchat وGoogle أو عدّلها بكلماتك. لا يتغير شيء قبل موافقتك في المحادثة.",
+  url: { label: "عنوان الخادم", copy: "نسخ", copied: "تم النسخ" },
   mock: {
     path: ["Settings", "Connectors"],
     name: "AdFunnl",
@@ -28,16 +30,16 @@ const hero = {
 const steps = {
   heading: "اربطه في ثلاث خطوات",
   items: [
-    { title: "أضِف AdFunnl كموصل", body: "في Claude، افتح الإعدادات ثم الموصلات (Connectors)، واختر Add custom connector. الصق عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl واختر Connect." },
-    { title: "سجّل الدخول ووافق", body: "سجّل الدخول بحسابك في AdFunnl. أبقِ خانة \"Also allow it to make changes\" محددة لإدارة الإعلانات، أو ألغِ تحديدها للربط للقراءة فقط." },
+    { title: "أضِف AdFunnl كموصل", body: "في Claude، افتح الإعدادات ثم الموصلات (Connectors)، واختر Add custom connector. الصق https://api.adfunnl.com/mcp واختر Connect." },
+    { title: "سجّل الدخول ووافق", body: "سجّل الدخول بحسابك في AdFunnl عندما يطلب Claude ذلك. أبقِ خانة \"Also allow it to make changes\" محددة لإدارة الإعلانات، أو ألغِ تحديدها للربط للقراءة فقط." },
     { title: "فعّله في المحادثة", body: "افتح قائمة الأدوات في أي محادثة وفعّل AdFunnl، ثم اطرح سؤالك الأول." },
   ],
 };
 
 const code = {
   heading: "إن كنت تستخدم Claude Code",
-  body: "شغّل هذا الأمر في الطرفية مع عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي. ثم افتح Claude Code وشغّل /mcp واختر AdFunnl ثم Authenticate، وسجّل الدخول عبر AdFunnl في نافذة المتصفح.",
-  command: "claude mcp add --transport http adfunnl <server address>",
+  body: "شغّل هذا الأمر في الطرفية. ثم افتح Claude Code وشغّل /mcp واختر AdFunnl ثم Authenticate، وسجّل الدخول عبر AdFunnl في نافذة المتصفح.",
+  command: "claude mcp add --transport http adfunnl https://api.adfunnl.com/mcp",
 };
 
 const prompts = {
@@ -62,7 +64,7 @@ const faqs = {
   heading: "أسئلة شائعة",
   items: [
     { q: "هل يمكن أن يغيّر Claude إعلاناتي دون أن يسألني؟", a: "لا. يعود إليك كل تغيير كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة. وكل ما هو جديد يبدأ متوقفًا." },
-    { q: "أين أجد عنوان الخادم؟", a: "في AdFunnl، افتح نافذة ربط أدوات الذكاء الاصطناعي. يظهر العنوان هناك مع زر للنسخ، بجانب خطوات Claude وClaude Code وChatGPT." },
+    { q: "ما عنوان خادم MCP الخاص بـ AdFunnl؟", a: "https://api.adfunnl.com/mcp. الصقه في Claude كموصل مخصص (custom connector)، أو في أي مساعد يتصل بخوادم MCP عن بُعد، وسجّل الدخول عبر AdFunnl عندما يطلب ذلك." },
     { q: "هل يمكنني ربط Claude للقراءة فقط؟", a: "نعم. ألغِ تحديد خانة \"Also allow it to make changes\" في شاشة الموافقة، وسيكتفي Claude بقراءة أرقامك." },
     { q: "هل يعرف Claude أي حساب إعلاني يتبع أي علامة تجارية؟", a: "نعم. العلامات التجارية وحساباتها الإعلانية مُعَدّة في AdFunnl، فيعمل Claude علامةً بعلامة، ومعه ملاحظات كل علامة وهدفها ومستهدفاتها." },
     { q: "كيف أفصل Claude؟", a: "تعرض نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl كل مساعد متصل. افصل Claude من هناك فيفقد الوصول فورًا." },
@@ -103,6 +105,15 @@ const howTo = {
            class="mt-8 inline-block w-full rounded-xl bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-200 transition hover:bg-brand-700 sm:w-auto">
           ابدأ مجانًا
         </a>
+
+        <div class="mt-6 max-w-md rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+          <p class="px-1 text-xs font-semibold text-zinc-500">{hero.url.label}</p>
+          <div class="mt-1.5 flex items-center gap-2">
+            <code dir="ltr" class="min-w-0 flex-1 truncate rounded-lg bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 ring-1 ring-zinc-200">{MCP_URL}</code>
+            <button type="button" data-copy={MCP_URL} data-done={hero.url.copied}
+                    class="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-zinc-700">{hero.url.copy}</button>
+          </div>
+        </div>
       </div>
 
       <!-- Claude's connector list with AdFunnl on, then a request and its plan -->
@@ -210,6 +221,17 @@ const howTo = {
     </div>
   </section>
 </Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) => {
+    const label = b.textContent;
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(b.dataset.copy || ""); b.textContent = b.dataset.done || label; }
+      catch { return; }
+      setTimeout(() => { b.textContent = label; }, 1800);
+    });
+  });
+</script>
 
 <style>
   /* The mock plays once on load and rests in its finished state. */

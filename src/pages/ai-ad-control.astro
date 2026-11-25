@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import { faqPage } from "../data/plans";
 import PlatformIcon from "../components/PlatformIcon.astro";
 import AdControlSafety from "../components/AdControlSafety.astro";
+import AssistantRotator from "../components/AssistantRotator.astro";
+import WhyAdFunnlMcp from "../components/WhyAdFunnlMcp.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -41,9 +43,14 @@ const APP_URL = "https://app.adfunnl.com";
 // change is written to the brand's Change Log, and the AI reads that log
 // beside the numbers when it reviews an account, compares periods or lists
 // campaigns (what-ships.md, Change Log). Never state the lookback window.
+// The headline names one assistant at a time (AssistantRotator): the served
+// HTML reads "Make Claude your assistant media buyer", and the page title,
+// description and FAQ carry ChatGPT, so both names are indexed.
 const hero = {
-  heading: "An AI that changes your ads and remembers why",
-  body: "Ask Claude or ChatGPT, or the assistant inside AdFunnl, to pause the ads that waste money or move budget to the ones that work. Every change goes into the brand's Change Log, and the AI reads that log whenever it reviews the account, so a jump in spend is read with the budget you raised behind it.",
+  headingBefore: "Make",
+  headingAfter: "your assistant media buyer",
+  body: "Connect AdFunnl once and Claude, ChatGPT or any AI assistant can read every ad platform you run, then pause ads, move budget or launch campaigns once you approve. Every change goes into the brand's Change Log, and the AI reads that log before it answers.",
+  worksWith: "Works in Claude, ChatGPT, Claude Code and any assistant that connects to an MCP server. The assistant inside AdFunnl does the same with no setup.",
   chat: {
     ask: "Raise the budget of my best-ROAS TikTok campaign by 20%.",
     tool: "set_ad_budget",
@@ -106,6 +113,11 @@ const compare = {
       old: "Download them from Drive, upload them to the platform, build the campaign by hand.",
       now: "Point it at the Drive folder. The campaign is built switched off, ready to review.",
     },
+    {
+      job: "Running the same campaign on another platform",
+      old: "Rebuild it in the other platform's menus, setting by setting.",
+      now: "Ask to copy it. One plan covers every platform, and one yes creates them, paused.",
+    },
   ],
 };
 
@@ -131,6 +143,7 @@ const table = {
     { label: "Edit ad text and URL tracking tags", cells: [true, true, true, true] },
     { label: "Launch new campaigns from Google Drive", cells: [true, true, true, "Search, Shopping, Display, Demand Gen and Performance Max"] },
     { label: "Add new ad sets and ads to running campaigns", cells: [true, true, true, "Search campaigns"] },
+    { label: "Copy a campaign made in AdFunnl to the brand's other platforms", cells: [true, true, true, false] },
     { label: "Keywords, negative keywords and search terms", cells: [false, false, false, true] },
     { label: "Turn existing posts into ads", cells: [true, true, false, false] },
     { label: "Catalog ads", cells: [true, true, true, false] },
@@ -173,7 +186,10 @@ const faqs = {
   items: [
     { q: "Can it change my ads without asking me?", a: "No. Every change comes back as a plan first, and only happens once you approve it in the chat." },
     { q: "What does Beta mean for Meta and Google?", a: "It works today, on real accounts. On Google it covers everything in the table, with Search, Shopping, Display, Demand Gen and Performance Max campaigns; videos for Google must already be on YouTube. Both are still gaining actions." },
-    { q: "Which assistants does it work with?", a: "Claude, ChatGPT, and any other AI assistant that can connect to an MCP server. The assistant inside AdFunnl makes the same changes with no setup at all, and shows each one as a plan before it goes ahead." },
+    { q: "Why use AdFunnl's MCP instead of each ad platform's own?", a: "One connection covers Meta, TikTok, Snapchat and Google, and it already knows which ad accounts belong to which brand, with each brand's notes, goal and targets. Every change lands in the brand's Change Log, which the AI reads before it answers. It also gets fixes and new actions every week, and a person answers on WhatsApp or by email when you need help." },
+    { q: "Which assistants does it work with?", a: "Claude, ChatGPT, Claude Code, and any other AI assistant that can connect to an MCP server. The assistant inside AdFunnl makes the same changes with no setup at all, and shows each one as a plan before it goes ahead." },
+    { q: "How do I connect Claude?", a: "In Claude, open Settings, then Connectors, and choose Add custom connector. Paste the server address from Connect AI tools in AdFunnl and select Connect. Sign in with AdFunnl and approve, then turn AdFunnl on from the tools menu in any chat." },
+    { q: "How do I connect ChatGPT?", a: "In ChatGPT, open Settings, then Plugins, and choose Add custom MCP server. If it is not there, your ChatGPT plan or admin needs to allow it. Name it AdFunnl, paste the server address from Connect AI tools in AdFunnl, choose OAuth and select Create. Sign in with AdFunnl and approve." },
     { q: "Can I connect it read-only?", a: "Yes. Untick \"Also allow it to make changes\" on the approval screen, and it can only read your numbers." },
     { q: "Can my team see what it changed?", a: "Yes. Every change it makes is written to the brand's Change Log, with what changed and when." },
     { q: "Which plans include it?", a: "Every paid plan includes it: Solo, Growth and Agency. The free trial of each plan includes it too." },
@@ -190,8 +206,8 @@ const closing = {
 <Layout
   schema={[faqPage(faqs.items)]}
   title="AI ad control"
-  seoTitle="Run your ads from Claude or ChatGPT · AdFunnl"
-  description="Ask Claude, ChatGPT or AdFunnl's assistant to pause ads, move budget or launch campaigns. Every change is logged, and the AI reads that log."
+  seoTitle="Make Claude or ChatGPT your assistant media buyer · AdFunnl"
+  description="Connect AdFunnl to Claude or ChatGPT once to read and change ads on Meta, TikTok, Snapchat and Google. Every change is logged, and the AI reads that log."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -199,8 +215,9 @@ const closing = {
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,#e6e1fb,transparent)]"></div>
     <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1fr]">
       <div>
-        <h1 class="font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">{hero.heading}</h1>
-        <p class="mt-5 text-lg leading-relaxed text-zinc-500">{hero.body}</p>
+        <h1 class="font-display text-[2.2rem] font-extrabold leading-[1.05] tracking-tight text-zinc-950 sm:text-6xl lg:text-[3.2rem] xl:text-[3.85rem]">{hero.headingBefore} <AssistantRotator /> {hero.headingAfter}</h1>
+        <p class="mt-6 text-lg leading-relaxed text-zinc-500">{hero.body}</p>
+        <p class="mt-3 text-sm leading-relaxed text-zinc-500">{hero.worksWith}</p>
         <ul class="mt-6 flex flex-wrap gap-2">
           {platforms.map((p) => (
             <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
@@ -218,7 +235,7 @@ const closing = {
       <!-- A request, the plan it comes back with, and the approval -->
       <div class="rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-brand-900/10">
         <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5 text-[11px] font-medium text-zinc-500">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{hero.chat.connected}
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span><span data-ai-sync class="font-semibold text-zinc-700">Claude</span><span>· {hero.chat.connected}</span>
         </div>
         <div class="space-y-4 p-5">
           <p class="ms-auto w-fit max-w-[85%] rounded-2xl bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-800">{hero.chat.ask}</p>
@@ -251,6 +268,11 @@ const closing = {
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===================== WHY ADFUNNL'S MCP ===================== -->
+  <section class="bg-zinc-50/60 border-y border-zinc-100 px-6 py-16 sm:py-24">
+    <WhyAdFunnlMcp class="mx-auto max-w-5xl" />
   </section>
 
   <!-- ========================= CHANGE LOG, READ BY AI ========================= -->

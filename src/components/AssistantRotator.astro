@@ -1,0 +1,107 @@
+---
+// The assistant's name inside the AI ad control headline, with its mark,
+// turning between Claude and ChatGPT.
+//
+// Search and AI crawlers read the HTML as it is served, so the served text is
+// one plain name ("Make Claude your assistant media buyer"). Every name and
+// mark sits in a data attribute, which is not page text, and the script swaps
+// them in. Both names are in the page title, description and FAQ, so ChatGPT
+// is still indexed. With reduced motion, or without JavaScript, the first
+// name stays.
+//
+// Anything else on the page marked `data-ai-sync` (the chat card header) gets
+// the same name and mark at the same moment.
+import AssistantMark from "./AssistantMark.astro";
+import { markSvg } from "../lib/assistant-marks";
+
+const names = [
+  { key: "claude", name: "Claude" },
+  { key: "chatgpt", name: "ChatGPT" },
+] as const;
+const first = names[0];
+// URI-encoded so no "<" sits in the attribute for a naive text scraper to trip on.
+const data = encodeURIComponent(JSON.stringify(names.map((n) => ({
+  key: n.key,
+  name: n.name,
+  big: markSvg(n.key, "h-[.62em] w-[.62em]"),
+  small: markSvg(n.key, "h-3.5 w-3.5"),
+}))));
+---
+
+<span class="ai-rot" data-ai-rot data-alts={data}><span class="ai-word is-on" data-key={first.key}><span class="ai-chip"><AssistantMark assistant={first.key} class="h-[.62em] w-[.62em]" /></span>{first.name}</span></span>
+
+<style is:global>
+  .ai-rot {
+    position: relative; display: inline-flex; vertical-align: bottom;
+    height: 1.15em; overflow: hidden; padding-inline: .02em;
+    transition: width .55s cubic-bezier(.2,.8,.2,1);
+  }
+  .ai-word {
+    display: inline-flex; align-items: center; gap: .18em; white-space: nowrap;
+    color: #5738c9; line-height: 1.15;
+  }
+  .ai-rot.is-live .ai-word { position: absolute; inset-inline-start: .02em; top: 0; opacity: 0; transform: translateY(70%); filter: blur(4px);
+    transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .45s ease, filter .45s ease; }
+  .ai-rot.is-live .ai-word.is-on { opacity: 1; transform: none; filter: none; }
+  .ai-rot.is-live .ai-word.is-out { opacity: 0; transform: translateY(-70%); filter: blur(4px); }
+  .ai-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: .92em; width: .92em; border-radius: .24em; background: #fff;
+    box-shadow: 0 0 0 1px rgba(87, 56, 201, .14), 0 6px 14px -8px rgba(43, 29, 97, .45);
+  }
+  .ai-sync-item { display: inline-flex; align-items: center; gap: .375rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .ai-rot, .ai-rot .ai-word { transition: none !important; }
+  }
+</style>
+
+<script>
+  type Alt = { key: string; name: string; big: string; small: string };
+  const rot = document.querySelector<HTMLElement>("[data-ai-rot]");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (rot && !still) {
+    const alts: Alt[] = JSON.parse(decodeURIComponent(rot.dataset.alts || "%5B%5D"));
+    // Built from trusted, build-time strings in src/lib/assistant-marks.ts.
+    const make = (cls: string, a: Alt, svg: string, chip: boolean) => {
+      const el = document.createElement("span");
+      el.className = cls;
+      el.dataset.key = a.key;
+      el.innerHTML = chip ? `<span class="ai-chip">${svg}</span>` : svg;
+      el.append(a.name);
+      return el;
+    };
+    alts.slice(1).forEach((a) => rot.appendChild(make("ai-word", a, a.big, true)));
+    const words = Array.from(rot.querySelectorAll<HTMLElement>(".ai-word"));
+    const syncTargets = document.querySelectorAll<HTMLElement>("[data-ai-sync]");
+
+    const sync = (key: string) => {
+      const a = alts.find((x) => x.key === key);
+      if (!a) return;
+      syncTargets.forEach((t) => t.replaceChildren(make("ai-sync-item", a, a.small, false)));
+    };
+    const fit = (w: HTMLElement) => { rot.style.width = `${Math.ceil(w.getBoundingClientRect().width) + 10}px`; };
+
+    let i = 0;
+    rot.classList.add("is-live");
+    fit(words[0]);
+    sync(words[0].dataset.key!);
+
+    setInterval(() => {
+      if (document.hidden) return;
+      const prev = words[i];
+      i = (i + 1) % words.length;
+      const next = words[i];
+      prev.classList.remove("is-on");
+      prev.classList.add("is-out");
+      next.classList.remove("is-out");
+      next.classList.add("is-on");
+      fit(next);
+      sync(next.dataset.key!);
+      setTimeout(() => prev.classList.remove("is-out"), 650);
+    }, 2600);
+
+    window.addEventListener("resize", () => fit(words[i]));
+    document.fonts?.ready.then(() => fit(words[i]));
+  }
+</script>

@@ -3,6 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import { faqPage } from "../../data/plans";
 import PlatformIcon from "../../components/PlatformIcon.astro";
 import AdControlSafety from "../../components/AdControlSafety.astro";
+import AssistantRotator from "../../components/AssistantRotator.astro";
+import WhyAdFunnlMcp from "../../components/WhyAdFunnlMcp.astro";
 
 const APP_URL = "https://app.adfunnl.com";
 
@@ -15,8 +17,10 @@ const APP_URL = "https://app.adfunnl.com";
 // Amounts with an arrow sit in their own field so the markup can wrap them in
 // <bdi dir="ltr"> and the arrow does not flip.
 const hero = {
-  heading: "ذكاء اصطناعي يغيّر إعلاناتك ويتذكر السبب",
-  body: "اطلب من Claude أو ChatGPT، أو من المساعد داخل AdFunnl، إيقاف الإعلانات التي تهدر المال أو نقل الميزانية إلى الإعلانات الناجحة. يُسجَّل كل تغيير في سجل التغييرات الخاص بالعلامة التجارية، ويقرأ الذكاء الاصطناعي هذا السجل كلما راجع الحساب، فيفهم أي قفزة في الإنفاق ومعها الميزانية التي رفعتها.",
+  headingBefore: "اجعل",
+  headingAfter: "مساعدك في الـ Media Buying",
+  body: "اربط AdFunnl مرة واحدة، فيستطيع Claude أو ChatGPT أو أي مساعد ذكاء اصطناعي قراءة كل منصاتك الإعلانية، ثم إيقاف الإعلانات أو نقل الميزانية أو إطلاق الحملات بعد موافقتك. يُسجَّل كل تغيير في سجل التغييرات الخاص بالعلامة التجارية، ويقرأ الذكاء الاصطناعي هذا السجل قبل أن يجيب.",
+  worksWith: "يعمل في Claude وChatGPT وClaude Code وأي مساعد يتصل بخادم MCP. والمساعد داخل AdFunnl يفعل الشيء نفسه دون أي إعداد.",
   chat: {
     ask: "زِد ميزانية حملة TikTok الأعلى في ROAS بنسبة 20 في المئة.",
     tool: "set_ad_budget",
@@ -74,6 +78,11 @@ const compare = {
       old: "تنزّلها من Drive، وترفعها إلى المنصة، وتبني الحملة يدويًا.",
       now: "تشير إلى مجلد Drive، فتُبنى الحملة متوقفة وجاهزة لمراجعتك.",
     },
+    {
+      job: "تشغيل الحملة نفسها على منصة أخرى",
+      old: "تعيد بناءها في قوائم المنصة الأخرى، إعدادًا بعد إعداد.",
+      now: "تطلب نسخها، فتغطي خطة واحدة كل المنصات، وبموافقة واحدة تُنشأ كلها متوقفة.",
+    },
   ],
 };
 
@@ -97,6 +106,7 @@ const table = {
     { label: "تعديل نصوص الإعلانات ووسوم تتبع الروابط", cells: [true, true, true, true] },
     { label: "إطلاق حملات جديدة من Google Drive", cells: [true, true, true, "البحث وShopping وDisplay وDemand Gen وPerformance Max"] },
     { label: "إضافة مجموعات إعلانية وإعلانات جديدة إلى حملات جارية", cells: [true, true, true, "حملات البحث"] },
+    { label: "نسخ حملة أُنشئت في AdFunnl إلى منصات العلامة التجارية الأخرى", cells: [true, true, true, false] },
     { label: "الكلمات المفتاحية والكلمات السلبية وعبارات البحث", cells: [false, false, false, true] },
     { label: "تحويل المنشورات الحالية إلى إعلانات", cells: [true, true, false, false] },
     { label: "إعلانات الكتالوج", cells: [true, true, true, false] },
@@ -138,7 +148,10 @@ const faqs = {
   items: [
     { q: "هل يمكنه تغيير إعلاناتي دون أن يسألني؟", a: "لا. يعود إليك كل تغيير كخطة أولًا، ولا يُنفَّذ إلا بعد موافقتك في المحادثة." },
     { q: "ماذا يعني تجريبي بالنسبة لـ Meta وGoogle؟", a: "أنها تعمل اليوم على حسابات حقيقية. على Google تشمل كل ما في الجدول، مع حملات Search وShopping وDisplay وDemand Gen وPerformance Max، والفيديوهات يجب أن تكون على YouTube. وما زالت إجراءات جديدة تُضاف إلى المنصتين." },
-    { q: "ما المساعدات التي يعمل معها؟", a: "Claude وChatGPT، وأي مساعد ذكاء اصطناعي آخر يمكنه الاتصال بخادم MCP. والمساعد داخل AdFunnl يجري التغييرات نفسها دون أي إعداد، ويعرض كل تغيير كخطة قبل تنفيذه." },
+    { q: "لماذا MCP من AdFunnl بدلًا من MCP كل منصة إعلانية؟", a: "اتصال واحد يغطي Meta وTikTok وSnapchat وGoogle، ويعرف مسبقًا أي حساب إعلاني يتبع أي علامة تجارية، ومعه ملاحظات كل علامة وهدفها ومستهدفاتها. ويُسجَّل كل تغيير في سجل التغييرات الخاص بالعلامة التجارية، ويقرؤه الذكاء الاصطناعي قبل أن يجيب. كما تصله إصلاحات وإجراءات جديدة كل أسبوع، ويرد عليك شخص من الفريق على WhatsApp أو بالبريد متى احتجت مساعدة." },
+    { q: "ما المساعدات التي يعمل معها؟", a: "Claude وChatGPT وClaude Code، وأي مساعد ذكاء اصطناعي آخر يمكنه الاتصال بخادم MCP. والمساعد داخل AdFunnl يجري التغييرات نفسها دون أي إعداد، ويعرض كل تغيير كخطة قبل تنفيذه." },
+    { q: "كيف أربط Claude؟", a: "في Claude، افتح الإعدادات ثم الموصلات (Connectors)، واختر Add custom connector. الصق عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl واختر Connect. سجّل الدخول عبر AdFunnl ووافق، ثم فعّل AdFunnl من قائمة الأدوات في أي محادثة." },
+    { q: "كيف أربط ChatGPT؟", a: "في ChatGPT، افتح الإعدادات ثم Plugins، واختر Add custom MCP server. إن لم تجده، فيجب أن تسمح به خطتك في ChatGPT أو مسؤول مساحة العمل. سمّه AdFunnl، والصق عنوان الخادم من نافذة ربط أدوات الذكاء الاصطناعي في AdFunnl، واختر OAuth ثم Create. سجّل الدخول عبر AdFunnl ووافق." },
     { q: "هل يمكنني ربطه للقراءة فقط؟", a: "نعم. ألغِ تحديد خانة \"Also allow it to make changes\" في شاشة الموافقة، وسيكتفي بقراءة أرقامك." },
     { q: "هل يرى فريقي ما الذي غيّره؟", a: "نعم. يُسجَّل كل تغيير يجريه في سجل التغييرات الخاص بالعلامة التجارية، مع ما تغيّر ومتى." },
     { q: "ما الباقات التي تشمله؟", a: "تشمله كل باقة مدفوعة: Solo وGrowth وAgency، وتشمله أيضًا الفترة التجريبية المجانية لكل باقة." },
@@ -156,8 +169,8 @@ const closing = {
   schema={[faqPage(faqs.items)]}
   locale="ar"
   title="التحكم في الإعلانات بالـ AI"
-  seoTitle="أدِر إعلاناتك من Claude أو ChatGPT · AdFunnl"
-  description="اطلب من Claude أو ChatGPT أو مساعد AdFunnl إيقاف الإعلانات أو نقل الميزانية أو إطلاق حملات. كل تغيير يُسجَّل، والذكاء الاصطناعي يقرأ السجل."
+  seoTitle="اجعل Claude أو ChatGPT مساعدك في الـ Media Buying · AdFunnl"
+  description="اربط AdFunnl بـ Claude أو ChatGPT مرة واحدة لقراءة إعلاناتك وتعديلها على Meta وTikTok وSnapchat وGoogle. كل تغيير يُسجَّل، والذكاء الاصطناعي يقرأ السجل."
 >
 
   <!-- ============================== HERO ============================== -->
@@ -165,8 +178,9 @@ const closing = {
     <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,#e6e1fb,transparent)]"></div>
     <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1fr]">
       <div>
-        <h1 class="font-display text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">{hero.heading}</h1>
-        <p class="mt-5 text-lg leading-relaxed text-zinc-500">{hero.body}</p>
+        <h1 class="font-display text-[2.2rem] font-extrabold leading-[1.15] tracking-tight text-zinc-950 sm:text-6xl lg:text-[3.2rem] xl:text-[3.85rem]">{hero.headingBefore} <AssistantRotator /> {hero.headingAfter}</h1>
+        <p class="mt-6 text-lg leading-relaxed text-zinc-500">{hero.body}</p>
+        <p class="mt-3 text-sm leading-relaxed text-zinc-500">{hero.worksWith}</p>
         <ul class="mt-6 flex flex-wrap gap-2">
           {platforms.map((p) => (
             <li class="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
@@ -184,7 +198,7 @@ const closing = {
       <!-- A request, the plan it comes back with, and the approval -->
       <div class="rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-brand-900/10">
         <div class="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-2.5 text-[11px] font-medium text-zinc-500">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{hero.chat.connected}
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span><span data-ai-sync class="font-semibold text-zinc-700" dir="ltr">Claude</span><span>· {hero.chat.connected}</span>
         </div>
         <div class="space-y-4 p-5">
           <p class="ms-auto w-fit max-w-[85%] rounded-2xl bg-zinc-100 px-3.5 py-2.5 text-sm leading-relaxed text-zinc-800">{hero.chat.ask}</p>
@@ -217,6 +231,11 @@ const closing = {
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===================== WHY ADFUNNL'S MCP ===================== -->
+  <section class="bg-zinc-50/60 border-y border-zinc-100 px-6 py-16 sm:py-24">
+    <WhyAdFunnlMcp locale="ar" class="mx-auto max-w-5xl" />
   </section>
 
   <!-- ========================= CHANGE LOG, READ BY AI ========================= -->

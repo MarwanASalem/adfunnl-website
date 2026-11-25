@@ -1,0 +1,278 @@
+---
+// Why connect AdFunnl's MCP rather than one MCP per ad platform. Three glass
+// cards in the "6 ways" style (docs/design.md), each with a small piece of the
+// app that plays on hover, focus or swipe and rests in its finished state.
+//
+// The three reasons are the owner's (25 November 2026). Capability notes, all
+// in docs/what-ships.md:
+//   1. One connection reaches every ad platform; brands and the ad accounts
+//      they hold are set up in AdFunnl (Team, Clients); brand notes, goal and
+//      targets are shared with Claude, ChatGPT and the in-app assistant
+//      (Ask, Brand notes).
+//   2. Change Log: marked on the Ads timeline report, and read by the AI beside
+//      the numbers (Ask, Change Log; Visualize, Reports). No lookback window.
+//   3. The MCP is fixed and extended every week from where calls fail (Ask,
+//      MCP updates), and support is answered by a person on WhatsApp or email
+//      (Share, Support channels). It is not "trained": no model is trained on
+//      customer data, so never write that, and never put a count of users on it.
+import PlatformIcon from "./PlatformIcon.astro";
+
+interface Props {
+  locale?: "en" | "ar";
+  class?: string;
+}
+const { locale = "en", class: cls = "" } = Astro.props;
+
+type Card = "brands" | "log" | "care";
+const ORDER: Card[] = ["brands", "log", "care"];
+
+const COPY = {
+  en: {
+    heading: "Why use AdFunnl's MCP, not one per ad platform",
+    body: "A platform's own MCP connects that one platform. AdFunnl's connects every ad platform you run, along with the brands, notes and change history your team keeps in AdFunnl.",
+    cards: {
+      brands: { title: "One connection knows your brands", body: "Meta, TikTok, Snapchat and Google through one sign-in. Which ad accounts belong to which brand is already set up in AdFunnl, with each brand's goal and targets." },
+      log: { title: "It knows what you changed", body: "Every change lands in the brand's Change Log. You see it on the Ads timeline beside your results, and the AI reads it before it answers." },
+      care: { title: "Improved every week, with people behind it", body: "We read where it gets stuck and ship fixes every week. If you get stuck, a person answers on WhatsApp or by email." },
+    },
+    brand: "Tiffin Co.",
+    target: "Target ROAS",
+    raised: "Budget raised",
+    paused: "2 ads paused",
+    fresh: "New",
+    freshItem: "Copy a campaign to the brand's other platforms",
+    reply: "Support",
+    replyLine: "A person replied",
+  },
+  ar: {
+    heading: "لماذا MCP من AdFunnl، وليس MCP لكل منصة إعلانية",
+    body: "الـ MCP الخاص بأي منصة يربط تلك المنصة وحدها. أما MCP من AdFunnl فيربط كل منصاتك الإعلانية، ومعها العلامات التجارية والملاحظات وسجل التغييرات التي يحفظها فريقك في AdFunnl.",
+    cards: {
+      brands: { title: "اتصال واحد يعرف علاماتك التجارية", body: "Meta وTikTok وSnapchat وGoogle بتسجيل دخول واحد. ربط كل حساب إعلاني بعلامته التجارية مُعَدّ مسبقًا في AdFunnl، ومعه هدف كل علامة ومستهدفاتها." },
+      log: { title: "يعرف ما الذي غيّرته", body: "يُسجَّل كل تغيير في سجل التغييرات الخاص بالعلامة التجارية. تراه على Ads timeline بجانب نتائجك، ويقرؤه الذكاء الاصطناعي قبل أن يجيب." },
+      care: { title: "يتحسّن كل أسبوع، وخلفه فريق حقيقي", body: "نتابع المواضع التي يتعثر فيها ونطلق إصلاحات كل أسبوع. وإذا تعثّرت أنت، يرد عليك شخص حقيقي على WhatsApp أو بالبريد." },
+    },
+    brand: "Tiffin Co.",
+    target: "المستهدف ROAS",
+    raised: "رُفعت الميزانية",
+    paused: "أُوقف إعلانان",
+    fresh: "جديد",
+    freshItem: "نسخ حملة إلى منصات العلامة الأخرى",
+    reply: "الدعم",
+    replyLine: "ردّ عليك شخص من الفريق",
+  },
+};
+const T = COPY[locale];
+
+// Ad accounts under the demo brand, in the fixed platform order.
+const accounts = ["meta", "tiktok", "snapchat", "google_ads"];
+
+// Daily results for the timeline card; the change lands on day 3.
+const series = [22, 24, 21, 30, 34, 33, 38];
+const W = 160, H = 40;
+const pts = series.map((v, i) => [Math.round((i / (series.length - 1)) * W), Math.round(H - (v / 42) * H)]);
+const line = pts.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
+const markX = (pts[3][0] / W) * 100;
+const markX2 = (pts[1][0] / W) * 100;
+
+// ── Frosted glass objects, the same four layers as UseCases.astro ──
+const defs = (i: number) => `<defs>
+  <linearGradient id="wgl${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".97"/><stop offset=".5" stop-color="#ece7fd" stop-opacity=".9"/><stop offset="1" stop-color="#a796ef" stop-opacity=".85"/></linearGradient>
+  <linearGradient id="wdp${i}" x1="0" y1="0" x2="0" y2="1"><stop offset=".3" stop-color="#6549dd" stop-opacity="0"/><stop offset="1" stop-color="#5738c9" stop-opacity=".42"/></linearGradient>
+  <linearGradient id="wrm${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity=".75"/></linearGradient>
+  <radialGradient id="wgw${i}"><stop offset="0" stop-color="#9b86f0" stop-opacity=".42"/><stop offset="1" stop-color="#9b86f0" stop-opacity="0"/></radialGradient>
+  <filter id="wbl${i}" x="-60%" y="-200%" width="220%" height="500%"><feGaussianBlur stdDeviation="3.5"/></filter>
+  <filter id="wsp${i}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.3"/></filter>
+</defs>`;
+const glass = (i: number, shape: string) =>
+  shape.replace("__", `fill="url(#wgl${i})"`)
+  + shape.replace("__", `fill="url(#wdp${i})"`)
+  + shape.replace("__", `fill="none" stroke="url(#wrm${i})" stroke-width="1"`);
+const spec = (i: number, cx: number, cy: number, rx: number, ry: number, rot = 0) =>
+  `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${cx} ${cy})" fill="#fff" opacity=".85" filter="url(#wsp${i})"/>`;
+const ground = (i: number, rx = 34) =>
+  `<circle cx="60" cy="60" r="50" fill="url(#wgw${i})"/><ellipse cx="60" cy="107" rx="${rx}" ry="4.5" fill="#4b32b5" opacity=".2" filter="url(#wbl${i})"/>`;
+const glint = (x: number, y: number, r: number) =>
+  `<path d="M${x},${y - r} Q${x},${y} ${x + r},${y} Q${x},${y} ${x},${y + r} Q${x},${y} ${x - r},${y} Q${x},${y} ${x},${y - r}Z" fill="#fff" opacity=".9"/>`;
+
+const art: Record<Card, string> = {
+  // One glass hub with three tiles hanging from it: one connection, many accounts.
+  brands: defs(0) + ground(0, 40)
+    + `<g class="wy-body">`
+    + `<path d="M60 52 L28 78 M60 52 L60 80 M60 52 L92 78" stroke="#b9a8f5" stroke-width="3" stroke-linecap="round"/>`
+    + glass(0, `<circle cx="60" cy="40" r="20" __/>`) + spec(0, 54, 28, 8, 2.4, -15)
+    + [20, 52, 84].map((x) => glass(0, `<rect x="${x - 4}" y="76" width="24" height="20" rx="6" __/>`)).join("")
+    + `</g><g class="wy-float">${glint(96, 26, 6)}</g>`,
+
+  // A glass log page with three lines and one marked.
+  log: defs(1) + ground(1, 32)
+    + `<g class="wy-body">${glass(1, `<rect x="30" y="20" width="60" height="78" rx="10" __/>`)}`
+    + `<rect x="40" y="36" width="34" height="4" rx="2" fill="#fff" opacity=".9"/>`
+    + `<rect x="40" y="52" width="40" height="4" rx="2" fill="#8b73e6" opacity=".55"/>`
+    + `<rect x="40" y="68" width="26" height="4" rx="2" fill="#fff" opacity=".75"/>`
+    + `<circle cx="84" cy="54" r="7" fill="#fff"/><path d="M80.8 54.2 l2.2 2.2 l4 -4.5" fill="none" stroke="#8b73e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+    + spec(1, 46, 24, 12, 2.2)
+    + `</g><g class="wy-float">${glint(24, 32, 6)}</g>`,
+
+  // A glass speech bubble with a tick: someone answers.
+  care: defs(2) + ground(2, 36)
+    + `<g class="wy-body">${glass(2, `<path d="M26 30 h68 a12 12 0 0 1 12 12 v30 a12 12 0 0 1 -12 12 h-38 l-18 16 v-16 h-12 a12 12 0 0 1 -12 -12 v-30 a12 12 0 0 1 12 -12 z" stroke-linejoin="round" __/>`)}`
+    + `<path d="M48 57 l9 9 l17 -19" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`
+    + spec(2, 44, 35, 14, 2.4)
+    + `</g><g class="wy-float">${glint(100, 22, 6)}</g>`,
+};
+---
+
+<div class={cls}>
+  <div class="mx-auto max-w-2xl text-center">
+    <h2 class="font-display text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">{T.heading}</h2>
+    <p class="mt-4 text-lg leading-relaxed text-zinc-500">{T.body}</p>
+  </div>
+
+  <div class="wy-row mt-12">
+    {ORDER.map((c) => (
+      <article class="wy-card" tabindex="0" data-wycard>
+        <svg class="wy-art" viewBox="0 0 120 120" aria-hidden="true" set:html={art[c]} />
+        <h3 class="wy-title">{T.cards[c].title}</h3>
+        <p class="wy-text">{T.cards[c].body}</p>
+
+        <div class="wy-mini" aria-hidden="true">
+          {c === "brands" && (
+            <div>
+              <div class="flex items-center justify-between pb-1.5 text-[10px]">
+                <span class="font-bold text-brand-900">{T.brand}</span>
+                <span class="wy-pop rounded-full bg-brand-600 px-2 py-px font-semibold text-white" style="--k:5">{T.target} <bdi dir="ltr" class="tabular-nums">3.0×</bdi></span>
+              </div>
+              <div class="grid grid-cols-2 gap-1">
+                {accounts.map((a, k) => (
+                  <span class="wy-in flex items-center gap-1.5 rounded-md bg-white px-1.5 py-1 text-[10px] font-medium text-zinc-600 ring-1 ring-brand-100" style={`--k:${k}`}>
+                    <PlatformIcon platform={a} class="h-3 w-3 shrink-0" />
+                    <span class="h-1.5 flex-1 rounded-full bg-zinc-100"></span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {c === "log" && (
+            <div class="relative rounded-md bg-white px-2 pb-1 pt-5 ring-1 ring-brand-100">
+              <svg class="block h-10 w-full overflow-visible" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style="direction:ltr">
+                <path class="wy-line" d={line} pathLength="1" fill="none" stroke="#8b73e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+              </svg>
+              <div class="pointer-events-none absolute inset-x-2 bottom-1 top-5" style="direction:ltr">
+                <span class="wy-pop absolute bottom-0 top-0 w-px bg-zinc-300" style={`left:${markX2}%;--k:2`}></span>
+                <span class="wy-pop absolute bottom-0 top-0 w-px bg-brand-500" style={`left:${markX}%;--k:4`}></span>
+              </div>
+              <span class="wy-pop absolute top-1 rounded-full bg-zinc-100 px-1.5 text-[9px] font-semibold text-zinc-600" style={`left:calc(${markX2}% - 4px);--k:2;direction:ltr`}>{T.paused}</span>
+              <span class="wy-pop absolute end-1.5 top-1 rounded-full bg-brand-50 px-1.5 text-[9px] font-semibold text-brand-700 ring-1 ring-brand-200" style="--k:4">{T.raised}</span>
+            </div>
+          )}
+
+          {c === "care" && (
+            <div class="space-y-1.5">
+              <div class="wy-in flex items-center gap-1.5 rounded-md bg-white px-1.5 py-1 text-[10px] ring-1 ring-brand-100" style="--k:0">
+                <span class="shrink-0 rounded bg-emerald-50 px-1.5 py-px font-semibold text-emerald-700">{T.fresh}</span>
+                <span class="truncate font-medium text-zinc-600">{T.freshItem}</span>
+              </div>
+              <div class="wy-pop flex items-center gap-1.5 rounded-xl rounded-es-sm bg-brand-600 px-2 py-1 text-[10px] text-white w-fit" style="--k:3">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+                <span class="font-semibold">{T.reply}</span><span class="opacity-80">· {T.replyLine}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .wy-row { display: flex; gap: .875rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .5rem 1.5rem 1.5rem; margin-inline: -1.5rem; scrollbar-width: none; }
+  .wy-row::-webkit-scrollbar { display: none; }
+  .wy-card {
+    --rx: 0deg; --ry: 0deg; --tx: 0px; --ty: 0px; --lift: 0px; --sc: 1;
+    position: relative; flex: 0 0 80%; scroll-snap-align: center; outline: none;
+    display: flex; flex-direction: column; border-radius: 1.6rem; padding: 1.25rem;
+    background: linear-gradient(165deg, #ffffff 0%, #f7f5fe 55%, #eae5fc 100%);
+    border: 1px solid rgba(255, 255, 255, .9);
+    box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(87, 56, 201, .06), 0 18px 34px -20px rgba(43, 29, 97, .28);
+    transform: translateY(var(--lift)) perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--sc));
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
+  }
+  .wy-card:focus-visible { box-shadow: 0 0 0 3px #b0a1ef, 0 18px 34px -20px rgba(43, 29, 97, .28); }
+  .wy-art { display: block; height: 6rem; width: 6rem; margin-inline-start: auto; margin-top: -.4rem; overflow: visible; pointer-events: none; }
+  .wy-title { margin-top: .25rem; font-size: 1.15rem; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; color: #1e1b4b; }
+  .wy-text { margin-top: .45rem; font-size: .8125rem; line-height: 1.5; color: #71717a; }
+  .wy-mini { margin-top: auto; padding-top: 1rem; }
+  .wy-mini > * { border-radius: .75rem; background: rgba(255, 255, 255, .55); padding: .5rem; box-shadow: 0 0 0 1px rgba(87, 56, 201, .08); }
+  .wy-body, .wy-float { transition: translate .35s ease-out; }
+  .wy-body { translate: var(--tx) var(--ty); }
+  .wy-float { translate: calc(var(--tx) * 2.2) calc(var(--ty) * 2.2); }
+  .wy-line { stroke-dasharray: 1; stroke-dashoffset: 0; }
+
+  .wy-card.is-playing .wy-in { animation: wyIn .45s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--k, 0) * 120ms + 100ms); }
+  .wy-card.is-playing .wy-pop { animation: wyPop .4s cubic-bezier(.34,1.56,.64,1) both; animation-delay: calc(var(--k, 0) * 130ms + 250ms); }
+  .wy-card.is-playing .wy-line { animation: wyLine 1.3s ease-out .15s both; }
+  @keyframes wyIn { from { opacity: 0; transform: translateY(6px); } }
+  @keyframes wyPop { from { opacity: 0; transform: scale(.6); } }
+  @keyframes wyLine { from { stroke-dashoffset: 1; } }
+
+  @media (min-width: 768px) {
+    .wy-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; overflow: visible; padding: 0; margin-inline: 0; }
+    .wy-card:is(:hover, :focus-visible) {
+      --lift: -10px; --sc: 1.03; z-index: 10;
+      box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(87, 56, 201, .1), 0 40px 60px -28px rgba(43, 29, 97, .45);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wy-card, .wy-body, .wy-float { transition: none !important; }
+    .wy-card *, .wy-card.is-playing * { animation: none !important; }
+  }
+</style>
+
+<script>
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wide = () => window.innerWidth >= 768;
+  const cards = document.querySelectorAll<HTMLElement>("[data-wycard]");
+
+  cards.forEach((card) => {
+    const play = () => {
+      if (still) return;
+      card.classList.remove("is-playing");
+      void card.offsetWidth;
+      card.classList.add("is-playing");
+    };
+    card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && wide()) play(); });
+    card.addEventListener("focus", () => { if (wide()) play(); });
+    card.addEventListener("pointerleave", () => {
+      ["--rx", "--ry", "--tx", "--ty"].forEach((p) => card.style.removeProperty(p));
+    });
+    if (!still) {
+      card.addEventListener("pointermove", (e) => {
+        if (e.pointerType !== "mouse" || !wide()) return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
+        card.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
+        card.style.setProperty("--tx", `${(x * 5).toFixed(2)}px`);
+        card.style.setProperty("--ty", `${(y * 4).toFixed(2)}px`);
+      });
+    }
+  });
+
+  // Every card plays once when it first scrolls into view, on any screen.
+  if (!still && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add("is-playing");
+          if (wide()) io.unobserve(e.target);
+        } else if (!wide()) {
+          (e.target as HTMLElement).classList.remove("is-playing");
+        }
+      }
+    }, { threshold: 0.6 });
+    cards.forEach((c) => io.observe(c));
+  }
+</script>

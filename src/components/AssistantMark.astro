@@ -1,0 +1,13 @@
+---
+// An AI assistant's mark, for "works with" chips. Drawings live in
+// src/lib/assistant-marks.ts.
+import { markSvg, type Assistant } from "../lib/assistant-marks";
+
+interface Props {
+  assistant: Assistant;
+  class?: string;
+}
+const { assistant, class: cls = "h-5 w-5" } = Astro.props;
+---
+
+<Fragment set:html={markSvg(assistant, cls)} />

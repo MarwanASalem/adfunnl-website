@@ -21,7 +21,7 @@ import { faqPage } from "../data/plans";
 const copy: Copy = {
   hero: {
     heading: "Earn 10% of what every brand you bring pays",
-    body: "For agencies and media buyers. Share your link, and earn 10% of what each new customer pays AdFunnl for their first 12 months, paid to your bank account or InstaPay.",
+    body: "For agencies and media buyers. Share your link, and earn 10% of what each new customer pays in the app, by card or wallet, for their first 12 months, paid to your bank account or InstaPay.",
     cta: "Apply to the program",
   },
   steps: {
@@ -29,7 +29,7 @@ const copy: Copy = {
     items: [
       { title: "Apply", body: "Sign in, or create a free account, and tell us about your agency. We read every application.", chip: "Application sent" },
       { title: "Share your link", body: "Once you are approved you get a link. A brand that creates a new AdFunnl account through it counts as yours.", chip: "app.adfunnl.com/signup?aff=" },
-      { title: "Get paid", body: "Each of their payments earns you 10% for 12 months. It is yours to withdraw 30 days later, and we pay out monthly once you have EGP 500.", chip: "10% · 12 months" },
+      { title: "Get paid", body: "Each payment they make in the app earns you 10% for 12 months. It becomes available 30 days later, and we pay out monthly once you have EGP 500.", chip: "10% · 12 months" },
     ],
   },
   counts: {
@@ -57,7 +57,7 @@ const copy: Copy = {
 <Layout
   title="Affiliate program"
   seoTitle="AdFunnl affiliate program"
-  description="Agencies and media buyers earn 10% of what each new customer they bring pays AdFunnl for 12 months, paid by bank transfer or InstaPay."
+  description="Agencies and media buyers earn 10% of what each new customer they bring pays in the app for 12 months, paid by bank transfer or InstaPay."
   schema={[faqPage(copy.faq.items)]}
 >
   <AffiliatePage copy={copy} termsHref="/terms#affiliates" />

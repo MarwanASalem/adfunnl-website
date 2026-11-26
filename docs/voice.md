@@ -23,7 +23,8 @@ disagree, `CLAUDE.md` wins.
   media buyers, and the short form reads as somebody making a purchase. The
   hook enforces this, which is why this line does not spell out the short form.
 - The CTA is `Start free`, on every page. Nothing else. No demo button,
-  because demos are not offered right now.
+  because demos are not offered right now. The one exception is the affiliate
+  program page, whose button is `Apply to the program`.
 - No invented numbers, customers, testimonials or percentages.
 - Capability claims come from `what-ships.md`, including its "Do not claim"
   list. The app repo is not connected to this one, so nothing warns you when
@@ -125,7 +126,8 @@ WAS:  Put your book on one screen
       Set up one account with me
 NOW:  Start free
 RULE: A clever CTA makes the reader decode instead of click. The call to
-      action is Start free, on every page.
+      action is Start free, on every page (the affiliate program page,
+      whose button is Apply to the program, is the one exception).
 ```
 
 ### R6. No coined vocabulary

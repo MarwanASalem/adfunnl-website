@@ -24,7 +24,9 @@ These are not preferences. A copy change that breaks one of these is wrong.
 4. **CTAs are fixed and plain.** The one call to action is `Start free` (in Arabic `ابدأ مجانًا`),
    both to `${APP_URL}/signup`. No witty or metaphorical button text. There is
    no demo button: demos are not offered right now, and the app has no `/demo`
-   page. Do not add one back until that changes.
+   page. Do not add one back until that changes. The one exception is the
+   affiliate program page (`/affiliates` and its twin): its button is
+   `Apply to the program` (`قدّم على البرنامج`), to `${APP_URL}/affiliate/join`.
 5. **Never claim a capability without checking `docs/what-ships.md`.** That file
    is the list of what the site may claim, and it has a "Do not claim" section
    for things that sound true and are not. This repo and the app repo are not

@@ -1,0 +1,54 @@
+---
+// Arabic twin of src/pages/affiliates.astro. Keep the two in step: a change to
+// one page's copy or markup belongs in the other. The brief and the rules for
+// this page live in the English page.
+import Layout from "../../layouts/Layout.astro";
+import AffiliatePage from "../../components/AffiliatePage.astro";
+import type { Copy } from "../../components/AffiliatePage.astro";
+import { faqPage } from "../../data/plans";
+
+const copy: Copy = {
+  hero: {
+    heading: "اربح 10% مما يدفعه كل براند تجلبه",
+    body: "للوكالات وMedia Buyers. شارك رابطك، واربح 10% مما يدفعه كل عميل جديد لـ AdFunnl خلال أول 12 شهرًا، تصلك على حسابك البنكي أو InstaPay.",
+    cta: "قدّم على البرنامج",
+  },
+  steps: {
+    heading: "كيف يعمل البرنامج",
+    items: [
+      { title: "قدّم طلبك", body: "سجّل الدخول أو أنشئ حسابًا مجانيًا، وأخبرنا عن وكالتك. نقرأ كل طلب.", chip: "تم إرسال الطلب" },
+      { title: "شارك رابطك", body: "بعد قبولك تحصل على رابط خاص بك. أي براند ينشئ حسابًا جديدًا على AdFunnl من خلاله يُحتسب لك.", chip: "app.adfunnl.com/signup?aff=" },
+      { title: "استلم أرباحك", body: "كل دفعة منهم تربحك 10% لمدة 12 شهرًا، وتصبح متاحة لك بعد 30 يومًا، ونرسل الأرباح كل شهر عندما يبلغ رصيدك 500 جنيه.", chip: "10% · 12 شهرًا" },
+    ],
+  },
+  counts: {
+    heading: "ما الذي يُحتسب",
+    body: "الحسابات الجديدة التي تُنشأ عبر رابطك. لا يُحتسب فريقك ولا مساحات العمل التي يعمل فيها فريقك بالفعل، والدفعة المستردة تُخصم عمولتها.",
+    termsLink: "اقرأ شروط برنامج الشركاء",
+  },
+  faq: {
+    heading: "أسئلة تسألها الوكالات أولًا",
+    items: [
+      { q: "هل يحصل البراند الذي أجلبه على خصم؟", a: "لا. يدفع السعر المعتاد، وعمولتك لا تُخصم من فاتورته." },
+      { q: "أستخدم AdFunnl بالفعل. هل أستطيع الانضمام؟", a: "نعم. سجّل الدخول بحسابك وقدّم طلبك من هناك." },
+      { q: "من يمكنه التقديم؟", a: "مالك مساحة العمل على AdFunnl أو أحد مسؤوليها. تنضم الوكالة كلها، لا شخص واحد." },
+      { q: "كيف أستلم أرباحي؟", a: "بتحويل بنكي أو عبر InstaPay، بالجنيه المصري. تضيف بياناتك في صفحة الشريك داخل التطبيق." },
+    ],
+  },
+  closing: {
+    heading: "اجلب براندًا واربح لمدة عام",
+    body: "التقديم يأخذ دقائق. نراجع كل طلب ونراسلك بالبريد عند قبولك.",
+    cta: "قدّم على البرنامج",
+  },
+};
+---
+
+<Layout
+  locale="ar"
+  title="برنامج الشركاء"
+  seoTitle="برنامج شركاء AdFunnl"
+  description="تربح الوكالات وMedia Buyers نسبة 10% مما يدفعه كل عميل جديد يجلبونه لـ AdFunnl لمدة 12 شهرًا، بتحويل بنكي أو عبر InstaPay."
+  schema={[faqPage(copy.faq.items)]}
+>
+  <AffiliatePage copy={copy} termsHref="/ar/terms#affiliates" />
+</Layout>

@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AffiliatePage from "../components/AffiliatePage.astro";
+import type { Copy } from "../components/AffiliatePage.astro";
+import { faqPage } from "../data/plans";
+
+// ── The brief ─────────────────────────────────────────────────────────
+//   Who     Agencies and media buyers who already recommend tools to the
+//           brands they work with.
+//   Promise 10% of what each new customer pays AdFunnl for 12 months, paid
+//           out in Egyptian pounds.
+//   Action  Apply to the program (the one page whose button is not
+//           Start free, see CLAUDE.md rule 4).
+//
+// Rules for anyone editing this page:
+//   - Every figure here is in docs/what-ships.md (Affiliate program row) and
+//     in the app's affiliate terms. Change them together or not at all.
+//   - No earnings examples. A sum per month is a promise we cannot keep.
+//   - No discount for the customer: there is none.
+
+const copy: Copy = {
+  hero: {
+    heading: "Earn 10% of what every brand you bring pays",
+    body: "For agencies and media buyers. Share your link, and earn 10% of what each new customer pays AdFunnl for their first 12 months, paid to your bank account or InstaPay.",
+    cta: "Apply to the program",
+  },
+  steps: {
+    heading: "How it works",
+    items: [
+      { title: "Apply", body: "Sign in, or create a free account, and tell us about your agency. We read every application.", chip: "Application sent" },
+      { title: "Share your link", body: "Once you are approved you get a link. A brand that creates a new AdFunnl account through it counts as yours.", chip: "app.adfunnl.com/signup?aff=" },
+      { title: "Get paid", body: "Each of their payments earns you 10% for 12 months. It is yours to withdraw 30 days later, and we pay out monthly once you have EGP 500.", chip: "10% · 12 months" },
+    ],
+  },
+  counts: {
+    heading: "What counts",
+    body: "New accounts made through your link. Your own team, and workspaces your team already works in, do not count, and a refunded payment comes off its commission.",
+    termsLink: "Read the affiliate terms",
+  },
+  faq: {
+    heading: "Questions agencies ask first",
+    items: [
+      { q: "Do the brands I bring get a discount?", a: "No. They pay the normal price, and your commission does not come out of their bill." },
+      { q: "I already use AdFunnl. Can I join?", a: "Yes. Sign in with your account and apply from there." },
+      { q: "Who can apply?", a: "The owner or an admin of an AdFunnl workspace. The whole agency joins, not one person." },
+      { q: "How do I get paid?", a: "By bank transfer or InstaPay, in Egyptian pounds. You add your details on the Affiliate page in the app." },
+    ],
+  },
+  closing: {
+    heading: "Bring a brand, earn for a year",
+    body: "Apply in a few minutes. We review every application and email you when you are in.",
+    cta: "Apply to the program",
+  },
+};
+---
+
+<Layout
+  title="Affiliate program"
+  seoTitle="AdFunnl affiliate program"
+  description="Agencies and media buyers earn 10% of what each new customer they bring pays AdFunnl for 12 months, paid by bank transfer or InstaPay."
+  schema={[faqPage(copy.faq.items)]}
+>
+  <AffiliatePage copy={copy} termsHref="/terms#affiliates" />
+</Layout>

@@ -80,6 +80,7 @@ const COPY = {
     home: "Home",
     features: "Features",
     contact: "Contact",
+    affiliates: "Affiliate program",
     company: "Company",
     about: "About",
     privacy: "Privacy",
@@ -118,6 +119,7 @@ const COPY = {
     home: "الرئيسية",
     features: "المزايا",
     contact: "تواصل معنا",
+    affiliates: "برنامج الشركاء",
     company: "الشركة",
     about: "من نحن",
     privacy: "الخصوصية",
@@ -217,6 +219,7 @@ const crumbLabels: Record<string, string> = {
   "/features": T.features,
   "/integrations": T.integrations,
   "/contact": T.contact,
+  "/affiliates": T.affiliates,
   ...Object.fromEntries(personas.map((p) => [p.href, T.forPersona(p.label)])),
 };
 const crumb = crumbLabels[basePath];
@@ -522,6 +525,7 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": grap
               <a href={`${APP_URL}/signup`} class="hover:text-zinc-900 transition">{T.startFree}</a>
               <a href={L("/about")}    class="hover:text-zinc-900 transition">{T.about}</a>
               <a href={L("/contact")}  class="hover:text-zinc-900 transition">{T.contact}</a>
+              <a href={L("/affiliates")} class="hover:text-zinc-900 transition">{T.affiliates}</a>
               <a href={L("/blog")}     class="hover:text-zinc-900 transition">{T.blog}</a>
               <a href={L("/security")} class="hover:text-zinc-900 transition">{T.security}</a>
               <a href={L("/privacy")}  class="hover:text-zinc-900 transition">{T.privacy}</a>

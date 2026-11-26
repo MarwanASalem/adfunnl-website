@@ -29,6 +29,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [Snapchat ads reporting](https://www.adfunnl.com/integrations/snapchat): what comes in from Snapchat, audience breakdowns, creative ranking and running Snapchat from Claude or ChatGPT
 - [TikTok ads reporting](https://www.adfunnl.com/integrations/tiktok): what comes in from TikTok, creative ranking and switching TikTok campaigns
 - [Contact](https://www.adfunnl.com/contact): WhatsApp and email
+- [Affiliate program](https://www.adfunnl.com/affiliates): agencies and media buyers earn 10% of what each new customer they bring pays for 12 months, paid in EGP by bank transfer or InstaPay
 - [AI ad control](https://www.adfunnl.com/ai-ad-control): make Claude or ChatGPT your assistant media buyer over AdFunnl's MCP server, why one MCP for every ad platform, how to connect each assistant, and what it can change on each platform
 - [Connect Claude](https://www.adfunnl.com/ai-ad-control/claude): how to connect Claude and Claude Code to Meta, TikTok, Snapchat and Google ads through AdFunnl, in three steps, and what to ask first
 - [For Account Managers](https://www.adfunnl.com/for/account-managers): client reporting
@@ -53,6 +54,7 @@ AdFunnl is a web app at https://app.adfunnl.com, operated by Funnl Suite LLC in 
 - [تقارير إعلانات Snapchat](https://www.adfunnl.com/ar/integrations/snapchat)
 - [تقارير إعلانات TikTok](https://www.adfunnl.com/ar/integrations/tiktok)
 - [تواصل معنا](https://www.adfunnl.com/ar/contact)
+- [برنامج الشركاء](https://www.adfunnl.com/ar/affiliates)
 - [التحكم في الإعلانات بالـ AI](https://www.adfunnl.com/ar/ai-ad-control)
 - [ربط Claude](https://www.adfunnl.com/ar/ai-ad-control/claude)
 - [المدونة](https://www.adfunnl.com/ar/blog)

@@ -11,7 +11,7 @@ const SUPPORT_EMAIL = "support@adfunnl.com";
 //
 // Deliberately low-visibility: linked from the footer only, and kept out of
 // the nav and the sitemap-facing pages. See privacy.astro for the sibling page.
-const LAST_UPDATED = "Last updated: October 2026";
+const LAST_UPDATED = "Last updated: November 2026";
 
 type Section = { title: string; body: string[]; link?: { before: string; href: string; label: string } };
 
@@ -80,6 +80,77 @@ const SECTIONS: Section[] = [
     link: { before: "The full policy is on our", href: "/refund-policy", label: "Refund Policy" },
   },
 ];
+// Affiliate Program Terms, mirrored from the app's Terms page
+// (app.adfunnl.com/terms#affiliates, keys terms.aff.* in the app's translations).
+const AFFILIATE_TITLE = "Affiliate Program Terms";
+const AFFILIATE_INTRO = "These terms apply on top of the Terms of Service above to any workspace that applies to, or takes part in, the AdFunnl affiliate program. The program is run by Funnl Suite LLC (\"AdFunnl\", \"we\"). The workspace taking part is \"you\". By ticking the box on the application form, you accept them on behalf of your workspace.";
+const AFFILIATE_SECTIONS: Section[] = [
+  {
+    title: "1. Joining the program",
+    body: [
+      "An owner or admin of a workspace can apply. Your workspace is the affiliate, not one person: everyone in it is treated as part of your team. We review every application and may approve or decline it at our discretion, without having to give a reason. If we decline, you can apply again after 30 days.",
+      "Once approved, you get a personal link and code. Don't share your account access to let others use them.",
+    ],
+  },
+  {
+    title: "2. Which customers count",
+    body: [
+      "A customer counts for you when they create a brand new AdFunnl account through your link. They are credited once, at signup, and this never changes later.",
+      "These don't count:",
+      "• People who already had an AdFunnl account, or who join someone else's workspace through an invitation.\n• Anyone on your own team.\n• Workspaces that you, or anyone on your team, pay for, or are or have been a member of. This includes clients whose AdFunnl workspace your team works in. Commission is for bringing us new customers, not a discount on your own or your clients' bills.",
+    ],
+  },
+  {
+    title: "3. What you earn",
+    body: [
+      "You earn 10% of every payment a customer you brought makes in the app, by card or wallet, for their AdFunnl subscription and add-ons, for 12 months from their first payment. This covers payments from the workspace they signed up with and any other workspace they own.",
+      "Commission is worked out on what the customer actually paid, after any discount. Payments arranged outside the app, such as bank transfers we record by hand, are not included. Your rate can be different if we agree it with you in writing, and the rate shown on your Affiliate page is the one that applies.",
+    ],
+  },
+  {
+    title: "4. When commission becomes available",
+    body: [
+      "Each commission becomes available 30 days after the customer's payment. If a payment is refunded, its commission is cancelled in proportion to the refund. If we have already paid it out, the same amount comes off your next payouts.",
+      "We may hold a customer's commission while we check that it meets these terms, for example when the customer seems connected to your team. We will either release it or tell you it is not eligible.",
+    ],
+  },
+  {
+    title: "5. How you are paid",
+    body: [
+      "We pay your available balance by bank transfer or InstaPay, in Egyptian pounds, to the details you give us on your Affiliate page. We send payouts about once a month, once your available balance is at least EGP 500. Smaller balances carry over to the next month.",
+      "You are responsible for giving us correct payout details. A payout sent to the details you gave counts as paid. You are also responsible for any tax due on what you earn.",
+    ],
+  },
+  {
+    title: "6. How you may promote AdFunnl",
+    body: [
+      "You may share your link with brands, in your content, with your audience and in your own ads, as long as you:",
+      "• Describe AdFunnl accurately, and only promise what it does today. Don't promise results, savings or prices other than those on our pricing page.\n• Make it clear you earn a commission when you recommend AdFunnl.\n• Don't offer discounts, cashback or gifts in AdFunnl's name.\n• Don't bid on \"AdFunnl\" or misspellings of it in search ads, or use it in a domain, page or account name.\n• Don't present yourself as AdFunnl or as working for us.\n• Don't send spam or messages to people who haven't agreed to hear from you.\n• Don't create fake accounts, pay people to sign up, or sign up through your own link.",
+    ],
+  },
+  {
+    title: "7. Breaking these terms",
+    body: [
+      "If we believe a commission was earned against these terms, we may cancel it. If you break these terms, we may pause your affiliate account, which freezes your balance while we look into it. For serious or repeated breaches, including any attempt to defraud us, we may end your participation and cancel any balance not yet paid.",
+      "We will tell you which part of these terms we believe was broken, and you can reply to us before we make a final decision.",
+    ],
+  },
+  {
+    title: "8. Changes and ending",
+    body: [
+      "We may change these terms, the commission rate or the program, or end the program. We will give you at least 30 days' notice by email. Commission already earned stays under the terms that applied when it was earned.",
+      "You can leave the program at any time by contacting us. If you leave, or we end your participation or the program for any reason other than a breach, commission you have already earned is still paid under section 5, including commission still in its 30-day hold.",
+    ],
+  },
+  {
+    title: "9. Our relationship",
+    body: [
+      "You take part as an independent business. Nothing here makes you our employee, agent or partner, and you can't make commitments for AdFunnl.",
+      "On your Affiliate page you see the customers you brought and what you earned from each. You don't get access to their data, and you must not ask them for access to their AdFunnl workspace in order to earn commission.",
+    ],
+  },
+];
+
 ---
 
 <Layout
@@ -109,6 +180,23 @@ const SECTIONS: Section[] = [
         </section>
       ))}
     </div>
+
+    <section id="affiliates" class="mt-16 scroll-mt-24 border-t border-zinc-200 pt-12">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-zinc-900">{AFFILIATE_TITLE}</h2>
+      <p class="mt-4 text-[15px] leading-relaxed text-zinc-600">{AFFILIATE_INTRO}</p>
+      <div class="mt-10 space-y-10">
+        {AFFILIATE_SECTIONS.map((section) => (
+          <section>
+            <h3 class="text-lg font-semibold text-zinc-900">{section.title}</h3>
+            <div class="mt-2 space-y-2">
+              {section.body.map((paragraph) => (
+                <p class="whitespace-pre-line text-[15px] leading-relaxed text-zinc-600">{paragraph}</p>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </section>
 
     <p class="mt-12 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
       Questions? Contact us at{" "}
